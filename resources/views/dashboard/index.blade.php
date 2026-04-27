@@ -435,7 +435,7 @@
                     </div>
                 </div>
             </div>
-        @elseif (Auth::user()->type = 'customer')
+        @elseif (Auth::user()->type == 'customer')
             <div class="col-lg-3 col-md-6">
                 <div class="card">
                     <div class="card-body">
