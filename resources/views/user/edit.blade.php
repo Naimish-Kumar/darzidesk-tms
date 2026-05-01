@@ -1,14 +1,8 @@
 {{ Form::model($user, ['route' => ['users.update', encrypt($user->id)], 'method' => 'PUT', 'enctype' => 'multipart/form-data']) }}
 <div class="modal-body">
     <div class="row">
-        @if (\Auth::user()->type != 'super admin')
-            <div class="form-group col-md-6">
-                {{ Form::label('role', __('Assign Role') . '<span class="text-danger"> *</span>', ['class' => 'form-label'], false) }}
-                {!! Form::select('role', $userRoles, !empty($user->roles) ? $user->roles[0]->id : null, [
-                    'class' => 'form-control select2 ',
-                    'required' => 'required',
-                ]) !!}
-            </div>
+        @if (\Auth::user()->type == 'super admin')
+            {{-- Super admin logic --}}
         @endif
         <div class="form-group col-md-6">
             {{ Form::label('name', __('Name') . '<span class="text-danger"> *</span>',  ['class' => 'form-label'], false) }}

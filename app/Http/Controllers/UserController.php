@@ -116,15 +116,12 @@ class UserController extends Controller
                 return redirect()->route('users.index')->with('success', __('User successfully created.') . $errorMessage);
             } else {
 
-                $validator = \Validator::make(
-                    $request->all(),
-                    [
-                        'name' => 'required',
-                        'email' => 'required|email|unique:users',
-                        'password' => 'required|min:6',
-                        'role' => 'required',
-                    ]
-                );
+                $rules = [
+                    'name' => 'required',
+                    'email' => 'required|email|unique:users',
+                    'password' => 'required|min:6',
+                ];
+                $validator = \Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
                     $messages = $validator->getMessageBag();
 
@@ -148,7 +145,16 @@ class UserController extends Controller
                 if ($totalEmployee >= $subscription->employee_limit && $subscription->employee_limit != 0) {
                     return redirect()->back()->with('error', __('Your employee limit is over, please upgrade your subscription.'));
                 }
-                $userRole = Role::findById($request->role);
+                if (!empty($request->role)) {
+                    $userRole = Role::findById($request->role);
+                } else {
+                    $userRole = Role::where('parent_id', parentId())->where('name', 'employee')->first();
+                }
+
+                if (!$userRole) {
+                    return redirect()->back()->with('error', __('Role not found.'));
+                }
+
                 if (\Auth::user()->type == 'manager' && $userRole->name != 'employee') {
                     return redirect()->back()->with('error', __('Permission Denied.'));
                 }
@@ -286,14 +292,11 @@ class UserController extends Controller
             } else {
 
 
-                $validator = \Validator::make(
-                    $request->all(),
-                    [
-                        'name' => 'required',
-                        'email' => 'required|email|unique:users,email,' . $id,
-                        'role' => 'required',
-                    ]
-                );
+                $rules = [
+                    'name' => 'required',
+                    'email' => 'required|email|unique:users,email,' . $id,
+                ];
+                $validator = \Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
                     $messages = $validator->getMessageBag();
 
@@ -304,7 +307,17 @@ class UserController extends Controller
                 if (\Auth::user()->type == 'manager' && $user->type != 'employee') {
                     return redirect()->back()->with('error', __('Permission Denied.'));
                 }
-                $userRole = Role::findById($request->role);
+
+                if (!empty($request->role)) {
+                    $userRole = Role::findById($request->role);
+                } else {
+                    $userRole = Role::where('parent_id', parentId())->where('name', 'employee')->first();
+                }
+
+                if (!$userRole) {
+                    return redirect()->back()->with('error', __('Role not found.'));
+                }
+
                 if (\Auth::user()->type == 'manager' && $userRole->name != 'employee') {
                     return redirect()->back()->with('error', __('Permission Denied.'));
                 }

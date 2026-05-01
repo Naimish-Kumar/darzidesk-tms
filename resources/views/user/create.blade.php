@@ -1,11 +1,8 @@
 {{ Form::open(['url' => 'users', 'method' => 'post', 'enctype' => 'multipart/form-data']) }}
 <div class="modal-body">
     <div class="row">
-        @if (\Auth::user()->type != 'super admin')
-            <div class="form-group col-md-6">
-                {{ Form::label('role', __('Assign Role'). '<span class="text-danger"> *</span>', ['class' => 'form-label'], false) }}
-                {!! Form::select('role', $userRoles, null, ['class' => 'form-control select2', 'required' => 'required']) !!}
-            </div>
+        @if (\Auth::user()->type == 'super admin')
+            {{-- Super Admin logic if needed, but they don't usually use this form for customers --}}
         @endif
         <div class="form-group col-md-6">
             {{ Form::label('name', __('Name'). '<span class="text-danger"> *</span>', ['class' => 'form-label'], false) }}
