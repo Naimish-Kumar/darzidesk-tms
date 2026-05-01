@@ -129,21 +129,22 @@ class UserController extends Controller
                 }
 
                 $pricing_feature_settings = getSettingsValByIdName(1, 'pricing_feature');
-                if ($pricing_feature_settings == 'on') {
-                    $ids = parentId();
-                    $authUser = User::find($ids);
+                $ids = parentId();
+                $authUser = User::find($ids);
+                $subscription = Subscription::find($authUser->subscription);
+
+                if ($pricing_feature_settings == 'on' && $subscription) {
                     $totalUser = $authUser->totalUser();
-                    $subscription = Subscription::find($authUser->subscription);
                     if ($totalUser >= $subscription->user_limit && $subscription->user_limit != 0) {
                         return redirect()->back()->with('error', __('Your user limit is over, please upgrade your subscription.'));
                     }
                 }
 
-                $authUser = User::find($ids);
-                $totalEmployee = $authUser->totalEmployee();
-                $subscription = Subscription::find($authUser->subscription);
-                if ($totalEmployee >= $subscription->employee_limit && $subscription->employee_limit != 0) {
-                    return redirect()->back()->with('error', __('Your employee limit is over, please upgrade your subscription.'));
+                if ($subscription) {
+                    $totalEmployee = $authUser->totalEmployee();
+                    if ($totalEmployee >= $subscription->employee_limit && $subscription->employee_limit != 0) {
+                        return redirect()->back()->with('error', __('Your employee limit is over, please upgrade your subscription.'));
+                    }
                 }
                 if (!empty($request->role)) {
                     $userRole = Role::findById($request->role);
