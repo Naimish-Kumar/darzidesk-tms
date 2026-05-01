@@ -591,7 +591,10 @@ if (!function_exists('defaultCustomerCreate')) {
             'name' => 'customer',
             'parent_id' => $id,
         ];
-        $systemCustomerRole = Role::create($customerRoleData);
+        $systemCustomerRole = Role::where('name', 'customer')->where('parent_id', $id)->first();
+        if (!$systemCustomerRole) {
+            $systemCustomerRole = Role::query()->create($customerRoleData);
+        }
         // Default Customer permissions
         $systemCustomerPermissions = [
             ['name' => 'manage contact'],
@@ -620,7 +623,10 @@ if (!function_exists('defaultEmployeeCreate')) {
             'name' => 'employee',
             'parent_id' => $id,
         ];
-        $systemEmployeeRole = Role::create($employeeRoleData);
+        $systemEmployeeRole = Role::where('name', 'employee')->where('parent_id', $id)->first();
+        if (!$systemEmployeeRole) {
+            $systemEmployeeRole = Role::query()->create($employeeRoleData);
+        }
         // Default Emolopyee permissions
         $systemEmployeePermissions = [
             ['name' => 'manage contact'],

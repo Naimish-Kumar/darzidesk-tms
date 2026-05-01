@@ -633,28 +633,18 @@ class SettingController extends Controller
             $request->file('meta_seo_image')->storeAs('upload/seo/', $seoFileName);
 
 
-            \DB::insert(
-                'insert into settings (`value`, `name`, `type`,`parent_id`) values (?, ?, ?,?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) ',
-                [
-                    $seoFileName,
-                    'meta_seo_image',
-                    'SEO',
-                    parentId(),
-                ]
+            Setting::updateOrCreate(
+                ['name' => 'meta_seo_image', 'parent_id' => parentId()],
+                ['value' => $seoFileName, 'type' => 'SEO']
             );
         }
         unset($settings['meta_seo_image']);
         foreach ($settings as $key => $val) {
             if (!empty($val)) {
 
-                \DB::insert(
-                    'insert into settings (`value`, `name`, `type`,`parent_id`) values (?, ?, ?,?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) ',
-                    [
-                        $val,
-                        $key,
-                        'SEO',
-                        parentId(),
-                    ]
+                Setting::updateOrCreate(
+                    ['name' => $key, 'parent_id' => parentId()],
+                    ['value' => $val, 'type' => 'SEO']
                 );
             }
         }
