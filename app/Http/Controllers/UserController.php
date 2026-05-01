@@ -23,7 +23,11 @@ class UserController extends Controller
                 $users = User::where('parent_id', parentId())->where('type', 'owner')->orderBy('id', 'desc')->get();
                 return view('user.index', compact('users'));
             } else {
-                $users = User::where('parent_id', '=', parentId())->whereNotIn('type', ['customer'])->orderBy('id', 'desc')->get();
+                $users = User::where('parent_id', '=', parentId())->whereNotIn('type', ['customer']);
+                if (\Auth::user()->type == 'manager') {
+                    $users->where('type', 'employee');
+                }
+                $users = $users->orderBy('id', 'desc')->get();
                 return view('user.index', compact('users'));
             }
         } else {
@@ -141,6 +145,9 @@ class UserController extends Controller
                     return redirect()->back()->with('error', __('Your employee limit is over, please upgrade your subscription.'));
                 }
                 $userRole = Role::findById($request->role);
+                if (\Auth::user()->type == 'manager' && $userRole->name != 'employee') {
+                    return redirect()->back()->with('error', __('Permission Denied.'));
+                }
                 $user = new User();
                 $user->name = $request->name;
                 $user->email = $request->email;
@@ -221,7 +228,14 @@ class UserController extends Controller
     {
         $id = decrypt($id);
         $user = User::findOrFail($id);
-        $userRoles = Role::where('parent_id', '=', parentId())->whereNotIn('name', ['customer'])->get()->pluck('name', 'id');
+        if (\Auth::user()->type == 'manager' && $user->type != 'employee') {
+            return redirect()->back()->with('error', __('Permission Denied.'));
+        }
+        $userRoles = Role::where('parent_id', '=', parentId())->whereNotIn('name', ['customer']);
+        if (\Auth::user()->type == 'manager') {
+            $userRoles->where('name', 'employee');
+        }
+        $userRoles = $userRoles->get()->pluck('name', 'id');
 
         return view('user.edit', compact('user', 'userRoles'));
     }
@@ -282,8 +296,14 @@ class UserController extends Controller
                     return redirect()->back()->with('error', $messages->first());
                 }
 
-                $userRole = Role::findById($request->role);
                 $user = User::findOrFail($id);
+                if (\Auth::user()->type == 'manager' && $user->type != 'employee') {
+                    return redirect()->back()->with('error', __('Permission Denied.'));
+                }
+                $userRole = Role::findById($request->role);
+                if (\Auth::user()->type == 'manager' && $userRole->name != 'employee') {
+                    return redirect()->back()->with('error', __('Permission Denied.'));
+                }
                 $user->name = $request->name;
                 $user->email = $request->email;
                 $user->phone_number = $request->phone_number;
@@ -318,6 +338,12 @@ class UserController extends Controller
         if (\Auth::user()->can('delete user')) {
             $id = decrypt($id);
             $user = User::find($id);
+            if (\Auth::user()->type == 'manager' && $user->type != 'employee') {
+                return redirect()->back()->with('error', __('Permission Denied.'));
+            }
+            if ($user->type == 'owner') {
+                return redirect()->back()->with('error', __('Owner cannot be deleted.'));
+            }
             $user->delete();
 
             return redirect()->route('users.index')->with('success', __('User successfully deleted.'));
