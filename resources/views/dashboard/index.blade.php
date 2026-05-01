@@ -195,26 +195,6 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div class="flex-shrink-0">
-                                <div class="avtar bg-light-primary">
-                                    <i class="ti ti-settings f-24"></i>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <p class="mb-1">{{ __('System Settings') }}</p>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <h4 class="mb-0">{{ __('Configuration') }}</h4>
-                                    <a href="{{ route('setting.index') }}" class="btn btn-sm btn-primary btn-rounded">{{ __('Manage') }}</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0">
                                 <div class="avtar bg-light-secondary">
                                     <i class="ti ti-users f-24"></i>
                                 </div>
