@@ -593,7 +593,11 @@ if (!function_exists('defaultCustomerCreate')) {
         ];
         $systemCustomerRole = Role::where('name', 'customer')->where('parent_id', $id)->first();
         if (!$systemCustomerRole) {
-            $systemCustomerRole = Role::query()->create($customerRoleData);
+            $systemCustomerRole = new Role();
+            $systemCustomerRole->name = 'customer';
+            $systemCustomerRole->parent_id = $id;
+            $systemCustomerRole->guard_name = 'web';
+            $systemCustomerRole->save();
         }
         // Default Customer permissions
         $systemCustomerPermissions = [
@@ -625,7 +629,11 @@ if (!function_exists('defaultEmployeeCreate')) {
         ];
         $systemEmployeeRole = Role::where('name', 'employee')->where('parent_id', $id)->first();
         if (!$systemEmployeeRole) {
-            $systemEmployeeRole = Role::query()->create($employeeRoleData);
+            $systemEmployeeRole = new Role();
+            $systemEmployeeRole->name = 'employee';
+            $systemEmployeeRole->parent_id = $id;
+            $systemEmployeeRole->guard_name = 'web';
+            $systemEmployeeRole->save();
         }
         // Default Emolopyee permissions
         $systemEmployeePermissions = [

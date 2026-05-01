@@ -123,7 +123,7 @@ class User extends Authenticatable
     public function SubscriptionLeftDay()
     {
         $Subscription = Subscription::find($this->subscription);
-        if ($Subscription->interval == 'Unlimited') {
+        if ($Subscription && $Subscription->interval == 'Unlimited') {
             $return = '<span class="text-success">'.__('Unlimited Days Left').'</span>';
         } else {
             $date1 = date_create(date('Y-m-d'));

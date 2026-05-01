@@ -71,7 +71,7 @@
                                         <a class="pc-link" href="{{ route('role.index') }}">{{ __('Roles') }} </a>
                                     </li>
                                 @endif
-                                @if ($pricing_feature_settings == 'off' || $subscription->enabled_logged_history == 1)
+                                @if ($pricing_feature_settings == 'off' || ($subscription && $subscription->enabled_logged_history == 1))
                                     @if (Gate::check('manage logged history'))
                                         <li
                                             class="pc-item  {{ in_array($routeName, ['logged.history']) ? 'active' : '' }}">
@@ -314,18 +314,9 @@
                 @endif
 
 
-                @if ((Gate::check('manage pricing packages') ||
-                        Gate::check('manage pricing transation') ||
-                        Gate::check('manage account settings') ||
-                        Gate::check('manage password settings') ||
-                        Gate::check('manage general settings') ||
-                        Gate::check('manage email settings') ||
-                        Gate::check('manage payment settings') ||
-                        Gate::check('manage company settings') ||
-                        Gate::check('manage seo settings') ||
-                        Gate::check('manage google recaptcha settings')) && Auth::user()->type == 'super admin')
+                @if (Auth::user()->type == 'super admin')
                     <li class="pc-item pc-caption">
-                        <label>{{ (Auth::user()->type == 'owner') ? __('Marketing & CMS') : __('System Settings') }}</label>
+                        <label>{{ __('System Settings') }}</label>
                         <i class="ti ti-chart-arcs"></i>
                     </li>
 
@@ -342,8 +333,7 @@
                             <ul class="pc-submenu"
                                 style="display: {{ in_array($routeName, ['homepage.index', 'FAQ.index', 'pages.index', 'footerSetting']) ? 'block' : 'none' }}">
                                 @if (Gate::check('manage home page'))
-                                    <li
-                                        class="pc-item {{ in_array($routeName, ['homepage.index']) ? 'active' : '' }} ">
+                                    <li class="pc-item {{ in_array($routeName, ['homepage.index']) ? 'active' : '' }} ">
                                         <a href="{{ route('homepage.index') }}"
                                             class="pc-link">{{ __('Home Page') }}</a>
                                     </li>
@@ -360,15 +350,13 @@
                                     </li>
                                 @endif
                                 @if (Gate::check('manage footer'))
-                                    <li
-                                        class="pc-item {{ in_array($routeName, ['footerSetting']) ? 'active' : '' }} ">
+                                    <li class="pc-item {{ in_array($routeName, ['footerSetting']) ? 'active' : '' }} ">
                                         <a href="{{ route('footerSetting') }}"
                                             class="pc-link">{{ __('Footer') }}</a>
                                     </li>
                                 @endif
                                 @if (Gate::check('manage auth page'))
-                                    <li
-                                        class="pc-item {{ in_array($routeName, ['authPage.index']) ? 'active' : '' }} ">
+                                    <li class="pc-item {{ in_array($routeName, ['authPage.index']) ? 'active' : '' }} ">
                                         <a href="{{ route('authPage.index') }}"
                                             class="pc-link">{{ __('Auth Page') }}</a>
                                     </li>
@@ -376,37 +364,37 @@
                             </ul>
                         </li>
                     @endif
-                    @if (Auth::user()->type == 'super admin')
-                        @if (Gate::check('manage pricing packages') || Gate::check('manage pricing transation'))
-                            <li
-                                class="pc-item pc-hasmenu {{ in_array($routeName, ['subscriptions.index', 'subscriptions.show', 'subscription.transaction']) ? 'pc-trigger active' : '' }}">
-                                <a href="#!" class="pc-link">
-                                    <span class="pc-micon">
-                                        <i class="ti ti-package"></i>
-                                    </span>
-                                    <span class="pc-mtext">{{ __('Pricing') }}</span>
-                                    <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
-                                </a>
-                                <ul class="pc-submenu"
-                                    style="display: {{ in_array($routeName, ['subscriptions.index', 'subscriptions.show', 'subscription.transaction']) ? 'block' : 'none' }}">
-                                    @if (Gate::check('manage pricing packages'))
-                                        <li
-                                            class="pc-item {{ in_array($routeName, ['subscriptions.index', 'subscriptions.show']) ? 'active' : '' }}">
-                                            <a class="pc-link"
-                                                href="{{ route('subscriptions.index') }}">{{ __('Packages') }}</a>
-                                        </li>
-                                    @endif
-                                    @if (Gate::check('manage pricing transation'))
-                                        <li
-                                            class="pc-item {{ in_array($routeName, ['subscription.transaction']) ? 'active' : '' }}">
-                                            <a class="pc-link"
-                                                href="{{ route('subscription.transaction') }}">{{ __('Transactions') }}</a>
-                                        </li>
-                                    @endif
-                                </ul>
-                            </li>
-                        @endif
+
+                    @if (Gate::check('manage pricing packages') || Gate::check('manage pricing transation'))
+                        <li
+                            class="pc-item pc-hasmenu {{ in_array($routeName, ['subscriptions.index', 'subscriptions.show', 'subscription.transaction']) ? 'pc-trigger active' : '' }}">
+                            <a href="#!" class="pc-link">
+                                <span class="pc-micon">
+                                    <i class="ti ti-package"></i>
+                                </span>
+                                <span class="pc-mtext">{{ __('Pricing') }}</span>
+                                <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
+                            </a>
+                            <ul class="pc-submenu"
+                                style="display: {{ in_array($routeName, ['subscriptions.index', 'subscriptions.show', 'subscription.transaction']) ? 'block' : 'none' }}">
+                                @if (Gate::check('manage pricing packages'))
+                                    <li
+                                        class="pc-item {{ in_array($routeName, ['subscriptions.index', 'subscriptions.show']) ? 'active' : '' }}">
+                                        <a class="pc-link"
+                                            href="{{ route('subscriptions.index') }}">{{ __('Packages') }}</a>
+                                    </li>
+                                @endif
+                                @if (Gate::check('manage pricing transation'))
+                                    <li
+                                        class="pc-item {{ in_array($routeName, ['subscription.transaction']) ? 'active' : '' }}">
+                                        <a class="pc-link"
+                                            href="{{ route('subscription.transaction') }}">{{ __('Transactions') }}</a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </li>
                     @endif
+
                     @if (Gate::check('manage coupon') || Gate::check('manage coupon history'))
                         <li
                             class="pc-item pc-hasmenu {{ in_array($routeName, ['coupons.index', 'coupons.history']) ? 'active' : '' }}">
@@ -420,8 +408,7 @@
                             <ul class="pc-submenu"
                                 style="display: {{ in_array($routeName, ['coupons.index', 'coupons.history']) ? 'block' : 'none' }}">
                                 @if (Gate::check('manage coupon'))
-                                    <li
-                                        class="pc-item {{ in_array($routeName, ['coupons.index']) ? 'active' : '' }}">
+                                    <li class="pc-item {{ in_array($routeName, ['coupons.index']) ? 'active' : '' }}">
                                         <a class="pc-link"
                                             href="{{ route('coupons.index') }}">{{ __('All Coupon') }}</a>
                                     </li>
@@ -436,14 +423,15 @@
                             </ul>
                         </li>
                     @endif
-                    @if ((Gate::check('manage account settings') ||
+
+                    @if (Gate::check('manage account settings') ||
                             Gate::check('manage password settings') ||
                             Gate::check('manage general settings') ||
                             Gate::check('manage email settings') ||
                             Gate::check('manage payment settings') ||
                             Gate::check('manage company settings') ||
                             Gate::check('manage seo settings') ||
-                            Gate::check('manage google recaptcha settings')) && Auth::user()->type == 'super admin')
+                            Gate::check('manage google recaptcha settings'))
                         <li class="pc-item {{ in_array($routeName, ['setting.index']) ? 'active' : '' }} ">
                             <a href="{{ route('setting.index') }}" class="pc-link">
                                 <span class="pc-micon"><i class="ti ti-settings"></i></span>
@@ -451,8 +439,8 @@
                             </a>
                         </li>
                     @endif
-
                 @endif
+
             </ul>
             <div class="w-100 text-center">
                 <div class="badge theme-version badge rounded-pill bg-light text-dark f-12"></div>
