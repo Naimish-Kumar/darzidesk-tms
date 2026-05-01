@@ -314,7 +314,7 @@
                 @endif
 
 
-                @if (Gate::check('manage pricing packages') ||
+                @if ((Gate::check('manage pricing packages') ||
                         Gate::check('manage pricing transation') ||
                         Gate::check('manage account settings') ||
                         Gate::check('manage password settings') ||
@@ -436,7 +436,7 @@
                             </ul>
                         </li>
                     @endif
-                    @if (Gate::check('manage account settings') ||
+                    @if ((Gate::check('manage account settings') ||
                             Gate::check('manage password settings') ||
                             Gate::check('manage general settings') ||
                             Gate::check('manage email settings') ||
