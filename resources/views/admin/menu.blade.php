@@ -38,22 +38,6 @@
                         <span class="pc-mtext">{{ __('Dashboard') }}</span>
                     </a>
                 </li>
-                @if (\Auth::user()->type == 'owner')
-                    @if (Gate::check('manage pricing packages'))
-                        <li class="pc-item {{ in_array($routeName, ['subscriptions.index', 'subscriptions.show']) ? 'active' : '' }}">
-                            <a href="{{ route('subscriptions.index') }}" class="pc-link">
-                                <span class="pc-micon"><i class="ti ti-package"></i></span>
-                                <span class="pc-mtext">{{ __('Subscription') }}</span>
-                            </a>
-                        </li>
-                    @endif
-                    <li class="pc-item {{ in_array($routeName, ['setting.index']) ? 'active' : '' }}">
-                        <a href="{{ route('setting.index') }}" class="pc-link">
-                            <span class="pc-micon"><i class="ti ti-settings"></i></span>
-                            <span class="pc-mtext">{{ __('Settings') }}</span>
-                        </a>
-                    </li>
-                @endif
                 @if (\Auth::user()->type == 'super admin')
                     @if (Gate::check('manage user'))
                         <li class="pc-item {{ in_array($routeName, ['users.index', 'users.show']) ? 'active' : '' }}">
@@ -339,7 +323,7 @@
                         Gate::check('manage payment settings') ||
                         Gate::check('manage company settings') ||
                         Gate::check('manage seo settings') ||
-                        Gate::check('manage google recaptcha settings'))
+                        Gate::check('manage google recaptcha settings')) && Auth::user()->type == 'super admin')
                     <li class="pc-item pc-caption">
                         <label>{{ (Auth::user()->type == 'owner') ? __('Marketing & CMS') : __('System Settings') }}</label>
                         <i class="ti ti-chart-arcs"></i>
