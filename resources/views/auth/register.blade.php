@@ -72,6 +72,16 @@
                     </span>
                 @enderror
             </div>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation"
+                    placeholder="{{ __('Password Confirmation') }}" />
+                <label for="password_confirmation">{{ __('Password Confirmation') }}</label>
+                @error('password_confirmation')
+                    <span class="invalid-password_confirmation text-danger" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
             <div class="form-check mt-3">
                 <input class="form-check-input input-primary" type="checkbox" id="agree" name="agree" />
                 <label class="form-check-label" for="agree">
