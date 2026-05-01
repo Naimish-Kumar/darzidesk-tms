@@ -60,11 +60,14 @@
                 @enderror
             </div>
             <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation"
-                    placeholder="{{ __('Password Confirmation') }}" />
-                <label for="password_confirmation">{{ __('Password Confirmation') }}</label>
-                @error('password_confirmation')
-                    <span class="invalid-password_confirmation text-danger" role="alert">
+                <select class="form-control" id="type" name="type">
+                    <option value="owner">{{ __('Owner') }}</option>
+                    <option value="manager">{{ __('Manager') }}</option>
+                    <option value="employee">{{ __('Employee') }}</option>
+                </select>
+                <label for="type">{{ __('Role') }}</label>
+                @error('type')
+                    <span class="invalid-type text-danger" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror

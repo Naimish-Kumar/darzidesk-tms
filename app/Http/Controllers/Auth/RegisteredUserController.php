@@ -54,20 +54,25 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'type' => ['required', 'string', 'in:owner,manager,employee'],
         ]);
         $userData = [
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'type' => 'owner',
+            'type' => $request->type,
             'lang' => 'english',
-            'subscription' => 1,
+            'subscription' => ($request->type == 'owner') ? 1 : 0,
             'parent_id' => 1,
         ];
         $owner_email_verification = getSettingsValByName('owner_email_verification');
         $owner = User::create($userData);
-        $userRole = Role::findByName('owner');
-        $owner->assignRole($userRole);
+        
+        $roleName = $request->type;
+        $userRole = Role::where('name', $roleName)->first();
+        if ($userRole) {
+            $owner->assignRole($userRole);
+        }
         Auth::login($owner);
         defaultCustomerCreate($owner->id);
         defaultEmployeeCreate($owner->id);

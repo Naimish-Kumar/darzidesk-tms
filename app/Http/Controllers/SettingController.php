@@ -76,6 +76,9 @@ class SettingController extends Controller
     public function accountDelete(Request $request)
     {
         $loginUser = \Auth::user();
+        if ($loginUser->type == 'super admin') {
+            return redirect()->back()->with('error', 'Super admin account cannot be deleted.');
+        }
         $loginUser->delete();
 
         return redirect()->back()->with('success', 'Your account successfully deleted.');
