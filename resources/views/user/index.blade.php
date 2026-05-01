@@ -6,7 +6,7 @@
     @if (\Auth::user()->type == 'super admin')
         {{ __('Customer') }}
     @else
-        {{ __('User') }}
+        {{ __('Employee') }}
     @endif
 @endsection
 @section('breadcrumb')
@@ -17,7 +17,7 @@
         @if (\Auth::user()->type == 'super admin')
             {{ __('Customers') }}
         @else
-            {{ __('Users') }}
+            {{ __('Employees') }}
         @endif
     </li>
 @endsection
@@ -33,7 +33,7 @@
                                 @if (\Auth::user()->type == 'super admin')
                                     {{ __('Customer List') }}
                                 @else
-                                    {{ __('User List') }}
+                                    {{ __('Employee List') }}
                                 @endif
                             </h5>
                         </div>
@@ -43,12 +43,12 @@
                                     data-url="{{ route('users.create') }}"
                                     data-title=" @if (\Auth::user()->type == 'super admin') {{ __('Create Customer') }}
                                 @else
-                                    {{ __('Create User') }} @endif">
+                                    {{ __('Create Employee') }} @endif">
                                     <i class="ti ti-circle-plus align-text-bottom"></i>
                                     @if (\Auth::user()->type == 'super admin')
                                         {{ __('Create Customer') }}
                                     @else
-                                        {{ __('Create User') }}
+                                        {{ __('Create Employee') }}
                                     @endif
                                 </a>
                             </div>
@@ -123,7 +123,7 @@
                                                         data-bs-toggle="tooltip" data-size="lg"
                                                         data-bs-original-title="{{ __('Edit') }}" href="#"
                                                         data-url="{{ route('users.edit',encrypt( $user->id)) }}"
-                                                        data-title="{{ __('Edit User') }}"> <i data-feather="edit"></i></a>
+                                                        data-title="{{ __('Edit Employee') }}"> <i data-feather="edit"></i></a>
                                                 @endcan
                                                 @can('delete user')
                                                     <a class="avtar avtar-xs btn-link-danger text-danger confirm_dialog"

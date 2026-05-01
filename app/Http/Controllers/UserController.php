@@ -37,7 +37,11 @@ class UserController extends Controller
 
     public function create()
     {
-        $userRoles = Role::where('parent_id', parentId())->whereNotIn('name', ['customer'])->get()->pluck('name', 'id');
+        $userRoles = Role::where('parent_id', parentId())->whereNotIn('name', ['customer']);
+        if (\Auth::user()->type == 'manager') {
+            $userRoles->where('name', 'employee');
+        }
+        $userRoles = $userRoles->get()->pluck('name', 'id');
         return view('user.create', compact('userRoles'));
     }
 

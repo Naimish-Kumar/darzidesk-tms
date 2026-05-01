@@ -62,7 +62,7 @@
                                 style="display: {{ in_array($routeName, ['users.index', 'logged.history', 'role.index', 'role.create', 'role.edit']) ? 'block' : 'none' }}">
                                 @if (Gate::check('manage user'))
                                     <li class="pc-item {{ in_array($routeName, ['users.index']) ? 'active' : '' }}">
-                                        <a class="pc-link" href="{{ route('users.index') }}">{{ __('Users') }}</a>
+                                        <a class="pc-link" href="{{ route('users.index') }}">{{ __('Employees') }}</a>
                                     </li>
                                 @endif
                                 @if (Gate::check('manage role'))
