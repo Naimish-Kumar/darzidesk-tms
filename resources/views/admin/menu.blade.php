@@ -38,6 +38,22 @@
                         <span class="pc-mtext">{{ __('Dashboard') }}</span>
                     </a>
                 </li>
+                @if (\Auth::user()->type == 'owner')
+                    @if (Gate::check('manage pricing packages'))
+                        <li class="pc-item {{ in_array($routeName, ['subscriptions.index', 'subscriptions.show']) ? 'active' : '' }}">
+                            <a href="{{ route('subscriptions.index') }}" class="pc-link">
+                                <span class="pc-micon"><i class="ti ti-package"></i></span>
+                                <span class="pc-mtext">{{ __('Subscription') }}</span>
+                            </a>
+                        </li>
+                    @endif
+                    <li class="pc-item {{ in_array($routeName, ['setting.index']) ? 'active' : '' }}">
+                        <a href="{{ route('setting.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-settings"></i></span>
+                            <span class="pc-mtext">{{ __('Settings') }}</span>
+                        </a>
+                    </li>
+                @endif
                 @if (\Auth::user()->type == 'super admin')
                     @if (Gate::check('manage user'))
                         <li class="pc-item {{ in_array($routeName, ['users.index', 'users.show']) ? 'active' : '' }}">
@@ -325,7 +341,7 @@
                         Gate::check('manage seo settings') ||
                         Gate::check('manage google recaptcha settings'))
                     <li class="pc-item pc-caption">
-                        <label>{{ __('System Settings') }}</label>
+                        <label>{{ (Auth::user()->type == 'owner') ? __('Marketing & CMS') : __('System Settings') }}</label>
                         <i class="ti ti-chart-arcs"></i>
                     </li>
 
@@ -376,7 +392,7 @@
                             </ul>
                         </li>
                     @endif
-                    @if (Auth::user()->type == 'super admin' || $pricing_feature_settings == 'on')
+                    @if (Auth::user()->type == 'super admin')
                         @if (Gate::check('manage pricing packages') || Gate::check('manage pricing transation'))
                             <li
                                 class="pc-item pc-hasmenu {{ in_array($routeName, ['subscriptions.index', 'subscriptions.show', 'subscription.transaction']) ? 'pc-trigger active' : '' }}">
@@ -443,7 +459,7 @@
                             Gate::check('manage payment settings') ||
                             Gate::check('manage company settings') ||
                             Gate::check('manage seo settings') ||
-                            Gate::check('manage google recaptcha settings'))
+                            Gate::check('manage google recaptcha settings')) && Auth::user()->type == 'super admin')
                         <li class="pc-item {{ in_array($routeName, ['setting.index']) ? 'active' : '' }} ">
                             <a href="{{ route('setting.index') }}" class="pc-link">
                                 <span class="pc-micon"><i class="ti ti-settings"></i></span>

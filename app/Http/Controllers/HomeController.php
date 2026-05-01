@@ -77,6 +77,7 @@ class HomeController extends Controller
                 $result['totalExpense'] = Expense::where('parent_id', parentId())->sum('amount');
                 $result['incomeExpenseByMonth'] = $this->incomeByMonth();
                 $result['settings'] = settings();
+                $result['subscription'] = Subscription::find(Auth::user()->subscription);
 
                 return view('dashboard.index', compact('result'));
             }
