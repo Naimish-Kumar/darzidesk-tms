@@ -521,8 +521,7 @@ class SettingController extends Controller
                             parentId(),
                         ]
                     );
-                }
-            }
+                    }
             }
         }
         clearSettingsCache();
@@ -531,7 +530,7 @@ class SettingController extends Controller
 
     //    ---------------------- Company  --------------------------------------------------------
 
-
+    
 
     public function companyData(Request $request)
     {
