@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\ParentIdTrait;
+
 class Measurement extends Model
 {
     use HasFactory;
+    use ParentIdTrait;
+
     protected $fillable=[
         'measurement_id',
         'customer',
@@ -17,6 +21,11 @@ class Measurement extends Model
         'measurement_detail',
         'parent_id',
     ];
+
+    protected $casts = [
+        'measurement_detail' => 'array',
+    ];
+
 
     public function customers()
     {

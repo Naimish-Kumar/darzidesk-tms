@@ -49,17 +49,9 @@ class ExpenseController extends Controller
                 return redirect()->back()->with('error', $messages->first());
             }
 
-            if (!empty($request->receipt)) {
-                $receiptFilenameWithExt = $request->file('receipt')->getClientOriginalName();
-                $receiptFilename = pathinfo($receiptFilenameWithExt, PATHINFO_FILENAME);
-                $receiptExtension = $request->file('receipt')->getClientOriginalExtension();
-                $receiptFileName = $receiptFilename . '_' . time() . '.' . $receiptExtension;
-                $dir = storage_path('upload/receipt');
-                if (!file_exists($dir)) {
-                    mkdir($dir, 0777, true);
-                }
+            if ($request->hasFile('receipt')) {
+                $receiptFileName = $request->file('receipt')->hashName();
                 $request->file('receipt')->storeAs('upload/receipt/', $receiptFileName);
-
             }
 
             $expense = new Expense();
@@ -71,7 +63,7 @@ class ExpenseController extends Controller
             $expense->date = $request->date;
             $expense->receipt = !empty($request->receipt) ? $receiptFileName : '';
             $expense->notes = $request->notes;
-            $expense->parent_id = parentId();
+
             $expense->save();
 
             return redirect()->back()->with('success', __('Expense successfully created.'));
@@ -123,17 +115,10 @@ class ExpenseController extends Controller
             }
             $id = decrypt($id);
             $expense = Expense::find($id);
-            if (!empty($request->receipt)) {
-                $receiptFilenameWithExt = $request->file('receipt')->getClientOriginalName();
-                $receiptFilename = pathinfo($receiptFilenameWithExt, PATHINFO_FILENAME);
-                $receiptExtension = $request->file('receipt')->getClientOriginalExtension();
-                $receiptFileName = $receiptFilename . '_' . time() . '.' . $receiptExtension;
-                $dir = storage_path('upload/receipt');
-                if (!file_exists($dir)) {
-                    mkdir($dir, 0777, true);
-                }
+            if ($request->hasFile('receipt')) {
+                $receiptFileName = $request->file('receipt')->hashName();
                 $request->file('receipt')->storeAs('upload/receipt/', $receiptFileName);
-                $expense->receipt = !empty($request->receipt) ? $receiptFileName : '';
+                $expense->receipt = $receiptFileName;
             }
 
             $expense->title = $request->title;

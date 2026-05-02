@@ -18,6 +18,8 @@ use Carbon\Carbon;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -122,102 +124,99 @@ if (!function_exists('settingsKeys')) {
 if (!function_exists('settings')) {
     function settings()
     {
-        $settingData = DB::table('settings');
-        if (\Auth::check()) {
-            $userId = parentId();
-            $settingData = $settingData->where('parent_id', $userId);
-        } else {
-            $settingData = $settingData->where('parent_id', 1);
-        }
-        $settingData = $settingData->get();
-        $details = settingsKeys();
+        $userId = (\Auth::check()) ? parentId() : 1;
+        
+        return Cache::remember('settings_' . $userId, 3600, function () use ($userId) {
+            $settingData = DB::table('settings')->where('parent_id', $userId)->get();
+            $details = settingsKeys();
 
-        foreach ($settingData as $row) {
-            $details[$row->name] = $row->value;
-        }
+            foreach ($settingData as $row) {
+                $details[$row->name] = $row->value;
+            }
 
-        config(
-            [
-                'captcha.secret' => $details['recaptcha_secret'],
-                'captcha.sitekey' => $details['recaptcha_key'],
-                'options' => [
-                    'timeout' => 30,
-                ]
-            ]
-        );
+            config([
+                'captcha.secret' => $details['recaptcha_secret'] ?? '',
+                'captcha.sitekey' => $details['recaptcha_key'] ?? '',
+                'options' => ['timeout' => 30]
+            ]);
 
-        return $details;
+            return $details;
+        });
     }
 }
 
 if (!function_exists('subscriptionPaymentSettings')) {
     function subscriptionPaymentSettings()
     {
-        $settingData = DB::table('settings')->where('type', 'payment')->where('parent_id', '=', 1)->get();
-        $result = [
-            'CURRENCY' => "USD",
-            'CURRENCY_SYMBOL' => "$",
-            'STRIPE_PAYMENT' => "off",
-            'STRIPE_KEY' => "",
-            'STRIPE_SECRET' => "",
-            "paypal_payment" => "off",
-            "paypal_mode" => "",
-            "paypal_client_id" => "",
-            "paypal_secret_key" => "",
-            "bank_transfer_payment" => "off",
-            "bank_name" => "",
-            "bank_holder_name" => "",
-            "bank_account_number" => "",
-            "bank_ifsc_code" => "",
-            "bank_other_details" => "",
-            "flutterwave_payment" => "off",
-            "flutterwave_public_key" => "",
-            "flutterwave_secret_key" => "",
-            "paystack_payment" => "off",
-            "paystack_public_key" => "",
-            "paystack_secret_key" => "",
-        ];
+        return Cache::remember('subscription_payment_settings', 3600, function () {
+            $settingData = DB::table('settings')->where('type', 'payment')->where('parent_id', '=', 1)->get();
+            $result = [
+                'CURRENCY' => "USD",
+                'CURRENCY_SYMBOL' => "$",
+                'STRIPE_PAYMENT' => "off",
+                'STRIPE_KEY' => "",
+                'STRIPE_SECRET' => "",
+                "paypal_payment" => "off",
+                "paypal_mode" => "",
+                "paypal_client_id" => "",
+                "paypal_secret_key" => "",
+                "bank_transfer_payment" => "off",
+                "bank_name" => "",
+                "bank_holder_name" => "",
+                "bank_account_number" => "",
+                "bank_ifsc_code" => "",
+                "bank_other_details" => "",
+                "flutterwave_payment" => "off",
+                "flutterwave_public_key" => "",
+                "flutterwave_secret_key" => "",
+                "paystack_payment" => "off",
+                "paystack_public_key" => "",
+                "paystack_secret_key" => "",
+            ];
 
-        foreach ($settingData as $setting) {
-            $result[$setting->name] = $setting->value;
-        }
+            foreach ($settingData as $setting) {
+                $result[$setting->name] = $setting->value;
+            }
 
-        return $result;
+            return $result;
+        });
     }
 }
 
 if (!function_exists('invoicePaymentSettings')) {
     function invoicePaymentSettings($id)
     {
-        $settingData = DB::table('settings')->where('type', 'payment')->where('parent_id', $id)->get();
-        $result = [
-            'CURRENCY' => "USD",
-            'CURRENCY_SYMBOL' => "$",
-            'STRIPE_PAYMENT' => "off",
-            'STRIPE_KEY' => "",
-            'STRIPE_SECRET' => "",
-            "paypal_payment" => "off",
-            "paypal_mode" => "",
-            "paypal_client_id" => "",
-            "paypal_secret_key" => "",
-            "bank_transfer_payment" => "off",
-            "bank_name" => "",
-            "bank_holder_name" => "",
-            "bank_account_number" => "",
-            "bank_ifsc_code" => "",
-            "bank_other_details" => "",
-            "flutterwave_payment" => "off",
-            "flutterwave_public_key" => "",
-            "flutterwave_secret_key" => "",
-            "paystack_payment" => "off",
-            "paystack_public_key" => "",
-            "paystack_secret_key" => "",
-        ];
+        return Cache::remember('invoice_payment_settings_' . $id, 3600, function () use ($id) {
+            $settingData = DB::table('settings')->where('type', 'payment')->where('parent_id', $id)->get();
+            $result = [
+                'CURRENCY' => "USD",
+                'CURRENCY_SYMBOL' => "$",
+                'STRIPE_PAYMENT' => "off",
+                'STRIPE_KEY' => "",
+                'STRIPE_SECRET' => "",
+                "paypal_payment" => "off",
+                "paypal_mode" => "",
+                "paypal_client_id" => "",
+                "paypal_secret_key" => "",
+                "bank_transfer_payment" => "off",
+                "bank_name" => "",
+                "bank_holder_name" => "",
+                "bank_account_number" => "",
+                "bank_ifsc_code" => "",
+                "bank_other_details" => "",
+                "flutterwave_payment" => "off",
+                "flutterwave_public_key" => "",
+                "flutterwave_secret_key" => "",
+                "paystack_payment" => "off",
+                "paystack_public_key" => "",
+                "paystack_secret_key" => "",
+            ];
 
-        foreach ($settingData as $row) {
-            $result[$row->name] = $row->value;
-        }
-        return $result;
+            foreach ($settingData as $row) {
+                $result[$row->name] = $row->value;
+            }
+            return $result;
+        });
     }
 }
 
@@ -560,26 +559,34 @@ if (!function_exists('settingsById')) {
 
     function settingsById($userId)
     {
-        $data = DB::table('settings');
-        $data = $data->where('parent_id', $userId);
-        $data = $data->get();
-        $settings = settingsKeys();
+        return Cache::remember('settings_' . $userId, 3600, function () use ($userId) {
+            $data = DB::table('settings')->where('parent_id', $userId)->get();
+            $settings = settingsKeys();
 
-        foreach ($data as $row) {
-            $settings[$row->name] = $row->value;
+            foreach ($data as $row) {
+                $settings[$row->name] = $row->value;
+            }
+
+            config([
+                'captcha.secret' => $settings['recaptcha_key'] ?? '',
+                'captcha.sitekey' => $settings['recaptcha_secret'] ?? '',
+                'options' => ['timeout' => 30],
+            ]);
+
+            return $settings;
+        });
+    }
+}
+
+if (!function_exists('clearSettingsCache')) {
+    function clearSettingsCache($userId = null)
+    {
+        $userId = $userId ?? (Auth::check() ? parentId() : 1);
+        Cache::forget('settings_' . $userId);
+        Cache::forget('invoice_payment_settings_' . $userId);
+        if ($userId == 1) {
+            Cache::forget('subscription_payment_settings');
         }
-
-        config(
-            [
-                'captcha.secret' => $settings['recaptcha_key'],
-                'captcha.sitekey' => $settings['recaptcha_secret'],
-                'options' => [
-                    'timeout' => 30,
-                ],
-            ]
-        );
-
-        return $settings;
     }
 }
 

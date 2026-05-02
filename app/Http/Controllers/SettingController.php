@@ -42,13 +42,10 @@ class SettingController extends Controller
 
 
         if ($request->hasFile('profile')) {
-            $filenameWithExt = $request->file('profile')->getClientOriginalName();
-            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('profile')->getClientOriginalExtension();
-            $fileNameToStore = $filename . '_' . time() . '.' . $extension;
+            $fileNameToStore = $request->file('profile')->hashName();
 
             $dir = storage_path('uploads/profile/');
-            $image_path = $dir . $loginUser->avatar;
+            $image_path = $dir . $loginUser->profile;
 
             if (\File::exists($image_path)) {
                 \File::delete($image_path);
@@ -68,7 +65,7 @@ class SettingController extends Controller
         $user->email = $request->email;
         $user->phone_number = $request->phone_number;
         $user->save();
-
+        clearSettingsCache();
 
         return redirect()->back()->with('success', 'User profile settings successfully updated.')->with('tab', 'user_profile_settings');
     }
@@ -174,7 +171,7 @@ class SettingController extends Controller
         // Upload and store logo file names in DB
         foreach ($fileFields as $key => $field) {
             if ($request->hasFile($field)) {
-                $filename = ($userType === 'super admin') ? $field . '.png' : $parentId . '_' . $field . '.png';
+                $filename = $request->file($field)->hashName();
                 $settingKey = ($userType === 'super admin') ? $field : 'company_' . $field;
                 $request->file($field)->storeAs('upload/logo/', $filename);
 
@@ -203,6 +200,7 @@ class SettingController extends Controller
                 );
             }
         }
+        clearSettingsCache();
 
         return redirect()->back()
             ->with('success', __('General setting successfully saved.'))
@@ -259,6 +257,7 @@ class SettingController extends Controller
                     );
                 }
             }
+            clearSettingsCache();
 
             return redirect()->back()->with('success', __('SMTP settings successfully saved.'))->with('tab', 'email_SMTP_settings');
         } else {
@@ -524,7 +523,9 @@ class SettingController extends Controller
                     );
                 }
             }
+            }
         }
+        clearSettingsCache();
         return redirect()->back()->with('success', __('Payment successfully saved.'))->with('tab', 'payment_settings');
     }
 
@@ -567,6 +568,7 @@ class SettingController extends Controller
                 );
             }
         }
+        clearSettingsCache();
         return redirect()->back()->with('success', __('Company setting successfully saved.'))->with('tab', 'company_settings');
     }
 
@@ -577,6 +579,7 @@ class SettingController extends Controller
         $user = \Auth::user();
         $user->lang = $lang;
         $user->save();
+        clearSettingsCache();
 
         return redirect()->back()->with('success', __('Language successfully changed.'));
     }
@@ -600,6 +603,7 @@ class SettingController extends Controller
                 );
             }
         }
+        clearSettingsCache();
 
         return redirect()->back()->with('success', __('Theme settings save successfully.'));
     }
@@ -626,15 +630,9 @@ class SettingController extends Controller
 
         $settings = $request->all();
         unset($settings['_token']);
-        if ($request->meta_seo_image) {
-            $seoFilenameWithExt = $request->file('meta_seo_image')->getClientOriginalName();
-            $seoFilename = pathinfo($seoFilenameWithExt, PATHINFO_FILENAME);
-            $supportExtension = $request->file('meta_seo_image')->getClientOriginalExtension();
-            $seoFileName = $seoFilename . '_' . time() . '.' . $supportExtension;
-
-
+        if ($request->hasFile('meta_seo_image')) {
+            $seoFileName = $request->file('meta_seo_image')->hashName();
             $request->file('meta_seo_image')->storeAs('upload/seo/', $seoFileName);
-
 
             Setting::updateOrCreate(
                 ['name' => 'meta_seo_image', 'parent_id' => parentId()],
@@ -651,6 +649,7 @@ class SettingController extends Controller
                 );
             }
         }
+        clearSettingsCache();
 
         return redirect()->back()->with('success', __('Site SEO settings save successfully.'))->with('tab', 'site_SEO_settings');
     }
@@ -693,6 +692,7 @@ class SettingController extends Controller
                 );
             }
         }
+        clearSettingsCache();
 
         return redirect()->back()->with('success', __('Google Recaptcha settings save successfully.'))->with('tab', 'google_recaptcha_settings');
     }
@@ -729,6 +729,7 @@ class SettingController extends Controller
                 );
             }
         }
+        clearSettingsCache();
 
         return redirect()->back()->with('success', __('Footer settings save successfully.'))->with('tab', $request->tab);
     }
@@ -781,6 +782,7 @@ class SettingController extends Controller
                 [$request->$key, $key, parentId()]
             );
         }
+        clearSettingsCache();
 
         return redirect()->back()->with('success', 'twilio settings updated successfully.')->with('tab', 'twilio');
     }

@@ -11,7 +11,7 @@ class NotificationController extends Controller
     public function index()
     {
         if (\Auth::user()->can('manage notification')) {
-            $notifications = Notification::where('parent_id', parentId())->orderBy('id', 'desc')->get();
+            $notifications = Notification::orderBy('id', 'desc')->get();
             return view('notification.index', compact('notifications'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
@@ -44,13 +44,13 @@ class NotificationController extends Controller
                 return redirect()->back()->with('error', $messages->first());
             }
 
-            $exist = Notification::where('parent_id', parentId())->where('module', $request->module)->first();
+            $exist = Notification::where('module', $request->module)->first();
             if (empty($exist)) {
                 $notification = new Notification();
                 $notification->module = $request->module;
                 $notification->subject = $request->subject;
                 $notification->message = $request->message;
-                $notification->parent_id = parentId();
+
                 $notification->save();
 
                 return redirect()->route('notification.index')->with('success', __('Notification successfully created.'));
@@ -72,7 +72,7 @@ class NotificationController extends Controller
         $id = decrypt($id);
         $notification = Notification::find($id);
         $short_code = $notification->short_code;
-        $notification->short_code = json_decode($notification->short_code);
+
 
         $Notifications = Notification::$modules;
         $notification_option = [];

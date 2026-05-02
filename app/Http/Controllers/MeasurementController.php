@@ -21,7 +21,7 @@ class MeasurementController extends Controller
             } elseif (\Auth::user()->type == 'employee') {
                 $measurements = Measurement::where('responsible', \Auth::user()->id)->orderBy('id', 'desc')->get();
             } else {
-                $measurements = Measurement::where('parent_id', parentId())->orderBy('id', 'desc')->get();
+                $measurements = Measurement::orderBy('id', 'desc')->get();
             }
             return view('measurement.index', compact('measurements'));
         } else {
@@ -87,8 +87,8 @@ class MeasurementController extends Controller
             $measurement->date = $request->date;
             $measurement->cloth_type = $request->cloth_type;
             $measurement->responsible = !empty($request->responsible) ? $request->responsible : 0;
-            $measurement->measurement_detail = json_encode($measurementDetail);
-            $measurement->parent_id = parentId();
+            $measurement->measurement_detail = $measurementDetail;
+
             $measurement->save();
 
 
@@ -176,7 +176,7 @@ class MeasurementController extends Controller
         if (\Auth::user()->can('show measurement')) {
             $id = Crypt::decrypt($ids);
             $measurement = Measurement::find($id);
-            $measurement->measurement_detail = json_decode($measurement->measurement_detail);
+
             return view('measurement.show', compact('measurement'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
@@ -198,7 +198,7 @@ class MeasurementController extends Controller
             $clothType = ClothType::where('parent_id', parentId())->get()->pluck('title', 'id');
             $clothType->prepend(__('Select Cloth Type'), '');
             $measurementNumber = $measurement->measurement_id;
-            $measurement->measurement_detail = json_decode($measurement->measurement_detail);
+
             return view('measurement.edit', compact('measurement', 'customer', 'user', 'clothType', 'measurementNumber'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
@@ -246,7 +246,7 @@ class MeasurementController extends Controller
             $measurement->date = $request->date;
             $measurement->cloth_type = $request->cloth_type;
             $measurement->responsible = !empty($request->responsible) ? $request->responsible : 0;
-            $measurement->measurement_detail = json_encode($measurementDetail);
+            $measurement->measurement_detail = $measurementDetail;
             $measurement->save();
             return redirect()->route('measurement.index')->with('success', __('Measurement successfully updated.'));
         } else {

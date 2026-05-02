@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\ParentIdTrait;
+
 class Notification extends Model
 {
     use HasFactory;
+    use ParentIdTrait;
+
 
     protected $fillable = [
         'module',
@@ -19,6 +23,11 @@ class Notification extends Model
         'enabled_sms',
         'parent_id',
     ];
+
+    protected $casts = [
+        'short_code' => 'array',
+    ];
+
 
     static $modules = [
         'user_create' =>

@@ -22,19 +22,16 @@ class InvoiceController extends Controller
         if (\Auth::user()->can('manage invoice')) {
             if (\Auth::user()->type == 'customer') {
                 $invoices = Invoice::where('customer_id', \Auth::user()->id)
-                    ->where('parent_id', parentId())
                     ->orderBy('id', 'desc')
                     ->get();
             }elseif (\Auth::user()->type == 'employee') {
                 $invoices = Invoice::whereHas('orders', function ($query) {
                     $query->where('responsible', \Auth::user()->id);
                 })
-                    ->where('parent_id', parentId())
                     ->orderBy('id', 'desc')
                     ->get();
             } else {
-                $invoices = Invoice::where('parent_id', parentId())
-                    ->orderBy('id', 'desc')
+                $invoices = Invoice::orderBy('id', 'desc')
                     ->get();
             }
             return view('invoice.index', compact('invoices'));
@@ -86,7 +83,7 @@ class InvoiceController extends Controller
                 $invoice->invoice_date = $request->invoice_date;
                 $invoice->due_date = $request->due_date;
                 $invoice->status = 'unpaid';
-                $invoice->parent_id = parentId();
+
                 $invoice->save();
 
                 if (!empty($invoice)) {
@@ -266,15 +263,8 @@ class InvoiceController extends Controller
                 return redirect()->back()->with('error', $messages->first());
             }
 
-            if (!empty($request->receipt)) {
-                $receiptFilenameWithExt = $request->file('receipt')->getClientOriginalName();
-                $receiptFilename = pathinfo($receiptFilenameWithExt, PATHINFO_FILENAME);
-                $receiptExtension = $request->file('receipt')->getClientOriginalExtension();
-                $receiptFileName = $receiptFilename . '_' . time() . '.' . $receiptExtension;
-                $dir = storage_path('upload/receipt');
-                if (!file_exists($dir)) {
-                    mkdir($dir, 0777, true);
-                }
+            if ($request->hasFile('receipt')) {
+                $receiptFileName = $request->file('receipt')->hashName();
                 $request->file('receipt')->storeAs('upload/receipt/', $receiptFileName);
             }
 
@@ -286,7 +276,7 @@ class InvoiceController extends Controller
             $payment->payment_date = $request->payment_date;
             $payment->notes = $request->notes;
             $payment->payment_status = 'Success';
-            $payment->parent_id = parentId();
+
             $payment->save();
             $invoice = Invoice::find($invoice_id);
             if ($invoice->getInvoiceDueAmount() <= 0) {
@@ -432,15 +422,8 @@ class InvoiceController extends Controller
         $payment['notes'] = $request->notes;
         $payment['payment_status'] = 'pending';
 
-        if (!empty($request->receipt)) {
-            $tenantFilenameWithExt = $request->file('receipt')->getClientOriginalName();
-            $tenantFilename = pathinfo($tenantFilenameWithExt, PATHINFO_FILENAME);
-            $tenantExtension = $request->file('receipt')->getClientOriginalExtension();
-            $tenantFileName = $tenantFilename . '_' . time() . '.' . $tenantExtension;
-            $dir = storage_path('upload/receipt');
-            if (!file_exists($dir)) {
-                mkdir($dir, 0777, true);
-            }
+        if ($request->hasFile('receipt')) {
+            $tenantFileName = $request->file('receipt')->hashName();
             $request->file('receipt')->storeAs('upload/receipt/', $tenantFileName);
             $payment['receipt'] = $tenantFileName;
         }

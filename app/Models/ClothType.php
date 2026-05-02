@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\ParentIdTrait;
+
 class ClothType extends Model
 {
     use HasFactory;
+    use ParentIdTrait;
+
     protected $fillable=[
         'title',
         'gender',

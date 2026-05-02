@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\ParentIdTrait;
+
 class Order extends Model
 {
     use HasFactory;
+    use ParentIdTrait;
+
     protected $fillable = [
         'order_id',
         'customer_id',
@@ -24,6 +28,11 @@ class Order extends Model
         'measurement',
         'parent_id',
     ];
+    
+    protected $casts = [
+        'measurement' => 'array',
+    ];
+
 
     public static $status = [
         'pending' => 'Pending',

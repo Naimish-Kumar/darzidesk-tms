@@ -16,17 +16,14 @@ class OrderController extends Controller
     {
         if (\Auth::user()->type == 'customer') {
             return Order::where('customer_id', \Auth::user()->id)
-                ->where('parent_id', parentId())
                 ->orderBy('id', 'desc')
                 ->get();
         } elseif (\Auth::user()->type == 'employee') {
             return Order::where('responsible', \Auth::user()->id)
-                ->where('parent_id', parentId())
                 ->orderBy('id', 'desc')
                 ->get();
         } else {
-            return Order::where('parent_id', parentId())
-                ->orderBy('id', 'desc')
+            return Order::orderBy('id', 'desc')
                 ->get();
         }
     }
@@ -127,8 +124,8 @@ class OrderController extends Controller
             $order->status = $request->status;
             $order->notes = $request->notes;
             $order->responsible = !empty($request->responsible) ? $request->responsible : 0;
-            $order->measurement = json_encode($measurementDetail);
-            $order->parent_id = parentId();
+            $order->measurement = $measurementDetail;
+
             $order->save();
 
 
@@ -140,28 +137,14 @@ class OrderController extends Controller
                 $measurementDetails .= $service['type'] . ':' . ' ' . $service['measurement'] . ", Unit: " . $service['unit'] . "<br>";
             }
 
-            if (!empty($request->fabric_attachment)) {
-                $tenantFilenameWithExt = $request->file('fabric_attachment')->getClientOriginalName();
-                $tenantFilename = pathinfo($tenantFilenameWithExt, PATHINFO_FILENAME);
-                $tenantExtension = $request->file('fabric_attachment')->getClientOriginalExtension();
-                $tenantFileName = $tenantFilename . '_' . time() . '.' . $tenantExtension;
-                $dir = storage_path('upload/fabric_attachment');
-                if (!file_exists($dir)) {
-                    mkdir($dir, 0777, true);
-                }
+            if ($request->hasFile('fabric_attachment')) {
+                $tenantFileName = $request->file('fabric_attachment')->hashName();
                 $request->file('fabric_attachment')->storeAs('upload/fabric_attachment/', $tenantFileName);
                 $order->fabric_attachment = $tenantFileName;
                 $order->save();
             }
-            if (!empty($request->sewing_pattern)) {
-                $tenantFilenameWithExt = $request->file('sewing_pattern')->getClientOriginalName();
-                $tenantFilename = pathinfo($tenantFilenameWithExt, PATHINFO_FILENAME);
-                $tenantExtension = $request->file('sewing_pattern')->getClientOriginalExtension();
-                $tenantFileName = $tenantFilename . '_' . time() . '.' . $tenantExtension;
-                $dir = storage_path('upload/sewing_pattern');
-                if (!file_exists($dir)) {
-                    mkdir($dir, 0777, true);
-                }
+            if ($request->hasFile('sewing_pattern')) {
+                $tenantFileName = $request->file('sewing_pattern')->hashName();
                 $request->file('sewing_pattern')->storeAs('upload/sewing_pattern/', $tenantFileName);
                 $order->sewing_pattern = $tenantFileName;
                 $order->save();
@@ -238,7 +221,7 @@ class OrderController extends Controller
         if (\Auth::user()->can('show order')) {
             $id = Crypt::decrypt($ids);
             $order = Order::find($id);
-            $order->measurement = json_decode($order->measurement);
+
             return view('order.show', compact('order'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
@@ -250,7 +233,7 @@ class OrderController extends Controller
         if (\Auth::user()->can('edit order')) {
             $id = Crypt::decrypt($ids);
             $order = Order::find($id);
-            $order->measurement = json_decode($order->measurement);
+
             $customer = User::where('parent_id', parentId())->where('type', 'customer')->get()->pluck('name', 'id');
             $customer->prepend(__('Select Customer'), '');
 
@@ -320,31 +303,16 @@ class OrderController extends Controller
             $order->status = $request->status;
             $order->notes = $request->notes;
             $order->responsible = !empty($request->responsible) ? $request->responsible : 0;
-            $order->measurement = json_encode($measurementDetail);
+            $order->measurement = $measurementDetail;
             $order->save();
-            if (!empty($request->fabric_attachment)) {
-                $file = $request->file('fabric_attachment');
-                $tenantFilenameWithExt = $file->getClientOriginalName();
-                $tenantFilename = pathinfo($tenantFilenameWithExt, PATHINFO_FILENAME);
-                $tenantExtension = $request->file('fabric_attachment')->getClientOriginalExtension();
-                $tenantFileName = $tenantFilename . '_' . time() . '.' . $tenantExtension;
-                $dir = storage_path('upload/fabric_attachment');
-                if (!file_exists($dir)) {
-                    mkdir($dir, 0777, true);
-                }
+            if ($request->hasFile('fabric_attachment')) {
+                $tenantFileName = $request->file('fabric_attachment')->hashName();
                 $request->file('fabric_attachment')->storeAs('upload/fabric_attachment/', $tenantFileName);
                 $order->fabric_attachment = $tenantFileName;
                 $order->save();
             }
-            if (!empty($request->sewing_pattern)) {
-                $tenantFilenameWithExt = $request->file('sewing_pattern')->getClientOriginalName();
-                $tenantFilename = pathinfo($tenantFilenameWithExt, PATHINFO_FILENAME);
-                $tenantExtension = $request->file('sewing_pattern')->getClientOriginalExtension();
-                $tenantFileName = $tenantFilename . '_' . time() . '.' . $tenantExtension;
-                $dir = storage_path('upload/sewing_pattern');
-                if (!file_exists($dir)) {
-                    mkdir($dir, 0777, true);
-                }
+            if ($request->hasFile('sewing_pattern')) {
+                $tenantFileName = $request->file('sewing_pattern')->hashName();
                 $request->file('sewing_pattern')->storeAs('upload/sewing_pattern/', $tenantFileName);
                 $order->sewing_pattern = $tenantFileName;
                 $order->save();

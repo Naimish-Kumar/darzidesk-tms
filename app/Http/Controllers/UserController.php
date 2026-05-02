@@ -81,15 +81,8 @@ class UserController extends Controller
                 defaultCustomerCreate($user->id);
                 defaultEmployeeCreate($user->id);
 
-                if (!empty($request->profile)) {
-                    $tenantFilenameWithExt = $request->file('profile')->getClientOriginalName();
-                    $tenantFilename = pathinfo($tenantFilenameWithExt, PATHINFO_FILENAME);
-                    $tenantExtension = $request->file('profile')->getClientOriginalExtension();
-                    $tenantFileName = $tenantFilename . '_' . time() . '.' . $tenantExtension;
-                    $dir = storage_path('upload/profile');
-                    if (!file_exists($dir)) {
-                        mkdir($dir, 0777, true);
-                    }
+                if ($request->hasFile('profile')) {
+                    $tenantFileName = $request->file('profile')->hashName();
                     $request->file('profile')->storeAs('upload/profile/', $tenantFileName);
                     $user->profile = $tenantFileName;
                     $user->save();
@@ -172,15 +165,8 @@ class UserController extends Controller
                 $user->save();
                 $user->assignRole($userRole);
 
-                if (!empty($request->profile)) {
-                    $tenantFilenameWithExt = $request->file('profile')->getClientOriginalName();
-                    $tenantFilename = pathinfo($tenantFilenameWithExt, PATHINFO_FILENAME);
-                    $tenantExtension = $request->file('profile')->getClientOriginalExtension();
-                    $tenantFileName = $tenantFilename . '_' . time() . '.' . $tenantExtension;
-                    $dir = storage_path('upload/profile');
-                    if (!file_exists($dir)) {
-                        mkdir($dir, 0777, true);
-                    }
+                if ($request->hasFile('profile')) {
+                    $tenantFileName = $request->file('profile')->hashName();
                     $request->file('profile')->storeAs('upload/profile/', $tenantFileName);
                     $user->profile = $tenantFileName;
                     $user->save();
@@ -275,15 +261,8 @@ class UserController extends Controller
                 $userData = $request->all();
                 $user->fill($userData)->save();
 
-                if ($request->profile != '') {
-                    $tenantFilenameWithExt = $request->file('profile')->getClientOriginalName();
-                    $tenantFilename = pathinfo($tenantFilenameWithExt, PATHINFO_FILENAME);
-                    $tenantExtension = $request->file('profile')->getClientOriginalExtension();
-                    $tenantFileName = $tenantFilename . '_' . time() . '.' . $tenantExtension;
-                    $dir = storage_path('upload/profile');
-                    if (!file_exists($dir)) {
-                        mkdir($dir, 0777, true);
-                    }
+                if ($request->hasFile('profile')) {
+                    $tenantFileName = $request->file('profile')->hashName();
                     $request->file('profile')->storeAs('upload/profile/', $tenantFileName);
                     $user->profile = $tenantFileName;
                     $user->save();
@@ -328,15 +307,8 @@ class UserController extends Controller
                 $user->type = $userRole->name;
                 $user->save();
 
-                if ($request->profile != '') {
-                    $tenantFilenameWithExt = $request->file('profile')->getClientOriginalName();
-                    $tenantFilename = pathinfo($tenantFilenameWithExt, PATHINFO_FILENAME);
-                    $tenantExtension = $request->file('profile')->getClientOriginalExtension();
-                    $tenantFileName = $tenantFilename . '_' . time() . '.' . $tenantExtension;
-                    $dir = storage_path('upload/profile');
-                    if (!file_exists($dir)) {
-                        mkdir($dir, 0777, true);
-                    }
+                if ($request->hasFile('profile')) {
+                    $tenantFileName = $request->file('profile')->hashName();
                     $request->file('profile')->storeAs('upload/profile/', $tenantFileName);
                     $user->profile = $tenantFileName;
                     $user->save();
