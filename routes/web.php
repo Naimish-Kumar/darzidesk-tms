@@ -420,6 +420,17 @@ Route::group(
 );
 
 Route::get('page/{slug}', [PageController::class, 'page'])->name('page');
+
+Route::get('download-apk', function () {
+    $file = public_path('download/darzidesk.apk');
+    if (file_exists($file)) {
+        return response()->download($file, 'darzidesk.apk', [
+            'Content-Type' => 'application/vnd.android.package-archive',
+        ]);
+    }
+    return abort(404);
+})->name('download.apk');
+
 //-------------------------------FAQ-------------------------------------------
 Route::impersonate();
 

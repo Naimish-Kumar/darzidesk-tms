@@ -883,7 +883,7 @@
                         Take the power of Darzidesk with you. Our new mobile app allows you to track orders, update measurements, and manage your staff anytime, anywhere.
                     </p>
                     <div class="d-flex justify-content-center gap-3 flex-wrap wow fadeInUp" data-wow-delay="0.6s">
-                        <a href="{{ asset('download/darzidesk.apk') }}" download="darzidesk.apk" id="downloadApkBtn" class="btn btn-light btn-lg d-inline-flex align-items-center" style="border-radius: 12px; padding: 12px 24px;">
+                        <a href="{{ route('download.apk') }}" id="downloadApkBtn" class="btn btn-light btn-lg d-inline-flex align-items-center" style="border-radius: 12px; padding: 12px 24px;">
                             <i class="ti ti-brand-android me-2 f-30" style="color: #40B0AC;"></i>
                             <div class="text-start">
                                 <small class="d-block lh-1 text-muted" style="font-size: 10px; text-transform: uppercase;">Download for</small>
@@ -895,14 +895,14 @@
                                 const btn = this;
                                 const originalContent = btn.innerHTML;
                                 
-                                // Show loading state without alert
+                                // Show loading state briefly to confirm click
                                 btn.style.pointerEvents = 'none';
                                 btn.innerHTML = '<i class="ti ti-loader me-2 f-30 spin" style="color: #40B0AC;"></i> <div class="text-start"><small class="d-block lh-1 text-muted">Starting...</small><span class="fw-bold" style="color: #333;">Downloading App</span></div>';
                                 
                                 setTimeout(() => {
                                     btn.style.pointerEvents = 'auto';
                                     btn.innerHTML = originalContent;
-                                }, 3000);
+                                }, 4000);
                             });
                         </script>
                         <a href="#" class="btn btn-outline-light btn-lg d-inline-flex align-items-center opacity-75" style="border-radius: 12px; padding: 12px 24px; pointer-events: none; border-style: dashed;">
