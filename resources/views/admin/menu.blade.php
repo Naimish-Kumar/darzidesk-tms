@@ -71,7 +71,8 @@
                                         <a class="pc-link" href="{{ route('role.index') }}">{{ __('Roles') }} </a>
                                     </li>
                                 @endif
-                                @if ($pricing_feature_settings == 'off' || ($subscription && $subscription->enabled_logged_history == 1))
+                                @if ($pricing_feature_settings == 'off' || optional($subscription)->enabled_logged_history == 1)
+
                                     @if (Gate::check('manage logged history'))
                                         <li
                                             class="pc-item  {{ in_array($routeName, ['logged.history']) ? 'active' : '' }}">

@@ -303,7 +303,7 @@ if (!function_exists('priceFormat')) {
 if (!function_exists('parentId')) {
     function parentId()
     {
-        if (\Auth::user()->type == 'owner' || \Auth::user()->type == 'super admin' || \Auth::user()->parent_id == 1) {
+        if (\Auth::user()->type == 'owner' || \Auth::user()->type == 'super admin') {
             return \Auth::user()->id;
         } else {
             return \Auth::user()->parent_id;
