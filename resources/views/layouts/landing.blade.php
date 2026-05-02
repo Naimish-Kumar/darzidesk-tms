@@ -873,6 +873,37 @@
     @endif
     <!-- [ section ] End -->
     <!-- [ footer ] start -->
+    <!-- [ Mobile App Section ] start -->
+    <section class="bg-primary text-white py-5" style="background: linear-gradient(135deg, #40B0AC 0%, #2D8A87 100%) !important;">
+        <div class="container text-center">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <h2 class="text-white mb-4 wow fadeInUp" data-wow-delay="0.2s">Manage Your Tailoring Business on the Go!</h2>
+                    <p class="lead mb-5 wow fadeInUp" data-wow-delay="0.4s text-white-50">
+                        Take the power of Darzidesk with you. Our new mobile app allows you to track orders, update measurements, and manage your staff anytime, anywhere.
+                    </p>
+                    <div class="d-flex justify-content-center gap-3 flex-wrap wow fadeInUp" data-wow-delay="0.6s">
+                        <a href="{{ asset('download/darzidesk.apk') }}" class="btn btn-light btn-lg d-inline-flex align-items-center" style="border-radius: 12px; padding: 12px 24px;">
+                            <i class="ti ti-brand-android me-2 f-30" style="color: #40B0AC;"></i>
+                            <div class="text-start">
+                                <small class="d-block lh-1 text-muted" style="font-size: 10px; text-transform: uppercase;">Download for</small>
+                                <span class="fw-bold" style="color: #333;">Android (APK)</span>
+                            </div>
+                        </a>
+                        <a href="#" class="btn btn-outline-light btn-lg d-inline-flex align-items-center opacity-75" style="border-radius: 12px; padding: 12px 24px; pointer-events: none; border-style: dashed;">
+                            <i class="ti ti-brand-apple me-2 f-30"></i>
+                            <div class="text-start">
+                                <small class="d-block lh-1" style="font-size: 10px; text-transform: uppercase;">Coming Soon on</small>
+                                <span class="fw-bold">App Store</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- [ Mobile App Section ] end -->
+
     <footer class="bg-dark footer">
         @php
             $Section_10 = App\Models\HomePage::where('section', 'Section 10')->first();
