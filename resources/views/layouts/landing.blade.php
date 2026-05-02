@@ -892,20 +892,17 @@
                         </a>
                         <script>
                             document.getElementById('downloadApkBtn').addEventListener('click', function(e) {
-                                // Show a temporary toast or message
                                 const btn = this;
                                 const originalContent = btn.innerHTML;
                                 
-                                // Simple feedback on the button
+                                // Show loading state without alert
                                 btn.style.pointerEvents = 'none';
                                 btn.innerHTML = '<i class="ti ti-loader me-2 f-30 spin" style="color: #40B0AC;"></i> <div class="text-start"><small class="d-block lh-1 text-muted">Starting...</small><span class="fw-bold" style="color: #333;">Downloading App</span></div>';
                                 
                                 setTimeout(() => {
                                     btn.style.pointerEvents = 'auto';
                                     btn.innerHTML = originalContent;
-                                    // Optional: Show a toast if your site has a toast system, or a simple alert
-                                    alert('Your download has started! Please check your notification bar.');
-                                }, 2000);
+                                }, 3000);
                             });
                         </script>
                         <a href="#" class="btn btn-outline-light btn-lg d-inline-flex align-items-center opacity-75" style="border-radius: 12px; padding: 12px 24px; pointer-events: none; border-style: dashed;">
