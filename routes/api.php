@@ -71,6 +71,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/invoices/{id}', [\App\Http\Controllers\Api\InvoiceController::class, 'show']);
     Route::get('/invoices/{id}/receipt', [\App\Http\Controllers\Api\InvoiceController::class, 'receipt'])->name('api.receipt');
 
+    // Customer Routes
+    Route::get('/customers', [\App\Http\Controllers\Api\CustomerController::class, 'index']);
+    Route::post('/customers', [\App\Http\Controllers\Api\CustomerController::class, 'store']);
+
+    // Cloth Type Routes
+    Route::get('/cloth-types', [\App\Http\Controllers\Api\ClothTypeController::class, 'index']);
+
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
