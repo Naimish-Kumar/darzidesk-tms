@@ -524,6 +524,43 @@ class SettingController extends Controller
                     }
             }
         }
+
+        //For Razorpay
+        if (isset($request->razorpay_payment)) {
+            $validator = \Validator::make(
+                $request->all(),
+                [
+                    'razorpay_key' => 'required',
+                    'razorpay_secret' => 'required',
+                ]
+            );
+            if ($validator->fails()) {
+                $messages = $validator->getMessageBag();
+                return redirect()->back()->with('error', $messages->first());
+            }
+
+            $razorpayArray = [
+                'razorpay_payment' => $request->razorpay_payment ?? 'off',
+                'razorpay_key' => $request->razorpay_key,
+                'razorpay_secret' => $request->razorpay_secret,
+            ];
+
+            foreach ($razorpayArray as $key => $val) {
+                if (!empty($val)) {
+
+                    \DB::insert(
+                        'insert into settings (`value`, `name`, `type`,`parent_id`) values (?, ?, ?,?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) ',
+                        [
+                            $val,
+                            $key,
+                            'payment',
+                            parentId(),
+                        ]
+                    );
+                }
+            }
+        }
+
         clearSettingsCache();
         return redirect()->back()->with('success', __('Payment successfully saved.'))->with('tab', 'payment_settings');
     }

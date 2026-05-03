@@ -17,6 +17,17 @@
                         show: false
                     }
                 },
+                responsive: [{
+                    breakpoint: 576,
+                    options: {
+                        chart: {
+                            height: 300
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }],
                 colors: ['#2ca58d', '#e74c3c'], // Income (green), Expense (red)
                 dataLabels: {
                     enabled: false
@@ -91,6 +102,17 @@
                         show: false
                     }
                 },
+                responsive: [{
+                    breakpoint: 576,
+                    options: {
+                        chart: {
+                            height: 300
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }],
                 colors: ['#4CAF50', '#F44336'], // Completed (green), Pending (red)
                 dataLabels: {
                     enabled: false
@@ -170,7 +192,7 @@
 @section('content')
     <div class="row">
         @if (\Auth::user()->type == 'owner')
-            <div class="col-lg-3 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -190,7 +212,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -210,7 +232,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -229,7 +251,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -248,7 +270,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -283,7 +305,7 @@
                 </div>
             </div>
         @elseif (\Auth::user()->type == 'employee')
-            <div class="col-lg-3 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -303,7 +325,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -323,7 +345,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -343,7 +365,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -396,11 +418,11 @@
                                         <tr>
                                             <th>{{ __('ID') }}</th>
                                             <th>{{ __('Customer') }}</th>
-                                            <th>{{ __('Order Date') }}</th>
+                                            <th class="d-none d-md-table-cell">{{ __('Order Date') }}</th>
                                             <th>{{ __('Deadline') }}</th>
-                                            <th>{{ __('Cloth Type') }}</th>
-                                            <th>{{ __('Gender') }}</th>
-                                            <th>{{ __('Responsible') }}</th>
+                                            <th class="d-none d-lg-table-cell">{{ __('Cloth Type') }}</th>
+                                            <th class="d-none d-lg-table-cell">{{ __('Gender') }}</th>
+                                            <th class="d-none d-lg-table-cell">{{ __('Responsible') }}</th>
                                             <th>{{ __('Status') }}</th>
                                             <th>{{ __('Action') }}</th>
                                         </tr>
@@ -410,11 +432,11 @@
                                             <tr>
                                                 <td>{{ orderPrefix() . $order->order_id }} </td>
                                                 <td>{{ !empty($order->customers) ? $order->customers->name : '-' }} </td>
-                                                <td>{{ dateFormat($order->order_date) }}</td>
+                                                <td class="d-none d-md-table-cell">{{ dateFormat($order->order_date) }}</td>
                                                 <td>{{ dateFormat($order->deadline_date) }}</td>
-                                                <td>{{ !empty($order->clothTypes) ? $order->clothTypes->title : '-' }}</td>
-                                                <td>{{ $order->gender }}</td>
-                                                <td>{{ !empty($order->users) ? $order->users->name : '-' }}</td>
+                                                <td class="d-none d-lg-table-cell">{{ !empty($order->clothTypes) ? $order->clothTypes->title : '-' }}</td>
+                                                <td class="d-none d-lg-table-cell">{{ $order->gender }}</td>
+                                                <td class="d-none d-lg-table-cell">{{ !empty($order->users) ? $order->users->name : '-' }}</td>
                                                 <td>
                                                     @if ($order->status == 'pending')
                                                         <span
@@ -456,7 +478,7 @@
                 </div>
             </div>
         @elseif (Auth::user()->type == 'customer')
-            <div class="col-lg-3 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -476,7 +498,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -496,7 +518,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
@@ -516,7 +538,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center">

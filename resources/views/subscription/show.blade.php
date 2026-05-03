@@ -215,6 +215,64 @@
             });
         </script>
     @endif
+
+    {{-- Razorpay --}}
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    @if (!empty($settings['razorpay_payment']) && $settings['razorpay_payment'] == 'on')
+        <script>
+            $(document).on("click", "#subscription_pay_with_razorpay", function(e) {
+                e.preventDefault();
+
+                const $button = $(this);
+                const $paymentForm = $('#razorpay-payment-form');
+                const formActionUrl = $paymentForm.attr('action');
+                const formMethod = $paymentForm.attr('method');
+                const formSerializedData = $paymentForm.serialize();
+
+                $button.prop('disabled', true).text('Processing...');
+
+                $.ajax({
+                    url: formActionUrl,
+                    method: formMethod,
+                    data: formSerializedData,
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.flag === 1) {
+                            var options = {
+                                "key": response.razorpay_key,
+                                "amount": (response.total_price * 100),
+                                "currency": response.currency,
+                                "name": "{{ config('app.name') }}",
+                                "description": "Subscription Payment",
+                                "image": "{{ asset(Storage::url('upload/logo/logo.png')) }}",
+                                "handler": function (razorpayResponse){
+                                    window.location.href = "{{ url('/subscription/razorpay') }}/" + razorpayResponse.razorpay_payment_id + "/" + "{{ encrypt($subscription->id) }}?coupon_id=" + response.coupon;
+                                },
+                                "prefill": {
+                                    "name": "{{ \Auth::user()->name }}",
+                                    "email": response.email,
+                                    "contact": ""
+                                },
+                                "theme": {
+                                    "color": "#3399cc"
+                                }
+                            };
+                            var rzp1 = new Razorpay(options);
+                            rzp1.open();
+                        } else {
+                            show_toastr('Error', response.message, 'msg');
+                            $button.prop('disabled', false).text('Pay Now');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('AJAX Error:', xhr.responseText);
+                        show_toastr('Error', 'An unexpected error occurred. Please try again.', 'msg');
+                        $button.prop('disabled', false).text("{{ __('Pay Now') }}");
+                    }
+                });
+            });
+        </script>
+    @endif
 @endpush
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
@@ -609,6 +667,68 @@
 
                                             <button type="button" class="btn btn-secondary"
                                                 id="subscription_pay_with_paystack">
+                                                {{ __('Pay') }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                @if (
+                    $settings['razorpay_payment'] == 'on' &&
+                        !empty($settings['razorpay_key']) &&
+                        !empty($settings['razorpay_secret']))
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="d-inline">{{ __('Razorpay') }}</h5>
+                                @if ($subscription->couponCheck() > 0)
+                                    <div class="setting-card action-menu float-end">
+                                        <div class="form-group mb-0">
+                                            <div class="form-check custom-chek">
+                                                <input class="form-check-input have_coupon" type="checkbox"
+                                                    value="" id="have_razorpay_coupon">
+                                                <label class="form-check-label"
+                                                    for="have_razorpay_coupon">{{ __('Have a Discount Coupon Code?') }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="card-body profile-user-box">
+                                <form id="razorpay-payment-form" method="POST"
+                                    action="{{ route('subscription.pay.with.razorpay') }}" class="require-validation">
+                                    @csrf
+                                    <input type="hidden" name="plan_id"
+                                        value="{{ Crypt::encrypt($subscription->id) }}">
+
+                                    <div class="row">
+                                        @if ($subscription->couponCheck() > 0)
+                                            <div class="col-md-12 coupon_div d-none">
+                                                <div class="form-group">
+                                                    <label class="form-label text-dark"
+                                                        for="coupon">{{ __('Coupon Code') }}</label>
+                                                    <input type="text" id="coupon" name="coupon"
+                                                        class="form-control required packageCouponCode"
+                                                        placeholder="{{ __('Enter Coupon Code') }}">
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        <div class="col-sm-12">
+                                            @if ($subscription->couponCheck() > 0)
+                                                <button type="button"
+                                                    class="btn btn-warning packageCouponApplyBtn d-none coupon_div">
+                                                    {{ __('Coupon Apply') }}
+                                                </button>
+                                            @endif
+
+                                            <button type="button" class="btn btn-secondary"
+                                                id="subscription_pay_with_razorpay">
                                                 {{ __('Pay') }}
                                             </button>
                                         </div>

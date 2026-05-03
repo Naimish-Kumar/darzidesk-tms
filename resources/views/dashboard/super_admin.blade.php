@@ -15,6 +15,17 @@
                     show: false
                 }
             },
+            responsive: [{
+                breakpoint: 576,
+                options: {
+                    chart: {
+                        height: 300
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }],
             colors: ['#2ca58d', '#0a2342'],
             dataLabels: {
                 enabled: false
@@ -83,7 +94,7 @@
 @endpush
 @section('content')
     <div class="row">
-        <div class="col-lg-3 col-md-6">
+        <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
@@ -103,7 +114,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6">
+        <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
@@ -122,7 +133,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6">
+        <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
@@ -141,7 +152,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6">
+        <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-center">

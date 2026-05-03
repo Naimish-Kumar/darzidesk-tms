@@ -432,4 +432,95 @@ class PaymentController extends Controller
         }
     }
 
+    public function razorpayPaymentConfig()
+    {
+        $payment_setting = settingsById(1);
+        $this->razorpay_key = isset($payment_setting['razorpay_key']) ? $payment_setting['razorpay_key'] : '';
+        $this->razorpay_secret = isset($payment_setting['razorpay_secret']) ? $payment_setting['razorpay_secret'] : '';
+        $this->is_enabled = isset($payment_setting['razorpay_payment']) ? $payment_setting['razorpay_payment'] : 'off';
+        $this->currency = isset($payment_setting['CURRENCY']) ? $payment_setting['CURRENCY'] : 'USD';
+    }
+
+    public function subscriptionPayWithRazorpay(Request $request)
+    {
+        $this->razorpayPaymentConfig();
+        $planID = decrypt($request->plan_id);
+        $plan = Subscription::find($planID);
+        $coupon = $request->coupon;
+
+        if ($plan) {
+            $price = Coupon::couponApply($planID, $coupon);
+            if ($price <= 0) {
+                $packageTransId = uniqid('', true);
+                $data['holder_name'] = \Auth::user()->name;
+                $data['subscription_id'] = $plan->id;
+                $data['amount'] = $price;
+                $data['subscription_transactions_id'] = $packageTransId;
+                $data['payment_type'] = 'Razorpay';
+                PackageTransaction::transactionData($data);
+
+                if ($plan->couponCheck() > 0 && !empty($request->coupon)) {
+                    $couhis['coupon'] = $request->coupon;
+                    $couhis['package'] = $plan->id;
+                    CouponHistory::couponData($couhis);
+                }
+
+                assignSubscription($plan->id);
+                return redirect()->route('subscriptions.index')->with('success', __("Subscription successfully upgraded."));
+            }
+
+            $res_data['email'] = \Auth::user()->email;
+            $res_data['total_price'] = $price;
+            $res_data['currency'] = $this->currency;
+            $res_data['flag'] = 1;
+            $res_data['coupon'] = $coupon;
+            $res_data['razorpay_key'] = $this->razorpay_key;
+            return $res_data;
+        } else {
+            return redirect()->route('subscriptions.index')->with('error', __('Subscription is deleted.'));
+        }
+    }
+
+    public function getSubscriptionPaymentStatusRazorpay(Request $request, $plan)
+    {
+        $this->razorpayPaymentConfig();
+        $planID = decrypt($plan);
+        $plan = Subscription::find($planID);
+        $user = \Auth::user();
+
+        if ($plan) {
+            try {
+                $api = new \Razorpay\Api\Api($this->razorpay_key, $this->razorpay_secret);
+                $payment = $api->payment->fetch($request->payment_id);
+
+                if ($payment->status == 'captured') {
+                    $price = Coupon::couponApply($planID, $request->coupon_id);
+                    $packageTransId = uniqid('', true);
+
+                    $data['holder_name'] = $user->name;
+                    $data['subscription_id'] = $plan->id;
+                    $data['amount'] = $price;
+                    $data['subscription_transactions_id'] = $packageTransId;
+                    $data['payment_type'] = 'Razorpay';
+                    PackageTransaction::transactionData($data);
+
+                    if ($plan->couponCheck() > 0 && !empty($request->coupon_id)) {
+                        $couhis['coupon'] = $request->coupon_id;
+                        $couhis['package'] = $plan->id;
+                        CouponHistory::couponData($couhis);
+                    }
+
+                    assignSubscription($plan->id);
+                    return redirect()->route('subscriptions.index')->with('success', __('Subscriptions activated Successfully.'));
+                } else {
+                    return redirect()->back()->with('error', __('Transaction Unsuccesfull'));
+                }
+            } catch (\Exception $e) {
+                return redirect()->route('subscriptions.index')->with('error', $e->getMessage());
+            }
+        } else {
+            return redirect()->route('subscriptions.index')->with('error', __('Subscriptions is deleted.'));
+        }
+    }
+
 }

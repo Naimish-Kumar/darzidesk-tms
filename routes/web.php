@@ -227,6 +227,8 @@ Route::group(
         Route::get('subscription/flutterwave/{sid}/{tx_ref}', [PaymentController::class, 'subscriptionFlutterwave'])->name('subscription.flutterwave');
         Route::post('/subscription-pay-with-paystack', [PaymentController::class, 'subscriptionPayWithPaystack'])->name('subscription.pay.with.paystack')->middleware(['auth', 'XSS']);
         Route::get('/subscription/paystack/{pay_id}/{plan_id}', [PaymentController::class, 'getsubscriptionsPaymentStatus'])->name('subscription.paystack');
+        Route::post('/subscription-pay-with-razorpay', [PaymentController::class, 'subscriptionPayWithRazorpay'])->name('subscription.pay.with.razorpay')->middleware(['auth', 'XSS']);
+        Route::get('/subscription/razorpay/{payment_id}/{plan_id}', [PaymentController::class, 'getSubscriptionPaymentStatusRazorpay'])->name('subscription.razorpay');
     }
 );
 
