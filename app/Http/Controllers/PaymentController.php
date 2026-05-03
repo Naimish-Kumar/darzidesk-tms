@@ -438,6 +438,7 @@ class PaymentController extends Controller
         $this->razorpay_key = isset($payment_setting['razorpay_key']) ? $payment_setting['razorpay_key'] : '';
         $this->razorpay_secret = isset($payment_setting['razorpay_secret']) ? $payment_setting['razorpay_secret'] : '';
         $this->is_enabled = isset($payment_setting['razorpay_payment']) ? $payment_setting['razorpay_payment'] : 'off';
+        $this->razorpay_mode = isset($payment_setting['razorpay_mode']) ? $payment_setting['razorpay_mode'] : 'test';
         $this->currency = isset($payment_setting['CURRENCY']) ? $payment_setting['CURRENCY'] : 'USD';
     }
 

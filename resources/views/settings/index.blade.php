@@ -767,6 +767,23 @@
                                         </div>
 
                                         <div class="row">
+                                            <div class="form-group col-md-12">
+                                                {{ Form::label('razorpay_mode', __('Account Mode'), ['class' => 'form-label me-2']) }}
+                                                <div class="form-check custom-chek form-check-inline">
+                                                    <input class="form-check-input" type="radio" value="test"
+                                                        id="razorpay_test" name="razorpay_mode"
+                                                        {{ ($settings['razorpay_mode'] ?? 'test') == 'test' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="razorpay_test">{{ __('Test') }}
+                                                    </label>
+                                                </div>
+                                                <div class="form-check custom-chek form-check-inline">
+                                                    <input class="form-check-input" type="radio" value="live"
+                                                        id="razorpay_live" name="razorpay_mode"
+                                                        {{ ($settings['razorpay_mode'] ?? 'test') == 'live' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="razorpay_live">{{ __('Live') }}
+                                                    </label>
+                                                </div>
+                                            </div>
                                             <div class="form-group col-md-6">
                                                 {{ Form::label('razorpay_key', __('Key'), ['class' => 'form-label']) }}
                                                 {{ Form::text('razorpay_key', $settings['razorpay_key'] ?? '', ['class' => 'form-control', 'placeholder' => __('Enter Razorpay key')]) }}

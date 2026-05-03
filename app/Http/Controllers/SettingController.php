@@ -543,6 +543,7 @@ class SettingController extends Controller
                 'razorpay_payment' => $request->razorpay_payment ?? 'off',
                 'razorpay_key' => $request->razorpay_key,
                 'razorpay_secret' => $request->razorpay_secret,
+                'razorpay_mode' => $request->razorpay_mode,
             ];
 
             foreach ($razorpayArray as $key => $val) {
