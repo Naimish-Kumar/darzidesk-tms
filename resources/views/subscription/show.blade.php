@@ -678,9 +678,9 @@
                     </div>
                 @endif
                 @if (
-                    $settings['razorpay_payment'] == 'on' &&
-                        !empty($settings['razorpay_key']) &&
-                        !empty($settings['razorpay_secret']))
+                    ($settings['razorpay_payment'] ?? 'off') == 'on' &&
+                        !empty($settings['razorpay_key'] ?? '') &&
+                        !empty($settings['razorpay_secret'] ?? ''))
                     <div class="col-sm-6">
                         <div class="card">
                             <div class="card-header">

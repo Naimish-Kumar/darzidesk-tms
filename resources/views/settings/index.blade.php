@@ -760,7 +760,7 @@
                                                     <div class="form-check custom-chek">
                                                         <input class="form-check-input" type="checkbox"
                                                             name="razorpay_payment" id="razorpay_payment"
-                                                            {{ $settings['razorpay_payment'] == 'on' ? 'checked' : '' }}>
+                                                            {{ ($settings['razorpay_payment'] ?? 'off') == 'on' ? 'checked' : '' }}>
                                                     </div>
                                                 </div>
                                             </div>
@@ -769,11 +769,11 @@
                                         <div class="row">
                                             <div class="form-group col-md-6">
                                                 {{ Form::label('razorpay_key', __('Key'), ['class' => 'form-label']) }}
-                                                {{ Form::text('razorpay_key', $settings['razorpay_key'], ['class' => 'form-control', 'placeholder' => __('Enter Razorpay key')]) }}
+                                                {{ Form::text('razorpay_key', $settings['razorpay_key'] ?? '', ['class' => 'form-control', 'placeholder' => __('Enter Razorpay key')]) }}
                                             </div>
                                             <div class="form-group col-md-6">
                                                 {{ Form::label('razorpay_secret', __('Secret Key'), ['class' => 'form-label']) }}
-                                                {{ Form::text('razorpay_secret', $settings['razorpay_secret'], ['class' => 'form-control', 'placeholder' => __('Enter Razorpay secret key')]) }}
+                                                {{ Form::text('razorpay_secret', $settings['razorpay_secret'] ?? '', ['class' => 'form-control', 'placeholder' => __('Enter Razorpay secret key')]) }}
                                             </div>
 
                                         </div>
