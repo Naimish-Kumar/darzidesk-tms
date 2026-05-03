@@ -246,7 +246,7 @@
                                 "description": "Subscription Payment",
                                 "image": "{{ asset(Storage::url('upload/logo/logo.png')) }}",
                                 "handler": function (razorpayResponse){
-                                    window.location.href = "{{ url('/subscription/razorpay') }}/" + razorpayResponse.razorpay_payment_id + "/" + "{{ encrypt($subscription->id) }}?coupon_id=" + response.coupon;
+                                    window.location.href = "{{ url('/subscription/razorpay') }}/" + razorpayResponse.razorpay_payment_id + "?plan_id=" + "{{ encrypt($subscription->id) }}&coupon_id=" + response.coupon;
                                 },
                                 "prefill": {
                                     "name": "{{ \Auth::user()->name }}",

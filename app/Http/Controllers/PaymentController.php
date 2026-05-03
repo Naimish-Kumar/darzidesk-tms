@@ -482,17 +482,17 @@ class PaymentController extends Controller
         }
     }
 
-    public function getSubscriptionPaymentStatusRazorpay(Request $request, $plan)
+    public function getSubscriptionPaymentStatusRazorpay(Request $request, $payment_id)
     {
         $this->razorpayPaymentConfig();
-        $planID = decrypt($plan);
+        $planID = decrypt($request->plan_id);
         $plan = Subscription::find($planID);
         $user = \Auth::user();
 
         if ($plan) {
             try {
                 $api = new \Razorpay\Api\Api($this->razorpay_key, $this->razorpay_secret);
-                $payment = $api->payment->fetch($request->payment_id);
+                $payment = $api->payment->fetch($payment_id);
 
                 if ($payment->status == 'captured') {
                     $price = Coupon::couponApply($planID, $request->coupon_id);
