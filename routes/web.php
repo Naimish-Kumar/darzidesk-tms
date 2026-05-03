@@ -54,6 +54,17 @@ Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name
 Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
 Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index']);
 
+// Blog Management
+Route::middleware(['auth', 'XSS'])->group(function () {
+    Route::get('blogs', [App\Http\Controllers\BlogController::class, 'adminIndex'])->name('blog.admin.index');
+    Route::get('blog/create', [App\Http\Controllers\BlogController::class, 'create'])->name('blog.create');
+    Route::post('blog/store', [App\Http\Controllers\BlogController::class, 'store'])->name('blog.store');
+    Route::get('blog/{id}/edit', [App\Http\Controllers\BlogController::class, 'edit'])->name('blog.edit');
+    Route::put('blog/{id}/update', [App\Http\Controllers\BlogController::class, 'update'])->name('blog.update');
+    Route::delete('blog/{id}/destroy', [App\Http\Controllers\BlogController::class, 'destroy'])->name('blog.destroy');
+    Route::post('blog/{id}/status', [App\Http\Controllers\BlogController::class, 'status'])->name('blog.status');
+});
+
 Route::get('home', [HomeController::class, 'index'])->name('home')->middleware(
     [
 

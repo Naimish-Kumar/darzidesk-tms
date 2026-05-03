@@ -16,7 +16,12 @@
                             <li class="breadcrumb-item active" aria-current="page">Post</li>
                         </ol>
                     </nav>
-                    <span class="text-primary small fw-bold">{{ $blog->date }}</span>
+                    
+                    @if($blog->image)
+                        <img src="{{ asset(Storage::url('upload/'.$blog->image)) }}" class="img-fluid rounded-3 mb-4 w-100" alt="{{ $blog->title }}">
+                    @endif
+
+                    <span class="text-primary small fw-bold">{{ $blog->created_at->format('M d, Y') }}</span>
                     <h1 class="fw-bold my-3">{{ $blog->title }}</h1>
                     <hr class="my-4">
                     <div class="blog-content text-muted lead">

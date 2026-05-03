@@ -339,6 +339,10 @@
                                             class="pc-link">{{ __('Home Page') }}</a>
                                     </li>
                                 @endif
+                                <li class="pc-item {{ in_array($routeName, ['blog.admin.index', 'blog.create', 'blog.edit']) ? 'active' : '' }} ">
+                                    <a href="{{ route('blog.admin.index') }}"
+                                        class="pc-link">{{ __('Blog') }}</a>
+                                </li>
                                 @if (Gate::check('manage Page'))
                                     <li class="pc-item {{ in_array($routeName, ['pages.index']) ? 'active' : '' }} ">
                                         <a href="{{ route('pages.index') }}"

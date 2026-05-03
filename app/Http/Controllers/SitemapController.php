@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
@@ -9,11 +10,7 @@ class SitemapController extends Controller
 {
     public function index()
     {
-        $blogs = [
-            'how-to-manage-tailoring-business',
-            'best-software-for-tailors-india',
-            'digital-vs-manual-tailoring'
-        ];
+        $blogs = Blog::where('is_active', 1)->get();
 
         $urls = [
             [
@@ -42,10 +39,10 @@ class SitemapController extends Controller
             ],
         ];
 
-        foreach ($blogs as $slug) {
+        foreach ($blogs as $blog) {
             $urls[] = [
-                'loc' => route('blog.show', $slug),
-                'lastmod' => date('Y-m-d'),
+                'loc' => route('blog.show', $blog->slug),
+                'lastmod' => $blog->updated_at->format('Y-m-d'),
                 'changefreq' => 'weekly',
                 'priority' => '0.8',
             ];
