@@ -52,6 +52,7 @@ require __DIR__ . '/auth.php';
 Route::get('/', [HomeController::class, 'index'])->middleware(['XSS',])->name('home');
 Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
+Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index']);
 
 Route::get('home', [HomeController::class, 'index'])->name('home')->middleware(
     [
