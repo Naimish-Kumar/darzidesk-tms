@@ -107,6 +107,9 @@
                         @endforeach
                     @endif
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ route('blog.index') }}">{{ __('Blog') }}</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link me-2" href="{{ route('login') }}">{{ __('Login') }}</a>
                     </li>
                     <li class="nav-item">
@@ -135,17 +138,14 @@
                             @if (!empty($Section_1_content_value['title']))
                                 {{ $Section_1_content_value['title'] }}
                             @else
-                                {{ __('Smart Tenant - Property Management System') }}
+                                {{ __('DarziDesk - Premium Tailoring Management Software') }}
                             @endif
                         </h1>
                         <h4 class="mb-sm-4 text-muted wow fadeInUp" data-wow-delay="0.4s">
                             @if (!empty($Section_1_content_value['sub_title']))
                                 {{ $Section_1_content_value['sub_title'] }}
                             @else
-                                {{ __('Property management refers to the administration, operation, and oversight of real
-                                                                                                                                estate properties on behalf of property owners. It involves various tasks such as
-                                                                                                                                marketing rental properties, finding tenants, collecting rent and ensuring legal
-                                                                                                                                compliance.') }}
+                                {{ __('DarziDesk helps boutiques and tailors manage orders, measurements, and staff with ease. Streamline your tailoring business today with our digital solution.') }}
                             @endif
                         </h4>
                         @php
@@ -935,12 +935,12 @@
                                 class="img-fluid" />
                         </div>
                         <h4 class="my-3 text-white">
-                            {{ !empty($Section_10_content_value['Sec10_title']) ? $Section_10_content_value['Sec10_title'] : 'About Smart Tenant' }}
+                            {{ !empty($Section_10_content_value['Sec10_title']) ? $Section_10_content_value['Sec10_title'] : 'About DarziDesk' }}
                         </h4>
                         <p class="mb-4 text-white text-opacity-75">
                             {!! !empty($Section_10_content_value['Sec10_info'])
                                 ? $Section_10_content_value['Sec10_info']
-                                : 'Property management refers to the administration, operation, and oversight of real estate properties on behalf of property owners. It involves various tasks such as marketing rental properties, finding tenants, collecting rent and ensuring legal compliance.' !!}
+                                : 'DarziDesk is a premium Tailoring Management Software designed specifically for Indian boutiques and tailors. We help you digitize your measurements, orders, and customer management to grow your business.' !!}
                         </p>
                     </div>
                     <div class="col-md-8">
@@ -981,11 +981,10 @@
                                                     @endif
                                                 @endforeach
                                             @else
-                                                <li><a href="#" target="_blank">{{ __('Blog') }}</a></li>
-                                                <li><a href="#" target="_blank">{{ __('Documentation') }}</a>
-                                                </li>
-                                                <li><a href="#" target="_blank">{{ __('ChangeLog') }}</a></li>
-                                                <li><a href="#" target="_blank">{{ __('Support') }}</a></li>
+                                                <li><a href="{{ route('blog.index') }}">{{ __('Blog') }}</a></li>
+                                                <li><a href="{{ route('page', 'about_us') }}">{{ __('About Us') }}</a></li>
+                                                <li><a href="#features">{{ __('Features') }}</a></li>
+                                                <li><a href="#pricing">{{ __('Pricing') }}</a></li>
                                             @endif
                                         </ul>
                                     </div>
@@ -1010,11 +1009,8 @@
                                                     @endif
                                                 @endforeach
                                             @else
-                                                <li><a href="#" target="_blank">{{ __('Blog') }}</a></li>
-                                                <li><a href="#" target="_blank">{{ __('Documentation') }}</a>
-                                                </li>
-                                                <li><a href="#" target="_blank">{{ __('ChangeLog') }}</a></li>
-                                                <li><a href="#" target="_blank">{{ __('Support') }}</a></li>
+                                                <li><a href="{{ route('login') }}">{{ __('Login') }}</a></li>
+                                                <li><a href="{{ route('register') }}">{{ __('Register') }}</a></li>
                                             @endif
                                         </ul>
                                     </div>
@@ -1039,11 +1035,8 @@
                                                     @endif
                                                 @endforeach
                                             @else
-                                                <li><a href="#" target="_blank">{{ __('Blog') }}</a></li>
-                                                <li><a href="#" target="_blank">{{ __('Documentation') }}</a>
-                                                </li>
-                                                <li><a href="#" target="_blank">{{ __('ChangeLog') }}</a></li>
-                                                <li><a href="#" target="_blank">{{ __('Support') }}</a></li>
+                                                <li><a href="#">{{ __('Documentation') }}</a></li>
+                                                <li><a href="#">{{ __('Support') }}</a></li>
                                             @endif
                                         </ul>
                                     </div>
@@ -1068,11 +1061,7 @@
                                                     @endif
                                                 @endforeach
                                             @else
-                                                <li><a href="#" target="_blank">{{ __('Blog') }}</a></li>
-                                                <li><a href="#" target="_blank">{{ __('Documentation') }}</a>
-                                                </li>
-                                                <li><a href="#" target="_blank">{{ __('ChangeLog') }}</a></li>
-                                                <li><a href="#" target="_blank">{{ __('Support') }}</a></li>
+                                                <li><a href="mailto:support@darzidesk.shop">{{ __('Email Us') }}</a></li>
                                             @endif
                                         </ul>
                                     </div>

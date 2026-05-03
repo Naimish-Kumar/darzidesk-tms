@@ -34,11 +34,17 @@ class BlogController extends Controller
 
     public function create()
     {
+        if (\Auth::user()->type != 'super admin') {
+            return response()->json(['status' => 'error', 'messages' => __('Permission denied.')]);
+        }
         return view('blog.admin.create');
     }
 
     public function store(Request $request)
     {
+        if (\Auth::user()->type != 'super admin') {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
         $request->validate([
             'title' => 'required|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -64,12 +70,18 @@ class BlogController extends Controller
 
     public function edit($id)
     {
+        if (\Auth::user()->type != 'super admin') {
+            return response()->json(['status' => 'error', 'messages' => __('Permission denied.')]);
+        }
         $blog = Blog::findOrFail($id);
         return view('blog.admin.edit', compact('blog'));
     }
 
     public function update(Request $request, $id)
     {
+        if (\Auth::user()->type != 'super admin') {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
         $request->validate([
             'title' => 'required|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -98,6 +110,9 @@ class BlogController extends Controller
 
     public function destroy($id)
     {
+        if (\Auth::user()->type != 'super admin') {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
         $blog = Blog::findOrFail($id);
         if ($blog->image) {
             Storage::delete('public/' . $blog->image);
@@ -109,6 +124,9 @@ class BlogController extends Controller
 
     public function status(Request $request, $id)
     {
+        if (\Auth::user()->type != 'super admin') {
+            return response()->json(['success' => false, 'message' => __('Permission denied.')]);
+        }
         $blog = Blog::findOrFail($id);
         $blog->is_active = $blog->is_active == 1 ? 0 : 1;
         $blog->save();
@@ -116,3 +134,4 @@ class BlogController extends Controller
         return response()->json(['success' => true, 'message' => __('Status updated successfully.')]);
     }
 }
+

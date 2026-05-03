@@ -12,21 +12,21 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <div class="row align-items-center g-2">
-                        <div class="col">
+                    <div class="row align-items-center justify-content-between">
+                        <div class="col-auto">
                             <h5>{{ __('Blog List') }}</h5>
                         </div>
                         <div class="col-auto">
-                            <a href="#" class="btn btn-secondary customModal" data-size="lg"
+                            <a href="#" class="btn btn-sm btn-secondary customModal" data-size="lg"
                                 data-url="{{ route('blog.create') }}" data-title="{{ __('Create New Blog') }}">
-                                <i class="ti ti-circle-plus align-text-bottom"></i> {{ __('Create Blog') }}
+                                <i class="ti ti-plus"></i> {{ __('Create Blog') }}
                             </a>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-striped">
+                        <table class="table table-striped" id="pc-dt-simple">
                             <thead>
                                 <tr>
                                     <th>{{ __('Image') }}</th>
@@ -56,17 +56,17 @@
                                             </div>
                                         </td>
                                         <td class="Action">
-                                            <div class="d-flex align-items-center">
+                                            <div class="d-flex align-items-center gap-1">
                                                 <a href="#" class="avtar avtar-xs btn-link-secondary text-secondary customModal"
                                                     data-bs-toggle="tooltip" data-bs-original-title="{{ __('Edit') }}"
                                                     data-url="{{ route('blog.edit', $blog->id) }}"
                                                     data-size="lg"
-                                                    data-title="{{ __('Edit Blog') }}"> <i data-feather="edit"></i></a>
+                                                    data-title="{{ __('Edit Blog') }}"> <i class="ti ti-edit"></i></a>
                                                 
-                                                {!! Form::open(['method' => 'DELETE', 'route' => ['blog.destroy', $blog->id], 'id' => 'delete-form-' . $blog->id]) !!}
+                                                {!! Form::open(['method' => 'DELETE', 'route' => ['blog.destroy', $blog->id], 'id' => 'delete-form-' . $blog->id, 'class' => 'd-inline']) !!}
                                                     <a class="avtar avtar-xs btn-link-danger text-danger confirm_dialog"
                                                         data-bs-toggle="tooltip" data-bs-original-title="{{ __('Delete') }}"
-                                                        href="#"> <i data-feather="trash-2"></i></a>
+                                                        href="#"> <i class="ti ti-trash"></i></a>
                                                 {!! Form::close() !!}
                                             </div>
                                         </td>
@@ -81,7 +81,7 @@
     </div>
 @endsection
 
-@push('scripts')
+@push('script-page')
     <script>
         $(document).on('change', '.change-status', function() {
             var url = $(this).data('url');
@@ -92,9 +92,14 @@
                     _token: $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(data) {
-                    show_toastr('Success', data.message, 'success');
+                    if (data.success) {
+                        show_toastr('Success', data.message, 'success');
+                    } else {
+                        show_toastr('Error', data.message, 'error');
+                    }
                 }
             });
         });
     </script>
 @endpush
+
