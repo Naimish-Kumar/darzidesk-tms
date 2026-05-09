@@ -762,13 +762,21 @@
                 transform: scale(1.1);
             }
             /* Swiper Grid specific styles */
-            .testimonials-slider .swiper-grid-column > .swiper-wrapper {
-                flex-wrap: wrap;
-                flex-direction: column;
+            .testimonials-slider {
+                height: 700px; /* Set a fixed height for grid to work correctly */
+            }
+            @media (max-width: 767px) {
+                .testimonials-slider {
+                    height: 900px;
+                }
             }
             .testimonials-slider .swiper-slide {
-                height: auto;
-                margin-top: 0 !important;
+                height: calc((100% - 30px) / 2) !important; /* Adjust height for 2 rows with gap */
+                display: flex;
+                flex-direction: column;
+            }
+            .testimonials-slider .testimonial-card {
+                flex: 1;
             }
         </style>
 
@@ -1328,6 +1336,11 @@
                 fill: 'row',
             },
             spaceBetween: 30,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            loop: false, // Swiper Grid does not support loop: true well, using autoplay instead
             pagination: {
                 el: ".swiper-pagination",
                 clickable: true,
