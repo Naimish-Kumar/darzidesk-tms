@@ -64,8 +64,8 @@
             padding: 5px 0 !important;
         }
         header#home {
-            padding-top: 150px !important;
-            padding-bottom: 0 !important;
+            padding-top: 170px !important;
+            padding-bottom: 20px !important;
             min-height: auto !important;
         }
         .section-top-reduce {
