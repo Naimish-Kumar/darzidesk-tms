@@ -788,38 +788,50 @@
                 
                 <div class="swiper testimonials-slider wow fadeInUp" data-wow-delay="0.4s">
                     <div class="swiper-wrapper">
-                        @for ($is7 = 1; $is7 <= 12; $is7++) @php // Increased count for better slider demo $name_key='Sec7_box' . $is7 . '_name' ; $tag_key='Sec7_box' . $is7 . '_tag' ; $review_key='Sec7_box' . $is7 . '_review' ; $img_key='Sec7_box' . $is7 . '_image_path' ; $name=!empty($Section_7_content_value[$name_key]) ? $Section_7_content_value[$name_key] : __('Tailor Master') . ' ' . $is7; $tag=!empty($Section_7_content_value[$tag_key]) ? $Section_7_content_value[$tag_key] : __('Verified Business'); $review=!empty($Section_7_content_value[$review_key]) ? $Section_7_content_value[$review_key] : __('This software has completely transformed how we manage our tailoring business. Highly recommended!'); $image=!empty($Section_7_content_value[$img_key]) ? asset(Storage::url($Section_7_content_value[$img_key])) : asset('assets/images/user/avatar-1.jpg'); @endphp <div class="swiper-slide h-auto">
-                            <div class="card testimonial-card border-0 shadow-sm">
-                                <div class="card-body p-4 position-relative overflow-hidden">
-                                    <div class="quote-icon-bg">
-                                        <i class="ti ti-quote"></i>
-                                    </div>
-                                    
-                                    <div class="d-flex align-items-center mb-3 position-relative">
-                                        <div class="avatar-wrapper me-3">
-                                            <img src="{{ $image }}" alt="{{ $name }}" class="rounded-circle shadow-sm" width="45" height="45" style="object-fit: cover; border: 2px solid #fff;">
-                                            <div class="verified-badge">
-                                                <i class="ti ti-check"></i>
+                        @for ($is7 = 1; $is7 <= 12; $is7++)
+                            @php
+                                $name_key = 'Sec7_box' . $is7 . '_name';
+                                $tag_key = 'Sec7_box' . $is7 . '_tag';
+                                $review_key = 'Sec7_box' . $is7 . '_review';
+                                $img_key = 'Sec7_box' . $is7 . '_image_path';
+                                
+                                $name = !empty($Section_7_content_value[$name_key]) ? $Section_7_content_value[$name_key] : __('Tailor Master') . ' ' . $is7;
+                                $tag = !empty($Section_7_content_value[$tag_key]) ? $Section_7_content_value[$tag_key] : __('Verified Business');
+                                $review = !empty($Section_7_content_value[$review_key]) ? $Section_7_content_value[$review_key] : __('This software has completely transformed how we manage our tailoring business. Highly recommended!');
+                                $image = !empty($Section_7_content_value[$img_key]) ? asset(Storage::url($Section_7_content_value[$img_key])) : asset('assets/images/user/avatar-1.jpg');
+                            @endphp
+                            <div class="swiper-slide h-auto">
+                                <div class="card testimonial-card border-0 shadow-sm">
+                                    <div class="card-body p-4 position-relative overflow-hidden">
+                                        <div class="quote-icon-bg">
+                                            <i class="ti ti-quote"></i>
+                                        </div>
+                                        
+                                        <div class="d-flex align-items-center mb-3 position-relative">
+                                            <div class="avatar-wrapper me-3">
+                                                <img src="{{ $image }}" alt="{{ $name }}" class="rounded-circle shadow-sm" width="45" height="45" style="object-fit: cover; border: 2px solid #fff;">
+                                                <div class="verified-badge">
+                                                    <i class="ti ti-check"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h6 class="fw-bold mb-0">{{ $name }}</h6>
+                                                <p class="text-primary small mb-0 fw-semibold opacity-75" style="font-size: 0.75rem;">{{ $tag }}</p>
                                             </div>
                                         </div>
-                                        <div>
-                                            <h6 class="fw-bold mb-0">{{ $name }}</h6>
-                                            <p class="text-primary small mb-0 fw-semibold opacity-75" style="font-size: 0.75rem;">{{ $tag }}</p>
+                                        
+                                        <div class="star-rating mb-2 position-relative">
+                                            @for($i=1; $i<=5; $i++)
+                                                <i class="ti ti-star-filled text-warning"></i>
+                                            @endfor
                                         </div>
+                                        
+                                        <p class="testimonial-text text-muted mb-0">
+                                            "{{ $review }}"
+                                        </p>
                                     </div>
-                                    
-                                    <div class="star-rating mb-2 position-relative">
-                                        @for($i=1; $i<=5; $i++)
-                                            <i class="ti ti-star-filled text-warning"></i>
-                                        @endfor
-                                    </div>
-                                    
-                                    <p class="testimonial-text text-muted mb-0">
-                                        "{{ $review }}"
-                                    </p>
                                 </div>
                             </div>
-                        </div>
                         @endfor
                     </div>
                     <!-- Add Pagination -->
