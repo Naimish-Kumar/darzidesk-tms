@@ -672,56 +672,143 @@
     @endphp
 
     @if (empty($Section_7_content_value['section_enabled']) || $Section_7_content_value['section_enabled'] == 'active')
-        <section class="bg-body">
-            <div class="container">
-                <div class="row justify-content-center title">
-                    <div class="col-md-9 col-lg-6 text-center">
-                        <h2 class="h1">
-                            {{ !empty($Section_7_content_value['Sec7_title']) ? $Section_7_content_value['Sec7_title'] : 'Testaments' }}
+        <style>
+            .testimonials-section {
+                position: relative;
+                overflow: hidden;
+            }
+            .testimonials-masonry {
+                column-count: 3;
+                column-gap: 2rem;
+            }
+            @media (max-width: 991px) {
+                .testimonials-masonry {
+                    column-count: 2;
+                }
+            }
+            @media (max-width: 767px) {
+                .testimonials-masonry {
+                    column-count: 1;
+                }
+            }
+            .testimonial-card-wrapper {
+                break-inside: avoid;
+                margin-bottom: 2rem;
+                transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+            .testimonial-card {
+                border-radius: 24px !important;
+                background: #ffffff;
+                transition: all 0.4s ease;
+                border: 1px solid rgba(0,0,0,0.05) !important;
+            }
+            .testimonial-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+                border-color: var(--bs-primary) !important;
+            }
+            .quote-icon-bg {
+                position: absolute;
+                top: -10px;
+                right: 20px;
+                font-size: 8rem;
+                color: rgba(var(--bs-primary-rgb), 0.05);
+                line-height: 1;
+                z-index: 0;
+                pointer-events: none;
+            }
+            .avatar-wrapper {
+                position: relative;
+                display: inline-block;
+            }
+            .verified-badge {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                background: #28a745;
+                color: white;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 10px;
+                border: 2px solid #fff;
+            }
+            .star-rating i {
+                font-size: 0.9rem;
+                margin-right: 2px;
+            }
+            .testimonial-text {
+                font-size: 1.05rem;
+                line-height: 1.7;
+                font-style: italic;
+                position: relative;
+                z-index: 1;
+            }
+            .letter-spacing-1 {
+                letter-spacing: 1px;
+            }
+        </style>
+
+        <section class="testimonials-section py-5 bg-light" id="testimonials">
+            <div class="container py-5">
+                <div class="row justify-content-center mb-5">
+                    <div class="col-md-9 col-lg-7 text-center wow fadeInUp" data-wow-delay="0.2s">
+                        <span class="badge bg-primary-soft text-primary px-3 py-2 rounded-pill mb-3 fw-bold text-uppercase letter-spacing-1" style="background: rgba(var(--bs-primary-rgb), 0.1);">{{ !empty($Section_7_content_value['Sec7_tag']) ? $Section_7_content_value['Sec7_tag'] : __('Testimonials') }}</span>
+                        <h2 class="display-5 fw-bold mb-3">
+                            {{ !empty($Section_7_content_value['Sec7_title']) ? $Section_7_content_value['Sec7_title'] : __('What Our Customers Say About Us') }}
                         </h2>
-                        <p class="text-lg">
-                            {{ !empty($Section_7_content_value['Sec7_info']) ? $Section_7_content_value['Sec7_info'] : 'We are so grateful for your positive review and appreciate your support of our product' }}
+                        <p class="text-muted lead px-lg-5">
+                            {{ !empty($Section_7_content_value['Sec7_info']) ? $Section_7_content_value['Sec7_info'] : __('Join thousands of satisfied business owners who trust DarziDesk for their daily operations.') }}
                         </p>
                     </div>
                 </div>
-                <div class="testaments-cards">
-                    @php
-                        $is7_check = 0;
-                    @endphp
+                
+                <div class="testimonials-masonry">
                     @for ($is7 = 1; $is7 <= 8; $is7++)
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="flex-shrink-0">
-                                        <div class="avtar avtar-l">
-                                            @if (!empty($Section_7_content_value['Sec7_box' . $is7 . '_image_path']))
-                                                <img src="{{ asset(Storage::url($Section_7_content_value['Sec7_box' . $is7 . '_image_path'])) }}"
-                                                    alt="img" class="img-fluid rounded-circle wid-40" />
-                                            @else
-                                                <img src="assets/images/user/avatar-1.jpg" alt="img"
-                                                    class="img-fluid rounded-circle wid-40" />
-                                            @endif
+                        @php
+                            $name = !empty($Section_7_content_value['Sec7_box' . $is7 . '_name']) ? $Section_7_content_value['Sec7_box' . $is7 . '_name'] : 'Tailor Master';
+                            $tag = !empty($Section_7_content_value['Sec7_box' . $is7 . '_tag']) ? $Section_7_content_value['Sec7_box' . $is7 . '_tag'] : 'Verified Business';
+                            $review = !empty($Section_7_content_value['Sec7_box' . $is7 . '_review']) ? $Section_7_content_value['Sec7_box' . $is7 . '_review'] : 'This software has completely transformed how we manage our tailoring business. Highly recommended!';
+                            $image = !empty($Section_7_content_value['Sec7_box' . $is7 . '_image_path']) ? asset(Storage::url($Section_7_content_value['Sec7_box' . $is7 . '_image_path'])) : asset('assets/images/user/avatar-1.jpg');
+                        @endphp
+                        
+                        <div class="testimonial-card-wrapper wow fadeInUp" data-wow-delay="{{ 0.05 * $is7 }}s">
+                            <div class="card testimonial-card border-0 shadow-sm h-100">
+                                <div class="card-body p-4 position-relative overflow-hidden">
+                                    <div class="quote-icon-bg">
+                                        <i class="ti ti-quote"></i>
+                                    </div>
+                                    
+                                    <div class="d-flex align-items-center mb-4 position-relative">
+                                        <div class="avatar-wrapper me-3">
+                                            <img src="{{ $image }}" alt="{{ $name }}" class="rounded-circle shadow-sm" width="50" height="50" style="object-fit: cover; border: 2px solid #fff;">
+                                            <div class="verified-badge">
+                                                <i class="ti ti-check"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5 class="fw-bold mb-0" style="font-size: 1.1rem;">{{ $name }}</h5>
+                                            <p class="text-primary small mb-0 fw-semibold opacity-75">{{ $tag }}</p>
                                         </div>
                                     </div>
-                                    <div class="flex-grow-1 ms-2">
-                                        <h4 class="mb-0">
-                                            {{ !empty($Section_7_content_value['Sec7_box' . $is7 . '_name']) ? $Section_7_content_value['Sec7_box' . $is7 . '_name'] : 'Lenore Becker' }}
-                                        </h4>
-                                        <h6 class="mb-0 text-primary">
-                                            {{ !empty($Section_7_content_value['Sec7_box' . $is7 . '_tag']) ? $Section_7_content_value['Sec7_box' . $is7 . '_tag'] : '' }}
-                                        </h6>
+                                    
+                                    <div class="star-rating mb-3 position-relative">
+                                        @for($i=1; $i<=5; $i++)
+                                            <i class="ti ti-star-filled text-warning"></i>
+                                        @endfor
                                     </div>
+                                    
+                                    <p class="testimonial-text text-muted mb-0">
+                                        "{{ $review }}"
+                                    </p>
                                 </div>
-                                <p class="mb-0">
-                                    {{ !empty($Section_7_content_value['Sec7_box' . $is7 . '_review'])
-                                        ? $Section_7_content_value['Sec7_box' . $is7 . '_review']
-                                        : 'Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Vestibulum rutrum, mi nec elementum vehicula, eros quam gravida nisl, id fringilla neque ante vel mi. Quisque ut nisi. Nulla porta dolor. Aenean tellus metus, bibendum sed, posuere ac, mattis non, nunc.' }}
-                                </p>
                             </div>
                         </div>
                     @endfor
                 </div>
-
             </div>
         </section>
     @endif
