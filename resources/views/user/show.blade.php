@@ -3,11 +3,21 @@
     $profile = asset(Storage::url('upload/profile/'));
 @endphp
 @section('page-title')
-    {{ __('Customer Details') }}
+    @if (\Auth::user()->type == 'super admin')
+        {{ __('Customer Details') }}
+    @else
+        {{ __('User Details') }}
+    @endif
 @endsection
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('users.index') }}">{{ __('Customer') }}</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('users.index') }}">
+            @if (\Auth::user()->type == 'super admin')
+                {{ __('Customer') }}
+            @else
+                {{ __('User') }}
+            @endif
+        </a></li>
     <li class="breadcrumb-item" aria-current="page"> {{ __('Show') }}</li>
 @endsection
 @push('script-page')

@@ -12,15 +12,21 @@
             {{ Form::label('email', __('Email') . '<span class="text-danger"> *</span>', ['class' => 'form-label'], false) }}
             {{ Form::text('email', null, ['class' => 'form-control', 'placeholder' => __('Enter Email'), 'required' => 'required']) }}
         </div>
+        @if (\Auth::user()->type != 'super admin')
+            <div class="form-group col-md-6">
+                {{ Form::label('role', __('Assign Role') . '<span class="text-danger"> *</span>', ['class' => 'form-label'], false) }}
+                {!! Form::select('role', $userRoles, $user->roles->first()->id ?? null, ['class' => 'form-control select2', 'required' => 'required']) !!}
+            </div>
+        @endif
         <div class="form-group col-md-6">
-            {{ Form::label('phone_number', __('Phone Number') . '<span class="text-danger"> *</span>', ['class' => 'form-label'], false) }}
+            {{ Form::label('phone_number', __('Phone Number'), ['class' => 'form-label'], false) }}
             {{ Form::text('phone_number', null, ['class' => 'form-control', 'placeholder' => __('Enter Phone Number')]) }}
             <small class="form-text text-muted">
                 {{ __('Please enter the number with country code. e.g., +91XXXXXXXXXX') }}
             </small>
 
         </div>
-        <div class="form-group {{ \Auth::user()->type == 'super admin' ? 'col-md-6 col-lg-6' : 'col-md-12 col-lg-12' }}">
+        <div class="form-group {{ \Auth::user()->type == 'super admin' ? 'col-md-6 col-lg-6' : 'col-md-6 col-lg-6' }}">
             {{ Form::label('profile', __('Profile'), ['class' => 'form-label']) }}
             {{ Form::file('profile', ['class' => 'form-control']) }}
         </div>

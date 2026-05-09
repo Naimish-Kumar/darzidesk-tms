@@ -16,6 +16,12 @@
             {{ Form::label('password', __('Password'). '<span class="text-danger"> *</span>', ['class' => 'form-label'], false) }}
             {{ Form::password('password', ['class' => 'form-control', 'placeholder' => __('Enter password'), 'required' => 'required', 'minlength' => '6']) }}
         </div>
+        @if (\Auth::user()->type != 'super admin')
+            <div class="form-group col-md-6">
+                {{ Form::label('role', __('Assign Role') . '<span class="text-danger"> *</span>', ['class' => 'form-label'], false) }}
+                {!! Form::select('role', $userRoles, null, ['class' => 'form-control select2', 'required' => 'required']) !!}
+            </div>
+        @endif
         <div class="form-group col-md-6">
             {{ Form::label('phone_number', __('Phone Number'), ['class' => 'form-label']) }}
             {{ Form::text('phone_number', null, ['class' => 'form-control', 'placeholder' => __('Enter phone number')]) }}

@@ -55,14 +55,14 @@
                                 <span class="pc-micon">
                                     <i class="ti ti-users"></i>
                                 </span>
-                                <span class="pc-mtext">{{ __('Staff Management') }}</span>
+                                <span class="pc-mtext">{{ __('User Management') }}</span>
                                 <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
                             </a>
                             <ul class="pc-submenu"
                                 style="display: {{ in_array($routeName, ['users.index', 'logged.history', 'role.index', 'role.create', 'role.edit']) ? 'block' : 'none' }}">
                                 @if (Gate::check('manage user'))
                                     <li class="pc-item {{ in_array($routeName, ['users.index']) ? 'active' : '' }}">
-                                        <a class="pc-link" href="{{ route('users.index') }}">{{ __('Employees') }}</a>
+                                        <a class="pc-link" href="{{ route('users.index') }}">{{ __('Users') }}</a>
                                     </li>
                                 @endif
                                 @if (Gate::check('manage role'))
