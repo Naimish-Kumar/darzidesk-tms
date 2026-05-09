@@ -677,41 +677,27 @@
                 position: relative;
                 overflow: hidden;
             }
-            .testimonials-masonry {
-                column-count: 3;
-                column-gap: 2rem;
-            }
-            @media (max-width: 991px) {
-                .testimonials-masonry {
-                    column-count: 2;
-                }
-            }
-            @media (max-width: 767px) {
-                .testimonials-masonry {
-                    column-count: 1;
-                }
-            }
-            .testimonial-card-wrapper {
-                break-inside: avoid;
-                margin-bottom: 2rem;
-                transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            .testimonials-slider {
+                padding: 20px 0 60px;
+                overflow: visible;
             }
             .testimonial-card {
                 border-radius: 24px !important;
                 background: #ffffff;
                 transition: all 0.4s ease;
                 border: 1px solid rgba(0,0,0,0.05) !important;
+                height: 100%;
             }
             .testimonial-card:hover {
-                transform: translateY(-10px);
-                box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+                transform: translateY(-5px);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important;
                 border-color: var(--bs-primary) !important;
             }
             .quote-icon-bg {
                 position: absolute;
-                top: -10px;
-                right: 20px;
-                font-size: 8rem;
+                top: -5px;
+                right: 15px;
+                font-size: 6rem;
                 color: rgba(var(--bs-primary-rgb), 0.05);
                 line-height: 1;
                 z-index: 0;
@@ -727,36 +713,70 @@
                 right: 0;
                 background: #28a745;
                 color: white;
-                width: 18px;
-                height: 18px;
+                width: 16px;
+                height: 16px;
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 10px;
+                font-size: 9px;
                 border: 2px solid #fff;
             }
             .star-rating i {
-                font-size: 0.9rem;
+                font-size: 0.8rem;
                 margin-right: 2px;
             }
             .testimonial-text {
-                font-size: 1.05rem;
-                line-height: 1.7;
+                font-size: 0.95rem;
+                line-height: 1.6;
                 font-style: italic;
                 position: relative;
                 z-index: 1;
             }
-            .letter-spacing-1 {
-                letter-spacing: 1px;
+            .swiper-pagination-bullet-active {
+                background: var(--bs-primary) !important;
+            }
+            .slider-nav {
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+                margin-top: 20px;
+            }
+            .slider-nav .btn-nav {
+                width: 45px;
+                height: 45px;
+                border-radius: 50%;
+                background: #fff;
+                border: 1px solid rgba(0,0,0,0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                color: var(--bs-primary);
+                box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            }
+            .slider-nav .btn-nav:hover {
+                background: var(--bs-primary);
+                color: #fff;
+                transform: scale(1.1);
+            }
+            /* Swiper Grid specific styles */
+            .testimonials-slider .swiper-grid-column > .swiper-wrapper {
+                flex-wrap: wrap;
+                flex-direction: column;
+            }
+            .testimonials-slider .swiper-slide {
+                height: auto;
+                margin-top: 0 !important;
             }
         </style>
 
         <section class="testimonials-section py-5 bg-light" id="testimonials">
             <div class="container py-5">
-                <div class="row justify-content-center mb-5">
+                <div class="row justify-content-center mb-4">
                     <div class="col-md-9 col-lg-7 text-center wow fadeInUp" data-wow-delay="0.2s">
-                        <span class="badge bg-primary-soft text-primary px-3 py-2 rounded-pill mb-3 fw-bold text-uppercase letter-spacing-1" style="background: rgba(var(--bs-primary-rgb), 0.1);">{{ !empty($Section_7_content_value['Sec7_tag']) ? $Section_7_content_value['Sec7_tag'] : __('Testimonials') }}</span>
+                        <span class="badge bg-primary-soft text-primary px-3 py-2 rounded-pill mb-3 fw-bold text-uppercase" style="background: rgba(var(--bs-primary-rgb), 0.1); letter-spacing: 1px;">{{ !empty($Section_7_content_value['Sec7_tag']) ? $Section_7_content_value['Sec7_tag'] : __('Testimonials') }}</span>
                         <h2 class="display-5 fw-bold mb-3">
                             {{ !empty($Section_7_content_value['Sec7_title']) ? $Section_7_content_value['Sec7_title'] : __('What Our Customers Say About Us') }}
                         </h2>
@@ -766,36 +786,29 @@
                     </div>
                 </div>
                 
-                <div class="testimonials-masonry">
-                    @for ($is7 = 1; $is7 <= 8; $is7++)
-                        @php
-                            $name = !empty($Section_7_content_value['Sec7_box' . $is7 . '_name']) ? $Section_7_content_value['Sec7_box' . $is7 . '_name'] : 'Tailor Master';
-                            $tag = !empty($Section_7_content_value['Sec7_box' . $is7 . '_tag']) ? $Section_7_content_value['Sec7_box' . $is7 . '_tag'] : 'Verified Business';
-                            $review = !empty($Section_7_content_value['Sec7_box' . $is7 . '_review']) ? $Section_7_content_value['Sec7_box' . $is7 . '_review'] : 'This software has completely transformed how we manage our tailoring business. Highly recommended!';
-                            $image = !empty($Section_7_content_value['Sec7_box' . $is7 . '_image_path']) ? asset(Storage::url($Section_7_content_value['Sec7_box' . $is7 . '_image_path'])) : asset('assets/images/user/avatar-1.jpg');
-                        @endphp
-                        
-                        <div class="testimonial-card-wrapper wow fadeInUp" data-wow-delay="{{ 0.05 * $is7 }}s">
-                            <div class="card testimonial-card border-0 shadow-sm h-100">
+                <div class="swiper testimonials-slider wow fadeInUp" data-wow-delay="0.4s">
+                    <div class="swiper-wrapper">
+                        @for ($is7 = 1; $is7 <= 12; $is7++) @php // Increased count for better slider demo $name_key='Sec7_box' . $is7 . '_name' ; $tag_key='Sec7_box' . $is7 . '_tag' ; $review_key='Sec7_box' . $is7 . '_review' ; $img_key='Sec7_box' . $is7 . '_image_path' ; $name=!empty($Section_7_content_value[$name_key]) ? $Section_7_content_value[$name_key] : __('Tailor Master') . ' ' . $is7; $tag=!empty($Section_7_content_value[$tag_key]) ? $Section_7_content_value[$tag_key] : __('Verified Business'); $review=!empty($Section_7_content_value[$review_key]) ? $Section_7_content_value[$review_key] : __('This software has completely transformed how we manage our tailoring business. Highly recommended!'); $image=!empty($Section_7_content_value[$img_key]) ? asset(Storage::url($Section_7_content_value[$img_key])) : asset('assets/images/user/avatar-1.jpg'); @endphp <div class="swiper-slide h-auto">
+                            <div class="card testimonial-card border-0 shadow-sm">
                                 <div class="card-body p-4 position-relative overflow-hidden">
                                     <div class="quote-icon-bg">
                                         <i class="ti ti-quote"></i>
                                     </div>
                                     
-                                    <div class="d-flex align-items-center mb-4 position-relative">
+                                    <div class="d-flex align-items-center mb-3 position-relative">
                                         <div class="avatar-wrapper me-3">
-                                            <img src="{{ $image }}" alt="{{ $name }}" class="rounded-circle shadow-sm" width="50" height="50" style="object-fit: cover; border: 2px solid #fff;">
+                                            <img src="{{ $image }}" alt="{{ $name }}" class="rounded-circle shadow-sm" width="45" height="45" style="object-fit: cover; border: 2px solid #fff;">
                                             <div class="verified-badge">
                                                 <i class="ti ti-check"></i>
                                             </div>
                                         </div>
                                         <div>
-                                            <h5 class="fw-bold mb-0" style="font-size: 1.1rem;">{{ $name }}</h5>
-                                            <p class="text-primary small mb-0 fw-semibold opacity-75">{{ $tag }}</p>
+                                            <h6 class="fw-bold mb-0">{{ $name }}</h6>
+                                            <p class="text-primary small mb-0 fw-semibold opacity-75" style="font-size: 0.75rem;">{{ $tag }}</p>
                                         </div>
                                     </div>
                                     
-                                    <div class="star-rating mb-3 position-relative">
+                                    <div class="star-rating mb-2 position-relative">
                                         @for($i=1; $i<=5; $i++)
                                             <i class="ti ti-star-filled text-warning"></i>
                                         @endfor
@@ -807,7 +820,20 @@
                                 </div>
                             </div>
                         </div>
-                    @endfor
+                        @endfor
+                    </div>
+                    <!-- Add Pagination -->
+                    <div class="swiper-pagination"></div>
+                </div>
+
+                <!-- Custom Navigation -->
+                <div class="slider-nav wow fadeInUp" data-wow-delay="0.6s">
+                    <div class="btn-nav prev-testimonial">
+                        <i class="ti ti-chevron-left f-20"></i>
+                    </div>
+                    <div class="btn-nav next-testimonial">
+                        <i class="ti ti-chevron-right f-20"></i>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1278,6 +1304,40 @@
                 },
                 1024: {
                     slidesPerView: 5
+                }
+            }
+        });
+
+        // Testimonials Slider (2 Rows)
+        const testimonials_Swiper = new Swiper('.testimonials-slider', {
+            slidesPerView: 1,
+            grid: {
+                rows: 2,
+                fill: 'row',
+            },
+            spaceBetween: 30,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.next-testimonial',
+                prevEl: '.prev-testimonial',
+            },
+            breakpoints: {
+                768: {
+                    slidesPerView: 2,
+                    grid: {
+                        rows: 2,
+                        fill: 'row',
+                    },
+                },
+                1024: {
+                    slidesPerView: 3,
+                    grid: {
+                        rows: 2,
+                        fill: 'row',
+                    },
                 }
             }
         });
