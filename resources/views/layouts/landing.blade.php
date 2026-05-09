@@ -63,17 +63,17 @@
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     <style>
         .navbar {
-            padding: 10px 0 !important;
+            padding: 5px 0 !important;
         }
         header .hero-image {
-            transform-origin: center center !important;
-            transform: scale(1.3) !important;
-            margin-top: 50px;
+            transform-origin: bottom left !important;
+            transform: scale(1.4) !important;
+            margin-top: 0 !important;
         }
         @media (max-width: 991px) {
             header .hero-image {
                 transform: scale(1) !important;
-                margin-top: 30px;
+                transform-origin: center center !important;
             }
         }
     </style>
