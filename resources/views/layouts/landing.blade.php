@@ -59,182 +59,22 @@
     @endif
     <link rel="stylesheet" href="{{ asset('assets/css/landing.css') }}" />
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/css/landing.css') }}" />
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #2196F3 0%, #673AB7 100%);
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.3);
-        }
-
-        .hero-section {
-            position: relative;
-            padding: 160px 0 100px;
-            overflow: hidden;
-            background: #fff;
-        }
-
-        .hero-bg-shapes {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .shape {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.15;
-            z-index: 1;
-        }
-
-        .shape-1 {
-            width: 400px;
-            height: 400px;
-            background: #2196F3;
-            top: -100px;
-            right: -50px;
-        }
-
-        .shape-2 {
-            width: 300px;
-            height: 300px;
-            background: #673AB7;
-            bottom: 100px;
-            left: -100px;
-        }
-
-        .shape-3 {
-            width: 250px;
-            height: 250px;
-            background: #00c853;
-            bottom: -50px;
-            right: 20%;
-        }
-
-        .text-gradient {
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
-        }
-
-        .hero-title {
-            font-size: 3.5rem;
-            line-height: 1.2;
-            letter-spacing: -1px;
-        }
-
-        .btn-hero {
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            font-weight: 600;
-        }
-
-        .btn-hero:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(33, 150, 243, 0.3);
-        }
-
-        .hero-feature-glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            padding: 15px 25px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
-
-        .hero-image-wrapper {
-            position: relative;
-            padding: 20px;
-        }
-
-        .main-img {
-            border-radius: 30px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.1);
-            position: relative;
-            z-index: 2;
-        }
-
-        .floating-icons .floating-icon {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            background: #fff;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-            z-index: 3;
-            animation: float 4s ease-in-out infinite;
-        }
-
-        .icon-1 { top: 10%; left: -30px; animation-delay: 0s; }
-        .icon-2 { bottom: 20%; right: -20px; animation-delay: 1s; }
-        .icon-3 { top: 50%; left: -40px; animation-delay: 2s; }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .bg-soft-primary {
-            background-color: rgba(33, 150, 243, 0.1);
-        }
-
-        @media (max-width: 991px) {
-            .hero-title {
-                font-size: 2.5rem;
-            }
-            .hero-section {
-                padding: 120px 0 60px;
-                text-align: center;
-            }
-            .hero-feature-glass {
-                margin: 0 auto;
-            }
-            .icon-1, .icon-2, .icon-3 {
-                display: none;
-            }
-        }
-        /* Navbar Enhancements */
         .navbar {
-            background: rgba(255, 255, 255, 0.8) !important;
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
+            padding: 10px 0 !important;
         }
-
-        .navbar .nav-link {
-            font-weight: 500;
-            color: #444 !important;
-            transition: color 0.3s ease;
-            position: relative;
+        header .hero-image {
+            transform-origin: center center !important;
+            transform: scale(1.3) !important;
+            margin-top: 50px;
         }
-
-        .navbar .nav-link:after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 0;
-            background: var(--primary-gradient);
-            transition: width 0.3s ease;
-        }
-
-        .navbar .nav-link:hover:after,
-        .navbar .nav-link.active:after {
-            width: 100%;
-        }
-
-        .navbar .nav-link:hover {
-            color: #2196F3 !important;
+        @media (max-width: 991px) {
+            header .hero-image {
+                transform: scale(1) !important;
+                margin-top: 30px;
+            }
         }
     </style>
 </head>
@@ -308,28 +148,18 @@
             : [];
     @endphp
     @if (empty($Section_1_content_value['section_enabled']) || $Section_1_content_value['section_enabled'] == 'active')
-        <header id="home" class="hero-section">
-            <div class="hero-bg-shapes">
-                <div class="shape shape-1"></div>
-                <div class="shape shape-2"></div>
-                <div class="shape shape-3"></div>
-            </div>
+        <header id="home">
             <div class="container">
                 <div class="row align-items-center justify-content-between">
-                    <div class="col-lg-6 col-xl-6 position-relative" style="z-index: 2;">
-                        <div class="hero-badge mb-3 wow fadeInUp" data-wow-delay="0.1s">
-                            <span class="badge rounded-pill bg-soft-primary text-primary px-3 py-2">
-                                <i class="ti ti-sparkles me-1"></i> {{ __('Empowering Modern Tailors') }}
-                            </span>
-                        </div>
-                        <h1 class="mt-sm-3 mb-sm-4 f-w-700 wow fadeInUp hero-title" data-wow-delay="0.2s">
+                    <div class="col-lg-6 col-xl-6">
+                        <h1 class="mt-sm-3 mb-sm-4 f-w-600 wow fadeInUp" data-wow-delay="0.2s">
                             @if (!empty($Section_1_content_value['title']))
-                                {!! str_replace('DarziDesk', '<span class="text-gradient">DarziDesk</span>', $Section_1_content_value['title']) !!}
+                                {{ $Section_1_content_value['title'] }}
                             @else
-                                {{ __('DarziDesk - ') }} <span class="text-gradient">{{ __('Premium Tailoring') }}</span> {{ __('Management Software') }}
+                                {{ __('DarziDesk - Premium Tailoring Management Software') }}
                             @endif
                         </h1>
-                        <h4 class="mb-sm-4 text-muted wow fadeInUp lh-base" data-wow-delay="0.4s" style="max-width: 90%;">
+                        <h4 class="mb-sm-4 text-muted wow fadeInUp" data-wow-delay="0.4s">
                             @if (!empty($Section_1_content_value['sub_title']))
                                 {{ $Section_1_content_value['sub_title'] }}
                             @else
@@ -348,61 +178,59 @@
                                     $sec1_url = route('register');
                                 }
                             @endphp
-                            <a href="{{ $sec1_url }}" class="btn btn-primary btn-lg shadow-primary px-5 py-3 rounded-pill me-3 btn-hero">
+                            <a href="{{ $sec1_url }}" class="btn btn-secondary me-2">
                                 @if (!empty($Section_1_content_value['btn_name']))
                                     {{ $Section_1_content_value['btn_name'] }}
                                 @else
-                                    {{ __('Get Started Free') }}
+                                    {{ __('Get Started') }}
                                 @endif
-                                <i class="ti ti-chevron-right ms-2"></i>
                             </a>
+
                         </div>
-                        <div class="mb-4 mb-lg-0 d-inline-flex align-items-center wow fadeInUp hero-feature-glass" data-wow-delay="0.8s">
+                        <div class="mb-4 mb-lg-0 d-inline-flex align-items-center wow fadeInUp" data-wow-delay="0.8s">
                             <div class="flex-shrink-0">
-                                <div class="avtar avtar-l bg-primary text-white shadow-sm">
+                                <div class="avtar avtar-l bg-light-secondary text-secondary">
                                     @if (!empty($Section_1_content_value['section_footer_image_path']))
                                         <img src="{{ asset(Storage::url($Section_1_content_value['section_footer_image_path'])) }}"
                                             alt="user-image" class="img-fluid wid-80" />
                                     @else
-                                        <i class="ti ti-chart-bar fs-2"></i>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="32"
+                                            class="d-block" viewBox="0 0 118 94" role="img">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M24.509 0c-6.733 0-11.715 5.893-11.492 12.284.214 6.14-.064 14.092-2.066 20.577C8.943 39.365 5.547 43.485 0 44.014v5.972c5.547.529 8.943 4.649 10.951 11.153 2.002 6.485 2.28 14.437 2.066 20.577C12.794 88.106 17.776 94 24.51 94H93.5c6.733 0 11.714-5.893 11.491-12.284-.214-6.14.064-14.092 2.066-20.577 2.009-6.504 5.396-10.624 10.943-11.153v-5.972c-5.547-.529-8.934-4.649-10.943-11.153-2.002-6.484-2.28-14.437-2.066-20.577C105.214 5.894 100.233 0 93.5 0H24.508zM80 57.863C80 66.663 73.436 72 62.543 72H44a2 2 0 01-2-2V24a2 2 0 012-2h18.437c9.083 0 15.044 4.92 15.044 12.474 0 5.302-4.01 10.049-9.119 10.88v.277C75.317 46.394 80 51.21 80 57.863zM60.521 28.34H49.948v14.934h8.905c6.884 0 10.68-2.772 10.68-7.727 0-4.643-3.264-7.207-9.012-7.207zM49.948 49.2v16.458H60.91c7.167 0 10.964-2.876 10.964-8.281 0-5.406-3.903-8.178-11.425-8.178H49.948z"
+                                                fill="currentColor"></path>
+                                        </svg>
                                     @endif
                                 </div>
                             </div>
                             <div class="flex-grow-1 ms-3">
-                                <h6 class="mb-0 text-start fw-bold text-dark">
+                                <h5 class="mb-0 text-start">
                                     @if (!empty($Section_1_content_value['section_footer_text']))
                                         {{ $Section_1_content_value['section_footer_text'] }}
                                     @else
                                         {{ __('Track orders, store measurements, and handle billing—all in one simple system.') }}
                                     @endif
-                                </h6>
+                                </h5>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 position-relative">
-                        <div class="hero-image-wrapper">
-                            <div class="floating-icons">
-                                <div class="floating-icon icon-1"><i class="ti ti-cut text-primary"></i></div>
-                                <div class="floating-icon icon-2"><i class="ti ti-needle text-secondary"></i></div>
-                                <div class="floating-icon icon-3"><i class="ti ti-ruler-2 text-info"></i></div>
-                            </div>
-                            <div class="hero-image wow zoomIn" data-wow-delay="0.5s">
-                                @if (!empty($Section_1_content_value['section_main_image_path']))
-                                    <img src="{{ asset(Storage::url($Section_1_content_value['section_main_image_path'])) }}"
-                                        alt="user-image" class="img-fluid main-img" />
-                                @else
-                                    <img src="assets/images/landing/img-header-main.svg" alt="image"
-                                        class="img-fluid img-bg" />
-                                    <div class="img-widget-1">
-                                        <img src="assets/images/landing/img-widget-1.svg" alt="image"
-                                            class="img-fluid wow fadeInDown" data-wow-delay="0.6s" />
-                                    </div>
-                                    <div class="img-widget-2">
-                                        <img src="assets/images/landing/img-widget-2.svg" alt="image"
-                                            class="img-fluid wow fadeInDown" data-wow-delay="0.7s" />
-                                    </div>
-                                @endif
-                            </div>
+                    <div class="col-lg-6">
+                        <div class="hero-image">
+                            @if (!empty($Section_1_content_value['section_main_image_path']))
+                                <img src="{{ asset(Storage::url($Section_1_content_value['section_main_image_path'])) }}"
+                                    alt="user-image" class="img-fluid" />
+                            @else
+                                <img src="assets/images/landing/img-header-main.svg" alt="image"
+                                    class="img-fluid img-bg wow fadeInUp" data-wow-delay="0.5s" />
+                                <div class="img-widget-1">
+                                    <img src="assets/images/landing/img-widget-1.svg" alt="image"
+                                        class="img-fluid wow fadeInDown" data-wow-delay="0.6s" />
+                                </div>
+                                <div class="img-widget-2">
+                                    <img src="assets/images/landing/img-widget-2.svg" alt="image"
+                                        class="img-fluid wow fadeInDown" data-wow-delay="0.7s" />
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
