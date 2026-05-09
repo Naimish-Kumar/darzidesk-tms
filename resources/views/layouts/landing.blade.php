@@ -62,19 +62,115 @@
     <link rel="stylesheet" href="{{ asset('assets/css/landing.css') }}" />
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     <style>
-        .navbar {
-            padding: 5px 0 !important;
+        :root {
+            --primary-gradient: linear-gradient(135deg, #2196F3 0%, #673AB7 100%);
         }
+
+        .navbar {
+            padding: 8px 0 !important;
+            background: rgba(255, 255, 255, 0.8) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        header#home {
+            position: relative;
+            padding: 140px 0 80px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .hero-bg-blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(33, 150, 243, 0.1) 0%, rgba(103, 58, 183, 0.05) 70%, transparent 100%);
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .blob-1 { top: -100px; right: -100px; }
+        .blob-2 { bottom: -150px; left: -150px; }
+
+        .text-gradient {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(33, 150, 243, 0.08);
+            border: 1px solid rgba(33, 150, 243, 0.2);
+            border-radius: 50px;
+            color: #2196F3;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .btn-hero {
+            padding: 15px 35px;
+            font-weight: 700;
+            border-radius: 50px;
+            box-shadow: 0 10px 20px rgba(33, 150, 243, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-hero:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(33, 150, 243, 0.3);
+        }
+
         header .hero-image {
             transform-origin: bottom left !important;
             transform: scale(1.4) !important;
             margin-top: 0 !important;
+            position: relative;
+            z-index: 2;
         }
+
+        .floating-element {
+            position: absolute;
+            z-index: 3;
+            background: #fff;
+            padding: 12px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .element-1 { top: 10%; right: 10%; animation-delay: 0s; }
+        .element-2 { bottom: 20%; left: -20px; animation-delay: 1s; }
+        
+        .hero-feature-glass {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 20px;
+            padding: 15px 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: inline-flex;
+            align-items: center;
+        }
+
         @media (max-width: 991px) {
+            header#home { padding: 120px 0 40px; text-align: center; }
             header .hero-image {
                 transform: scale(1) !important;
                 transform-origin: center center !important;
+                margin-top: 40px !important;
             }
+            .element-1, .element-2 { display: none; }
         }
     </style>
 </head>
@@ -97,15 +193,15 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#home">{{ __('Home') }}</a>
+                        <a class="nav-link active px-3" href="#home">{{ __('Home') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#pricing">{{ __('Pricing') }}</a>
+                        <a class="nav-link px-3" href="#pricing">{{ __('Pricing') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#features">{{ __('Features') }}</a>
+                        <a class="nav-link px-3" href="#features">{{ __('Features') }}</a>
                     </li>
                     @php
                         $HomePage = App\Models\HomePage::where('section', 'Section 0')->first();
@@ -118,20 +214,20 @@
                         @foreach ($menus as $menu)
                             @if (in_array($menu->id, $active_menus))
                                 <li class="nav-item">
-                                    <a class="nav-link mb-2"
+                                    <a class="nav-link mb-2 px-3"
                                         href="{{ route('page', $menu->slug) }}">{{ $menu->title }}</a>
                                 </li>
                             @endif
                         @endforeach
                     @endif
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('blog.index') }}">{{ __('Blog') }}</a>
+                        <a class="nav-link px-3" href="{{ route('blog.index') }}">{{ __('Blog') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link me-2" href="{{ route('login') }}">{{ __('Login') }}</a>
+                        <a class="nav-link me-3 ms-2" href="{{ route('login') }}">{{ __('Login') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-secondary" href="{{ route('register') }}">
+                        <a class="btn btn-primary px-4 py-2 rounded-pill shadow-sm" href="{{ route('register') }}">
                             {{ __('Get Started') }}
                         </a>
                     </li>
@@ -149,21 +245,26 @@
     @endphp
     @if (empty($Section_1_content_value['section_enabled']) || $Section_1_content_value['section_enabled'] == 'active')
         <header id="home">
-            <div class="container">
+            <div class="hero-bg-blob blob-1"></div>
+            <div class="hero-bg-blob blob-2"></div>
+            <div class="container position-relative" style="z-index: 2;">
                 <div class="row align-items-center justify-content-between">
                     <div class="col-lg-6 col-xl-6">
-                        <h1 class="mt-sm-3 mb-sm-4 f-w-600 wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="hero-badge wow fadeInUp" data-wow-delay="0.1s">
+                            <i class="ti ti-sparkles me-1"></i> {{ __('Modern Tailoring Management') }}
+                        </div>
+                        <h1 class="mt-sm-3 mb-sm-4 f-w-700 wow fadeInUp lh-base" data-wow-delay="0.2s" style="font-size: 3.5rem;">
                             @if (!empty($Section_1_content_value['title']))
-                                {{ $Section_1_content_value['title'] }}
+                                {!! str_replace('DarziDesk', '<span class="text-gradient">DarziDesk</span>', $Section_1_content_value['title']) !!}
                             @else
-                                {{ __('DarziDesk - Premium Tailoring Management Software') }}
+                                {{ __('DarziDesk - ') }} <span class="text-gradient">{{ __('Premium') }}</span> {{ __('Management Software') }}
                             @endif
                         </h1>
-                        <h4 class="mb-sm-4 text-muted wow fadeInUp" data-wow-delay="0.4s">
+                        <h4 class="mb-sm-4 text-muted wow fadeInUp lh-base" data-wow-delay="0.4s" style="max-width: 90%;">
                             @if (!empty($Section_1_content_value['sub_title']))
                                 {{ $Section_1_content_value['sub_title'] }}
                             @else
-                                {{ __('DarziDesk helps boutiques and tailors manage orders, measurements, and staff with ease. Streamline your tailoring business today with our digital solution.') }}
+                                {{ __('DarziDesk helps boutiques and tailors manage orders, measurements, and staff with ease. Streamline your tailoring business today.') }}
                             @endif
                         </h4>
                         @php
@@ -178,47 +279,48 @@
                                     $sec1_url = route('register');
                                 }
                             @endphp
-                            <a href="{{ $sec1_url }}" class="btn btn-secondary me-2">
+                            <a href="{{ $sec1_url }}" class="btn btn-primary btn-hero me-3">
                                 @if (!empty($Section_1_content_value['btn_name']))
                                     {{ $Section_1_content_value['btn_name'] }}
                                 @else
-                                    {{ __('Get Started') }}
+                                    {{ __('Start Free Trial') }}
                                 @endif
+                                <i class="ti ti-chevron-right ms-2"></i>
                             </a>
-
                         </div>
-                        <div class="mb-4 mb-lg-0 d-inline-flex align-items-center wow fadeInUp" data-wow-delay="0.8s">
+                        <div class="mb-4 mb-lg-0 wow fadeInUp hero-feature-glass" data-wow-delay="0.8s">
                             <div class="flex-shrink-0">
-                                <div class="avtar avtar-l bg-light-secondary text-secondary">
+                                <div class="avtar avtar-l bg-primary text-white shadow-sm">
                                     @if (!empty($Section_1_content_value['section_footer_image_path']))
                                         <img src="{{ asset(Storage::url($Section_1_content_value['section_footer_image_path'])) }}"
                                             alt="user-image" class="img-fluid wid-80" />
                                     @else
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="32"
-                                            class="d-block" viewBox="0 0 118 94" role="img">
-                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                d="M24.509 0c-6.733 0-11.715 5.893-11.492 12.284.214 6.14-.064 14.092-2.066 20.577C8.943 39.365 5.547 43.485 0 44.014v5.972c5.547.529 8.943 4.649 10.951 11.153 2.002 6.485 2.28 14.437 2.066 20.577C12.794 88.106 17.776 94 24.51 94H93.5c6.733 0 11.714-5.893 11.491-12.284-.214-6.14.064-14.092 2.066-20.577 2.009-6.504 5.396-10.624 10.943-11.153v-5.972c-5.547-.529-8.934-4.649-10.943-11.153-2.002-6.484-2.28-14.437-2.066-20.577C105.214 5.894 100.233 0 93.5 0H24.508zM80 57.863C80 66.663 73.436 72 62.543 72H44a2 2 0 01-2-2V24a2 2 0 012-2h18.437c9.083 0 15.044 4.92 15.044 12.474 0 5.302-4.01 10.049-9.119 10.88v.277C75.317 46.394 80 51.21 80 57.863zM60.521 28.34H49.948v14.934h8.905c6.884 0 10.68-2.772 10.68-7.727 0-4.643-3.264-7.207-9.012-7.207zM49.948 49.2v16.458H60.91c7.167 0 10.964-2.876 10.964-8.281 0-5.406-3.903-8.178-11.425-8.178H49.948z"
-                                                fill="currentColor"></path>
-                                        </svg>
+                                        <i class="ti ti-check fs-3"></i>
                                     @endif
                                 </div>
                             </div>
                             <div class="flex-grow-1 ms-3">
-                                <h5 class="mb-0 text-start">
+                                <h6 class="mb-0 text-start fw-bold">
                                     @if (!empty($Section_1_content_value['section_footer_text']))
                                         {{ $Section_1_content_value['section_footer_text'] }}
                                     @else
-                                        {{ __('Track orders, store measurements, and handle billing—all in one simple system.') }}
+                                        {{ __('Trusted by 1000+ Tailors Worldwide') }}
                                     @endif
-                                </h5>
+                                </h6>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 position-relative">
+                        <div class="floating-element element-1">
+                            <i class="ti ti-cut text-primary fs-3"></i>
+                        </div>
+                        <div class="floating-element element-2">
+                            <i class="ti ti-ruler-2 text-secondary fs-3"></i>
+                        </div>
                         <div class="hero-image">
                             @if (!empty($Section_1_content_value['section_main_image_path']))
                                 <img src="{{ asset(Storage::url($Section_1_content_value['section_main_image_path'])) }}"
-                                    alt="user-image" class="img-fluid" />
+                                    alt="user-image" class="img-fluid" style="border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.1);" />
                             @else
                                 <img src="assets/images/landing/img-header-main.svg" alt="image"
                                     class="img-fluid img-bg wow fadeInUp" data-wow-delay="0.5s" />
