@@ -50,10 +50,6 @@ use App\Http\Controllers\InvoiceController;
 require __DIR__ . '/auth.php';
 
 Route::get('/', [HomeController::class, 'index'])->middleware(['XSS',])->name('home');
-Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
-Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
-Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index']);
-
 // Blog Management
 Route::middleware(['auth', 'XSS'])->group(function () {
     Route::get('blogs', [App\Http\Controllers\BlogController::class, 'adminIndex'])->name('blog.admin.index');
@@ -64,6 +60,10 @@ Route::middleware(['auth', 'XSS'])->group(function () {
     Route::delete('blog/{id}/destroy', [App\Http\Controllers\BlogController::class, 'destroy'])->name('blog.destroy');
     Route::post('blog/{id}/status', [App\Http\Controllers\BlogController::class, 'status'])->name('blog.status');
 });
+
+Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
+Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index']);
 
 Route::get('home', [HomeController::class, 'index'])->name('home')->middleware(
     [

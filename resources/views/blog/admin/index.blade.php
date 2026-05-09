@@ -100,32 +100,6 @@
                 }
             });
         });
-
-        // Direct handler for blog create to ensure it works
-        $(document).on('click', '.customModal', function(e) {
-            e.preventDefault();
-            var title = $(this).data('title');
-            var url = $(this).data('url');
-            var size = $(this).data('size') || 'md';
-
-            $("#customModal .modal-title").html(title);
-            $("#customModal .modal-dialog").addClass('modal-' + size);
-            $("#customModal .modal-body").html('<div class="text-center"><div class="spinner-border text-primary" role="status"></div></div>');
-            $("#customModal").modal('show');
-
-            $.ajax({
-                url: url,
-                success: function(data) {
-                    $("#customModal .modal-body").html(data);
-                    // Re-initialize any plugins if needed
-                    if (typeof select2 === "function") select2();
-                    if (typeof ckediter === "function") ckediter();
-                },
-                error: function() {
-                    $("#customModal .modal-body").html('<div class="text-center text-danger">Failed to load content.</div>');
-                }
-            });
-        });
     </script>
 @endpush
 

@@ -796,7 +796,7 @@
                 
                 <div class="swiper testimonials-slider wow fadeInUp" data-wow-delay="0.4s">
                     <div class="swiper-wrapper">
-                        @for ($is7 = 1; $is7 <= 12; $is7++)
+                        @for ($is7 = 1; $is7 <= 8; $is7++)
                             @php
                                 $name_key = 'Sec7_box' . $is7 . '_name';
                                 $tag_key = 'Sec7_box' . $is7 . '_tag';
