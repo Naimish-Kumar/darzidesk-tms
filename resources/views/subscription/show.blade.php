@@ -91,6 +91,68 @@
     <script src="https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
 
     <script>
+        $(document).ready(function() {
+            // Payment method selection
+            $('.payment-tile').on('click', function() {
+                var target = $(this).data('target');
+                $('.payment-tile').removeClass('active');
+                $(this).addClass('active');
+                $('.payment-form-section').addClass('d-none');
+                $(target).removeClass('d-none');
+            });
+
+            // Coupon synchronization
+            $(document).on('keyup change', '.packageCouponCodeInput', function() {
+                var code = $(this).val();
+                $('.packageCouponCodeHidden').val(code);
+            });
+
+            // Initialize first available payment method
+            $('.payment-tile').first().trigger('click');
+        });
+    </script>
+
+    <script>
+        @if ($settings['STRIPE_PAYMENT'] == 'on' && !empty($settings['STRIPE_KEY']) && !empty($settings['STRIPE_SECRET']))
+            var stripe_key = Stripe('{{ $settings['STRIPE_KEY'] }}');
+            var stripe_elements = stripe_key.elements();
+            var strip_css = {
+                base: {
+                    fontSize: '14px',
+                    color: '#32325d',
+                },
+            };
+            var stripe_card = stripe_elements.create('card', {
+            
+                style: strip_css
+            });
+            stripe_card.mount('#card-element');
+
+            var stripe_form = document.getElementById('stripe-payment-form');
+            if (stripe_form) {
+                stripe_form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    stripe_key.createToken(stripe_card).then(function(result) {
+                        if (result.error) {
+                            $("#stripe_card_errors").html(result.error.message);
+                            show_toastr('Error', result.error.message, 'error');
+                        } else {
+                            var token = result.token;
+                            var stripeForm = document.getElementById('stripe-payment-form');
+                            var stripeHiddenData = document.createElement('input');
+                            stripeHiddenData.setAttribute('type', 'hidden');
+                            stripeHiddenData.setAttribute('name', 'stripeToken');
+                            stripeHiddenData.setAttribute('value', token.id);
+                            stripeForm.appendChild(stripeHiddenData);
+                            stripeForm.submit();
+                        }
+                    });
+                });
+            }
+        @endif
+    </script>
+
+    <script>
         @if (
             $settings['flutterwave_payment'] == 'on' &&
                 !empty($settings['flutterwave_public_key']) &&
@@ -105,7 +167,6 @@
                 var customer_email = '{{ \Auth::user()->email }}';
                 var customer_name = '{{ \Auth::user()->name }}';
                 var flutterwave_public_key = '{{ $settings['flutterwave_public_key'] }}';
-                var nowTim = "{{ date('d-m-Y-h-i-a') }}";
                 var currency = '{{ $settings['CURRENCY'] }}';
 
                 if (amount) {
@@ -274,471 +335,382 @@
         </script>
     @endif
 @endpush
+@push('css-page')
+<style>
+    .payment-tile-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.25rem;
+        margin-bottom: 2rem;
+    }
+
+    .payment-tile {
+        flex: 1;
+        min-width: 140px;
+        max-width: 180px;
+        background: #ffffff;
+        border: 2px solid #eef2f6;
+        border-radius: 12px;
+        padding: 1.25rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .payment-tile:hover {
+        border-color: #5856d6;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 16px rgba(88, 86, 214, 0.08);
+    }
+
+    .payment-tile.active {
+        border-color: #5856d6;
+        background: #f8f9ff;
+        box-shadow: 0 8px 16px rgba(88, 86, 214, 0.12);
+    }
+
+    .payment-tile.active::after {
+        content: '\f00c';
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: #5856d6;
+        color: white;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        font-size: 10px;
+        line-height: 18px;
+    }
+
+    .payment-tile i {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .payment-tile span {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #2c3e50;
+    }
+
+    .payment-form-container {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+        border: 1px solid #f1f4f8;
+    }
+
+    .package-summary-card {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        color: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .package-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .info-item h6 {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-item p {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 0;
+    }
+
+    .coupon-box {
+        background: #fdfdfd;
+        border-radius: 10px;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        border: 1px dashed #d1d9e6;
+    }
+
+    .btn-pay-now {
+        padding: 10px 24px;
+        font-weight: 700;
+        border-radius: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+</style>
+@endpush
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
     <li class="breadcrumb-item"><a href="{{ route('subscriptions.index') }}">{{ __('Subscription') }}</a></li>
     <li class="breadcrumb-item" aria-current="page">{{ __('Details') }}</li>
 @endsection
 @section('content')
-    <div class="row pricing-grid">
+    <!-- Package Summary Section -->
+    <div class="row mb-4">
         <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <table class="display dataTable cell-border ">
-                        <thead>
-                            <tr>
-                                <th>{{ __('Title') }}</th>
-                                <th>{{ __('Amount') }}</th>
-                                <th>{{ __('Interval') }}</th>
-                                <th>{{ __('User Limit') }}</th>
-                                <th>{{ __('Customer Limit') }}</th>
-                                <th>{{ __('Cloth Type Limit') }}</th>
-                                <th>{{ __('Coupon Applicable') }}</th>
-                                <th>{{ __('User Logged History') }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    {{ $subscription->title }}
-                                </td>
-                                <td>
-                                    <b class="discoutedPrice">
-                                        {{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}{{ $subscription->package_amount }}</b>
-                                </td>
-                                <td>{{ $subscription->interval }} </td>
-                                <td>{{ $subscription->user_limit }} </td>
-                                <td>{{ $subscription->customer_limit }} </td>
-                                <td>{{ $subscription->cloth_type_limit }} </td>
-                                <td>
-                                    @if ($subscription->couponCheck() > 0)
-                                        <i class="text-success mr-4" data-feather="check-circle"></i>
-                                    @else
-                                        <i class="text-danger mr-4" data-feather="x-circle"></i>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($subscription->enabled_logged_history == 1)
-                                        <i class="text-success mr-4" data-feather="check-circle"></i>
-                                    @else
-                                        <i class="text-danger mr-4" data-feather="x-circle"></i>
-                                    @endif
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div class="package-summary-card shadow">
+                <div class="row align-items-center">
+                    <div class="col-md-4">
+                        <h3 class="text-white mb-1">{{ $subscription->title }}</h3>
+                        <span class="badge bg-white text-primary px-3 py-2 rounded-pill">{{ __('Active Subscription Selection') }}</span>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="package-info-grid">
+                            <div class="info-item">
+                                <h6>{{ __('Amount') }}</h6>
+                                <p class="discoutedPrice">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}{{ $subscription->package_amount }}</p>
+                            </div>
+                            <div class="info-item">
+                                <h6>{{ __('Interval') }}</h6>
+                                <p>{{ ucfirst($subscription->interval) }}</p>
+                            </div>
+                            <div class="info-item">
+                                <h6>{{ __('User Limit') }}</h6>
+                                <p>{{ $subscription->user_limit }}</p>
+                            </div>
+                            <div class="info-item">
+                                <h6>{{ __('Customer Limit') }}</h6>
+                                <p>{{ $subscription->customer_limit }}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Main Payment Selection Card -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent border-0 pt-4 px-4">
+                    <h5 class="fw-bold mb-0"><i class="ti ti-wallet me-2 text-primary"></i>{{ __('Choose Payment Method') }}</h5>
+                    <p class="text-muted small mt-1">{{ __('Select your preferred gateway to complete the transaction.') }}</p>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Method Selector -->
+                    <div class="payment-tile-container">
+                        @if ($settings['bank_transfer_payment'] == 'on')
+                            <div class="payment-tile" data-target="#bank-transfer-form">
+                                <i class="ti ti-building-bank text-primary"></i>
+                                <span>{{ __('Bank Transfer') }}</span>
+                            </div>
+                        @endif
 
-    <div class="row pricing-grid">
-        <div class="col-lg-12">
-            <div class="row">
-                @if ($settings['bank_transfer_payment'] == 'on')
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="row align-items-center g-2">
-                                    <div class="col">
-                                        <h5>{{ __('Bank Transfer Payment') }}</h5>
+                        @if ($settings['STRIPE_PAYMENT'] == 'on' && !empty($settings['STRIPE_KEY']) && !empty($settings['STRIPE_SECRET']))
+                            <div class="payment-tile" data-target="#stripe-form">
+                                <i class="ti ti-credit-card text-info"></i>
+                                <span>{{ __('Stripe') }}</span>
+                            </div>
+                        @endif
+
+                        @if ($settings['paypal_payment'] == 'on' && !empty($settings['paypal_client_id']) && !empty($settings['paypal_secret_key']))
+                            <div class="payment-tile" data-target="#paypal-form">
+                                <i class="ti ti-brand-paypal text-primary"></i>
+                                <span>{{ __('Paypal') }}</span>
+                            </div>
+                        @endif
+
+                        @if (!empty($settings['flutterwave_payment']) && $settings['flutterwave_payment'] == 'on' && !empty($settings['flutterwave_public_key']) && !empty($settings['flutterwave_secret_key']))
+                            <div class="payment-tile" data-target="#flutterwave-form">
+                                <i class="ti ti-wave-sine text-warning"></i>
+                                <span>{{ __('Flutterwave') }}</span>
+                            </div>
+                        @endif
+
+                        @if ($settings['paystack_payment'] == 'on' && !empty($settings['paystack_public_key']) && !empty($settings['paystack_secret_key']))
+                            <div class="payment-tile" data-target="#paystack-form">
+                                <i class="ti ti-stack text-success"></i>
+                                <span>{{ __('Paystack') }}</span>
+                            </div>
+                        @endif
+
+                        @if (($settings['razorpay_payment'] ?? 'off') == 'on' && !empty($settings['razorpay_key'] ?? '') && !empty($settings['razorpay_secret'] ?? ''))
+                            <div class="payment-tile" data-target="#razorpay-form">
+                                <i class="ti ti-rocket text-info"></i>
+                                <span>{{ __('Razorpay') }}</span>
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- Dynamic Form Area -->
+                    <div class="payment-form-container">
+                        @if ($subscription->couponCheck() > 0)
+                            <div class="coupon-box mb-4">
+                                <div class="row align-items-center">
+                                    <div class="col-md-5">
+                                        <div class="form-check custom-option mb-0">
+                                            <input class="form-check-input have_coupon" type="checkbox" value="" id="global_have_coupon">
+                                            <label class="form-check-label fw-bold" for="global_have_coupon">
+                                                {{ __('Have a Discount Coupon?') }}
+                                            </label>
+                                        </div>
                                     </div>
-                                    <div class="col-auto">
-                                        @if ($subscription->couponCheck() > 0)
-                                            <div class="setting-card action-menu">
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input have_coupon"
-                                                        id="have_bank_tran_coupon">
-                                                    <label
-                                                        for="have_bank_tran_coupon">{{ __('Have a Discount Coupon Code?') }}</label>
-                                                </div>
-                                            </div>
-                                        @endif
+                                    <div class="col-md-7 d-none coupon_div">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control packageCouponCodeInput" placeholder="{{ __('Enter Code') }}">
+                                            <button class="btn btn-primary packageCouponApplyBtn" type="button">{{ __('Apply') }}</button>
+                                        </div>
                                     </div>
                                 </div>
-
                             </div>
-                            <div class="card-body profile-user-box">
-                                <form
-                                    action="{{ route('subscription.bank.transfer', \Illuminate\Support\Facades\Crypt::encrypt($subscription->id)) }}"
-                                    method="post" class="require-validation" id="bank-payment"
-                                    enctype="multipart/form-data">
+                        @endif
+
+                        <!-- Form Sections -->
+                        
+                        <!-- Bank Transfer -->
+                        @if ($settings['bank_transfer_payment'] == 'on')
+                            <div id="bank-transfer-form" class="payment-form-section d-none">
+                                <form action="{{ route('subscription.bank.transfer', \Illuminate\Support\Facades\Crypt::encrypt($subscription->id)) }}" method="post" enctype="multipart/form-data">
                                     @csrf
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="card-name-on"
-                                                    class="form-label text-dark">{{ __('Bank Name') }}</label>
-                                                <p>{{ $settings['bank_name'] }}</p>
+                                    <input type="hidden" name="coupon" class="packageCouponCodeHidden">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="p-3 bg-light rounded border">
+                                                <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 10px;">{{ __('Bank Name') }}</small>
+                                                <h6 class="mb-0">{{ $settings['bank_name'] }}</h6>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="card-name-on"
-                                                    class="form-label text-dark">{{ __('Bank Holder Name') }}</label>
-                                                <p>{{ $settings['bank_holder_name'] }}</p>
+                                        <div class="col-md-6">
+                                            <div class="p-3 bg-light rounded border">
+                                                <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 10px;">{{ __('Account Holder') }}</small>
+                                                <h6 class="mb-0">{{ $settings['bank_holder_name'] }}</h6>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="card-name-on"
-                                                    class="form-label text-dark">{{ __('Bank Account Number') }}</label>
-                                                <p>{{ $settings['bank_account_number'] }}</p>
+                                        <div class="col-md-6">
+                                            <div class="p-3 bg-light rounded border">
+                                                <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 10px;">{{ __('Account Number') }}</small>
+                                                <h6 class="mb-0">{{ $settings['bank_account_number'] }}</h6>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="card-name-on"
-                                                    class="form-label text-dark">{{ __('Bank IFSC Code') }}</label>
-                                                <p>{{ $settings['bank_ifsc_code'] }}</p>
+                                        <div class="col-md-6">
+                                            <div class="p-3 bg-light rounded border">
+                                                <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 10px;">{{ __('IFSC Code') }}</small>
+                                                <h6 class="mb-0">{{ $settings['bank_ifsc_code'] }}</h6>
                                             </div>
                                         </div>
                                         @if (!empty($settings['bank_other_details']))
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="card-name-on"
-                                                        class="form-label text-dark">{{ __('Bank Other Details') }}</label>
-                                                    <p>{{ $settings['bank_other_details'] }}</p>
+                                            <div class="col-12">
+                                                <div class="p-3 bg-light rounded border">
+                                                    <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 10px;">{{ __('Instructions') }}</small>
+                                                    <p class="mb-0 small">{{ $settings['bank_other_details'] }}</p>
                                                 </div>
                                             </div>
                                         @endif
+                                        <div class="col-12 mt-3">
+                                            <label class="form-label fw-bold">{{ __('Payment Receipt (Image/PDF)') }}</label>
+                                            <input type="file" name="payment_receipt" class="form-control" required>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-primary btn-pay-now w-100 shadow-sm mt-2">{{ __('Submit Bank Transfer') }}</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        @endif
 
-                                        <div class="col-md-12 d-none coupon_div">
-                                            <div class="form-group">
-                                                <label for="card-name-on"
-                                                    class="form-label text-dark">{{ __('Coupon Code') }}</label>
-                                                <input type="text" name="coupon"
-                                                    class="form-control required packageCouponCode"
-                                                    placeholder="{{ __('Enter Coupon Code') }}">
-                                            </div>
+                        <!-- Stripe -->
+                        @if ($settings['STRIPE_PAYMENT'] == 'on' && !empty($settings['STRIPE_KEY']) && !empty($settings['STRIPE_SECRET']))
+                            <div id="stripe-form" class="payment-form-section d-none">
+                                <form action="{{ route('subscription.stripe.payment', \Illuminate\Support\Facades\Crypt::encrypt($subscription->id)) }}" method="post" id="stripe-payment-form">
+                                    @csrf
+                                    <input type="hidden" name="coupon" class="packageCouponCodeHidden">
+                                    <div class="row g-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-bold">{{ __('Card Holder Name') }}</label>
+                                            <input type="text" name="name" class="form-control" placeholder="Full Name" required>
                                         </div>
                                         <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="card-name-on"
-                                                    class="form-label text-dark">{{ __('Attachment') }}</label>
-                                                <input type="file" name="payment_receipt" id="payment_receipt"
-                                                    class="form-control" required>
-                                            </div>
+                                            <label class="form-label fw-bold">{{ __('Card Details') }}</label>
+                                            <div id="card-element" class="form-control" style="padding: 12px; border: 1px solid #ced4da;"></div>
+                                            <div id="stripe_card_errors" class="text-danger mt-2 small" role="alert"></div>
                                         </div>
-                                        <div class="col-sm-12 ">
-                                            <input type="button" value="{{ __('Coupon Apply') }}"
-                                                class="btn btn-primary packageCouponApplyBtn d-none coupon_div">
-                                            <input type="submit" value="{{ __('Pay') }}" class="btn btn-secondary">
+                                        <div class="col-12 mt-4">
+                                            <button type="submit" class="btn btn-primary btn-pay-now w-100 shadow-sm">{{ __('Pay Securely with Stripe') }}</button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
-                        </div>
-                    </div>
-                @endif
-                @if ($settings['STRIPE_PAYMENT'] == 'on' && !empty($settings['STRIPE_KEY']) && !empty($settings['STRIPE_SECRET']))
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="row align-items-center g-2">
-                                    <div class="col">
-                                        <h5>{{ __('Stripe Payment') }}</h5>
+                        @endif
+
+                        <!-- PayPal -->
+                        @if ($settings['paypal_payment'] == 'on' && !empty($settings['paypal_client_id']) && !empty($settings['paypal_secret_key']))
+                            <div id="paypal-form" class="payment-form-section d-none">
+                                <form action="{{ route('subscription.paypal', \Illuminate\Support\Facades\Crypt::encrypt($subscription->id)) }}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="coupon" class="packageCouponCodeHidden">
+                                    <div class="text-center py-3">
+                                        <i class="ti ti-brand-paypal text-primary display-4 mb-3"></i>
+                                        <h5 class="mb-2">{{ __('PayPal Checkout') }}</h5>
+                                        <p class="text-muted small px-md-5">{{ __('You will be redirected to PayPal\'s secure portal to complete your payment.') }}</p>
+                                        <button type="submit" class="btn btn-primary btn-pay-now w-100 shadow-sm mt-3">{{ __('Proceed to PayPal') }}</button>
                                     </div>
-                                    <div class="col-auto">
-                                        @if ($subscription->couponCheck() > 0)
-                                            <div class="setting-card action-menu">
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input have_coupon"
-                                                        id="have_stripe_coupon">
-                                                    <label
-                                                        for="have_stripe_coupon">{{ __('Have a Discount Coupon Code?') }}</label>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </div>
+                                </form>
+                            </div>
+                        @endif
+
+                        <!-- Flutterwave -->
+                        @if (!empty($settings['flutterwave_payment']) && $settings['flutterwave_payment'] == 'on')
+                            <div id="flutterwave-form" class="payment-form-section d-none">
+                                <div class="text-center py-3">
+                                    <i class="ti ti-wave-sine text-warning display-4 mb-3"></i>
+                                    <h5 class="mb-2">{{ __('Flutterwave Payment') }}</h5>
+                                    <p class="text-muted small">{{ __('Safe and fast payment via Flutterwave gateway.') }}</p>
+                                    <button type="button" id="flutterwavePaymentBtn" class="btn btn-primary btn-pay-now w-100 shadow-sm mt-3">{{ __('Pay with Flutterwave') }}</button>
                                 </div>
                             </div>
-                            <div class="card-body profile-user-box">
-                                <form
-                                    action="{{ route('subscription.stripe.payment', \Illuminate\Support\Facades\Crypt::encrypt($subscription->id)) }}"
-                                    method="post" class="require-validation" id="stripe-payment-form">
-                                    @csrf
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="card-name-on"
-                                                    class="form-label text-dark">{{ __('Card Name') }}</label>
-                                                <input type="text" name="name" id="card-name-on"
-                                                    class="form-control required"
-                                                    placeholder="{{ __('Card Holder Name') }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="card-name-on"
-                                                class="form-label text-dark">{{ __('Card Details') }}</label>
-                                            <div id="card-element">
-                                            </div>
-                                            <div id="stripe_card_errors" role="alert"></div>
-                                        </div>
+                        @endif
 
-                                        @if ($subscription->couponCheck() > 0)
-                                            <div class="col-md-12 d-none coupon_div">
-                                                <div class="form-group">
-                                                    <label for="card-name-on"
-                                                        class="form-label text-dark">{{ __('Coupon Code') }}</label>
-                                                    <input type="text" name="coupon"
-                                                        class="form-control required packageCouponCode"
-                                                        placeholder="{{ __('Enter Coupon Code') }}">
-                                                </div>
-                                            </div>
-                                        @endif
-                                        <div class="col-sm-12 mt-15">
-                                            @if ($subscription->couponCheck() > 0)
-                                                <input type="button" value="{{ __('Coupon Apply') }}"
-                                                    class="btn btn-primary packageCouponApplyBtn d-none coupon_div">
-                                            @endif
-                                            <input type="submit" value="{{ __('Pay') }}" class="btn btn-secondary">
-                                        </div>
+                        <!-- Paystack -->
+                        @if ($settings['paystack_payment'] == 'on')
+                            <div id="paystack-form" class="payment-form-section d-none">
+                                <form id="paystack-payment-form" method="POST" action="{{ route('subscription.pay.with.paystack') }}">
+                                    @csrf
+                                    <input type="hidden" name="plan_id" value="{{ Crypt::encrypt($subscription->id) }}">
+                                    <input type="hidden" name="coupon" class="packageCouponCodeHidden">
+                                    <div class="text-center py-3">
+                                        <i class="ti ti-stack text-success display-4 mb-3"></i>
+                                        <h5 class="mb-2">{{ __('Paystack Checkout') }}</h5>
+                                        <p class="text-muted small">{{ __('Fast and secure payment processing via Paystack.') }}</p>
+                                        <button type="button" class="btn btn-primary btn-pay-now w-100 shadow-sm mt-3" id="subscription_pay_with_paystack">{{ __('Pay with Paystack') }}</button>
                                     </div>
                                 </form>
                             </div>
-                        </div>
-                    </div>
-                @endif
+                        @endif
 
-                @if (
-                    $settings['paypal_payment'] == 'on' &&
-                        !empty($settings['paypal_client_id']) &&
-                        !empty($settings['paypal_secret_key']))
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="row align-items-center g-2">
-                                    <div class="col">
-                                        <h5>{{ __('Paypal Payment') }}</h5>
-                                    </div>
-                                    <div class="col-auto">
-                                        @if ($subscription->couponCheck() > 0)
-                                            <div class="setting-card action-menu">
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input have_coupon"
-                                                        id="have_paypal_coupon">
-                                                    <label
-                                                        for="have_paypal_coupon">{{ __('Have a Discount Coupon Code?') }}</label>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-
-
-                            </div>
-                            <div class="card-body profile-user-box">
-                                <form
-                                    action="{{ route('subscription.paypal', \Illuminate\Support\Facades\Crypt::encrypt($subscription->id)) }}"
-                                    method="post" class="require-validation">
+                        <!-- Razorpay -->
+                        @if (($settings['razorpay_payment'] ?? 'off') == 'on')
+                            <div id="razorpay-form" class="payment-form-section d-none">
+                                <form id="razorpay-payment-form" method="POST" action="{{ route('subscription.pay.with.razorpay') }}">
                                     @csrf
-                                    <div class="row">
-                                        @if ($subscription->couponCheck() > 0)
-                                            <div class="col-md-12 mt-15 d-none coupon_div">
-                                                <div class="form-group">
-                                                    <label for="card-name-on"
-                                                        class="form-label text-dark">{{ __('Coupon Code') }}</label>
-                                                    <input type="text" name="coupon"
-                                                        class="form-control required packageCouponCode"
-                                                        placeholder="{{ __('Enter Coupon Code') }}">
-                                                </div>
-                                            </div>
-                                        @endif
-                                        <div class="col-sm-12 mt-15">
-                                            @if ($subscription->couponCheck() > 0)
-                                                <input type="button" value="{{ __('Coupon Apply') }}"
-                                                    class="btn btn-primary packageCouponApplyBtn d-none coupon_div">
-                                            @endif
-                                            <input type="submit" value="{{ __('Pay') }}" class="btn btn-secondary">
-                                        </div>
+                                    <input type="hidden" name="plan_id" value="{{ Crypt::encrypt($subscription->id) }}">
+                                    <input type="hidden" name="coupon" class="packageCouponCodeHidden">
+                                    <div class="text-center py-3">
+                                        <i class="ti ti-rocket text-info display-4 mb-3"></i>
+                                        <h5 class="mb-2">{{ __('Razorpay Secure') }}</h5>
+                                        <p class="text-muted small">{{ __('India\'s most popular and secure payment gateway.') }}</p>
+                                        <button type="button" class="btn btn-primary btn-pay-now w-100 shadow-sm mt-3" id="subscription_pay_with_razorpay">{{ __('Pay with Razorpay') }}</button>
                                     </div>
                                 </form>
                             </div>
-                        </div>
+                        @endif
                     </div>
-                @endif
-
-                @if (
-                    !empty($settings['flutterwave_payment']) &&
-                        $settings['flutterwave_payment'] == 'on' &&
-                        !empty($settings['flutterwave_public_key']) &&
-                        !empty($settings['flutterwave_secret_key']))
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="row align-items-center g-2">
-                                    <div class="col">
-                                        <h5>{{ __('Flutterwave Payment') }}</h5>
-                                    </div>
-                                    <div class="col-auto">
-                                        @if ($subscription->couponCheck() > 0)
-                                            <div class="setting-card action-menu">
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input have_coupon"
-                                                        id="have_flutterwave_coupon">
-                                                    <label
-                                                        for="have_flutterwave_coupon">{{ __('Have a Discount Coupon Code?') }}</label>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body profile-user-box">
-                                <form action="#" class="require-validation" method="get">
-                                    @csrf
-                                    <div class="row">
-                                        @if ($subscription->couponCheck() > 0)
-                                            <div class="col-md-12 d-none coupon_div">
-                                                <div class="form-group">
-                                                    <label for="card-name-on"
-                                                        class="form-label text-dark">{{ __('Coupon Code') }}</label>
-                                                    <input type="text" name="coupon"
-                                                        class="form-control required packageCouponCode"
-                                                        placeholder="{{ __('Enter Coupon Code') }}">
-                                                </div>
-                                            </div>
-                                        @endif
-                                        <div class="col-sm-12">
-                                            @if ($subscription->couponCheck() > 0)
-                                                <input type="button" value="{{ __('Coupon Apply') }}"
-                                                    class="btn btn-primary packageCouponApplyBtn d-none coupon_div">
-                                            @endif
-                                            <input type="button" value="{{ __('Pay') }}" id="flutterwavePaymentBtn"
-                                                class="btn btn-secondary">
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-                @if (
-                    $settings['paystack_payment'] == 'on' &&
-                        !empty($settings['paystack_public_key']) &&
-                        !empty($settings['paystack_secret_key']))
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="d-inline">{{ __('Paystack') }}</h5>
-                                @if ($subscription->couponCheck() > 0)
-                                    <div class="setting-card action-menu float-end">
-                                        <div class="form-group mb-0">
-                                            <div class="form-check custom-chek">
-                                                <input class="form-check-input have_coupon" type="checkbox"
-                                                    value="" id="have_paystack_coupon">
-                                                <label class="form-check-label"
-                                                    for="have_paystack_coupon">{{ __('Have a Discount Coupon Code?') }}
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                            <div class="card-body profile-user-box">
-                                <form id="paystack-payment-form" method="POST"
-                                    action="{{ route('subscription.pay.with.paystack') }}" class="require-validation">
-                                    @csrf
-                                    <input type="hidden" name="plan_id"
-                                        value="{{ Crypt::encrypt($subscription->id) }}">
-
-                                    <div class="row">
-                                        @if ($subscription->couponCheck() > 0)
-                                            <div class="col-md-12 coupon_div d-none">
-                                                <div class="form-group">
-                                                    <label class="form-label text-dark"
-                                                        for="coupon">{{ __('Coupon Code') }}</label>
-                                                    <input type="text" id="coupon" name="coupon"
-                                                        class="form-control required packageCouponCode"
-                                                        placeholder="{{ __('Enter Coupon Code') }}">
-                                                </div>
-                                            </div>
-                                        @endif
-
-                                        <div class="col-sm-12">
-                                            @if ($subscription->couponCheck() > 0)
-                                                <button type="button"
-                                                    class="btn btn-warning packageCouponApplyBtn d-none coupon_div">
-                                                    {{ __('Coupon Apply') }}
-                                                </button>
-                                            @endif
-
-                                            <button type="button" class="btn btn-secondary"
-                                                id="subscription_pay_with_paystack">
-                                                {{ __('Pay') }}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
-                @endif
-                @if (
-                    ($settings['razorpay_payment'] ?? 'off') == 'on' &&
-                        !empty($settings['razorpay_key'] ?? '') &&
-                        !empty($settings['razorpay_secret'] ?? ''))
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="d-inline">{{ __('Razorpay') }}</h5>
-                                @if ($subscription->couponCheck() > 0)
-                                    <div class="setting-card action-menu float-end">
-                                        <div class="form-group mb-0">
-                                            <div class="form-check custom-chek">
-                                                <input class="form-check-input have_coupon" type="checkbox"
-                                                    value="" id="have_razorpay_coupon">
-                                                <label class="form-check-label"
-                                                    for="have_razorpay_coupon">{{ __('Have a Discount Coupon Code?') }}
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                            <div class="card-body profile-user-box">
-                                <form id="razorpay-payment-form" method="POST"
-                                    action="{{ route('subscription.pay.with.razorpay') }}" class="require-validation">
-                                    @csrf
-                                    <input type="hidden" name="plan_id"
-                                        value="{{ Crypt::encrypt($subscription->id) }}">
-
-                                    <div class="row">
-                                        @if ($subscription->couponCheck() > 0)
-                                            <div class="col-md-12 coupon_div d-none">
-                                                <div class="form-group">
-                                                    <label class="form-label text-dark"
-                                                        for="coupon">{{ __('Coupon Code') }}</label>
-                                                    <input type="text" id="coupon" name="coupon"
-                                                        class="form-control required packageCouponCode"
-                                                        placeholder="{{ __('Enter Coupon Code') }}">
-                                                </div>
-                                            </div>
-                                        @endif
-
-                                        <div class="col-sm-12">
-                                            @if ($subscription->couponCheck() > 0)
-                                                <button type="button"
-                                                    class="btn btn-warning packageCouponApplyBtn d-none coupon_div">
-                                                    {{ __('Coupon Apply') }}
-                                                </button>
-                                            @endif
-
-                                            <button type="button" class="btn btn-secondary"
-                                                id="subscription_pay_with_razorpay">
-                                                {{ __('Pay') }}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
-                @endif
+                </div>
             </div>
         </div>
     </div>
