@@ -299,6 +299,41 @@ if (!function_exists('priceFormat')) {
         return $settings['CURRENCY_SYMBOL'] . $price;
     }
 }
+
+if (!function_exists('dynamicPrice')) {
+    function dynamicPrice($amount)
+    {
+        $geo = session('geo_location');
+        $rates = \Cache::get('currency_rates');
+        $currency = $geo['currency'] ?? subscriptionPaymentSettings()['CURRENCY'] ?? 'USD';
+        
+        if ($rates && isset($rates[$currency])) {
+            $convertedAmount = $amount * $rates[$currency];
+            // Format with currency symbol
+            return getCurrencySymbol($currency) . number_format($convertedAmount, 2);
+        }
+
+        return priceFormat($amount);
+    }
+}
+
+if (!function_exists('getCurrencySymbol')) {
+    function getCurrencySymbol($currencyCode = null)
+    {
+        if (!$currencyCode) {
+            $geo = session('geo_location');
+            $currencyCode = $geo['currency'] ?? subscriptionPaymentSettings()['CURRENCY'] ?? 'USD';
+        }
+
+        $symbols = [
+            'USD' => '$', 'EUR' => '€', 'GBP' => '£', 'INR' => '₹', 'JPY' => '¥',
+            'AUD' => 'A$', 'CAD' => 'C$', 'CHF' => 'CHF', 'CNY' => '¥', 'SEK' => 'kr',
+            'NZD' => 'NZ$', 'AED' => 'د.إ', 'SAR' => 'ر.س', 'DKK' => 'kr', 'PLN' => 'zł'
+        ];
+
+        return $symbols[$currencyCode] ?? $currencyCode . ' ';
+    }
+}
 if (!function_exists('parentId')) {
     function parentId()
     {

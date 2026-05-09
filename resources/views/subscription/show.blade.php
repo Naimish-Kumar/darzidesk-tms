@@ -473,7 +473,10 @@
                         <div class="package-info-grid">
                             <div class="info-item">
                                 <h6>{{ __('Amount') }}</h6>
-                                <p class="discoutedPrice">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}{{ $subscription->package_amount }}</p>
+                                <p class="discoutedPrice mb-0">{{ dynamicPrice($subscription->package_amount) }}</p>
+                                @if(session('geo_location') && session('geo_location')['currency'] != (subscriptionPaymentSettings()['CURRENCY'] ?? 'USD'))
+                                    <small class="opacity-75" style="font-size: 0.7rem;">(≈ {{ priceFormat($subscription->package_amount) }})</small>
+                                @endif
                             </div>
                             <div class="info-item">
                                 <h6>{{ __('Interval') }}</h6>

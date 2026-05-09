@@ -158,11 +158,9 @@ class CouponController extends Controller
 
     public function apply(Request $request)
     {
-        $settings=subscriptionPaymentSettings();
         $package = Subscription::find(\Illuminate\Support\Facades\Crypt::decrypt($request->package));
         if ($package && $request->coupon != '') {
-            $currency = isset($settings['CURRENCY_SYMBOL'])?$settings['CURRENCY_SYMBOL']:'$';
-            $originalPrice=$currency.$package->package_amount;
+            $originalPrice = dynamicPrice($package->package_amount);
             $couponData = Coupon::where('code', $request->coupon)->where('status', '1')->first();
             if (!empty($couponData)) {
                 $applicable_packages = Coupon::whereRaw("find_in_set($package->id,applicable_packages)")->first();
@@ -171,29 +169,30 @@ class CouponController extends Controller
                     $response=[
                         'status' => false,
                         'price' => $package->package_amount,
-                        'final_price' => $originalPrice,
-                        'msg' => __('This coupon do not applicable packages for this package.'),
+                        'discoutedPrice' => $originalPrice,
+                        'msg' => __('This coupon is not applicable to this package.'),
                     ];
                     return response()->json($response);
                 }
                 $usedCoupun = $couponData->usedCoupon();
 
-                if (($couponData->use_limit == $usedCoupun) || $couponData->valid_for<date('Y-m-d')) {
+                if (($couponData->use_limit == $usedCoupun) || $couponData->valid_for < date('Y-m-d')) {
                     $response=[
                         'status' => false,
                         'discoutedPrice' => $originalPrice,
-                        'msg' => __('This coupon expired, please use another one.'),
+                        'msg' => __('This coupon has expired, please use another one.'),
                     ];
                     return response()->json($response);
 
                 } else {
 
                     if($couponData->type=='fixed'){
-                        $discoutedPrice = $currency.($package->package_amount - $couponData->rate);
+                        $finalAmount = $package->package_amount - $couponData->rate;
                     }else{
                         $discount_value = ($package->package_amount / 100) * $couponData->rate;
-                        $discoutedPrice = $currency.($package->package_amount - $discount_value);
+                        $finalAmount = $package->package_amount - $discount_value;
                     }
+                    $discoutedPrice = dynamicPrice($finalAmount);
                     $response=[
                         'status' => true,
                         'discoutedPrice' => $discoutedPrice,
@@ -211,6 +210,5 @@ class CouponController extends Controller
 
             }
         }
-
     }
 }

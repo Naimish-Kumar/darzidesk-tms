@@ -481,62 +481,75 @@
     @endphp
     @if ($settings['pricing_feature'] == 'on')
         @if (empty($Section_5_content_value['section_enabled']) || $Section_5_content_value['section_enabled'] == 'active')
-            <section class="bg-body pricingpricing" id="pricing">
+            <section class="bg-body pricingpricing" id="pricing" style="padding: 100px 0; background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(var(--primary-rgb), 0.03) 100%);">
                 <div class="container">
-                    <div class="row justify-content-center title">
+                    <div class="row justify-content-center title mb-5">
                         <div class="col-md-9 col-lg-6 text-center">
-                            <h2 class="h1">
-                                {{ !empty($Section_5_content_value['Sec5_title']) ? $Section_5_content_value['Sec5_title'] : 'Flexible Pricing' }}
+                            <span class="badge bg-light-primary text-primary text-uppercase fw-bold px-3 py-2 mb-3" style="letter-spacing: 1px;">{{ __('Pricing Plans') }}</span>
+                            <h2 class="h1 fw-bold mb-3">
+                                {{ !empty($Section_5_content_value['Sec5_title']) ? $Section_5_content_value['Sec5_title'] : __('Flexible Pricing for Everyone') }}
                             </h2>
-                            <p class="text-lg">
-                                {{ !empty($Section_5_content_value['Sec5_info']) ? $Section_5_content_value['Sec5_info'] : 'Get started for free, upgrade later in our application.' }}
+                            <p class="text-muted text-lg">
+                                {{ !empty($Section_5_content_value['Sec5_info']) ? $Section_5_content_value['Sec5_info'] : __('Choose a plan that fits your business needs. Transparent pricing with no hidden fees.') }}
                             </p>
                         </div>
                     </div>
-                    <div class="row text-center justify-content-center">
-                        <!-- [ sample-page ] start -->
+                    <div class="row g-4 justify-content-center">
                         @foreach ($subscriptions as $subscription)
                             <div class="col-md-6 col-lg-4">
-                                <div class="card price-card ">
-                                    <div class="card-body">
-                                        <h2 class="">{{ $subscription->title }}</h2>
-                                        <div class="price-price mt-4">
-                                            <sup>{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}</sup>
-                                            {{ $subscription->package_amount }}
-                                            <span>/{{ $subscription->interval }}</span>
+                                <div class="card pricing-card h-100 border-0 shadow-lg" style="border-radius: 24px; transition: transform 0.3s ease; overflow: hidden;">
+                                    <div class="card-body p-5">
+                                        <div class="d-flex justify-content-between align-items-center mb-4">
+                                            <h3 class="fw-bold mb-0">{{ $subscription->title }}</h3>
+                                            @if($loop->iteration == 2)
+                                                <span class="badge bg-primary text-white px-3 py-2 rounded-pill small">{{ __('Popular') }}</span>
+                                            @endif
                                         </div>
-                                        <ul class="list-group list-group-flush product-list">
-                                            <li class="list-group-item enable">{{ __('User Limit') }}
-                                                {{ $subscription->user_limit }}</li>
-                                            <li class="list-group-item enable">{{ __('Customer Limit') }}
-                                                {{ $subscription->customer_limit }}</li>
-                                            <li class="list-group-item enable">{{ __('Cloth Type Limit') }}
-                                                {{ $subscription->cloth_type_limit }}</li>
-                                            @if ($subscription->enabled_logged_history)
-                                                <li class="list-group-item enable">{{ __('Enabled Logged History') }}
-                                                </li>
-                                            @else
-                                                <li class="list-group-item">{{ __('Disable Logged History') }}</li>
+                                        
+                                        <div class="mb-4">
+                                            <div class="d-flex align-items-baseline flex-wrap">
+                                                <h2 class="display-5 fw-bold text-primary mb-0">{{ dynamicPrice($subscription->package_amount) }}</h2>
+                                                <span class="text-muted ms-2">/ {{ ucfirst($subscription->interval) }}</span>
+                                            </div>
+                                            @if(session('geo_location') && session('geo_location')['currency'] != (subscriptionPaymentSettings()['CURRENCY'] ?? 'USD'))
+                                                <small class="text-muted d-block mt-1" style="font-size: 0.85rem;">(≈ {{ priceFormat($subscription->package_amount) }})</small>
                                             @endif
-                                            @if ($subscription->couponCheck() > 0)
-                                                <li class="list-group-item enable">
-                                                    {{ __('Enabled Coupon Applicable') }}
-                                                </li>
-                                            @else
-                                                <li class="list-group-item">{{ __('Disable Coupon Applicable') }}
-                                                </li>
-                                            @endif
+                                        </div>
+
+                                        <p class="text-muted mb-4 small">{{ __('Unlock advanced features to scale your business efficiency.') }}</p>
+
+                                        <ul class="list-unstyled mb-5">
+                                            <li class="mb-3 d-flex align-items-center">
+                                                <i class="ti ti-circle-check text-primary f-20 me-2"></i>
+                                                <span><strong>{{ $subscription->user_limit }}</strong> {{ __('User Limit') }}</span>
+                                            </li>
+                                            <li class="mb-3 d-flex align-items-center">
+                                                <i class="ti ti-circle-check text-primary f-20 me-2"></i>
+                                                <span><strong>{{ $subscription->customer_limit }}</strong> {{ __('Customer Limit') }}</span>
+                                            </li>
+                                            <li class="mb-3 d-flex align-items-center">
+                                                <i class="ti ti-circle-check text-primary f-20 me-2"></i>
+                                                <span><strong>{{ $subscription->cloth_type_limit }}</strong> {{ __('Cloth Type Limit') }}</span>
+                                            </li>
+                                            <li class="mb-3 d-flex align-items-center {{ $subscription->enabled_logged_history ? '' : 'text-muted opacity-50' }}">
+                                                <i class="ti {{ $subscription->enabled_logged_history ? 'ti-circle-check text-primary' : 'ti-circle-x text-danger' }} f-20 me-2"></i>
+                                                <span class="{{ $subscription->enabled_logged_history ? '' : 'text-decoration-line-through' }}">{{ __('Logged History') }}</span>
+                                            </li>
+                                            <li class="mb-0 d-flex align-items-center {{ $subscription->couponCheck() > 0 ? '' : 'text-muted opacity-50' }}">
+                                                <i class="ti {{ $subscription->couponCheck() > 0 ? 'ti-circle-check text-primary' : 'ti-circle-x text-danger' }} f-20 me-2"></i>
+                                                <span class="{{ $subscription->couponCheck() > 0 ? '' : 'text-decoration-line-through' }}">{{ __('Coupons Support') }}</span>
+                                            </li>
                                         </ul>
-                                        <a class="btn btn-outline-primary bg-light text-primary mt-4"
-                                            href="{{ route('register') }}"
-                                            role="button">{{ __('Order Now') }}</a>
+
+                                        <a class="btn {{ $loop->iteration == 2 ? 'btn-primary' : 'btn-outline-primary' }} w-100 py-3 fw-bold rounded-pill shadow-sm"
+                                            href="{{ route('register') }}">
+                                            {{ __('Get Started Now') }} <i class="ti ti-arrow-right ms-2"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         @endforeach
-                        <!-- [ sample-page ] end -->
                     </div>
-
                 </div>
             </section>
         @endif
