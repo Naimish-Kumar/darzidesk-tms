@@ -63,6 +63,13 @@
         .navbar {
             padding: 5px 0 !important;
         }
+        header#home {
+            padding-bottom: 0 !important;
+            min-height: auto !important;
+        }
+        .section-top-reduce {
+            padding-top: 40px !important;
+        }
         header .hero-image {
             transform-origin: bottom left !important;
             transform: scale(1.4) !important;
@@ -244,7 +251,7 @@
             : [];
     @endphp
     @if (empty($Section_2_content_value['section_enabled']) || $Section_2_content_value['section_enabled'] == 'active')
-        <section>
+        <section class="section-top-reduce">
             <div class="container">
                 <div class="row g-4">
                     <div class="col-md-6 col-lg-4">
