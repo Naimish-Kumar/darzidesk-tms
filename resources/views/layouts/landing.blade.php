@@ -76,6 +76,82 @@
             transform: scale(1.4) !important;
             margin-top: 0 !important;
         }
+        .feature-card {
+            border: none !important;
+            border-radius: 24px !important;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.12) !important;
+        }
+
+        .feature-card .card-body {
+            padding: 35px 30px !important;
+            color: #fff !important;
+            position: relative;
+        }
+
+        .feature-card::before {
+            content: "";
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            z-index: 0;
+            transition: all 0.6s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scale(1.8);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .feature-card .h1 {
+            color: #fff !important;
+            font-weight: 800 !important;
+            letter-spacing: -1px;
+            margin-bottom: 5px !important;
+        }
+
+        .feature-card .h5 {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500 !important;
+            text-transform: uppercase;
+            font-size: 0.85rem !important;
+            letter-spacing: 1px;
+        }
+
+        .avtar.avtar-l {
+            width: 70px !important;
+            height: 70px !important;
+            background: rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 18px !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .avtar.avtar-l {
+            background: rgba(255, 255, 255, 0.3) !important;
+            transform: rotate(5deg);
+        }
+
+        .bg-secondary { background: linear-gradient(135deg, #00BFA5 0%, #00796B 100%) !important; }
+        .bg-blue-200 { background: linear-gradient(135deg, #42A5F5 0%, #1565C0 100%) !important; }
+        .bg-purple-200 { background: linear-gradient(135deg, #AB47BC 0%, #6A1B9A 100%) !important; }
+
         @media (max-width: 991px) {
             header .hero-image {
                 transform: scale(1) !important;
