@@ -340,7 +340,7 @@ class PaymentController extends Controller
                 $data['subscription_id'] = $subscription->id;
                 $data['amount'] = $price;
                 $data['subscription_transactions_id'] = $packageTransId;
-                $data['payment_type'] = 'Paypal';
+                $data['payment_type'] = 'Paystack';
                 PackageTransaction::transactionData($data);
 
                 if ($subscription->couponCheck() > 0 && !empty($request->coupon)) {
@@ -350,9 +350,11 @@ class PaymentController extends Controller
                 }
 
                 assignSubscription($subscription->id);
-                $res['msg'] = __("Subscription successfully upgraded.");
-                $res['flag'] = 2;
-                return $res;
+                return response()->json([
+                    'msg' => __("Subscription successfully upgraded."),
+                    'flag' => 2,
+                    'redirect' => route('subscriptions.index'),
+                ]);
             }
             $res_data['email'] = \Auth::user()->email;
             $res_data['total_price'] = $price;
@@ -467,7 +469,11 @@ class PaymentController extends Controller
                 }
 
                 assignSubscription($plan->id);
-                return redirect()->route('subscriptions.index')->with('success', __("Subscription successfully upgraded."));
+                return response()->json([
+                    'msg' => __("Subscription successfully upgraded."),
+                    'flag' => 2,
+                    'redirect' => route('subscriptions.index'),
+                ]);
             }
 
             $res_data['email'] = \Auth::user()->email;

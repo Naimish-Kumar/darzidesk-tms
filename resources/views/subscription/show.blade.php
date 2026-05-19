@@ -260,8 +260,13 @@
 
                                 const paymentHandler = PaystackPop.setup(paystackOptions);
                                 paymentHandler.openIframe();
+                            } else if (response.flag === 2) {
+                                show_toastr('Success', response.msg, 'success');
+                                setTimeout(function() {
+                                    window.location.href = response.redirect;
+                                }, 1000);
                             } else {
-                                show_toastr('Error', response.message, 'msg');
+                                show_toastr('Error', response.message || response.msg, 'error');
                                 $button.prop('disabled', false).text('Pay Now');
                             }
                         },
@@ -320,8 +325,13 @@
                             };
                             var rzp1 = new Razorpay(options);
                             rzp1.open();
+                        } else if (response.flag === 2) {
+                            show_toastr('Success', response.msg, 'success');
+                            setTimeout(function() {
+                                window.location.href = response.redirect;
+                            }, 1000);
                         } else {
-                            show_toastr('Error', response.message, 'msg');
+                            show_toastr('Error', response.message || response.msg, 'error');
                             $button.prop('disabled', false).text('Pay Now');
                         }
                     },

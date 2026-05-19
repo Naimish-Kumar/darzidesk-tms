@@ -320,6 +320,8 @@ class SettingController extends Controller
             'bank_transfer_payment' => $request->bank_transfer_payment ?? 'off',
             'STRIPE_PAYMENT' => $request->stripe_payment ?? 'off',
             'paypal_payment' => $request->paypal_payment ?? 'off',
+            'paystack_payment' => $request->paystack_payment ?? 'off',
+            'razorpay_payment' => $request->razorpay_payment ?? 'off',
         ];
         foreach ($currencyArray as $key => $val) {
             if (!empty($val)) {

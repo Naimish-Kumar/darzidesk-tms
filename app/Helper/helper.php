@@ -114,6 +114,10 @@ if (!function_exists('settingsKeys')) {
             "paystack_payment" => "off",
             "paystack_public_key" => "",
             "paystack_secret_key" => "",
+            "razorpay_payment" => "off",
+            "razorpay_key" => "",
+            "razorpay_secret" => "",
+            "razorpay_mode" => "test",
             'twilio_sid' => '',
             'twilio_token' => '',
             'twilio_from_number' => '',
@@ -175,6 +179,10 @@ if (!function_exists('subscriptionPaymentSettings')) {
                 "paystack_payment" => "off",
                 "paystack_public_key" => "",
                 "paystack_secret_key" => "",
+                "razorpay_payment" => "off",
+                "razorpay_key" => "",
+                "razorpay_secret" => "",
+                "razorpay_mode" => "test",
             ];
 
             foreach ($settingData as $setting) {
@@ -216,6 +224,10 @@ if (!function_exists('invoicePaymentSettings')) {
                 "paystack_payment" => "off",
                 "paystack_public_key" => "",
                 "paystack_secret_key" => "",
+                "razorpay_payment" => "off",
+                "razorpay_key" => "",
+                "razorpay_secret" => "",
+                "razorpay_mode" => "test",
             ];
 
             foreach ($settingData as $row) {
