@@ -79,8 +79,8 @@ if (!function_exists('settingsKeys')) {
             "order_number_prefix" => "#ODR-000",
             "invoice_number_prefix" => "#INV-000",
             "expense_number_prefix" => "#EXP-000",
-            'CURRENCY' => "USD",
-            'CURRENCY_SYMBOL' => "$",
+            'CURRENCY' => "INR",
+            'CURRENCY_SYMBOL' => "₹",
             'STRIPE_PAYMENT' => "off",
             'STRIPE_KEY' => "",
             'STRIPE_SECRET' => "",
@@ -133,6 +133,9 @@ if (!function_exists('settings')) {
             foreach ($settingData as $row) {
                 $details[$row->name] = $row->value;
             }
+            
+            $details['CURRENCY'] = 'INR';
+            $details['CURRENCY_SYMBOL'] = '₹';
 
             config([
                 'captcha.secret' => $details['recaptcha_secret'] ?? '',
@@ -151,8 +154,8 @@ if (!function_exists('subscriptionPaymentSettings')) {
         return Cache::remember('subscription_payment_settings', 3600, function () {
             $settingData = DB::table('settings')->where('type', 'payment')->where('parent_id', '=', 1)->get();
             $result = [
-                'CURRENCY' => "USD",
-                'CURRENCY_SYMBOL' => "$",
+                'CURRENCY' => "INR",
+                'CURRENCY_SYMBOL' => "₹",
                 'STRIPE_PAYMENT' => "off",
                 'STRIPE_KEY' => "",
                 'STRIPE_SECRET' => "",
@@ -178,6 +181,9 @@ if (!function_exists('subscriptionPaymentSettings')) {
                 $result[$setting->name] = $setting->value;
             }
 
+            $result['CURRENCY'] = 'INR';
+            $result['CURRENCY_SYMBOL'] = '₹';
+
             return $result;
         });
     }
@@ -189,8 +195,8 @@ if (!function_exists('invoicePaymentSettings')) {
         return Cache::remember('invoice_payment_settings_' . $id, 3600, function () use ($id) {
             $settingData = DB::table('settings')->where('type', 'payment')->where('parent_id', $id)->get();
             $result = [
-                'CURRENCY' => "USD",
-                'CURRENCY_SYMBOL' => "$",
+                'CURRENCY' => "INR",
+                'CURRENCY_SYMBOL' => "₹",
                 'STRIPE_PAYMENT' => "off",
                 'STRIPE_KEY' => "",
                 'STRIPE_SECRET' => "",
@@ -215,6 +221,10 @@ if (!function_exists('invoicePaymentSettings')) {
             foreach ($settingData as $row) {
                 $result[$row->name] = $row->value;
             }
+
+            $result['CURRENCY'] = 'INR';
+            $result['CURRENCY_SYMBOL'] = '₹';
+
             return $result;
         });
     }
@@ -303,35 +313,14 @@ if (!function_exists('priceFormat')) {
 if (!function_exists('dynamicPrice')) {
     function dynamicPrice($amount)
     {
-        $geo = session('geo_location');
-        $rates = \Cache::get('currency_rates');
-        $currency = $geo['currency'] ?? subscriptionPaymentSettings()['CURRENCY'] ?? 'USD';
-        
-        if ($rates && isset($rates[$currency])) {
-            $convertedAmount = $amount * $rates[$currency];
-            // Format with currency symbol
-            return getCurrencySymbol($currency) . number_format($convertedAmount, 2);
-        }
-
-        return priceFormat($amount);
+        return priceFormat(number_format((float)$amount, 2));
     }
 }
 
 if (!function_exists('getCurrencySymbol')) {
     function getCurrencySymbol($currencyCode = null)
     {
-        if (!$currencyCode) {
-            $geo = session('geo_location');
-            $currencyCode = $geo['currency'] ?? subscriptionPaymentSettings()['CURRENCY'] ?? 'USD';
-        }
-
-        $symbols = [
-            'USD' => '$', 'EUR' => '€', 'GBP' => '£', 'INR' => '₹', 'JPY' => '¥',
-            'AUD' => 'A$', 'CAD' => 'C$', 'CHF' => 'CHF', 'CNY' => '¥', 'SEK' => 'kr',
-            'NZD' => 'NZ$', 'AED' => 'د.إ', 'SAR' => 'ر.س', 'DKK' => 'kr', 'PLN' => 'zł'
-        ];
-
-        return $symbols[$currencyCode] ?? $currencyCode . ' ';
+        return '₹';
     }
 }
 if (!function_exists('parentId')) {
@@ -601,6 +590,9 @@ if (!function_exists('settingsById')) {
             foreach ($data as $row) {
                 $settings[$row->name] = $row->value;
             }
+
+            $settings['CURRENCY'] = 'INR';
+            $settings['CURRENCY_SYMBOL'] = '₹';
 
             config([
                 'captcha.secret' => $settings['recaptcha_key'] ?? '',

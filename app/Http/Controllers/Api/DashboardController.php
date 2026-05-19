@@ -19,6 +19,7 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $result = [];
+        $currency_symbol = settings()['CURRENCY_SYMBOL'] ?? '₹';
 
         if ($user->type == 'super admin') {
             // Super Admin features can be added here if needed
@@ -62,12 +63,12 @@ class DashboardController extends Controller
                 ],
                 'paid_amount' => [
                     'label' => 'Paid Amount',
-                    'value' => '$' . number_format($this->getCustomerAmount($user->id, 'paid'), 2),
+                    'value' => $currency_symbol . number_format($this->getCustomerAmount($user->id, 'paid'), 2),
                     'icon' => 'check_circle',
                 ],
                 'unpaid_amount' => [
                     'label' => 'Unpaid Amount',
-                    'value' => '$' . number_format($this->getCustomerAmount($user->id, 'unpaid'), 2),
+                    'value' => $currency_symbol . number_format($this->getCustomerAmount($user->id, 'unpaid'), 2),
                     'icon' => 'error_outline',
                 ],
             ];
@@ -87,12 +88,12 @@ class DashboardController extends Controller
                 ],
                 'total_income' => [
                     'label' => 'Total Income',
-                    'value' => '$' . number_format(InvoicePayment::where('parent_id', parentId())->sum('amount'), 2),
+                    'value' => $currency_symbol . number_format(InvoicePayment::where('parent_id', parentId())->sum('amount'), 2),
                     'icon' => 'trending_up',
                 ],
                 'total_expense' => [
                     'label' => 'Total Expense',
-                    'value' => '$' . number_format(Expense::where('parent_id', parentId())->sum('amount'), 2),
+                    'value' => $currency_symbol . number_format(Expense::where('parent_id', parentId())->sum('amount'), 2),
                     'icon' => 'trending_down',
                 ],
             ];

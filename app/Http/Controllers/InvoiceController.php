@@ -672,7 +672,7 @@ class InvoiceController extends Controller
     public function invoicePaystack(Request $request, $ids)
     {
         $payment_setting = $this->paymentSettings();
-        $currency = $payment_setting['CURRENCY'] ?? 'USD';
+        $currency = $payment_setting['CURRENCY'] ?? 'INR';
         $id = Crypt::decrypt($ids);
         $invoice = Invoice::find($id);
 

@@ -42,9 +42,9 @@ class GeoLocalization
                 } else {
                     // Fallback to default
                     Session::put('geo_location', [
-                        'country' => 'United States',
-                        'countryCode' => 'US',
-                        'currency' => 'USD'
+                        'country' => 'India',
+                        'countryCode' => 'IN',
+                        'currency' => 'INR'
                     ]);
                 }
             } catch (\Exception $e) {
@@ -86,7 +86,7 @@ class GeoLocalization
         if (!Cache::has('currency_rates')) {
             // Get base currency from subscription settings (usually USD or INR)
             $subSettings = subscriptionPaymentSettings();
-            $baseCurrency = $subSettings['CURRENCY'] ?? 'USD';
+            $baseCurrency = $subSettings['CURRENCY'] ?? 'INR';
             
             try {
                 $rateResponse = Http::get("https://api.exchangerate-api.com/v4/latest/{$baseCurrency}");

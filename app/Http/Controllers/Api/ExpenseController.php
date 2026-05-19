@@ -13,15 +13,16 @@ class ExpenseController extends Controller
 {
     public function index()
     {
+        $currency_symbol = settings()['CURRENCY_SYMBOL'] ?? '₹';
         $expenses = Expense::where('parent_id', parentId())
             ->orderBy('id', 'desc')
             ->get()
-            ->map(function($e) {
+            ->map(function($e) use ($currency_symbol) {
                 return [
                     'id' => $e->id,
                     'expense_id' => "#EXP" . $e->expense_id,
                     'title' => $e->title,
-                    'amount' => '$' . number_format($e->amount, 2),
+                    'amount' => $currency_symbol . number_format($e->amount, 2),
                     'date' => $e->date,
                     'category' => $e->category->name ?? 'Uncategorized',
                     'receipt' => !empty($e->receipt) ? asset('/storage/upload/receipt/' . $e->receipt) : null,

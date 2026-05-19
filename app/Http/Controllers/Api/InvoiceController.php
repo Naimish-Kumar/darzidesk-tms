@@ -14,6 +14,7 @@ class InvoiceController extends Controller
     {
         $user = Auth::user();
         $query = Invoice::orderBy('id', 'desc');
+        $currency_symbol = settings()['CURRENCY_SYMBOL'] ?? '₹';
 
         if ($user->type == 'customer') {
             $query->where('customer_id', $user->id);
@@ -25,7 +26,7 @@ class InvoiceController extends Controller
             $query->where('parent_id', parentId());
         }
 
-        $invoices = $query->get()->map(function($i) {
+        $invoices = $query->get()->map(function($i) use ($currency_symbol) {
             return [
                 'id' => $i->id,
                 'invoice_id' => "#INV" . $i->invoice_id,
@@ -33,9 +34,9 @@ class InvoiceController extends Controller
                 'date' => $i->invoice_date,
                 'due_date' => $i->due_date,
                 'status' => ucfirst($i->status),
-                'total_amount' => '$' . number_format($i->getTotal(), 2),
-                'paid_amount' => '$' . number_format($i->getPaidAmount(), 2),
-                'due_amount' => '$' . number_format($i->getDue(), 2),
+                'total_amount' => $currency_symbol . number_format($i->getTotal(), 2),
+                'paid_amount' => $currency_symbol . number_format($i->getPaidAmount(), 2),
+                'due_amount' => $currency_symbol . number_format($i->getDue(), 2),
             ];
         });
 
@@ -55,6 +56,8 @@ class InvoiceController extends Controller
             return response()->json(['success' => false, 'message' => 'Invoice not found'], 404);
         }
 
+        $currency_symbol = settings()['CURRENCY_SYMBOL'] ?? '₹';
+
         return response()->json([
             'success' => true,
             'data' => [
@@ -64,18 +67,18 @@ class InvoiceController extends Controller
                 'date' => $invoice->invoice_date,
                 'due_date' => $invoice->due_date,
                 'status' => ucfirst($invoice->status),
-                'items' => $invoice->items->map(function($item) {
+                'items' => $invoice->items->map(function($item) use ($currency_symbol) {
                     return [
                         'description' => $item->clothType->title ?? 'Tailoring Service',
                         'quantity' => $item->quantity,
-                        'rate' => '$' . number_format($item->amount, 2),
-                        'total' => '$' . number_format($item->amount * $item->quantity, 2),
+                        'rate' => $currency_symbol . number_format($item->amount, 2),
+                        'total' => $currency_symbol . number_format($item->amount * $item->quantity, 2),
                     ];
                 }),
                 'summary' => [
-                    'sub_total' => '$' . number_format($invoice->getSubTotal(), 2),
-                    'tax' => '$' . number_format($invoice->getTotalTax(), 2),
-                    'total' => '$' . number_format($invoice->getTotal(), 2),
+                    'sub_total' => $currency_symbol . number_format($invoice->getSubTotal(), 2),
+                    'tax' => $currency_symbol . number_format($invoice->getTotalTax(), 2),
+                    'total' => $currency_symbol . number_format($invoice->getTotal(), 2),
                 ]
             ]
         ]);

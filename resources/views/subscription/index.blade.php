@@ -49,7 +49,7 @@
                                         
                                         <div class="mb-4">
                                             <h2 class="fw-bold mb-0 text-primary">{{ dynamicPrice($subscription->package_amount) }}</h2>
-                                            @if(session('geo_location') && session('geo_location')['currency'] != (subscriptionPaymentSettings()['CURRENCY'] ?? 'USD'))
+                                            @if(session('geo_location') && session('geo_location')['currency'] != (subscriptionPaymentSettings()['CURRENCY'] ?? 'INR'))
                                                 <small class="text-muted d-block mt-1" style="font-size: 0.75rem;">(≈ {{ priceFormat($subscription->package_amount) }})</small>
                                             @endif
                                             <span class="text-muted small">/ {{ ucfirst($subscription->interval) }}</span>

@@ -411,7 +411,7 @@
                                             </div>
                                             <div class="form-group col-md-6">
                                                 {{ Form::label('CURRENCY_SYMBOL', __('Currency Icon'), ['class' => 'form-label']) }}
-                                                {{ Form::text('CURRENCY_SYMBOL', $settings['CURRENCY_SYMBOL'], ['class' => 'form-control', 'placeholder' => __('Enter currency symbol')]) }}
+                                                {{ Form::text('CURRENCY_SYMBOL', $settings['CURRENCY_SYMBOL'], ['class' => 'form-control', 'placeholder' => __('Enter currency symbol'), 'readonly' => 'readonly']) }}
                                             </div>
                                             <div class="col-md-6">
                                                 {{ Form::label('timezone', __('Timezone'), ['class' => 'form-label text-dark']) }}
@@ -577,11 +577,11 @@
                                         <div class="row">
                                             <div class="form-group col-md-6">
                                                 {{ Form::label('CURRENCY_SYMBOL', __('Currency Icon'), ['class' => 'form-label']) }}
-                                                {{ Form::text('CURRENCY_SYMBOL', $settings['CURRENCY_SYMBOL'], ['class' => 'form-control', 'placeholder' => __('Enter currency icon'), 'required']) }}
+                                                {{ Form::text('CURRENCY_SYMBOL', $settings['CURRENCY_SYMBOL'], ['class' => 'form-control', 'placeholder' => __('Enter currency icon'), 'required', 'readonly' => 'readonly']) }}
                                             </div>
                                             <div class="form-group col-md-6">
                                                 {{ Form::label('CURRENCY', __('Currency Code'), ['class' => 'form-label']) }}
-                                                {{ Form::text('CURRENCY', $settings['CURRENCY'], ['class' => 'form-control font-style', 'placeholder' => __('Enter currency code'), 'required']) }}
+                                                {{ Form::text('CURRENCY', $settings['CURRENCY'], ['class' => 'form-control font-style', 'placeholder' => __('Enter currency code'), 'required', 'readonly' => 'readonly']) }}
                                             </div>
                                         </div>
                                         <hr>

@@ -318,7 +318,7 @@ class PaymentController extends Controller
         $this->secret_key = isset($payment_setting['paystack_secret_key']) ? $payment_setting['paystack_secret_key'] : '';
         $this->public_key = isset($payment_setting['paystack_public_key']) ? $payment_setting['paystack_public_key'] : '';
         $this->is_enabled = isset($payment_setting['paystack_payment']) ? $payment_setting['paystack_payment'] : 'off';
-        $this->currency = isset($payment_setting['CURRENCY']) ? $payment_setting['CURRENCY'] : 'off';
+        $this->currency = isset($payment_setting['CURRENCY']) ? $payment_setting['CURRENCY'] : 'INR';
     }
 
     public function subscriptionPayWithPaystack(Request $request)
@@ -439,7 +439,7 @@ class PaymentController extends Controller
         $this->razorpay_secret = isset($payment_setting['razorpay_secret']) ? $payment_setting['razorpay_secret'] : '';
         $this->is_enabled = isset($payment_setting['razorpay_payment']) ? $payment_setting['razorpay_payment'] : 'off';
         $this->razorpay_mode = isset($payment_setting['razorpay_mode']) ? $payment_setting['razorpay_mode'] : 'test';
-        $this->currency = isset($payment_setting['CURRENCY']) ? $payment_setting['CURRENCY'] : 'USD';
+        $this->currency = isset($payment_setting['CURRENCY']) ? $payment_setting['CURRENCY'] : 'INR';
     }
 
     public function subscriptionPayWithRazorpay(Request $request)

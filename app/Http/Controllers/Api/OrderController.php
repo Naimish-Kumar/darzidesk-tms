@@ -13,6 +13,7 @@ class OrderController extends Controller
     {
         $user = Auth::user();
         $query = Order::orderBy('id', 'desc');
+        $currency_symbol = settings()['CURRENCY_SYMBOL'] ?? '₹';
 
         if ($user->type == 'customer') {
             $query->where('customer_id', $user->id);
@@ -22,7 +23,7 @@ class OrderController extends Controller
             $query->where('parent_id', parentId());
         }
 
-        $orders = $query->get()->map(function($o) {
+        $orders = $query->get()->map(function($o) use ($currency_symbol) {
             return [
                 'id' => $o->id,
                 'order_id' => $o->order_id,
@@ -32,7 +33,7 @@ class OrderController extends Controller
                 'deadline' => $o->deadline_date,
                 'status' => $o->status,
                 'status_label' => Order::$status[$o->status] ?? ucfirst($o->status),
-                'amount' => '$' . number_format($o->total_amount, 2),
+                'amount' => $currency_symbol . number_format($o->total_amount, 2),
             ];
         });
 
@@ -52,6 +53,8 @@ class OrderController extends Controller
             return response()->json(['success' => false, 'message' => 'Order not found'], 404);
         }
 
+        $currency_symbol = settings()['CURRENCY_SYMBOL'] ?? '₹';
+
         return response()->json([
             'success' => true,
             'data' => [
@@ -68,7 +71,7 @@ class OrderController extends Controller
                 'status' => $order->status,
                 'measurements' => $order->measurement,
                 'notes' => $order->notes,
-                'total' => '$' . number_format($order->total_amount, 2),
+                'total' => $currency_symbol . number_format($order->total_amount, 2),
             ]
         ]);
     }

@@ -474,7 +474,7 @@
                             <div class="info-item">
                                 <h6>{{ __('Amount') }}</h6>
                                 <p class="discoutedPrice mb-0">{{ dynamicPrice($subscription->package_amount) }}</p>
-                                @if(session('geo_location') && session('geo_location')['currency'] != (subscriptionPaymentSettings()['CURRENCY'] ?? 'USD'))
+                                @if(session('geo_location') && session('geo_location')['currency'] != (subscriptionPaymentSettings()['CURRENCY'] ?? 'INR'))
                                     <small class="opacity-75" style="font-size: 0.7rem;">(≈ {{ priceFormat($subscription->package_amount) }})</small>
                                 @endif
                             </div>

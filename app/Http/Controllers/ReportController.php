@@ -221,7 +221,7 @@ class ReportController extends Controller
             }
 
             $settings = settings();
-            $currency_symbol = $settings['CURRENCY_SYMBOL'] ?? '$';
+            $currency_symbol = $settings['CURRENCY_SYMBOL'] ?? '₹';
 
             $html = view('report.yearly_summary_table', compact('report'))->render();
 
