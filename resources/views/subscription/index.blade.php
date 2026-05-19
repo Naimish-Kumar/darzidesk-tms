@@ -33,6 +33,10 @@
                 </div>
                 <div class="card-body p-4">
                     <div class="row g-4">
+                        @php
+                            $currentPlan = $subscriptions->where('id', \Auth::user()->subscription)->first();
+                            $currentPlanAmount = $currentPlan ? $currentPlan->package_amount : 0;
+                        @endphp
                         @foreach ($subscriptions as $subscription)
                             <div class="col-xl-4 col-md-6">
                                 <div class="card pricing-card shadow-sm border-0 h-100 {{ \Auth::user()->subscription == $subscription->id ? 'border-primary border-2' : '' }}" style="border-radius: 16px; overflow: hidden; transition: all 0.3s ease;">
@@ -110,10 +114,21 @@
                                                 </div>
                                             @else
                                                 @if (\Auth::user()->type == 'owner' && \Auth::user()->subscription != $subscription->id)
-                                                    <a href="{{ route('subscriptions.show', \Illuminate\Support\Facades\Crypt::encrypt($subscription->id)) }}"
-                                                        class="btn btn-primary w-100 shadow-sm py-2 fw-bold">
-                                                        <i class="ti ti-shopping-cart me-2"></i>{{ __('Upgrade Now') }}
-                                                    </a>
+                                                    @if ($subscription->package_amount > $currentPlanAmount)
+                                                        <a href="{{ route('subscriptions.show', \Illuminate\Support\Facades\Crypt::encrypt($subscription->id)) }}"
+                                                            class="btn btn-primary w-100 shadow-sm py-2 fw-bold">
+                                                            <i class="ti ti-shopping-cart me-2"></i>{{ __('Upgrade Now') }}
+                                                        </a>
+                                                    @elseif ($subscription->package_amount == 0)
+                                                        <a href="{{ route('subscriptions.show', \Illuminate\Support\Facades\Crypt::encrypt($subscription->id)) }}"
+                                                            class="btn btn-primary w-100 shadow-sm py-2 fw-bold">
+                                                            <i class="ti ti-shopping-cart me-2"></i>{{ __('Get Started') }}
+                                                        </a>
+                                                    @else
+                                                        <button class="btn btn-light w-100 py-2 fw-bold" disabled>
+                                                            <i class="ti ti-arrow-down me-2"></i>{{ __('Current plan is higher') }}
+                                                        </button>
+                                                    @endif
                                                 @endif
                                             @endif
 
