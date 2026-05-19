@@ -1,3 +1,38 @@
+# DarziDesk TMS - robots.txt
+# https://darzidesk.shop
+
 User-agent: *
 Allow: /
+Allow: /page/
+Allow: /blog/
+
+# Block admin/auth areas from crawling
+Disallow: /login
+Disallow: /register
+Disallow: /password/
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /order/
+Disallow: /invoice/
+Disallow: /expense/
+Disallow: /customer/
+Disallow: /measurement/
+Disallow: /cloth-type/
+Disallow: /employee/
+Disallow: /role/
+Disallow: /subscription/
+Disallow: /coupon/
+Disallow: /tax/
+Disallow: /report/
+Disallow: /api/
+Disallow: /storage/
+Disallow: /sanctum/
+
+# Block asset directories that don't need indexing
+Disallow: /assets/js/
+Disallow: /assets/css/
+Disallow: /assets/fonts/
+Disallow: /vendor/
+
+# Sitemap
 Sitemap: https://darzidesk.shop/sitemap.xml
