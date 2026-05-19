@@ -119,11 +119,6 @@
                                                             class="btn btn-primary w-100 shadow-sm py-2 fw-bold">
                                                             <i class="ti ti-shopping-cart me-2"></i>{{ __('Upgrade Now') }}
                                                         </a>
-                                                    @elseif ($subscription->package_amount == 0)
-                                                        <a href="{{ route('subscriptions.show', \Illuminate\Support\Facades\Crypt::encrypt($subscription->id)) }}"
-                                                            class="btn btn-primary w-100 shadow-sm py-2 fw-bold">
-                                                            <i class="ti ti-shopping-cart me-2"></i>{{ __('Get Started') }}
-                                                        </a>
                                                     @else
                                                         <button class="btn btn-light w-100 py-2 fw-bold" disabled>
                                                             <i class="ti ti-arrow-down me-2"></i>{{ __('Current plan is higher') }}
