@@ -18,7 +18,7 @@
 
         $(document).on('click', '.packageCouponApplyBtn', function() {
             var element = $(this);
-            var couponCode = element.closest('.row').find('.packageCouponCode').val();
+            var couponCode = element.closest('.row').find('.packageCouponCodeInput').val();
             $.ajax({
                 url: '{{ route('coupons.apply') }}',
                 datType: 'json',
