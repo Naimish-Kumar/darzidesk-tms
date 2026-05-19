@@ -50,12 +50,10 @@
 
     <style>
         :root {
-            --page-primary: #4f46e5;
-            --page-primary-light: #eef2ff;
-            --page-primary-dark: #3730a3;
-            --page-gradient-start: #4f46e5;
-            --page-gradient-end: #7c3aed;
-            --page-text: #1e293b;
+            --page-primary: var(--bs-primary);
+            --page-primary-light: var(--bs-primary-light);
+            --page-primary-dark: var(--bs-secondary);
+            --page-text: var(--pc-heading-color, #343a40);
             --page-text-muted: #64748b;
             --page-bg: #f8fafc;
             --page-card-bg: #ffffff;
@@ -119,15 +117,15 @@
             color: var(--page-primary);
         }
         .policy-navbar .nav-links .btn-cta {
-            background: linear-gradient(135deg, var(--page-gradient-start), var(--page-gradient-end));
+            background: var(--bs-secondary);
             color: #fff !important;
             padding: 9px 22px;
             border-radius: 10px;
             font-weight: 600;
-            box-shadow: 0 2px 12px rgba(79,70,229,0.25);
+            box-shadow: 0 2px 12px rgba(var(--bs-secondary-rgb), 0.25);
         }
         .policy-navbar .nav-links .btn-cta:hover {
-            box-shadow: 0 4px 20px rgba(79,70,229,0.4);
+            box-shadow: 0 4px 20px rgba(var(--bs-secondary-rgb), 0.4);
             transform: translateY(-1px);
         }
         .policy-navbar .nav-toggle {
@@ -153,7 +151,7 @@
             padding: 160px 24px 80px;
             text-align: center;
             overflow: hidden;
-            background: linear-gradient(160deg, #0f172a 0%, #1e1b4b 40%, #312e81 70%, #4338ca 100%);
+            background: linear-gradient(160deg, rgba(var(--bs-primary-rgb), 0.95) 0%, rgba(var(--bs-secondary-rgb), 0.9) 100%);
         }
         .policy-hero::before {
             content: '';
@@ -162,8 +160,8 @@
             left: -20%;
             width: 140%;
             height: 200%;
-            background: radial-gradient(ellipse at 30% 50%, rgba(99,102,241,0.15) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 30%, rgba(139,92,246,0.12) 0%, transparent 50%);
+            background: radial-gradient(ellipse at 30% 50%, rgba(var(--bs-primary-rgb), 0.2) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 30%, rgba(var(--bs-secondary-rgb), 0.15) 0%, transparent 50%);
             pointer-events: none;
         }
         .policy-hero::after {
@@ -193,7 +191,7 @@
         }
         .policy-hero .hero-badge i {
             font-size: 14px;
-            color: #a5b4fc;
+            color: rgba(255,255,255,0.7);
         }
         .policy-hero h1 {
             font-size: clamp(32px, 5vw, 52px);
