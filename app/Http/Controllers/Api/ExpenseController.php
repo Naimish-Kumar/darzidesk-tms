@@ -85,4 +85,41 @@ class ExpenseController extends Controller
         $latest = Expense::where('parent_id', parentId())->latest()->first();
         return $latest ? $latest->expense_id + 1 : 1;
     }
+
+    public function update(Request $request, $id)
+    {
+        $expense = Expense::where('id', $id)->where('parent_id', parentId())->first();
+        if (!$expense) {
+            return response()->json(['success' => false, 'message' => 'Expense not found'], 404);
+        }
+
+        if ($request->title) $expense->title = $request->title;
+        if ($request->amount) $expense->amount = $request->amount;
+        if ($request->date) $expense->date = $request->date;
+        if ($request->category_id) $expense->category_id = $request->category_id;
+
+        if ($request->hasFile('receipt')) {
+            $receiptFileName = $request->file('receipt')->hashName();
+            $request->file('receipt')->storeAs('upload/receipt/', $receiptFileName);
+            $expense->receipt = $receiptFileName;
+        }
+
+        $expense->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Expense updated successfully',
+            'data' => $expense
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        $expense = Expense::where('id', $id)->where('parent_id', parentId())->first();
+        if (!$expense) {
+            return response()->json(['success' => false, 'message' => 'Expense not found'], 404);
+        }
+        $expense->delete();
+        return response()->json(['success' => true, 'message' => 'Expense deleted successfully']);
+    }
 }

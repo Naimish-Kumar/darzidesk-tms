@@ -101,4 +101,35 @@ class MeasurementController extends Controller
             'data' => $measurement
         ]);
     }
+
+    public function update(Request $request, $id)
+    {
+        $measurement = Measurement::where('id', $id)->where('parent_id', parentId())->first();
+        if (!$measurement) {
+            return response()->json(['success' => false, 'message' => 'Measurement not found'], 404);
+        }
+
+        if ($request->customer) $measurement->customer = $request->customer;
+        if ($request->date) $measurement->date = $request->date;
+        if ($request->cloth_type) $measurement->cloth_type = $request->cloth_type;
+        if ($request->responsible) $measurement->responsible = $request->responsible;
+        if ($request->details) $measurement->measurement_detail = $request->details;
+        $measurement->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Measurement updated successfully',
+            'data' => $measurement
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        $measurement = Measurement::where('id', $id)->where('parent_id', parentId())->first();
+        if (!$measurement) {
+            return response()->json(['success' => false, 'message' => 'Measurement not found'], 404);
+        }
+        $measurement->delete();
+        return response()->json(['success' => true, 'message' => 'Measurement deleted successfully']);
+    }
 }

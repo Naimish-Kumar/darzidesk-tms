@@ -33,4 +33,34 @@ class CustomerController extends Controller
 
         return response()->json(['success' => true, 'data' => $customer]);
     }
+
+    public function update(Request $request, $id)
+    {
+        $customer = User::where('id', $id)->where('parent_id', parentId())->where('type', 'customer')->first();
+        if (!$customer) {
+            return response()->json(['success' => false, 'message' => 'Customer not found'], 404);
+        }
+
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $id,
+        ]);
+
+        $customer->name = $request->name;
+        $customer->email = $request->email;
+        if ($request->phone_number) $customer->phone_number = $request->phone_number;
+        $customer->save();
+
+        return response()->json(['success' => true, 'message' => 'Customer updated successfully', 'data' => $customer]);
+    }
+
+    public function destroy($id)
+    {
+        $customer = User::where('id', $id)->where('parent_id', parentId())->where('type', 'customer')->first();
+        if (!$customer) {
+            return response()->json(['success' => false, 'message' => 'Customer not found'], 404);
+        }
+        $customer->delete();
+        return response()->json(['success' => true, 'message' => 'Customer deleted successfully']);
+    }
 }
