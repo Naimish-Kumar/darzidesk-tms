@@ -153,6 +153,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Subscription Routes
     Route::get('/subscriptions', [\App\Http\Controllers\Api\SubscriptionController::class, 'index']);
+    Route::get('/subscriptions/razorpay-config', [\App\Http\Controllers\Api\SubscriptionController::class, 'getRazorpayConfig']);
+    Route::post('/subscriptions/verify-razorpay', [\App\Http\Controllers\Api\SubscriptionController::class, 'verifyRazorpayPayment']);
     Route::get('/subscription-transactions', [\App\Http\Controllers\Api\SubscriptionController::class, 'transactions']);
     Route::post('/subscriptions/{id}/activate-mock', [\App\Http\Controllers\Api\SubscriptionController::class, 'activateMock']);
 

@@ -156,4 +156,75 @@ class SubscriptionController extends Controller
             ], 400);
         }
     }
+    public function getRazorpayConfig()
+    {
+        $user = Auth::user();
+        if ($user->type != 'owner') {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+        $payment_setting = settingsById(1);
+        return response()->json([
+            'success' => true,
+            'razorpay_key' => $payment_setting['razorpay_key'] ?? '',
+            'currency' => $payment_setting['CURRENCY'] ?? 'INR'
+        ]);
+    }
+
+    public function verifyRazorpayPayment(Request $request)
+    {
+        $user = Auth::user();
+        if ($user->type != 'owner') {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'plan_id' => 'required|integer',
+            'razorpay_payment_id' => 'required|string',
+        ]);
+
+        $plan = Subscription::find($request->plan_id);
+        if (!$plan) {
+            return response()->json(['success' => false, 'message' => 'Subscription plan not found.'], 404);
+        }
+
+        $payment_setting = settingsById(1);
+        $razorpay_key = $payment_setting['razorpay_key'] ?? '';
+        $razorpay_secret = $payment_setting['razorpay_secret'] ?? '';
+
+        try {
+            $api = new \Razorpay\Api\Api($razorpay_key, $razorpay_secret);
+            $payment = $api->payment->fetch($request->razorpay_payment_id);
+
+            // In test mode, status might be authorized, in live usually captured if auto-capture is on
+            if ($payment->status == 'captured' || $payment->status == 'authorized') {
+                $price = $plan->package_amount;
+                $packageTransId = uniqid('', true);
+
+                $data = [];
+                $data['holder_name'] = $user->name;
+                $data['subscription_id'] = $plan->id;
+                $data['amount'] = $price;
+                $data['subscription_transactions_id'] = $packageTransId;
+                $data['payment_type'] = 'Razorpay';
+                
+                PackageTransaction::transactionData($data);
+                assignSubscription($plan->id);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Subscription activated successfully.'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Transaction was not captured successfully.'
+                ], 400);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Razorpay Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
