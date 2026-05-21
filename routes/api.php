@@ -99,7 +99,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // Order Routes
     Route::get('/orders', [\App\Http\Controllers\Api\OrderController::class, 'index']);
     Route::get('/orders/statuses', [\App\Http\Controllers\Api\OrderController::class, 'getStatuses']);
+    Route::post('/orders', [\App\Http\Controllers\Api\OrderController::class, 'store']);
     Route::get('/orders/{id}', [\App\Http\Controllers\Api\OrderController::class, 'show']);
+    Route::put('/orders/{id}', [\App\Http\Controllers\Api\OrderController::class, 'update']);
+    Route::delete('/orders/{id}', [\App\Http\Controllers\Api\OrderController::class, 'destroy']);
     Route::patch('/orders/{id}/status', [\App\Http\Controllers\Api\OrderController::class, 'updateStatus']);
 
     // Expense Routes
@@ -111,8 +114,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Invoice Routes
     Route::get('/invoices', [\App\Http\Controllers\Api\InvoiceController::class, 'index']);
+    Route::post('/invoices', [\App\Http\Controllers\Api\InvoiceController::class, 'store']);
     Route::get('/invoices/{id}', [\App\Http\Controllers\Api\InvoiceController::class, 'show']);
+    Route::put('/invoices/{id}', [\App\Http\Controllers\Api\InvoiceController::class, 'update']);
+    Route::delete('/invoices/{id}', [\App\Http\Controllers\Api\InvoiceController::class, 'destroy']);
     Route::get('/invoices/{id}/receipt', [\App\Http\Controllers\Api\InvoiceController::class, 'receipt'])->name('api.receipt');
+    
+    // Invoice Items & Payments
+    Route::post('/invoices/{id}/items', [\App\Http\Controllers\Api\InvoiceController::class, 'invoiceItemStore']);
+    Route::delete('/invoices/{invoice_id}/items/{id}', [\App\Http\Controllers\Api\InvoiceController::class, 'invoiceItemDestroy']);
+    Route::post('/invoices/{id}/payments', [\App\Http\Controllers\Api\InvoiceController::class, 'invoicePaymentStore']);
+    Route::delete('/invoices/{invoice_id}/payments/{id}', [\App\Http\Controllers\Api\InvoiceController::class, 'invoicePaymentDestroy']);
 
     // Customer Routes
     Route::get('/customers', [\App\Http\Controllers\Api\CustomerController::class, 'index']);
@@ -122,6 +134,18 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Cloth Type Routes
     Route::get('/cloth-types', [\App\Http\Controllers\Api\ClothTypeController::class, 'index']);
+    Route::post('/cloth-types', [\App\Http\Controllers\Api\ClothTypeController::class, 'store']);
+    Route::put('/cloth-types/{id}', [\App\Http\Controllers\Api\ClothTypeController::class, 'update']);
+    Route::delete('/cloth-types/{id}', [\App\Http\Controllers\Api\ClothTypeController::class, 'destroy']);
+    
+    // Notice Board Routes
+    Route::get('/notes', [\App\Http\Controllers\Api\NoticeBoardController::class, 'index']);
+    Route::post('/notes', [\App\Http\Controllers\Api\NoticeBoardController::class, 'store']);
+    Route::put('/notes/{id}', [\App\Http\Controllers\Api\NoticeBoardController::class, 'update']);
+    Route::delete('/notes/{id}', [\App\Http\Controllers\Api\NoticeBoardController::class, 'destroy']);
+    
+    // Report Routes
+    Route::get('/reports/yearly-profit-loss', [\App\Http\Controllers\Api\ReportController::class, 'getYearlyProfitLoss']);
 
     Route::get('/user', function (Request $request) {
         return $request->user();

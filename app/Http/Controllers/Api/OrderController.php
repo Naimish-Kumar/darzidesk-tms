@@ -101,4 +101,94 @@ class OrderController extends Controller
             'data' => Order::$status
         ]);
     }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required',
+            'customer_id' => 'required',
+            'order_date' => 'required',
+            'deadline_date' => 'required',
+            'quantity' => 'required',
+            'febric' => 'required',
+            'febric_color' => 'required',
+            'cloth_type' => 'required',
+            'measurements' => 'required|array',
+        ]);
+
+        $order = new Order();
+        $order->parent_id = parentId();
+        $order->order_id = $request->order_id;
+        $order->customer_id = $request->customer_id;
+        $order->order_date = $request->order_date;
+        $order->deadline_date = $request->deadline_date;
+        $order->quantity = $request->quantity;
+        $order->febric = $request->febric;
+        $order->febric_color = $request->febric_color;
+        $order->gender = $request->gender;
+        $order->cloth_type = $request->cloth_type;
+        $order->status = $request->status ?? 'pending';
+        $order->notes = $request->notes;
+        $order->responsible = $request->responsible ?? 0;
+        $order->measurement = $request->measurements; // Laravel cast to JSON automatically if configured, else we should json_encode. Order model has 'measurement' => 'array' or 'json'? Wait, let's json_encode just to be safe if not casted, or let Laravel handle it. Actually the web controller does `$order->measurement = $measurementDetail;` so it's casted.
+
+        $order->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Order created successfully',
+            'data' => $order
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $order = Order::where('id', $id)->where('parent_id', parentId())->first();
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+        }
+
+        $request->validate([
+            'order_id' => 'required',
+            'customer_id' => 'required',
+            'order_date' => 'required',
+            'deadline_date' => 'required',
+            'quantity' => 'required',
+            'febric' => 'required',
+            'cloth_type' => 'required',
+            'measurements' => 'required|array',
+        ]);
+
+        $order->order_id = $request->order_id;
+        $order->customer_id = $request->customer_id;
+        $order->order_date = $request->order_date;
+        $order->deadline_date = $request->deadline_date;
+        $order->quantity = $request->quantity;
+        $order->febric = $request->febric;
+        $order->febric_color = $request->febric_color;
+        $order->gender = $request->gender;
+        $order->cloth_type = $request->cloth_type;
+        $order->status = $request->status ?? $order->status;
+        $order->notes = $request->notes;
+        $order->responsible = $request->responsible ?? $order->responsible;
+        $order->measurement = $request->measurements;
+        $order->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Order updated successfully',
+            'data' => $order
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        $order = Order::where('id', $id)->where('parent_id', parentId())->first();
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+        }
+
+        $order->delete();
+        return response()->json(['success' => true, 'message' => 'Order deleted successfully']);
+    }
 }
