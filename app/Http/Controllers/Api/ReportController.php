@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Expense;
 use App\Models\Invoice;
+use App\Models\Order;
+use App\Models\User;
 use DB;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ReportController extends Controller
 {
@@ -76,6 +79,138 @@ class ReportController extends Controller
                 'total_profit' => $total_income - $total_expense,
                 'currency_symbol' => $currency_symbol,
             ]
+        ]);
+    }
+    public function getOrderReport(Request $request)
+    {
+        if (!auth()->user()->can('manage order report')) {
+            return response()->json(['success' => false, 'message' => 'Permission denied'], 403);
+        }
+
+        $query = Order::with('customer')->where('parent_id', parentId());
+
+        if ($request->filled('responsible')) {
+            $query->where('responsible', $request->responsible);
+        }
+        if ($request->filled('customer_id')) {
+            $query->where('customer_id', $request->customer_id);
+        }
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereDate('order_date', '>=', $request->start_date)
+                  ->whereDate('deadline_date', '<=', $request->end_date);
+        }
+
+        $orders = $query->orderBy('id', 'desc')->get();
+        
+        $settings = settings();
+        $currency_symbol = $settings['CURRENCY_SYMBOL'] ?? '₹';
+
+        $data = $orders->map(function ($o) {
+            return [
+                'id' => $o->id,
+                'order_id' => $o->order_id,
+                'customer_name' => $o->customer->name ?? 'Unknown',
+                'order_date' => $o->order_date,
+                'deadline_date' => $o->deadline_date,
+                'total_amount' => $o->total_amount,
+                'status' => $o->status,
+            ];
+        });
+
+        $totalAmount = $orders->sum('total_amount');
+
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+            'total_amount' => $totalAmount,
+            'currency_symbol' => $currency_symbol,
+        ]);
+    }
+
+    public function getIncomeReport(Request $request)
+    {
+        if (!auth()->user()->can('manage income report')) {
+            return response()->json(['success' => false, 'message' => 'Permission denied'], 403);
+        }
+
+        $query = Invoice::with('customer')->where('parent_id', parentId())->whereIn('status', ['partial_paid', 'paid']);
+
+        if ($request->filled('customer_id')) {
+            $query->where('customer_id', $request->customer_id);
+        }
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereDate('invoice_date', '>=', $request->start_date)
+                  ->whereDate('invoice_date', '<=', $request->end_date);
+        }
+
+        $incomes = $query->orderBy('id', 'desc')->get();
+
+        $settings = settings();
+        $currency_symbol = $settings['CURRENCY_SYMBOL'] ?? '₹';
+
+        $data = $incomes->map(function ($inv) {
+            return [
+                'id' => $inv->id,
+                'invoice_id' => $inv->invoice_id,
+                'customer_name' => $inv->customer->name ?? 'Unknown',
+                'invoice_date' => $inv->invoice_date,
+                'status' => $inv->status,
+                'amount' => $inv->getInvoiceTotalAmount(),
+            ];
+        });
+
+        $totalAmount = $data->sum('amount');
+
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+            'total_amount' => $totalAmount,
+            'currency_symbol' => $currency_symbol,
+        ]);
+    }
+
+    public function getExpenseReport(Request $request)
+    {
+        if (!auth()->user()->can('manage expense report')) {
+            return response()->json(['success' => false, 'message' => 'Permission denied'], 403);
+        }
+
+        $query = Expense::with(['category', 'subCategory'])->where('parent_id', parentId());
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+        if ($request->filled('sub_category_id')) {
+            $query->where('sub_category_id', $request->sub_category_id);
+        }
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereDate('date', '>=', $request->start_date)
+                  ->whereDate('date', '<=', $request->end_date);
+        }
+
+        $expenses = $query->orderBy('id', 'desc')->get();
+
+        $settings = settings();
+        $currency_symbol = $settings['CURRENCY_SYMBOL'] ?? '₹';
+
+        $data = $expenses->map(function ($exp) {
+            return [
+                'id' => $exp->id,
+                'title' => $exp->title,
+                'category_name' => $exp->category->name ?? 'Unknown',
+                'sub_category_name' => $exp->subCategory->name ?? '-',
+                'date' => $exp->date,
+                'amount' => $exp->amount,
+            ];
+        });
+
+        $totalAmount = $expenses->sum('amount');
+
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+            'total_amount' => $totalAmount,
+            'currency_symbol' => $currency_symbol,
         ]);
     }
 }

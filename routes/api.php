@@ -145,7 +145,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/notes/{id}', [\App\Http\Controllers\Api\NoticeBoardController::class, 'destroy']);
     
     // Report Routes
+    // Reports
     Route::get('/reports/yearly-profit-loss', [\App\Http\Controllers\Api\ReportController::class, 'getYearlyProfitLoss']);
+    Route::get('/reports/orders', [\App\Http\Controllers\Api\ReportController::class, 'getOrderReport']);
+    Route::get('/reports/income', [\App\Http\Controllers\Api\ReportController::class, 'getIncomeReport']);
+    Route::get('/reports/expense', [\App\Http\Controllers\Api\ReportController::class, 'getExpenseReport']);
+
+    // Subscription Routes
+    Route::get('/subscriptions', [\App\Http\Controllers\Api\SubscriptionController::class, 'index']);
+    Route::get('/subscription-transactions', [\App\Http\Controllers\Api\SubscriptionController::class, 'transactions']);
+    Route::post('/subscriptions/{id}/activate-mock', [\App\Http\Controllers\Api\SubscriptionController::class, 'activateMock']);
+
+    // User Management Routes
+    Route::get('/user-management/roles', [\App\Http\Controllers\Api\UserManagementController::class, 'getRoles']);
+    Route::post('/user-management/roles', [\App\Http\Controllers\Api\UserManagementController::class, 'storeRole']);
+    Route::put('/user-management/roles/{id}', [\App\Http\Controllers\Api\UserManagementController::class, 'updateRole']);
+    Route::delete('/user-management/roles/{id}', [\App\Http\Controllers\Api\UserManagementController::class, 'destroyRole']);
+    Route::get('/user-management/logged-history', [\App\Http\Controllers\Api\UserManagementController::class, 'getLoggedHistory']);
+    Route::delete('/user-management/logged-history/{id}', [\App\Http\Controllers\Api\UserManagementController::class, 'destroyLoggedHistory']);
 
     Route::get('/user', function (Request $request) {
         return $request->user();
