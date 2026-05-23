@@ -28,8 +28,11 @@ class MeasurementController extends Controller
             return [
                 'id' => $m->id,
                 'measurement_id' => $m->measurement_id,
-                'customer_name' => $m->customer_user->name ?? 'Unknown',
-                'cloth_type' => $m->cloth_type_user->title ?? 'Unknown',
+                'customer_id' => $m->customer,
+                'cloth_type_id' => $m->cloth_type,
+                'responsible_id' => $m->responsible,
+                'customer_name' => $m->customers->name ?? 'Unknown',
+                'cloth_type' => $m->clothTypes->title ?? 'Unknown',
                 'date' => $m->date,
                 'details' => $m->measurement_detail,
             ];
