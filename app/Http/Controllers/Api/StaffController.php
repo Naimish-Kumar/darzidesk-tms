@@ -73,7 +73,14 @@ class StaffController extends Controller
         $user->password = Hash::make($request->password);
         $user->phone_number = $request->phone_number;
         
-        $role = Role::findById($request->role);
+        $role = Role::where('id', $request->role)->where('parent_id', parentId())->first();
+        if (!$role) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Role not found.'
+            ], 404);
+        }
+
         $user->type = $role->name;
         $user->parent_id = parentId();
         $user->profile = 'avatar.png';
