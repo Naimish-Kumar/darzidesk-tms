@@ -14,6 +14,9 @@ class Customer extends Model
         'city',
         'address',
         'notes',
+        'body_shape',
+        'posture_notes',
+        'fitting_photo',
         'parent_id',
     ];
 

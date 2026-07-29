@@ -93,9 +93,45 @@ class OrderController extends Controller
         $order->status = $request->status;
         $order->save();
 
+        // Dispatch Email & WhatsApp/SMS Notification to Customer
+        $statusLabel = Order::$status[$request->status] ?? ucfirst($request->status);
+        if ($order->customers && !empty($order->customers->email)) {
+            try {
+                \Mail::to($order->customers->email)->send(
+                    new \App\Mail\OrderNotificationMail(
+                        $order,
+                        "Status Updated to {$statusLabel}",
+                        "Good news! Your bespoke order status has been updated to {$statusLabel} at our atelier."
+                    )
+                );
+            } catch (\Throwable $e) {
+                \Log::error('Order email dispatch failed: ' . $e->getMessage());
+            }
+        }
+
+        try {
+            \App\Http\Controllers\Api\WhatsAppWebhookController::dispatchStageNotification($order->id, $statusLabel);
+        } catch (\Throwable $e) {
+            \Log::error('WhatsApp notification dispatch failed: ' . $e->getMessage());
+        }
+
+        // Real-time WebSocket Event Dispatch (Pusher / Echo)
+        try {
+            event(new \App\Events\OrderStatusUpdatedEvent($order, $statusLabel));
+            event(new \App\Events\LiveNotificationEvent(
+                $order->parent_id,
+                "Order Status Updated",
+                "Order #{$order->order_id} has been moved to {$statusLabel}",
+                "order_update",
+                ['order_id' => $order->id, 'status' => $order->status]
+            ));
+        } catch (\Throwable $e) {
+            \Log::error('WebSocket broadcast failed: ' . $e->getMessage());
+        }
+
         return response()->json([
             'success' => true,
-            'message' => 'Order status updated to ' . Order::$status[$request->status],
+            'message' => 'Order status updated to ' . (Order::$status[$request->status] ?? $request->status),
             'new_status' => $order->status
         ]);
     }
@@ -196,5 +232,17 @@ class OrderController extends Controller
 
         $order->delete();
         return response()->json(['success' => true, 'message' => 'Order deleted successfully']);
+    }
+
+    public function downloadGarmentTagPdf($id)
+    {
+        $order = Order::with(['customers', 'clothTypes'])->where('id', $id)->first();
+        if (!$order) {
+            abort(404, 'Order not found');
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.garment_tag', compact('order'));
+        $pdf->setPaper([0, 0, 226.77, 425.20], 'portrait'); // 80mm x 150mm thermal tag dimensions
+        return $pdf->download('GarmentTag-' . $order->order_id . '.pdf');
     }
 }

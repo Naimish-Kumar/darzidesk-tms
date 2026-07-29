@@ -19,11 +19,13 @@ class Measurement extends Model
         'cloth_type',
         'responsible',
         'measurement_detail',
+        'posture_adjustments',
         'parent_id',
     ];
 
     protected $casts = [
         'measurement_detail' => 'array',
+        'posture_adjustments' => 'array',
     ];
 
 
@@ -39,5 +41,10 @@ class Measurement extends Model
     public function clothTypes()
     {
         return $this->hasOne('App\Models\ClothType', 'id', 'cloth_type');
+    }
+
+    public function histories()
+    {
+        return $this->hasMany(MeasurementHistory::class, 'measurement_id')->orderBy('created_at', 'desc');
     }
 }

@@ -14,6 +14,7 @@ class Order extends Model
 
     protected $fillable = [
         'order_id',
+        'tracking_token',
         'customer_id',
         'order_date',
         'deadline_date',
@@ -26,6 +27,7 @@ class Order extends Model
         'status',
         'notes',
         'measurement',
+        'production_stage_id',
         'parent_id',
     ];
     
@@ -60,6 +62,21 @@ class Order extends Model
     public function invoices()
     {
         return $this->hasOne(Invoice::class, 'id', 'invoice');
+    }
+
+    public function productionStage()
+    {
+        return $this->belongsTo(ProductionStage::class, 'production_stage_id');
+    }
+
+    public function assignments()
+    {
+        return $this->hasMany(ProductionAssignment::class, 'order_id');
+    }
+
+    public function materialUsages()
+    {
+        return $this->hasMany(OrderMaterialUsage::class, 'order_id');
     }
 
 }

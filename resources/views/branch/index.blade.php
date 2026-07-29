@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branch Coordination - {{ env('APP_NAME', 'DarziDesk') }}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        :root {
+            --primary-teal: #006A67;
+            --accent-teal: #26A69A;
+            --light-teal-bg: #3AAFA9;
+            --dark-navy: #0B1C30;
+            --bg-light: #F4F7F9;
+            --card-border: #E2E8F0;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --font-main: 'Hanken Grotesk', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px; background: #FFFFFF; border-right: 1px solid var(--card-border);
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 24px 16px; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
+        }
+
+        .brand-box span { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; color: var(--text-muted); display: block; margin-top: 2px; }
+        .nav-list { list-style: none; }
+        .nav-item { margin-bottom: 4px; }
+
+        .nav-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 12px; border-radius: 10px; font-size: 13.5px; font-weight: 600;
+            color: var(--text-dark); text-decoration: none; transition: all 0.2s;
+        }
+
+        .nav-link.active { background: var(--accent-teal); color: #FFFFFF; }
+        .nav-link:hover:not(.active) { background: #F1F5F9; }
+
+        .main-wrapper { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
+
+        .top-header {
+            height: 64px; background: #FFFFFF; border-bottom: 1px solid var(--card-border);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 28px;
+            position: sticky; top: 0; z-index: 90;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 24px; }
+        .header-nav-links { display: flex; gap: 16px; font-size: 13px; font-weight: 600; }
+        .header-nav-links a { color: var(--text-muted); text-decoration: none; }
+        .header-right { display: flex; align-items: center; gap: 14px; }
+
+        .search-bar {
+            background: #EBF3FA; border-radius: 20px; padding: 6px 14px;
+            display: flex; align-items: center; gap: 8px; width: 240px;
+        }
+
+        .search-bar input { border: none; background: transparent; outline: none; font-family: var(--font-main); font-size: 12.5px; width: 100%; }
+
+        .user-initials-badge {
+            width: 32px; height: 32px; background: #26A69A; color: #FFF;
+            border-radius: 50%; font-size: 11px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .content-area { padding: 28px; }
+
+        .title-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+        .title-row h2 { font-size: 24px; font-weight: 800; }
+        .title-row p { font-size: 13.5px; color: var(--text-muted); margin-top: 2px; }
+
+        .btn-add-branch {
+            background: var(--primary-teal); color: #FFFFFF; border: none;
+            padding: 10px 18px; border-radius: 10px; font-family: var(--font-main);
+            font-size: 13.5px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer;
+        }
+
+        .top-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 28px; }
+
+        .map-card {
+            background: #FFFFFF; border: 1px solid var(--card-border); border-radius: 16px;
+            height: 280px; position: relative; padding: 16px;
+            background-image: radial-gradient(#CBD5E1 1px, transparent 1px); background-size: 20px 20px;
+        }
+
+        .map-tag {
+            background: #FFFFFF; border: 1px solid var(--card-border); border-radius: 8px;
+            padding: 6px 12px; font-size: 10px; font-weight: 800; letter-spacing: 0.8px;
+            display: inline-block; color: var(--primary-teal);
+        }
+
+        .map-controls { position: absolute; bottom: 16px; right: 16px; display: flex; flex-direction: column; gap: 6px; }
+
+        .map-btn {
+            width: 32px; height: 32px; background: #FFFFFF; border: 1px solid var(--card-border);
+            border-radius: 8px; font-size: 16px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .stats-col { display: flex; flex-direction: column; gap: 16px; }
+
+        .stat-card {
+            background: #FFFFFF; border: 1px solid var(--card-border); border-radius: 16px;
+            padding: 20px; flex: 1;
+        }
+
+        .stat-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .stat-lbl { font-size: 10px; font-weight: 800; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 4px; }
+        .stat-val { font-size: 26px; font-weight: 800; }
+
+        .stat-bar-bg { height: 6px; background: #E2E8F0; border-radius: 3px; margin-top: 12px; overflow: hidden; }
+        .stat-bar-fill { height: 100%; background: var(--accent-teal); }
+
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .section-header h3 { font-size: 17px; font-weight: 800; }
+
+        .toggle-btns { display: flex; gap: 4px; background: #E2E8F0; padding: 3px; border-radius: 8px; }
+        .toggle-btn { padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 16px; border: none; background: transparent; }
+        .toggle-btn.active { background: #FFFFFF; }
+
+        .branches-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 28px; }
+
+        .branch-card { background: #FFFFFF; border: 1px solid var(--card-border); border-radius: 16px; overflow: hidden; }
+
+        .branch-card-hero {
+            height: 110px; background: linear-gradient(180deg, #64748B 0%, #334155 100%);
+            padding: 16px; color: #FFFFFF; position: relative; display: flex; flex-direction: column; justify-content: flex-end;
+        }
+
+        .branch-status-badge {
+            position: absolute; top: 12px; right: 12px; background: #10B981; color: #FFF;
+            font-size: 9px; font-weight: 800; letter-spacing: 0.8px; padding: 3px 8px; border-radius: 4px;
+        }
+
+        .branch-name { font-size: 16px; font-weight: 800; }
+        .branch-loc { font-size: 11.5px; opacity: 0.8; display: flex; align-items: center; gap: 4px; }
+
+        .branch-metrics {
+            display: grid; grid-template-columns: repeat(3, 1fr); padding: 14px; text-align: center;
+            border-bottom: 1px solid var(--card-border); background: #F8FAFC;
+        }
+
+        .metric-item .lbl { font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 2px; }
+        .metric-item .val { font-size: 14px; font-weight: 800; color: var(--primary-teal); }
+
+        .branch-actions { padding: 12px 14px; display: flex; gap: 8px; }
+
+        .btn-switch-context {
+            flex: 1; background: var(--primary-teal); color: #FFF; border: none; padding: 8px 12px;
+            border-radius: 8px; font-family: var(--font-main); font-size: 12px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;
+        }
+
+        .btn-icon-square {
+            width: 32px; height: 32px; border: 1px solid var(--card-border); border-radius: 8px;
+            background: #FFF; display: flex; align-items: center; justify-content: center; cursor: pointer;
+            font-size: 16px; color: var(--text-dark);
+        }
+
+        .ledger-card { background: #FFFFFF; border: 1px solid var(--card-border); border-radius: 16px; overflow: hidden; }
+
+        .ledger-header {
+            padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;
+            background: #F8FAFC; border-bottom: 1px solid var(--card-border); font-size: 13.5px; font-weight: 800;
+        }
+
+        .ledger-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+
+        .ledger-table th {
+            text-align: left; padding: 12px 20px; font-size: 10px; font-weight: 800; letter-spacing: 0.8px;
+            color: var(--text-muted); background: #F8FAFC; border-bottom: 1px solid var(--card-border);
+        }
+
+        .ledger-table td { padding: 14px 20px; border-bottom: 1px solid var(--card-border); }
+
+        .branch-id-cell { display: flex; align-items: center; gap: 12px; }
+
+        .branch-avatar {
+            width: 32px; height: 32px; background: #E2E8F0; border-radius: 8px; font-size: 11px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center; color: var(--primary-teal);
+        }
+
+        .font-mono { font-family: var(--font-code); font-weight: 700; }
+
+        .btn-enter-workspace {
+            padding: 6px 14px; border: 1px solid var(--primary-teal); border-radius: 8px;
+            color: var(--primary-teal); background: #FFF; font-family: var(--font-main); font-size: 11.5px; font-weight: 700; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Nav -->
+    <aside class="sidebar">
+        <div>
+            <div class="brand-box">
+                <img src="{{ asset('assets/images/logo_wide.png') }}" alt="DarziDesk" style="height: 32px;">
+                <span>MASTER TAILOR WORKSPACE</span>
+            </div>
+
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="{{ route('dashboard') }}" class="nav-link">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('branches.index') }}" class="nav-link active">
+                        <span class="material-symbols-outlined">account_tree</span>
+                        Branches
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('orders.index') }}" class="nav-link">
+                        <span class="material-symbols-outlined">shopping_bag</span>
+                        Orders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="material-symbols-outlined">cut</span>
+                        Production
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                        Inventory
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('financials.index') }}" class="nav-link">
+                        <span class="material-symbols-outlined">payments</span>
+                        Financials
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('staff.index') }}" class="nav-link">
+                        <span class="material-symbols-outlined">group</span>
+                        Staff
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <img src="{{ asset('assets/images/logo_wide.png') }}" alt="DarziDesk" style="height: 28px;">
+                <div class="header-nav-links">
+                    <a href="#">Shop Performance</a>
+                    <a href="#">Live Production</a>
+                    <a href="#">Active Artisans</a>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="search-bar">
+                    <span class="material-symbols-outlined" style="font-size: 16px; color: var(--text-muted);">search</span>
+                    <input type="text" placeholder="Search branches...">
+                </div>
+                <span class="material-symbols-outlined" style="font-size: 20px; color: var(--text-muted); cursor: pointer;">notifications</span>
+                <span class="material-symbols-outlined" style="font-size: 20px; color: var(--text-muted); cursor: pointer;">history</span>
+                <div class="user-initials-badge">SO</div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <main class="content-area">
+            <div class="title-row">
+                <div>
+                    <h2>Branch Coordination</h2>
+                    <p>Manage and monitor your bespoke empire across 5 active locations.</p>
+                </div>
+                <a href="{{ route('branches.create.step1') }}" class="btn-add-branch" style="text-decoration:none;">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">storefront</span>
+                    Add New Branch
+                </a>
+            </div>
+
+            <!-- Top Grid: Map & Stats -->
+            <div class="top-grid">
+                <div class="map-card">
+                    <span class="map-tag">LIVE GEOLOCATION</span>
+                    <div class="map-controls">
+                        <button class="map-btn">+</button>
+                        <button class="map-btn">-</button>
+                        <button class="map-btn">🎯</button>
+                    </div>
+                </div>
+
+                <div class="stats-col">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-lbl">TOTAL MONTHLY REVENUE</div>
+                            <span style="font-size:11px; font-weight:700; color:#38A169;">↑ 12.5%</span>
+                        </div>
+                        <div class="stat-val">£482,900</div>
+                        <div class="stat-bar-bg">
+                            <div class="stat-bar-fill" style="width: 75%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-lbl">ACTIVE ARTISANS</div>
+                            <span class="material-symbols-outlined" style="color:var(--text-muted);">group</span>
+                        </div>
+                        <div class="stat-val">142</div>
+                        <div style="font-size:11.5px; color:var(--text-muted); margin-top:4px;">Across 5 specialized workshops</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Branches -->
+            <div class="section-header">
+                <h3>Active Branches</h3>
+                <div class="toggle-btns">
+                    <button class="toggle-btn active">
+                        <span class="material-symbols-outlined" style="font-size: 16px;">grid_view</span>
+                    </button>
+                    <button class="toggle-btn">
+                        <span class="material-symbols-outlined" style="font-size: 16px;">format_list_bulleted</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="branches-grid">
+                <!-- Branch 1 -->
+                <div class="branch-card">
+                    <div class="branch-card-hero">
+                        <span class="branch-status-badge">ACTIVE</span>
+                        <div class="branch-name">Savile Row Flagship</div>
+                        <div class="branch-loc">
+                            <span class="material-symbols-outlined" style="font-size: 14px;">location_on</span>
+                            Mayfair, London
+                        </div>
+                    </div>
+                    <div class="branch-metrics">
+                        <div class="metric-item">
+                            <div class="lbl">Revenue</div>
+                            <div class="val">£124k</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="lbl">Staff</div>
+                            <div class="val">42</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="lbl">Orders</div>
+                            <div class="val">89</div>
+                        </div>
+                    </div>
+                    <div class="branch-actions">
+                        <button class="btn-switch-context">
+                            <span class="material-symbols-outlined" style="font-size: 16px;">login</span>
+                            Switch Context
+                        </button>
+                        <button class="btn-icon-square">
+                            <span class="material-symbols-outlined">bar_chart</span>
+                        </button>
+                        <button class="btn-icon-square">
+                            <span class="material-symbols-outlined">edit</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Branch 2 -->
+                <div class="branch-card">
+                    <div class="branch-card-hero" style="background: linear-gradient(180deg, #475569 0%, #1E293B 100%);">
+                        <span class="branch-status-badge">ACTIVE</span>
+                        <div class="branch-name">Chelsea Design Studio</div>
+                        <div class="branch-loc">
+                            <span class="material-symbols-outlined" style="font-size: 14px;">location_on</span>
+                            Kings Road, London
+                        </div>
+                    </div>
+                    <div class="branch-metrics">
+                        <div class="metric-item">
+                            <div class="lbl">Revenue</div>
+                            <div class="val">£98k</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="lbl">Staff</div>
+                            <div class="val">28</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="lbl">Orders</div>
+                            <div class="val">54</div>
+                        </div>
+                    </div>
+                    <div class="branch-actions">
+                        <button class="btn-switch-context">
+                            <span class="material-symbols-outlined" style="font-size: 16px;">login</span>
+                            Switch Context
+                        </button>
+                        <button class="btn-icon-square">
+                            <span class="material-symbols-outlined">bar_chart</span>
+                        </button>
+                        <button class="btn-icon-square">
+                            <span class="material-symbols-outlined">edit</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Branch 3 -->
+                <div class="branch-card">
+                    <div class="branch-card-hero" style="background: linear-gradient(180deg, #334155 0%, #0F172A 100%);">
+                        <span class="branch-status-badge">ACTIVE</span>
+                        <div class="branch-name">Marylebone Hub</div>
+                        <div class="branch-loc">
+                            <span class="material-symbols-outlined" style="font-size: 14px;">location_on</span>
+                            Baker St, London
+                        </div>
+                    </div>
+                    <div class="branch-metrics">
+                        <div class="metric-item">
+                            <div class="lbl">Revenue</div>
+                            <div class="val">£82k</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="lbl">Staff</div>
+                            <div class="val">31</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="lbl">Orders</div>
+                            <div class="val">67</div>
+                        </div>
+                    </div>
+                    <div class="branch-actions">
+                        <button class="btn-switch-context">
+                            <span class="material-symbols-outlined" style="font-size: 16px;">login</span>
+                            Switch Context
+                        </button>
+                        <button class="btn-icon-square">
+                            <span class="material-symbols-outlined">bar_chart</span>
+                        </button>
+                        <button class="btn-icon-square">
+                            <span class="material-symbols-outlined">edit</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ledger Table -->
+            <div class="ledger-card">
+                <div class="ledger-header">
+                    <span>Live Branch Performance Ledger</span>
+                    <span style="font-size:11.5px; font-weight:500; color:var(--text-muted);">
+                        Updated: Just Now 🔄
+                    </span>
+                </div>
+
+                <table class="ledger-table">
+                    <thead>
+                        <tr>
+                            <th>BRANCH IDENTITY</th>
+                            <th>PRODUCTION (ACTIVE)</th>
+                            <th>AVG. FITTING TIME</th>
+                            <th>ERROR RATE</th>
+                            <th>CONTEXT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="branch-id-cell">
+                                    <div class="branch-avatar">SR</div>
+                                    <div>
+                                        <div style="font-weight:700;">Savile Row</div>
+                                        <div style="font-size:11.5px; color:var(--text-muted);">Bespoke Excellence</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="font-mono">42 Units</td>
+                            <td class="font-mono">3.2 Days</td>
+                            <td class="font-mono" style="color: #38A169;">0.2%</td>
+                            <td><button class="btn-enter-workspace">Enter Workspace</button></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="branch-id-cell">
+                                    <div class="branch-avatar">CH</div>
+                                    <div>
+                                        <div style="font-weight:700;">Chelsea Studio</div>
+                                        <div style="font-size:11.5px; color:var(--text-muted);">Modern Chic</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="font-mono">18 Units</td>
+                            <td class="font-mono">4.1 Days</td>
+                            <td class="font-mono" style="color: #D69E2E;">1.8%</td>
+                            <td><button class="btn-enter-workspace">Enter Workspace</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>

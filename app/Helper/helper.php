@@ -370,11 +370,15 @@ if (!function_exists('SetLimit')) {
         });
 
         // set cloth type
-        $cloth_type_limit = $subscription->cloth_type_limit;
-        $cloth_type_limit = ClothType::where('parent_id', '=', $id)->update(['is_active' => 0]);
-        $cloth_type_limit = ClothType::where('parent_id', '=', $id)->take($cloth_type_limit)->get()->each(function ($cloth_type_limit) {
-            $cloth_type_limit->update(['is_active' => 1]);
-        });
+        try {
+            $cloth_type_limit = $subscription->cloth_type_limit;
+            ClothType::where('parent_id', '=', $id)->update(['is_active' => 0]);
+            ClothType::where('parent_id', '=', $id)->take($cloth_type_limit)->get()->each(function ($ct) {
+                $ct->update(['is_active' => 1]);
+            });
+        } catch (\Throwable $e) {
+            // ClothType schema may not include is_active column
+        }
 
     }
 }
@@ -722,11 +726,16 @@ if (!function_exists('getTax')) {
 if (!function_exists('getTaxRate')) {
     function getTaxRate($itemtax)
     {
+        if (empty($itemtax)) return 0;
         $itemtaxs = explode(',', $itemtax);
         $itemTaxRate = 0;
         foreach ($itemtaxs as $tax) {
-            $tax = \App\Models\Tax::find($tax);
-            $itemTaxRate += $tax->rate;
+            $taxModel = \App\Models\Tax::find($tax);
+            if ($taxModel) {
+                $itemTaxRate += $taxModel->rate;
+            } elseif (is_numeric($tax)) {
+                $itemTaxRate += (float)$tax;
+            }
         }
         return $itemTaxRate;
     }
@@ -2138,14 +2147,9 @@ if (!function_exists('DefaultBankTransferPayment')) {
         ];
 
         foreach ($bankArray as $key => $val) {
-            \DB::insert(
-                'insert into settings (`value`, `name`, `type`,`parent_id`) values (?, ?, ?,?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) ',
-                [
-                    $val,
-                    $key,
-                    'payment',
-                    1,
-                ]
+            \DB::table('settings')->updateOrInsert(
+                ['name' => $key, 'type' => 'payment', 'parent_id' => 1],
+                ['value' => $val]
             );
         }
 

@@ -38,6 +38,11 @@ class Invoice extends Model
         return $this->hasOne('App\Models\User', 'id', 'customer_id');
     }
 
+    public function shop()
+    {
+        return $this->belongsTo('App\Models\User', 'parent_id', 'id');
+    }
+
     public function items()
     {
         return $this->hasMany('App\Models\InvoiceItem', 'invoice_id', 'id');
@@ -74,13 +79,28 @@ class Invoice extends Model
         return ($this->getInvoiceSubTotalAmount() + $this->getInvoiceTotalTax());
     }
 
+    public function getTotal()
+    {
+        return $this->getInvoiceTotalAmount();
+    }
+
+    public function getPaidAmount()
+    {
+        $totalPaid = 0;
+        foreach ($this->payments as $itemPayment) {
+            $totalPaid += $itemPayment->amount;
+        }
+        return $totalPaid;
+    }
+
     public function getInvoiceDueAmount()
     {
-        $totalDueAmount = 0;
-        foreach ($this->payments as $itemPayment) {
-            $totalDueAmount += $itemPayment->amount;
-        }
-        return ($this->getInvoiceTotalAmount() - $totalDueAmount);
+        return ($this->getInvoiceTotalAmount() - $this->getPaidAmount());
+    }
+
+    public function getDue()
+    {
+        return $this->getInvoiceDueAmount();
     }
 
     public static function statusChange($invoice_id, $status)

@@ -5,19 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Traits\ParentIdTrait;
-
 class Notification extends Model
 {
     use HasFactory;
-    use ParentIdTrait;
 
 
     protected $fillable = [
+        'user_id',
+        'type',
         'module',
         'name',
         'subject',
         'message',
+        'is_read',
         'short_code',
         'enabled_email',
         'enabled_sms',

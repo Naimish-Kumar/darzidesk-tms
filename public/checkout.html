@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment & Checkout - DarziDesk</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        :root {
+            --primary-teal: #006A67;
+            --accent-teal: #26A69A;
+            --dark-navy: #0B1C30;
+            --bg-light: #F4F7F9;
+            --card-border: #E2E8F0;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --font-main: 'Hanken Grotesk', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px; background: #FFFFFF; border-right: 1px solid var(--card-border);
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 24px 16px; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
+        }
+
+        .brand-box h2 { font-size: 20px; font-weight: 800; color: var(--primary-teal); }
+        .brand-box span { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; color: var(--text-muted); display: block; margin-top: 2px; }
+
+        .nav-list { list-style: none; margin-top: 24px; }
+        .nav-item { margin-bottom: 4px; }
+
+        .nav-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 12px; border-radius: 10px; font-size: 13.5px; font-weight: 600;
+            color: var(--text-dark); text-decoration: none; transition: all 0.2s;
+        }
+
+        .nav-link.active { background: #E6FFFA; color: var(--primary-teal); font-weight: 700; border-left: 3px solid var(--primary-teal); }
+
+        .main-wrapper { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
+
+        .top-header {
+            height: 64px; background: #FFFFFF; border-bottom: 1px solid var(--card-border);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 28px;
+            position: sticky; top: 0; z-index: 90;
+        }
+
+        .search-bar {
+            background: #F1F5F9; border-radius: 20px; padding: 6px 16px;
+            display: flex; align-items: center; gap: 8px; width: 340px;
+        }
+
+        .search-bar input { border: none; background: transparent; outline: none; font-family: var(--font-main); font-size: 12.5px; width: 100%; }
+
+        .header-right { display: flex; align-items: center; gap: 16px; }
+
+        .content-area { padding: 24px 28px; flex: 1; }
+
+        .checkout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+
+        /* Left Column: Order Review */
+        .order-review-card {
+            background: #FFFFFF; border: 1px solid var(--card-border);
+            border-radius: 18px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between;
+        }
+
+        .order-review-top { margin-bottom: 20px; }
+        .order-title-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .order-title-row h3 { font-size: 15px; font-weight: 800; }
+        .order-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+        .tag-pills { display: flex; gap: 6px; }
+        .t-pill { font-size: 9.5px; font-weight: 800; padding: 3px 8px; border-radius: 6px; }
+        .t-pill-draft { background: #EDF2F7; color: #4A5568; }
+        .t-pill-txn { background: #E6FFFA; color: var(--primary-teal); }
+
+        .customer-mini-box {
+            background: #F8FAFC; border: 1px solid var(--card-border);
+            border-radius: 12px; padding: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+        }
+
+        .cust-left { display: flex; align-items: center; gap: 12px; }
+        .cust-avatar { width: 38px; height: 38px; border-radius: 50%; background: #E2E8F0; color: var(--primary-teal); display: flex; align-items: center; justify-content: center; }
+
+        .cust-name { font-size: 13.5px; font-weight: 800; }
+        .cust-sub { font-size: 11.5px; color: var(--text-muted); }
+
+        .edit-link { font-size: 12px; font-weight: 700; color: var(--primary-teal); text-decoration: none; }
+
+        .items-header { font-size: 13px; font-weight: 800; margin-bottom: 12px; }
+
+        .order-items-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+
+        .item-row-card {
+            border: 1px solid var(--card-border); border-radius: 12px; padding: 14px;
+            display: flex; gap: 14px; justify-content: space-between; align-items: center;
+        }
+
+        .item-img { width: 52px; height: 52px; border-radius: 8px; object-fit: cover; }
+
+        .item-info h5 { font-size: 13.5px; font-weight: 800; margin-bottom: 2px; }
+        .item-info p { font-size: 11.5px; color: var(--text-muted); margin-bottom: 6px; }
+
+        .measure-tags { display: flex; gap: 6px; }
+        .m-tag { font-size: 9.5px; font-weight: 800; background: #E2E8F0; color: var(--text-dark); padding: 2px 6px; border-radius: 4px; }
+
+        .item-price-qty { text-align: right; }
+        .item-price { font-family: var(--font-code); font-size: 14px; font-weight: 800; color: var(--text-dark); }
+        .item-qty { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+        .coupon-box {
+            background: #F8FAFC; border: 1px solid var(--card-border); border-radius: 12px;
+            padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+        }
+
+        .toggle-switch { width: 36px; height: 20px; background: #CBD5E1; border-radius: 10px; position: relative; cursor: pointer; }
+        .toggle-switch.on { background: var(--primary-teal); }
+        .toggle-knob { width: 16px; height: 16px; background: #FFF; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: all 0.2s; }
+        .toggle-switch.on .toggle-knob { left: 18px; }
+
+        .totals-breakdown { border-top: 1px solid var(--card-border); padding-top: 16px; }
+        .t-line { display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 8px; }
+
+        .grand-total-line { display: flex; justify-content: space-between; align-items: flex-end; pt-3; border-top: 1px solid var(--card-border); margin-top: 12px; }
+        .grand-val { font-family: var(--font-code); font-size: 22px; font-weight: 800; color: var(--primary-teal); }
+
+        /* Right Column: Payment Methods & Keypad */
+        .payment-methods-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+
+        .pm-card {
+            background: #FFFFFF; border: 1.5px solid var(--card-border);
+            border-radius: 14px; padding: 20px 14px; text-align: center; cursor: pointer; transition: all 0.2s;
+        }
+
+        .pm-card.selected { border-color: var(--primary-teal); background: #FAFDFD; box-shadow: 0 0 0 1px var(--primary-teal); }
+
+        .pm-icon { font-size: 24px; color: var(--primary-teal); margin-bottom: 8px; }
+        .pm-label { font-size: 12.5px; font-weight: 700; color: var(--text-dark); }
+
+        /* Keypad Box */
+        .numpad-box {
+            background: #FFFFFF; border: 1px solid var(--card-border);
+            border-radius: 18px; padding: 20px; margin-bottom: 20px;
+        }
+
+        .amt-received-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .amt-received-label { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+        .amt-received-val { font-family: var(--font-code); font-size: 26px; font-weight: 800; color: var(--primary-teal); }
+
+        .preset-btns-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+        .btn-preset {
+            background: #F8FAFC; border: 1px solid var(--card-border); border-radius: 8px;
+            padding: 8px; font-size: 12px; font-weight: 700; cursor: pointer; text-align: center;
+        }
+
+        .keypad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+        .key-btn {
+            background: #F8FAFC; border: 1px solid var(--card-border); border-radius: 10px;
+            height: 48px; font-size: 16px; font-weight: 800; font-family: var(--font-code);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.1s;
+        }
+
+        .key-btn:active { background: #E2E8F0; }
+        .key-btn-backspace { background: #FEE2E2; color: #E53E3E; }
+
+        .change-return-box {
+            background: #EBF8FF; border: 1px solid #BAE6FD; border-radius: 12px;
+            padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+        }
+
+        .change-lbl { font-size: 13px; font-weight: 700; color: var(--text-dark); }
+        .change-val { font-family: var(--font-code); font-size: 20px; font-weight: 800; color: var(--primary-teal); }
+
+        .btn-complete-txn {
+            width: 100%; background: var(--primary-teal); color: #FFF; border: none;
+            padding: 14px; border-radius: 12px; font-size: 14px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-bottom: 14px;
+        }
+
+        .print-email-links { display: flex; justify-content: center; gap: 20px; font-size: 12px; font-weight: 700; color: var(--text-muted); }
+        .print-email-links a { color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 4px; }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Nav -->
+    <aside class="sidebar">
+        <div>
+            <div class="brand-box">
+                <h2>Bespoke Pro</h2>
+                <span>ENTERPRISE SUITE</span>
+            </div>
+
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="business-profile.html" class="nav-link">
+                        <span class="material-symbols-outlined">storefront</span>
+                        Business Profile
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pos.html" class="nav-link active">
+                        <span class="material-symbols-outlined">shopping_cart</span>
+                        Orders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="production.html" class="nav-link">
+                        <span class="material-symbols-outlined">cut</span>
+                        Production
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="inventory.html" class="nav-link">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                        Inventory
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="staff.html" class="nav-link">
+                        <span class="material-symbols-outlined">group</span>
+                        Staff
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="search-bar">
+                <span class="material-symbols-outlined" style="font-size: 16px; color: var(--text-muted);">search</span>
+                <input type="text" placeholder="Search orders or customers...">
+            </div>
+
+            <div class="header-right">
+                <span class="material-symbols-outlined" style="font-size: 20px; color: var(--text-muted); cursor: pointer;">history</span>
+                <span class="material-symbols-outlined" style="font-size: 20px; color: var(--text-muted); cursor: pointer;">notifications</span>
+                <img src="assets/images/onboarding_tailor.jpg" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" alt="Avatar">
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <main class="content-area">
+            <div class="checkout-grid">
+                <!-- Left: Order Review -->
+                <div class="order-review-card">
+                    <div class="order-review-top">
+                        <div class="order-title-row">
+                            <div>
+                                <h3>Order Review</h3>
+                                <div class="order-meta">Order #TXN-88294 • Today, 2:45 PM</div>
+                            </div>
+                            <div class="tag-pills">
+                                <span class="t-pill t-pill-draft">DRAFT</span>
+                                <span class="t-pill t-pill-txn">TRANSACTION</span>
+                            </div>
+                        </div>
+
+                        <!-- Customer Card -->
+                        <div class="customer-mini-box">
+                            <div class="cust-left">
+                                <div class="cust-avatar">
+                                    <span class="material-symbols-outlined">person</span>
+                                </div>
+                                <div>
+                                    <div class="cust-name">Alexander Hamilton</div>
+                                    <div class="cust-sub">+1 (555) 012-3456 • Premium Member</div>
+                                </div>
+                            </div>
+                            <a href="#" class="edit-link">Edit</a>
+                        </div>
+
+                        <!-- Items List -->
+                        <div class="items-header">Items (3)</div>
+                        <div class="order-items-list">
+                            <!-- Item 1 -->
+                            <div class="item-row-card">
+                                <div style="display:flex; gap:12px; align-items:center;">
+                                    <img src="assets/images/bespoke_tailor_atelier_hero.jpg" class="item-img" alt="Suit">
+                                    <div class="item-info">
+                                        <h5>Bespoke Two-Piece Suit</h5>
+                                        <p>Italian Wool • Slim Fit • Peak Lapel</p>
+                                        <div class="measure-tags">
+                                            <span class="m-tag">Chest: 40"</span>
+                                            <span class="m-tag">Waist: 32"</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item-price-qty">
+                                    <div class="item-price">$1,250.00</div>
+                                    <div class="item-qty">Qty: 1</div>
+                                </div>
+                            </div>
+
+                            <!-- Item 2 -->
+                            <div class="item-row-card">
+                                <div style="display:flex; gap:12px; align-items:center;">
+                                    <img src="assets/images/hero_tailor_atelier.jpg" class="item-img" alt="Shirt">
+                                    <div class="item-info">
+                                        <h5>Classic Oxford Shirt</h5>
+                                        <p>Sea Island Cotton • White • Monogrammed</p>
+                                    </div>
+                                </div>
+                                <div class="item-price-qty">
+                                    <div class="item-price">$180.00</div>
+                                    <div class="item-qty">Qty: 2</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Coupon Box -->
+                        <div class="coupon-box">
+                            <div style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700;">
+                                <span>🏷️</span> Apply Coupon
+                            </div>
+                            <div class="toggle-switch"><div class="toggle-knob"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Totals -->
+                    <div class="totals-breakdown">
+                        <div class="t-line">
+                            <span style="color:var(--text-muted);">Subtotal</span>
+                            <span style="font-weight:700;">$1,610.00</span>
+                        </div>
+                        <div class="t-line">
+                            <span style="color:var(--text-muted);">Service Tax (8%)</span>
+                            <span style="font-weight:700;">$128.80</span>
+                        </div>
+                        <div class="t-line">
+                            <span style="color:var(--text-muted);">Shipping</span>
+                            <span style="color:#10B981; font-weight:700;">FREE</span>
+                        </div>
+
+                        <div class="grand-total-line">
+                            <span style="font-size:13px; font-weight:800; color:var(--text-dark);">Total</span>
+                            <span class="grand-val">$1,738.80</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Payment Methods & Keypad -->
+                <div>
+                    <div style="font-size:13px; font-weight:800; margin-bottom:14px;">Payment Method</div>
+
+                    <div class="payment-methods-grid">
+                        <div class="pm-card selected">
+                            <span class="material-symbols-outlined pm-icon">payments</span>
+                            <div class="pm-label">Cash</div>
+                        </div>
+                        <div class="pm-card">
+                            <span class="material-symbols-outlined pm-icon">credit_card</span>
+                            <div class="pm-label">Credit/Debit Card</div>
+                        </div>
+                        <div class="pm-card">
+                            <span class="material-symbols-outlined pm-icon">qr_code_2</span>
+                            <div class="pm-label">UPI/Digital Wallet</div>
+                        </div>
+                        <div class="pm-card">
+                            <span class="material-symbols-outlined pm-icon">call_split</span>
+                            <div class="pm-label">Split Payment</div>
+                        </div>
+                    </div>
+
+                    <!-- Numpad Box -->
+                    <div class="numpad-box">
+                        <div class="amt-received-row">
+                            <span class="amt-received-label">Amount Received</span>
+                            <span class="amt-received-val">$ 1,740.00</span>
+                        </div>
+
+                        <div class="preset-btns-row">
+                            <button class="btn-preset">Exact</button>
+                            <button class="btn-preset">$1750</button>
+                            <button class="btn-preset">$1800</button>
+                            <button class="btn-preset">$2000</button>
+                        </div>
+
+                        <div class="keypad-grid">
+                            <button class="key-btn">1</button>
+                            <button class="key-btn">2</button>
+                            <button class="key-btn">3</button>
+                            <button class="key-btn">4</button>
+                            <button class="key-btn">5</button>
+                            <button class="key-btn">6</button>
+                            <button class="key-btn">7</button>
+                            <button class="key-btn">8</button>
+                            <button class="key-btn">9</button>
+                            <button class="key-btn">.</button>
+                            <button class="key-btn">0</button>
+                            <button class="key-btn key-btn-backspace">
+                                <span class="material-symbols-outlined" style="font-size:18px;">backspace</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Change to Return -->
+                    <div class="change-return-box">
+                        <span class="change-lbl">Change to Return</span>
+                        <span class="change-val">$ 1.20</span>
+                    </div>
+
+                    <button class="btn-complete-txn">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        Complete Transaction
+                    </button>
+
+                    <div class="print-email-links">
+                        <a href="#">🖨️ Print Receipt</a>
+                        <a href="#">✉️ Email Invoice</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

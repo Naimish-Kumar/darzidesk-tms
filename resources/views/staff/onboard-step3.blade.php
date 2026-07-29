@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Onboarding - Step 3: Payout & Security - {{ env('APP_NAME', 'DarziDesk') }}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        :root {
+            --primary-teal: #006A67;
+            --accent-teal: #26A69A;
+            --dark-navy: #0B1C30;
+            --bg-light: #F4F7F9;
+            --card-border: #E2E8F0;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --font-main: 'Hanken Grotesk', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px; background: #FFFFFF; border-right: 1px solid var(--card-border);
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 24px 16px; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
+        }
+
+        .brand-box h2 { font-size: 20px; font-weight: 800; color: var(--primary-teal); }
+        .brand-box span { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; color: var(--text-muted); display: block; margin-top: 2px; }
+
+        .nav-list { list-style: none; margin-top: 28px; }
+        .nav-item { margin-bottom: 4px; }
+
+        .nav-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 12px; border-radius: 10px; font-size: 13.5px; font-weight: 600;
+            color: var(--text-dark); text-decoration: none; transition: all 0.2s;
+        }
+
+        .nav-link.active { background: #E6FFFA; color: var(--primary-teal); font-weight: 700; border-left: 3px solid var(--primary-teal); }
+
+        .main-wrapper { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
+
+        .top-header {
+            height: 64px; background: #FFFFFF; border-bottom: 1px solid var(--card-border);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 28px;
+            position: sticky; top: 0; z-index: 90;
+        }
+
+        .header-title-links { display: flex; gap: 20px; font-size: 13px; font-weight: 600; }
+        .header-title-links a { color: var(--text-muted); text-decoration: none; }
+        .header-title-links a.active { color: var(--primary-teal); font-weight: 800; }
+
+        .secure-protocol-badge {
+            background: #E6FFFA; color: var(--primary-teal); font-size: 11px; font-weight: 800;
+            padding: 6px 12px; border-radius: 8px; display: flex; align-items: center; gap: 6px; border: 1px solid var(--accent-teal);
+        }
+
+        .stepper-container {
+            display: flex; align-items: center; justify-content: center;
+            gap: 16px; padding: 28px 0 20px; max-width: 650px; margin: 0 auto;
+        }
+
+        .step-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+        .step-circle {
+            width: 34px; height: 34px; border-radius: 50%; background: #CBD5E1; color: #FFF;
+            font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center;
+        }
+
+        .step-circle.done { background: #10B981; }
+        .step-circle.active { background: var(--primary-teal); }
+        .step-lbl { font-size: 11.5px; font-weight: 700; color: var(--text-muted); }
+        .step-lbl.active { color: var(--primary-teal); }
+
+        .step-line { flex: 1; height: 2px; background: #10B981; max-width: 100px; }
+
+        .content-area { padding: 0 28px 40px; max-width: 1050px; margin: 0 auto; width: 100%; }
+
+        .grid-2col { display: grid; grid-template-columns: 1.8fr 1fr; gap: 24px; }
+
+        .form-card {
+            background: #FFFFFF; border: 1px solid var(--card-border);
+            border-radius: 18px; padding: 32px; margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+        }
+
+        .payout-type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+
+        .payout-card {
+            border: 2px solid var(--card-border); border-radius: 12px; padding: 16px;
+            text-align: center; cursor: pointer; transition: all 0.2s;
+        }
+
+        .payout-card.selected { border-color: var(--primary-teal); background: #FAFDFD; }
+
+        .payout-card h5 { font-size: 13.5px; font-weight: 800; margin-top: 6px; }
+
+        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+        .form-group label { font-size: 10px; font-weight: 800; letter-spacing: 0.8px; color: var(--text-muted); text-transform: uppercase; }
+
+        .input-box {
+            background: #FFFFFF; border: 1.5px solid var(--card-border);
+            border-radius: 10px; padding: 12px 14px; font-family: var(--font-main);
+            font-size: 13.5px; outline: none; transition: border-color 0.2s; display: flex; align-items: center; gap: 10px;
+        }
+
+        .input-box input { border: none; background: transparent; outline: none; width: 100%; font-family: var(--font-main); font-size: 13.5px; }
+
+        .font-mono { font-family: var(--font-code); font-weight: 700; letter-spacing: 1px; }
+
+        .form-row-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+        .sub-hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+        .role-access-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+
+        .role-access-card {
+            border: 1.5px solid var(--card-border); border-radius: 12px; padding: 16px;
+            display: flex; align-items: flex-start; gap: 12px; cursor: pointer;
+        }
+
+        .role-access-card.selected { border-color: var(--primary-teal); background: #FAFDFD; }
+
+        .role-access-card input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--primary-teal); }
+
+        .role-access-card h5 { font-size: 13.5px; font-weight: 800; margin-bottom: 4px; }
+        .role-access-card p { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; }
+
+        .form-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 32px; }
+
+        .btn-back-link { font-size: 13.5px; font-weight: 700; color: var(--text-dark); text-decoration: none; display: flex; align-items: center; gap: 6px; }
+
+        .btn-complete-onboarding {
+            background: var(--primary-teal); color: #FFF; border: none;
+            padding: 12px 24px; border-radius: 10px; font-family: var(--font-main);
+            font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px;
+            cursor: pointer; text-decoration: none;
+        }
+
+        .summary-card {
+            background: #F8FAFC; border: 1px solid var(--card-border);
+            border-radius: 16px; padding: 20px; margin-bottom: 16px;
+        }
+
+        .summary-header { font-size: 14px; font-weight: 800; margin-bottom: 16px; }
+
+        .artisan-profile-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--card-border); }
+
+        .artisan-img { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; }
+
+        .artisan-name { font-size: 14px; font-weight: 800; }
+        .artisan-role { font-size: 10px; font-weight: 800; letter-spacing: 0.5px; color: var(--text-muted); }
+
+        .summary-row { display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 10px; }
+        .summary-row .lbl { color: var(--text-muted); }
+        .summary-row .val { font-weight: 700; }
+
+        .security-notice-box {
+            background: #F0F9FF; border: 1px solid #BAE6FD; border-radius: 14px;
+            padding: 16px; margin-bottom: 16px; font-size: 12px; color: #0C4A6E; line-height: 1.4;
+        }
+
+        .security-notice-title { font-weight: 800; display: flex; align-items: center; gap: 6px; margin-bottom: 6px; color: #0369A1; }
+
+        .protection-active-box {
+            background: #EDF2F7; border-radius: 14px; padding: 24px; text-align: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+        }
+
+        .protection-active-box h5 { font-size: 13px; font-weight: 800; color: var(--primary-teal); }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Nav -->
+    <aside class="sidebar">
+        <div>
+            <div class="brand-box">
+                <img src="{{ asset('assets/images/logo_wide.png') }}" alt="DarziDesk" style="height: 32px;">
+                <span>MASTER TAILOR WORKSPACE</span>
+            </div>
+
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="{{ route('dashboard') }}" class="nav-link">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('orders.index') }}" class="nav-link">
+                        <span class="material-symbols-outlined">shopping_bag</span>
+                        Orders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('staff.index') }}" class="nav-link active">
+                        <span class="material-symbols-outlined">group</span>
+                        Staff
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('financials.index') }}" class="nav-link">
+                        <span class="material-symbols-outlined">payments</span>
+                        Financials
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('branches.index') }}" class="nav-link">
+                        <span class="material-symbols-outlined">account_tree</span>
+                        Branches
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-title-links">
+                <a href="#" class="active">Onboard New Staff</a>
+                <a href="#">Shop Performance</a>
+                <a href="#">Live Production</a>
+                <a href="#">Active Artisans</a>
+            </div>
+
+            <div class="secure-protocol-badge">
+                <span class="material-symbols-outlined" style="font-size: 16px;">verified_user</span>
+                Secure Setup Protocol
+            </div>
+        </header>
+
+        <!-- Stepper Header -->
+        <div class="stepper-container">
+            <div class="step-item">
+                <div class="step-circle done">✓</div>
+                <div class="step-lbl">Basic Info</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item">
+                <div class="step-circle done">✓</div>
+                <div class="step-lbl">Skills & Specialties</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item">
+                <div class="step-circle active">3</div>
+                <div class="step-lbl active">Payout & Security</div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <main class="content-area">
+            <div class="grid-2col">
+                <!-- Left Section: Forms -->
+                <div>
+                    <!-- Payout Configuration -->
+                    <div class="form-card">
+                        <div class="section-title">
+                            <span class="material-symbols-outlined" style="color: var(--primary-teal);">payments</span>
+                            Payout Configuration
+                        </div>
+
+                        <div class="payout-type-grid">
+                            <div class="payout-card selected">
+                                <span class="material-symbols-outlined" style="color: var(--primary-teal);">calendar_today</span>
+                                <h5>Fixed Salary</h5>
+                            </div>
+                            <div class="payout-card">
+                                <span class="material-symbols-outlined" style="color: var(--text-muted);">extension</span>
+                                <h5>Piece-Rate</h5>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>RATE / SALARY AMOUNT</label>
+                            <div class="input-box">
+                                <span style="font-weight: 700; color: var(--text-muted);">$</span>
+                                <input type="text" value="3,200.00" class="font-mono">
+                            </div>
+                            <div class="sub-hint">Standard monthly payout cycle</div>
+                        </div>
+
+                        <div class="divider-line" style="height:1px; background:var(--card-border); margin:24px 0;"></div>
+
+                        <!-- Bank Account Details -->
+                        <div class="section-title">
+                            <span class="material-symbols-outlined" style="color: var(--primary-teal);">account_balance</span>
+                            Bank Account Details
+                        </div>
+
+                        <div class="form-group">
+                            <label>IBAN / ACCOUNT NUMBER</label>
+                            <div class="input-box">
+                                <input type="text" value="GB00 0000 0000 0000 0000 00" class="font-mono">
+                            </div>
+                        </div>
+
+                        <div class="form-row-2col">
+                            <div class="form-group">
+                                <label>BANK NAME</label>
+                                <div class="input-box">
+                                    <input type="text" value="Standard Chartered">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>SWIFT / BIC</label>
+                                <div class="input-box">
+                                    <input type="text" value="SCBLGB2L" class="font-mono">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="divider-line" style="height:1px; background:var(--card-border); margin:24px 0;"></div>
+
+                        <!-- Account Access & Security -->
+                        <div class="section-title">
+                            <span class="material-symbols-outlined" style="color: var(--primary-teal);">shield</span>
+                            Account Access & Security
+                        </div>
+
+                        <div class="role-access-grid">
+                            <div class="role-access-card selected">
+                                <input type="radio" checked name="access_role">
+                                <div>
+                                    <h5>Staff</h5>
+                                    <p>View assigned orders, update production status, and manage personal profile.</p>
+                                </div>
+                            </div>
+
+                            <div class="role-access-card">
+                                <input type="radio" name="access_role">
+                                <div>
+                                    <h5>Manager</h5>
+                                    <p>Manage all shop orders, oversee staff performance, and edit shop settings.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <a href="{{ route('staff.onboard.step2') }}" class="btn-back-link">
+                                <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span>
+                                Back
+                            </a>
+                            <a href="{{ route('staff.index') }}" class="btn-complete-onboarding">
+                                Complete Onboarding
+                                <span class="material-symbols-outlined" style="font-size: 18px;">check_circle</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Summary Cards -->
+                <div>
+                    <!-- Onboarding Summary -->
+                    <div class="summary-card">
+                        <div class="summary-header">Onboarding Summary</div>
+
+                        <div class="artisan-profile-bar">
+                            <img src="{{ asset('assets/images/onboarding_tailor.jpg') }}" class="artisan-img" alt="Liam Vance">
+                            <div>
+                                <div class="artisan-name">Liam Vance</div>
+                                <div class="artisan-role">SENIOR PATTERN CUTTER</div>
+                            </div>
+                        </div>
+
+                        <div class="summary-row">
+                            <span class="lbl">Contract Type</span>
+                            <span class="val">Full-time</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="lbl">Primary Skill</span>
+                            <span class="val">Silk & Velvet</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="lbl">Probation</span>
+                            <span class="val">90 Days</span>
+                        </div>
+                    </div>
+
+                    <!-- Security Notice -->
+                    <div class="security-notice-box">
+                        <div class="security-notice-title">
+                            <span class="material-symbols-outlined" style="font-size: 16px;">lock</span>
+                            Security Notice
+                        </div>
+                        DarziDesk uses bank-grade 256-bit encryption for all financial data. IBAN and Payout details are encrypted at rest and never visible to unauthorized staff members.
+                    </div>
+
+                    <!-- Data Protection Active -->
+                    <div class="protection-active-box">
+                        <span class="material-symbols-outlined" style="font-size: 32px; color: var(--primary-teal);">verified</span>
+                        <h5>Data Protection Active</h5>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

@@ -88,6 +88,15 @@ class CustomerController extends Controller
                 $customer->city = $request->city;
                 $customer->address = $request->address;
                 $customer->notes = $request->notes;
+                $customer->body_shape = $request->body_shape;
+                $customer->posture_notes = $request->posture_notes;
+
+                if ($request->hasFile('fitting_photo')) {
+                    $fileName = time() . '_' . $request->file('fitting_photo')->getClientOriginalName();
+                    $request->file('fitting_photo')->storeAs('upload/fitting_photos/', $fileName);
+                    $customer->fitting_photo = $fileName;
+                }
+
                 $customer->parent_id = parentId();
                 $customer->save();
             }

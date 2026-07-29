@@ -241,6 +241,17 @@ class MeasurementController extends Controller
             $id = decrypt($id);
 
             $measurement = Measurement::find($id);
+
+            // Record Historical Snapshot before updating
+            \App\Models\MeasurementHistory::create([
+                'measurement_id' => $measurement->id,
+                'customer_id' => $measurement->customer,
+                'cloth_type_id' => $measurement->cloth_type,
+                'snapshot_data' => $measurement->measurement_detail,
+                'change_notes' => 'Updated on ' . date('Y-m-d H:i:s'),
+                'updated_by' => \Auth::id(),
+            ]);
+
             $measurement->measurement_id = $request->measurement_id;
             $measurement->customer = $request->customer;
             $measurement->date = $request->date;

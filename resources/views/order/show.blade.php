@@ -116,6 +116,29 @@
                                         class="badge text-bg-info">{{ \App\Models\Order::$status[$order->status] }}</span>
                                 @endif
                             </p>
+                            @php
+                                $waPhone = $order->customers->phone_number ?? '';
+                                $waTrialMsg = \App\Helper\WhatsAppService::getTrialReminderMessage($order);
+                                $waStatusMsg = \App\Helper\WhatsAppService::getStatusUpdateMessage($order);
+                                $waTrialUrl = \App\Helper\WhatsAppService::generateClickToChatUrl($waPhone, $waTrialMsg);
+                                $waStatusUrl = \App\Helper\WhatsAppService::generateClickToChatUrl($waPhone, $waStatusMsg);
+                                $trackingUrl = route('order.public.track', $order->tracking_token ?? $order->id);
+                                $qrReceiptUrl = route('order.public.qr-receipt', $order->tracking_token ?? $order->id);
+                            @endphp
+                            <div class="mt-3 d-flex flex-wrap gap-2">
+                                <a href="{{ $waTrialUrl }}" target="_blank" class="btn btn-sm btn-success">
+                                    <i class="ti ti-brand-whatsapp me-1"></i> WhatsApp Trial Reminder
+                                </a>
+                                <a href="{{ $waStatusUrl }}" target="_blank" class="btn btn-sm btn-outline-success">
+                                    <i class="ti ti-brand-whatsapp me-1"></i> Send WhatsApp Status
+                                </a>
+                                <a href="{{ $trackingUrl }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                    <i class="ti ti-external-link me-1"></i> Public Track Portal
+                                </a>
+                                <a href="{{ $qrReceiptUrl }}" target="_blank" class="btn btn-sm btn-outline-dark">
+                                    <i class="ti ti-qrcode me-1"></i> QR Receipt Tag
+                                </a>
+                            </div>
                         </div>
                     </div>
 

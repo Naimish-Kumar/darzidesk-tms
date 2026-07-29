@@ -113,6 +113,7 @@ class OrderController extends Controller
             }
             $order = new Order();
             $order->order_id = $request->order_id;
+            $order->tracking_token = \Illuminate\Support\Str::random(16);
             $order->customer_id = $request->customer_id;
             $order->order_date = $request->order_date;
             $order->deadline_date = $request->deadline_date;
@@ -124,9 +125,33 @@ class OrderController extends Controller
             $order->status = $request->status;
             $order->notes = $request->notes;
             $order->responsible = !empty($request->responsible) ? $request->responsible : 0;
-            $order->measurement = $measurementDetail;
+            $firstStage = \App\Models\ProductionStage::orderBy('order_index', 'asc')->first();
+            if ($firstStage) {
+                $order->production_stage_id = $firstStage->id;
+            }
 
             $order->save();
+
+            // Automatic Fabric Inventory Deduction on Order Creation
+            if (!empty($request->febric)) {
+                $material = \App\Models\Material::where(function($q) use ($request) {
+                    $q->where('name', 'LIKE', '%' . $request->febric . '%')
+                      ->orWhere('code', 'LIKE', '%' . $request->febric . '%');
+                })->first();
+
+                if ($material) {
+                    $usedQty = floatval($request->quantity ?? 1);
+                    $material->quantity = max(0, $material->quantity - $usedQty);
+                    $material->save();
+
+                    \App\Models\OrderMaterialUsage::create([
+                        'order_id' => $order->id,
+                        'material_id' => $material->id,
+                        'quantity_used' => $usedQty,
+                        'cost' => $usedQty * $material->unit_cost,
+                    ]);
+                }
+            }
 
 
             // Initialize the measurement details string
@@ -487,5 +512,80 @@ class OrderController extends Controller
             }
         }
         return response()->json(['success' => true]);
+    }
+
+    // Step 1: Customer & Basic Details
+    public function createStep1()
+    {
+        return view('order.create-step1');
+    }
+
+    public function storeStep1(Request $request)
+    {
+        $validated = $request->validate([
+            'customer_name' => 'required|string',
+            'customer_phone' => 'required|string',
+            'garment_type' => 'required|string',
+        ]);
+
+        session(['order_step1' => $validated]);
+
+        return redirect()->route('orders.create.step2');
+    }
+
+    // Step 2: Fabric & Customizations
+    public function createStep2()
+    {
+        return view('order.create-step2');
+    }
+
+    public function storeStep2(Request $request)
+    {
+        $validated = $request->validate([
+            'fabric_name' => 'required|string',
+            'lapel_style' => 'nullable|string',
+            'lining_style' => 'nullable|string',
+        ]);
+
+        session(['order_step2' => $validated]);
+
+        return redirect()->route('orders.create.step3');
+    }
+
+    // Step 3: Detailed Measurements & Order Finalization
+    public function createStep3()
+    {
+        return view('order.create-step3');
+    }
+
+    public function storeStep3(Request $request)
+    {
+        $step1 = session('order_step1', []);
+        $step2 = session('order_step2', []);
+
+        $orderNumber = $this->orderNumber();
+
+        $order = Order::create([
+            'order_id' => $orderNumber,
+            'tracking_token' => \Illuminate\Support\Str::random(32),
+            'customer_id' => auth()->id() ?? 1,
+            'order_date' => now()->format('Y-m-d'),
+            'deadline_date' => now()->addDays(14)->format('Y-m-d'),
+            'quantity' => 1,
+            'febric' => $step2['fabric_name'] ?? 'Premium Wool',
+            'febric_color' => 'Navy Blue',
+            'gender' => 'male',
+            'responsible' => auth()->id() ?? 1,
+            'cloth_type' => 1,
+            'status' => 'pending',
+            'notes' => 'Custom 3-Step Wizard Order',
+            'measurement' => $request->except(['_token']),
+            'production_stage_id' => 1,
+            'parent_id' => parentId(),
+        ]);
+
+        session()->forget(['order_step1', 'order_step2']);
+
+        return redirect()->route('orders.index')->with('success', 'Bespoke Order #' . $orderNumber . ' created successfully!');
     }
 }

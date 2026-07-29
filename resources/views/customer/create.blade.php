@@ -23,7 +23,7 @@
 
 @section('content')
     <div class="row">
-        {{ Form::open(['route' => 'customer.store', 'method' => 'post']) }}
+        {{ Form::open(['route' => 'customer.store', 'method' => 'post', 'files' => true]) }}
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -59,12 +59,31 @@
                                 {{ Form::label('city', __('City') . '<span class="text-danger"> *</span>', ['class' => 'form-label'], false) }}
                                 {{ Form::text('city', null, ['class' => 'form-control', 'placeholder' => __('Enter city'), 'required' => 'required']) }}
                             </div>
-                            <div class="form-group  col-md-6">
+                            <div class="form-group col-md-6">
+                                {{ Form::label('body_shape', __('Anatomical Body Shape'), ['class' => 'form-label']) }}
+                                {{ Form::select('body_shape', [
+                                    'Standard' => 'Standard Build',
+                                    'Sloping Shoulders' => 'Sloping Shoulders',
+                                    'Athletic' => 'Athletic / Broad Chest',
+                                    'Stooping' => 'Stooping / Forward Posture',
+                                    'Round Belly' => 'Round Belly / Prominent Abdomen',
+                                    'Tall & Lean' => 'Tall & Lean'
+                                ], null, ['class' => 'form-select', 'placeholder' => __('Select Body Shape')]) }}
+                            </div>
+                            <div class="form-group col-md-6">
                                 {{ Form::label('address', __('Address'), ['class' => 'form-label']) }}
                                 {{ Form::textarea('address', null, ['class' => 'form-control', 'rows' => 3]) }}
                             </div>
-                            <div class="form-group  col-md-6">
-                                {{ Form::label('notes', __('Notes'), ['class' => 'form-label']) }}
+                            <div class="form-group col-md-6">
+                                {{ Form::label('posture_notes', __('Posture & Fitting Notes'), ['class' => 'form-label']) }}
+                                {{ Form::textarea('posture_notes', null, ['class' => 'form-control', 'rows' => 3, 'placeholder' => __('e.g., Left shoulder 0.5 inch lower, tight chest preference')]) }}
+                            </div>
+                            <div class="form-group col-md-6">
+                                {{ Form::label('fitting_photo', __('Fitting Reference Photo'), ['class' => 'form-label']) }}
+                                {{ Form::file('fitting_photo', ['class' => 'form-control']) }}
+                            </div>
+                            <div class="form-group col-md-6">
+                                {{ Form::label('notes', __('General Notes'), ['class' => 'form-label']) }}
                                 {{ Form::textarea('notes', null, ['class' => 'form-control', 'rows' => 3]) }}
                             </div>
                         </div>

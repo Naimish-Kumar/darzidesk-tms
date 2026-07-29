@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Reconciliation - {{ env('APP_NAME', 'DarziDesk') }}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        :root {
+            --primary-teal: #006A67;
+            --accent-teal: #26A69A;
+            --dark-navy: #0B1C30;
+            --bg-light: #F4F7F9;
+            --card-border: #E2E8F0;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --font-main: 'Hanken Grotesk', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px; background: #FFFFFF; border-right: 1px solid var(--card-border);
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 24px 16px; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
+        }
+
+        .brand-box h2 { font-size: 18px; font-weight: 800; color: var(--primary-teal); }
+        .brand-box span { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; color: var(--text-muted); display: block; margin-top: 2px; }
+
+        .nav-list { list-style: none; margin-top: 24px; }
+        .nav-item { margin-bottom: 4px; }
+
+        .nav-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 12px; border-radius: 10px; font-size: 13.5px; font-weight: 600;
+            color: var(--text-dark); text-decoration: none; transition: all 0.2s;
+        }
+
+        .nav-link.active { background: #E6FFFA; color: var(--primary-teal); font-weight: 700; border-left: 3px solid var(--primary-teal); }
+
+        .sidebar-bottom { border-top: 1px solid var(--card-border); padding-top: 16px; margin-top: 20px; }
+
+        .btn-new-order-side {
+            width: 100%; background: var(--primary-teal); color: #FFF; border: none;
+            padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; margin-bottom: 16px;
+        }
+
+        .main-wrapper { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
+
+        .top-header {
+            height: 64px; background: #FFFFFF; border-bottom: 1px solid var(--card-border);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 28px;
+            position: sticky; top: 0; z-index: 90;
+        }
+
+        .header-title-flex { display: flex; align-items: center; gap: 16px; }
+        .header-title-flex h3 { font-size: 18px; font-weight: 800; }
+
+        .date-select-btn {
+            background: #F8FAFC; border: 1px solid var(--card-border); border-radius: 8px;
+            padding: 6px 12px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer;
+        }
+
+        .btn-sync-data {
+            background: #EBF3FA; color: #2B6CB0; border: 1px solid #BEE3F8;
+            padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px;
+        }
+
+        .content-area { padding: 28px; max-width: 1250px; margin: 0 auto; width: 100%; }
+
+        .top-cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 28px; }
+
+        .recon-card {
+            background: #FFFFFF; border: 1.5px solid var(--card-border);
+            border-radius: 16px; padding: 20px; position: relative;
+        }
+
+        .recon-card.selected { border-color: var(--primary-teal); background: #FAFDFD; }
+
+        .recon-lbl { font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px; }
+        .recon-val { font-family: var(--font-code); font-size: 26px; font-weight: 800; color: var(--text-dark); margin-bottom: 6px; }
+        .recon-sub { font-size: 11px; color: var(--text-muted); }
+
+        .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; }
+
+        .card-box { background: #FFFFFF; border: 1px solid var(--card-border); border-radius: 18px; padding: 24px; }
+        .card-box-title { font-size: 14.5px; font-weight: 800; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+
+        .donut-flex { display: flex; align-items: center; gap: 28px; }
+
+        .donut-chart-svg { width: 140px; height: 140px; transform: rotate(-90deg); position: relative; }
+        .donut-center-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+
+        .donut-legend { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+        .legend-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+        .leg-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+
+        .adj-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .adj-table th { font-size: 10.5px; font-weight: 800; letter-spacing: 0.8px; color: var(--text-muted); uppercase; padding-bottom: 12px; border-bottom: 1px solid var(--card-border); }
+        .adj-table td { padding: 12px 0; font-size: 12.5px; border-bottom: 1px solid var(--card-border); }
+
+        .audit-trail-card {
+            background: #FFFFFF; border: 1px solid var(--card-border);
+            border-radius: 18px; overflow: hidden; margin-bottom: 28px;
+        }
+
+        .audit-header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); }
+        .audit-header h4 { font-size: 15px; font-weight: 800; }
+
+        .btn-filter-export { display: flex; gap: 10px; }
+        .btn-sm-outline { background: #FFF; border: 1px solid var(--card-border); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
+
+        .audit-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .audit-table th { padding: 14px 24px; font-size: 10.5px; font-weight: 800; letter-spacing: 0.8px; color: var(--text-muted); uppercase; border-bottom: 1px solid var(--card-border); }
+        .audit-table td { padding: 16px 24px; font-size: 13px; border-bottom: 1px solid var(--card-border); }
+
+        .txn-id-link { font-family: var(--font-code); font-weight: 700; color: var(--primary-teal); text-decoration: none; }
+
+        .status-badge-success { background: #E6FFFA; color: var(--primary-teal); font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 6px; }
+        .status-badge-refunded { background: #FEE2E2; color: #E53E3E; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 6px; }
+
+        .close-register-box {
+            background: #FAFDFD; border: 2px dashed #BAE6FD;
+            border-radius: 20px; padding: 28px; margin-bottom: 32px;
+        }
+
+        .close-reg-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+        .close-reg-sub { font-size: 12.5px; color: var(--text-muted); margin-bottom: 20px; max-width: 600px; line-height: 1.4; }
+
+        .close-reg-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; }
+
+        .notes-textarea {
+            width: 100%; border: 1.5px solid var(--card-border); border-radius: 12px;
+            padding: 12px; font-family: var(--font-main); font-size: 12.5px; min-height: 100px; outline: none; background: #FFF;
+        }
+
+        .settlement-summary-box {
+            background: #FFFFFF; border: 1px solid var(--card-border);
+            border-radius: 14px; padding: 16px; margin-bottom: 16px;
+        }
+
+        .settle-row { display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 8px; }
+
+        .net-settle-line { display: flex; justify-content: space-between; align-items: flex-end; pt-2; border-top: 1px solid var(--card-border); margin-top: 10px; }
+        .net-settle-val { font-family: var(--font-code); font-size: 22px; font-weight: 800; color: var(--primary-teal); }
+
+        .btn-finalize-submit {
+            width: 100%; background: var(--primary-teal); color: #FFF; border: none;
+            padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 800; cursor: pointer; text-align: center; margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Nav -->
+    <aside class="sidebar">
+        <div>
+            <div class="brand-box">
+                <img src="{{ asset('assets/images/logo_wide.png') }}" alt="DarziDesk" style="height: 32px;">
+                <span>Admin Workspace</span>
+            </div>
+
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="{{ route('dashboard') }}" class="nav-link">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('pos.index') }}" class="nav-link">
+                        <span class="material-symbols-outlined">receipt</span>
+                        Transactions
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('inventory.index') }}" class="nav-link">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                        Inventory
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('orders.create.step3') }}" class="nav-link">
+                        <span class="material-symbols-outlined">straighten</span>
+                        Measurements
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('reconciliation.index') }}" class="nav-link active">
+                        <span class="material-symbols-outlined">point_of_sale</span>
+                        Reconciliation
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('roles.index') }}" class="nav-link">
+                        <span class="material-symbols-outlined">settings</span>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="sidebar-bottom">
+            <button class="btn-new-order-side">New Order</button>
+            <div style="font-size:12px; font-weight:700; color:var(--text-muted); display:flex; flex-direction:column; gap:8px;">
+                <a href="#" style="color:var(--text-muted); text-decoration:none; display:flex; align-items:center; gap:6px;">
+                    <span class="material-symbols-outlined" style="font-size:16px;">help</span> Help Center
+                </a>
+                <a href="#" style="color:var(--text-muted); text-decoration:none; display:flex; align-items:center; gap:6px;">
+                    <span class="material-symbols-outlined" style="font-size:16px;">logout</span> Logout
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-title-flex">
+                <h3>Register Reconciliation</h3>
+                <div class="date-select-btn">
+                    <span class="material-symbols-outlined" style="font-size:16px;">calendar_today</span>
+                    Today, Oct 24 ▾
+                </div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:14px;">
+                <button class="btn-sync-data">
+                    <span class="material-symbols-outlined" style="font-size:16px;">sync</span>
+                    SYNC DATA
+                </button>
+                <span class="material-symbols-outlined" style="font-size:20px; color:var(--text-muted); cursor:pointer;">notifications</span>
+                <img src="{{ asset('assets/images/onboarding_tailor.jpg') }}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" alt="Avatar">
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <main class="content-area">
+            <!-- 4 Top Stat Cards -->
+            <div class="top-cards-grid">
+                <div class="recon-card">
+                    <div class="recon-lbl">Expected Cash</div>
+                    <div class="recon-val">₹ 42,850.00</div>
+                    <div class="recon-sub">Based on POS records</div>
+                </div>
+
+                <div class="recon-card selected">
+                    <div class="recon-lbl" style="color:var(--primary-teal);">Actual Cash Count</div>
+                    <div class="recon-val" style="color:var(--primary-teal);">₹ 42,850.0</div>
+                    <div class="recon-sub" style="color:var(--primary-teal);">Matched with drawer</div>
+                </div>
+
+                <div class="recon-card">
+                    <div class="recon-lbl">Net Sales (All Methods)</div>
+                    <div class="recon-val">₹ 1,58,420.00</div>
+                    <div class="recon-sub" style="color:#10B981;">↗ +12.5% vs yesterday</div>
+                </div>
+
+                <div class="recon-card">
+                    <div class="recon-lbl">Discrepancy</div>
+                    <div class="recon-val">₹ 0.00</div>
+                    <div class="recon-sub" style="color:#10B981; font-weight:800;">✓ REGISTER BALANCED</div>
+                </div>
+            </div>
+
+            <!-- Middle Split 2 Columns -->
+            <div class="grid-2col">
+                <!-- Payment Method Split -->
+                <div class="card-box">
+                    <div class="card-box-title">
+                        <span>Payment Method Split</span>
+                        <span class="material-symbols-outlined" style="color:var(--text-muted); cursor:pointer;">more_vert</span>
+                    </div>
+
+                    <div class="donut-flex">
+                        <div style="position:relative; width:130px; height:130px;">
+                            <svg class="donut-chart-svg" viewBox="0 0 36 36">
+                                <path stroke="#E2E8F0" stroke-width="4.5" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path stroke="#006A67" stroke-width="4.5" stroke-dasharray="35, 100" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path stroke="#4299E1" stroke-width="4.5" stroke-dasharray="45, 100" stroke-dashoffset="-35" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path stroke="#9F7AEA" stroke-width="4.5" stroke-dasharray="15, 100" stroke-dashoffset="-80" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            </svg>
+                            <div class="donut-center-text">
+                                <div style="font-size:9px; color:var(--text-muted); font-weight:800;">TOTAL</div>
+                                <div style="font-size:13px; font-weight:800; font-family:var(--font-code);">1.58L</div>
+                            </div>
+                        </div>
+
+                        <div class="donut-legend">
+                            <div class="legend-row">
+                                <span><span class="leg-dot" style="background:#006A67;"></span> Cash Payments</span>
+                                <strong style="font-family:var(--font-code);">₹ 42,850</strong>
+                            </div>
+                            <div class="legend-row">
+                                <span><span class="leg-dot" style="background:#4299E1;"></span> Card (POS Terminal)</span>
+                                <strong style="font-family:var(--font-code);">₹ 85,200</strong>
+                            </div>
+                            <div class="legend-row">
+                                <span><span class="leg-dot" style="background:#9F7AEA;"></span> UPI / QR Scan</span>
+                                <strong style="font-family:var(--font-code);">₹ 24,370</strong>
+                            </div>
+                            <div class="legend-row">
+                                <span><span class="leg-dot" style="background:#ECC94B;"></span> Store Credits</span>
+                                <strong style="font-family:var(--font-code);">₹ 6,000</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Today's Adjustments -->
+                <div class="card-box">
+                    <div class="card-box-title">
+                        <span>Today's Adjustments</span>
+                    </div>
+
+                    <table class="adj-table">
+                        <thead>
+                            <tr>
+                                <th>TYPE</th>
+                                <th>COUNT</th>
+                                <th style="text-align:right;">VALUE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Refunds Processed</td>
+                                <td>02</td>
+                                <td style="text-align:right; font-family:var(--font-code); color:#E53E3E; font-weight:800;">-₹ 1,200.00</td>
+                            </tr>
+                            <tr>
+                                <td>Applied Discounts</td>
+                                <td>12</td>
+                                <td style="text-align:right; font-family:var(--font-code); color:#E53E3E; font-weight:800;">-₹ 5,850.00</td>
+                            </tr>
+                            <tr>
+                                <td>Voided Tickets</td>
+                                <td>01</td>
+                                <td style="text-align:right; font-family:var(--font-code); font-weight:700;">₹ 0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Manual Overrides</td>
+                                <td>00</td>
+                                <td style="text-align:right; font-family:var(--font-code); font-weight:700;">₹ 0.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Audit Trail: Recent Transactions -->
+            <div class="audit-trail-card">
+                <div class="audit-header">
+                    <h4>Audit Trail: Recent Transactions</h4>
+                    <div class="btn-filter-export">
+                        <button class="btn-sm-outline">⚙ Filter</button>
+                        <button class="btn-sm-outline">📥 Export PDF</button>
+                    </div>
+                </div>
+
+                <table class="audit-table">
+                    <thead>
+                        <tr>
+                            <th>TIME</th>
+                            <th>TRANSACTION ID</th>
+                            <th>CUSTOMER</th>
+                            <th>METHOD</th>
+                            <th>AMOUNT</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>05:42 PM</td>
+                            <td><a href="#" class="txn-id-link">#TXN-88421</a></td>
+                            <td>Aditya Vikram Singh</td>
+                            <td>💵 Cash</td>
+                            <td style="font-family:var(--font-code); font-weight:800;">₹ 14,500.00</td>
+                            <td><span class="status-badge-success">SUCCESS</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>04:15 PM</td>
+                            <td><a href="#" class="txn-id-link">#TXN-88419</a></td>
+                            <td>Meera K. Iyer</td>
+                            <td>💳 Visa • 4201</td>
+                            <td style="font-family:var(--font-code); font-weight:800;">₹ 28,900.00</td>
+                            <td><span class="status-badge-success">SUCCESS</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>03:30 PM</td>
+                            <td><a href="#" class="txn-id-link">#TXN-88418</a></td>
+                            <td>Rohan Deshmukh</td>
+                            <td>📱 UPI (GPay)</td>
+                            <td style="font-family:var(--font-code); font-weight:800;">₹ 4,200.00</td>
+                            <td><span class="status-badge-success">SUCCESS</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>02:50 PM</td>
+                            <td><a href="#" class="txn-id-link">#TXN-88417</a></td>
+                            <td>Zoya Fazal</td>
+                            <td>💵 Cash</td>
+                            <td style="font-family:var(--font-code); font-weight:800;">₹ 12,100.00</td>
+                            <td><span class="status-badge-refunded">REFUNDED</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Close Register Section -->
+            <div class="close-register-box">
+                <div class="close-reg-title">Close Register</div>
+                <div class="close-reg-sub">Review all figures carefully. Once finalized, the register will be locked and an end-of-day report will be generated for the administrator.</div>
+
+                <form action="{{ route('reconciliation.store') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="reconciliation_date" value="{{ $date ?? date('Y-m-d') }}">
+                    <input type="hidden" name="expected_cash" value="{{ $expectedCash ?? 42850.00 }}">
+                    <input type="hidden" name="actual_cash" value="{{ $actualCash ?? 42850.00 }}">
+                    <input type="hidden" name="net_sales" value="{{ $netSales ?? 158420.00 }}">
+
+                    <div class="close-reg-grid">
+                        <div>
+                            <div style="font-size:10px; font-weight:800; letter-spacing:0.8px; color:var(--text-muted); uppercase; margin-bottom:6px;">CLOSING NOTES (OPTIONAL)</div>
+                            <textarea name="closing_notes" class="notes-textarea" placeholder="Enter any notes about cash handling, missing receipts, or significant adjustments..."></textarea>
+                        </div>
+
+                        <div>
+                            <div class="settlement-summary-box">
+                                <div class="settle-row">
+                                    <span style="color:var(--text-muted);">Final Cash On Hand</span>
+                                    <span style="font-weight:700;">₹ {{ number_format($actualCash ?? 42850.00, 2) }}</span>
+                                </div>
+                                <div class="settle-row">
+                                    <span style="color:var(--text-muted);">Total Receipts</span>
+                                    <span style="font-weight:700;">₹ {{ number_format($netSales ?? 158420.00, 2) }}</span>
+                                </div>
+
+                                <div class="net-settle-line">
+                                    <span style="font-size:12px; font-weight:800;">Net Settlement</span>
+                                    <span class="net-settle-val">₹ {{ number_format(($netSales ?? 158420) - 1200, 2) }}</span>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-finalize-submit">
+                                ✓ Finalize & Submit
+                            </button>
+                            <div style="text-align:center;">
+                                <a href="#" style="font-size:12px; font-weight:700; color:var(--text-muted); text-decoration:none;">Save Draft & Exit</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

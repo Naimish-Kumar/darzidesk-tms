@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management - DarziDesk</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        :root {
+            --primary-teal: #006A67;
+            --accent-teal: #26A69A;
+            --dark-navy: #0B1C30;
+            --bg-light: #F4F7F9;
+            --card-border: #E2E8F0;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --font-main: 'Hanken Grotesk', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 240px;
+            background: #FFFFFF;
+            border-right: 1px solid var(--card-border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px 16px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        .brand-box h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary-teal);
+        }
+
+        .profile-pill {
+            background: #EDF2F7;
+            border-radius: 12px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .profile-avatar {
+            width: 32px;
+            height: 32px;
+            background: #4FD1C5;
+            color: #FFFFFF;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-info h5 { font-size: 13px; font-weight: 700; }
+        .profile-info p { font-size: 11px; color: var(--text-muted); }
+
+        .nav-list { list-style: none; }
+        .nav-item { margin-bottom: 4px; }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .nav-link.active {
+            background: var(--accent-teal);
+            color: #FFFFFF;
+        }
+
+        .nav-link:hover:not(.active) { background: #F1F5F9; }
+
+        /* Main Workspace Wrapper */
+        .main-wrapper {
+            margin-left: 240px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header Bar */
+        .top-header {
+            height: 64px;
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .search-bar {
+            background: #EBF3FA;
+            border-radius: 8px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 340px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: var(--font-main);
+            font-size: 13px;
+            width: 100%;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .switch-branch-link {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            color: var(--primary-teal);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .icon-btn { color: var(--text-muted); cursor: pointer; font-size: 20px; }
+
+        /* Workspace Body */
+        .content-area {
+            padding: 28px;
+        }
+
+        .page-title-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .page-title-row h2 {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .page-title-row p {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .page-title-row p span {
+            color: var(--primary-teal);
+            font-weight: 700;
+        }
+
+        .btn-create-order {
+            background: var(--primary-teal);
+            color: #FFFFFF;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-family: var(--font-main);
+            font-size: 13.5px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-create-order:hover {
+            background: #004D4B;
+        }
+
+        /* Filter Tabs Container */
+        .filter-card {
+            background: #FFFFFF;
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .filter-tabs-row {
+            display: flex;
+            align-items: center;
+            background: #EBF3FA;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 14px;
+        }
+
+        .filter-tab {
+            padding: 8px 18px;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+        }
+
+        .filter-tab.active {
+            background: var(--primary-teal);
+            color: #FFFFFF;
+        }
+
+        .filter-controls-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .date-picker-btn {
+            padding: 8px 14px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-family: var(--font-main);
+            font-size: 12.5px;
+            font-weight: 600;
+            background: #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        .filter-icon-btn {
+            padding: 8px 12px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            background: #FFFFFF;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+        }
+
+        /* Orders Data Table Card */
+        .table-card {
+            background: #FFFFFF;
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+        }
+
+        .orders-table th {
+            text-align: left;
+            padding: 14px 18px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            background: #F8FAFC;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .orders-table td {
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--card-border);
+            vertical-align: middle;
+        }
+
+        .order-id-code {
+            font-family: var(--font-code);
+            font-weight: 700;
+            color: var(--primary-teal);
+        }
+
+        .customer-col {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        .customer-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .customer-initials {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #26A69A;
+            color: #FFFFFF;
+            font-size: 11px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .priority-badge {
+            font-size: 9.5px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 10px;
+            display: inline-block;
+            letter-spacing: 0.5px;
+        }
+
+        .priority-high { background: #FEE2E2; color: #DC2626; }
+        .priority-medium { background: #E2E8F0; color: #475569; }
+        .priority-low { background: #E0F2FE; color: #0284C7; }
+
+        .status-dot-cell {
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-stitching { color: #8B5CF6; }
+        .status-cutting { color: #3B82F6; }
+        .status-ready { color: #10B981; }
+
+        .view-btn {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--primary-teal);
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        /* Pagination Footer */
+        .pagination-bar {
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12.5px;
+            color: var(--text-muted);
+            background: #FFFFFF;
+        }
+
+        .pagination-pages {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .page-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .page-num.active {
+            background: var(--primary-teal);
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Left Sidebar Nav -->
+    <aside class="sidebar">
+        <div>
+            <div class="brand-box">
+                <img src="assets/images/logo_wide.png" alt="DarziDesk" style="height: 32px; margin-bottom: 2px;">
+            </div>
+
+            <div class="profile-pill">
+                <div class="profile-avatar">BM</div>
+                <div class="profile-info">
+                    <h5>Bespoke Master</h5>
+                    <p>London Branch</p>
+                </div>
+            </div>
+
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="orders.html" class="nav-link active">
+                        <span class="material-symbols-outlined">shopping_bag</span>
+                        Orders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="material-symbols-outlined">cut</span>
+                        Production
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                        Inventory
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="material-symbols-outlined">payments</span>
+                        Financials
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="material-symbols-outlined">group</span>
+                        Staff
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="material-symbols-outlined">storefront</span>
+                        Business Profile
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="material-symbols-outlined">account_tree</span>
+                        Branch Management
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="material-symbols-outlined">verified_user</span>
+                        Roles & Permissions
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="material-symbols-outlined">receipt_long</span>
+                        Billing
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="material-symbols-outlined">settings</span>
+                        Settings
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="material-symbols-outlined">help</span>
+                        Support
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main Content Workspace -->
+    <div class="main-wrapper">
+        <!-- Top Header Bar -->
+        <header class="top-header">
+            <div class="search-bar">
+                <span class="material-symbols-outlined" style="font-size: 18px; color: var(--text-muted);">search</span>
+                <input type="text" placeholder="Search orders, customers...">
+            </div>
+
+            <div class="header-actions">
+                <a href="#" class="switch-branch-link">
+                    <span class="material-symbols-outlined" style="font-size: 16px;">swap_horiz</span>
+                    SWITCH BRANCH
+                </a>
+                <span class="material-symbols-outlined icon-btn">notifications</span>
+                <span class="material-symbols-outlined icon-btn">grid_view</span>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <main class="content-area">
+            <div class="page-title-row">
+                <div>
+                    <h2>Order Management</h2>
+                    <p>Manage and track <span>128 active orders</span> across production stages.</p>
+                </div>
+
+                <button class="btn-create-order">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">add</span>
+                    Create New Order
+                </button>
+            </div>
+
+            <!-- Filter Tabs & Date Controls Card -->
+            <div class="filter-card">
+                <div class="filter-tabs-row">
+                    <button class="filter-tab active">All</button>
+                    <button class="filter-tab">Pending</button>
+                    <button class="filter-tab">In Production</button>
+                    <button class="filter-tab">Ready for Trial</button>
+                    <button class="filter-tab">Completed</button>
+                </div>
+
+                <div class="filter-controls-row">
+                    <button class="date-picker-btn">
+                        <span class="material-symbols-outlined" style="font-size: 16px;">calendar_today</span>
+                        Oct 01, 2024 - Oct 31, 2024
+                    </button>
+                    <button class="filter-icon-btn">
+                        <span class="material-symbols-outlined" style="font-size: 16px;">tune</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Orders Table Container -->
+            <div class="table-card">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Garment Type</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Due Date</th>
+                            <th>Value</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="order-id-code">#DD-4921</td>
+                            <td>
+                                <div class="customer-col">
+                                    <img src="assets/images/onboarding_tailor.jpg" class="customer-avatar" alt="Customer">
+                                    Alastair Thorne
+                                </div>
+                            </td>
+                            <td>3-Piece Bespoke Suit</td>
+                            <td><span class="priority-badge priority-high">HIGH</span></td>
+                            <td>
+                                <div class="status-dot-cell status-stitching">
+                                    ● Stitching
+                                </div>
+                            </td>
+                            <td>Oct 24, 2024</td>
+                            <td class="order-id-code" style="color:var(--text-dark);">£2,450.00</td>
+                            <td><a href="#" class="view-btn">VIEW</a></td>
+                        </tr>
+
+                        <tr>
+                            <td class="order-id-code">#DD-4918</td>
+                            <td>
+                                <div class="customer-col">
+                                    <img src="assets/images/onboarding_tailor_light.jpg" class="customer-avatar" alt="Customer">
+                                    Elena Rodriguez
+                                </div>
+                            </td>
+                            <td>Custom Evening Gown</td>
+                            <td><span class="priority-badge priority-medium">MEDIUM</span></td>
+                            <td>
+                                <div class="status-dot-cell status-cutting">
+                                    ● Cutting
+                                </div>
+                            </td>
+                            <td>Oct 28, 2024</td>
+                            <td class="order-id-code" style="color:var(--text-dark);">£1,800.00</td>
+                            <td><a href="#" class="view-btn">VIEW</a></td>
+                        </tr>
+
+                        <tr>
+                            <td class="order-id-code">#DD-4905</td>
+                            <td>
+                                <div class="customer-col">
+                                    <div class="customer-initials">JP</div>
+                                    James Patterson
+                                </div>
+                            </td>
+                            <td>Waistcoat Alterations</td>
+                            <td><span class="priority-badge priority-low">LOW</span></td>
+                            <td>
+                                <div class="status-dot-cell status-ready">
+                                    ● Ready
+                                </div>
+                            </td>
+                            <td>Oct 15, 2024</td>
+                            <td class="order-id-code" style="color:var(--text-dark);">£120.00</td>
+                            <td><a href="#" class="view-btn">VIEW</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Pagination Footer -->
+                <div class="pagination-bar">
+                    <div>Showing <span>3</span> of <span>128</span> orders</div>
+                    <div class="pagination-pages">
+                        <span style="cursor:pointer;">‹</span>
+                        <div class="page-num active">1</div>
+                        <div class="page-num">2</div>
+                        <div class="page-num">3</div>
+                        <span style="cursor:pointer;">›</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

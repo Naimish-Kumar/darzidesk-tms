@@ -158,6 +158,26 @@
                                         <a class="pc-link"
                                             href="{{ route('order.kanban') }}">{{ __('Order Kanban') }}</a>
                                     </li>
+                                    <li class="pc-item {{ in_array($routeName, ['production.kanban']) ? 'active' : '' }} ">
+                                        <a class="pc-link"
+                                            href="{{ route('production.kanban') }}">{{ __('Production Board') }}</a>
+                                    </li>
+                                    <li class="pc-item {{ in_array($routeName, ['worker-assignments.index']) ? 'active' : '' }} ">
+                                        <a class="pc-link"
+                                            href="{{ route('worker-assignments.index') }}">{{ __('Tailor Tasks') }}</a>
+                                    </li>
+                                    <li class="pc-item {{ in_array($routeName, ['materials.index']) ? 'active' : '' }} ">
+                                        <a class="pc-link"
+                                            href="{{ route('materials.index') }}">{{ __('Fabric Inventory') }}</a>
+                                    </li>
+                                    <li class="pc-item {{ in_array($routeName, ['pos.index']) ? 'active' : '' }} ">
+                                        <a class="pc-link"
+                                            href="{{ route('pos.index') }}">{{ __('POS Billing') }}</a>
+                                    </li>
+                                    <li class="pc-item {{ in_array($routeName, ['financials.analytics']) ? 'active' : '' }} ">
+                                        <a class="pc-link"
+                                            href="{{ route('financials.analytics') }}">{{ __('Financial Analytics') }}</a>
+                                    </li>
                                 @endif
                             </ul>
                         </li>

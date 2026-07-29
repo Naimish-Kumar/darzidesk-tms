@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Communication Dashboard - DarziDesk</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        :root {
+            --primary-teal: #006A67;
+            --accent-teal: #26A69A;
+            --dark-navy: #0B1C30;
+            --bg-light: #F4F7F9;
+            --card-border: #E2E8F0;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --font-main: 'Hanken Grotesk', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px; background: #FFFFFF; border-right: 1px solid var(--card-border);
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 24px 16px; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
+        }
+
+        .brand-box h2 { font-size: 20px; font-weight: 800; color: var(--primary-teal); }
+        .brand-box span { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; color: var(--text-muted); display: block; margin-top: 2px; }
+
+        .nav-list { list-style: none; margin-top: 24px; }
+        .nav-item { margin-bottom: 4px; }
+
+        .nav-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 12px; border-radius: 10px; font-size: 13.5px; font-weight: 600;
+            color: var(--text-dark); text-decoration: none; transition: all 0.2s;
+        }
+
+        .nav-link.active { background: #E6FFFA; color: var(--primary-teal); font-weight: 700; border-left: 3px solid var(--primary-teal); }
+
+        .main-wrapper { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
+
+        .top-header {
+            height: 64px; background: #FFFFFF; border-bottom: 1px solid var(--card-border);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 28px;
+            position: sticky; top: 0; z-index: 90;
+        }
+
+        .search-bar {
+            background: #F1F5F9; border-radius: 20px; padding: 6px 16px;
+            display: flex; align-items: center; gap: 8px; width: 340px;
+        }
+
+        .search-bar input { border: none; background: transparent; outline: none; font-family: var(--font-main); font-size: 12.5px; width: 100%; }
+
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .user-profile-widget { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; }
+        .user-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+
+        .content-area { padding: 28px; position: relative; }
+
+        .title-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+        .title-row h2 { font-size: 24px; font-weight: 800; }
+        .title-row p { font-size: 13.5px; color: var(--text-muted); margin-top: 2px; }
+
+        .date-badge {
+            background: #EBF8FF; color: #0284C7; border: 1px solid #BAE6FD;
+            padding: 8px 14px; border-radius: 10px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px;
+        }
+
+        /* 4 Stat Metric Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 28px; }
+
+        .stat-card {
+            background: #FFFFFF; border: 1px solid var(--card-border);
+            border-radius: 16px; padding: 20px; position: relative;
+        }
+
+        .stat-icon-circle {
+            width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px;
+        }
+
+        .icon-teal { background: #E6FFFA; color: var(--primary-teal); }
+        .icon-blue { background: #EBF3FA; color: #2B6CB0; }
+        .icon-purple { background: #F3E8FF; color: #7E22CE; }
+        .icon-yellow { background: #FEFCBF; color: #D69E2E; }
+
+        .stat-title { font-size: 10px; font-weight: 800; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 4px; }
+        .stat-val { font-size: 26px; font-weight: 800; font-family: var(--font-code); }
+        .stat-sub { font-size: 11px; margin-top: 4px; font-weight: 600; }
+
+        /* 2 Column Main Section */
+        .grid-2col { display: grid; grid-template-columns: 1.8fr 1fr; gap: 24px; margin-bottom: 32px; }
+
+        .card-box { background: #FFFFFF; border: 1px solid var(--card-border); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+
+        .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .card-header-flex h4 { font-size: 15px; font-weight: 800; }
+        .link-history { font-size: 12.5px; font-weight: 700; color: var(--primary-teal); text-decoration: none; }
+
+        /* Recent Activity List */
+        .activity-list { display: flex; flex-direction: column; gap: 20px; }
+
+        .activity-item { display: flex; gap: 14px; align-items: flex-start; padding-bottom: 16px; border-bottom: 1px solid var(--card-border); }
+        .activity-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+        .act-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+        .act-title { font-size: 13.5px; font-weight: 800; margin-bottom: 4px; }
+        .act-sub { font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-bottom: 8px; }
+
+        .act-pills { display: flex; gap: 6px; }
+        .act-pill { font-size: 9.5px; font-weight: 800; padding: 2px 8px; border-radius: 6px; }
+        .pill-green { background: #E6FFFA; color: var(--primary-teal); }
+        .pill-blue { background: #EBF3FA; color: #2B6CB0; }
+        .pill-gray { background: #EDF2F7; color: #4A5568; }
+
+        /* Scheduled Today Card */
+        .schedule-slot {
+            background: #F8FAFC; border-left: 3px solid var(--primary-teal);
+            border-radius: 8px; padding: 12px; margin-bottom: 12px;
+        }
+
+        .schedule-time { font-size: 12.5px; font-weight: 800; margin-bottom: 2px; }
+        .schedule-client { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+
+        .btn-view-calendar {
+            width: 100%; background: #FFF; border: 1px solid var(--card-border);
+            padding: 10px; border-radius: 10px; font-size: 12.5px; font-weight: 700; cursor: pointer; text-align: center; color: var(--text-dark);
+        }
+
+        /* Channel Performance Card */
+        .chan-perf-row { margin-bottom: 14px; }
+        .chan-perf-header { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+        .bar-bg { height: 6px; background: #E2E8F0; border-radius: 4px; overflow: hidden; }
+        .bar-fill { height: 100%; background: var(--primary-teal); border-radius: 4px; }
+
+        /* Automated Workflows Section */
+        .workflows-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .workflows-header h3 { font-size: 18px; font-weight: 800; }
+        .badge-active { background: #E6FFFA; color: var(--primary-teal); font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 12px; }
+
+        .workflows-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+        .workflow-card {
+            background: #FFFFFF; border: 1px solid var(--card-border);
+            border-radius: 16px; padding: 20px; position: relative;
+        }
+
+        .wf-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .wf-icon-box { width: 36px; height: 36px; border-radius: 10px; background: #E6FFFA; color: var(--primary-teal); display: flex; align-items: center; justify-content: center; }
+
+        .wf-status { font-size: 11px; font-weight: 700; color: #10B981; display: flex; align-items: center; gap: 4px; }
+        .wf-dot { width: 6px; height: 6px; border-radius: 50%; background: #10B981; }
+
+        .wf-title { font-size: 14px; font-weight: 800; margin-bottom: 6px; }
+        .wf-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-bottom: 20px; min-height: 48px; }
+
+        .wf-footer { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-muted); font-weight: 700; border-top: 1px solid var(--card-border); padding-top: 12px; }
+
+        /* Floating Action Button */
+        .fab-btn {
+            position: fixed; bottom: 32px; right: 32px; width: 52px; height: 52px;
+            border-radius: 16px; background: var(--primary-teal); color: #FFF;
+            border: none; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,106,103,0.3); cursor: pointer; z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Nav -->
+    <aside class="sidebar">
+        <div>
+            <div class="brand-box">
+                <h2>Bespoke Pro</h2>
+                <span>ENTERPRISE SUITE</span>
+            </div>
+
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="communication.html" class="nav-link active">
+                        <span class="material-symbols-outlined">chat</span>
+                        Communication
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="business-profile.html" class="nav-link">
+                        <span class="material-symbols-outlined">storefront</span>
+                        Business Profile
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="branches.html" class="nav-link">
+                        <span class="material-symbols-outlined">account_tree</span>
+                        Branch Management
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="orders.html" class="nav-link">
+                        <span class="material-symbols-outlined">shopping_bag</span>
+                        Orders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="production.html" class="nav-link">
+                        <span class="material-symbols-outlined">cut</span>
+                        Production
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="inventory.html" class="nav-link">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                        Inventory
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="staff.html" class="nav-link">
+                        <span class="material-symbols-outlined">group</span>
+                        Staff
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="billing.html" class="nav-link">
+                        <span class="material-symbols-outlined">receipt_long</span>
+                        Billing
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="search-bar">
+                <span class="material-symbols-outlined" style="font-size: 16px; color: var(--text-muted);">search</span>
+                <input type="text" placeholder="Search interactions, clients...">
+            </div>
+
+            <div class="header-right">
+                <span class="material-symbols-outlined" style="font-size: 20px; color: var(--text-muted); cursor: pointer;">history</span>
+                <span class="material-symbols-outlined" style="font-size: 20px; color: var(--text-muted); cursor: pointer;">notifications</span>
+                <span class="material-symbols-outlined" style="font-size: 20px; color: var(--text-muted); cursor: pointer;">settings</span>
+                <div class="user-profile-widget">
+                    <span>Marco Santini<br><small style="color:var(--text-muted);">Master Tailor</small></span>
+                    <img src="assets/images/onboarding_tailor.jpg" class="user-avatar" alt="Marco Santini">
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <main class="content-area">
+            <div class="title-row">
+                <div>
+                    <h2>Communication Dashboard</h2>
+                    <p>Manage your client relationships and automated messaging workflows.</p>
+                </div>
+
+                <div class="date-badge">
+                    <span class="material-symbols-outlined" style="font-size: 16px;">calendar_today</span>
+                    October 24, 2023
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon-circle icon-teal">
+                        <span class="material-symbols-outlined">send</span>
+                    </div>
+                    <div class="stat-title">TOTAL SENT ALERTS</div>
+                    <div class="stat-val">2,482</div>
+                    <div class="stat-sub" style="color:#10B981;">↗ +12%</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-circle icon-blue">
+                        <span class="material-symbols-outlined">mark_email_read</span>
+                    </div>
+                    <div class="stat-title">OPEN RATE</div>
+                    <div class="stat-val">94.2%</div>
+                    <div class="stat-sub" style="color:#10B981;">↗ +5.2%</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-circle icon-purple">
+                        <span class="material-symbols-outlined">verified</span>
+                    </div>
+                    <div class="stat-title">DELIVERY RATE</div>
+                    <div class="stat-val">99.8%</div>
+                    <div class="stat-sub" style="color:var(--text-muted);">Stable</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-circle icon-yellow">
+                        <span class="material-symbols-outlined">forum</span>
+                    </div>
+                    <div class="stat-title">RESPONSE RATE</div>
+                    <div class="stat-val">42.1%</div>
+                    <div class="stat-sub" style="color:#10B981;">↗ +8%</div>
+                </div>
+            </div>
+
+            <!-- 2-Column Main Layout -->
+            <div class="grid-2col">
+                <!-- Left: Recent Activity -->
+                <div class="card-box">
+                    <div class="card-header-flex">
+                        <h4>Recent Activity</h4>
+                        <a href="message-templates.html" class="link-history">View History</a>
+                    </div>
+
+                    <div class="activity-list">
+                        <!-- Item 1 -->
+                        <div class="activity-item">
+                            <div class="act-icon" style="background:#E6FFFA; color:var(--primary-teal);">
+                                <span class="material-symbols-outlined">notifications</span>
+                            </div>
+                            <div>
+                                <div class="act-title">Fitting Reminder sent to Alexander Vance <span style="font-weight:400; color:var(--text-muted); font-size:11px;">• 2 mins ago</span></div>
+                                <div class="act-sub">Sms content: "Hi Alexander, your bespoke suit is ready for the first fitting tomorrow at 2:00 PM..."</div>
+                                <div class="act-pills">
+                                    <span class="act-pill pill-green">Delivered</span>
+                                    <span class="act-pill pill-gray">SMS</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item 2 -->
+                        <div class="activity-item">
+                            <div class="act-icon" style="background:#EBF3FA; color:#2B6CB0;">
+                                <span class="material-symbols-outlined">mail</span>
+                            </div>
+                            <div>
+                                <div class="act-title">Invoice Paid - Confirmation sent to Elara Thorne <span style="font-weight:400; color:var(--text-muted); font-size:11px;">• 45 mins ago</span></div>
+                                <div class="act-sub">Email content: "Thank you for your payment of $1,250 for Order #BT-8892. View receipt here..."</div>
+                                <div class="act-pills">
+                                    <span class="act-pill pill-blue">Opened</span>
+                                    <span class="act-pill pill-gray">Email</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item 3 -->
+                        <div class="activity-item">
+                            <div class="act-icon" style="background:#FEFCBF; color:#D69E2E;">
+                                <span class="material-symbols-outlined">warning</span>
+                            </div>
+                            <div>
+                                <div class="act-title">Production Delay alert to Julian Reed <span style="font-weight:400; color:var(--text-muted); font-size:11px;">• 2 hours ago</span></div>
+                                <div class="act-sub">Automated workflow: "Order #BT-8841 fabric shipment delayed. New ETA sent to client..."</div>
+                                <div class="act-pills">
+                                    <span class="act-pill pill-green">Delivered</span>
+                                    <span class="act-pill pill-blue">WhatsApp</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Schedule & Channel Performance -->
+                <div>
+                    <!-- Scheduled Today Card -->
+                    <div class="card-box">
+                        <div class="card-header-flex">
+                            <h4>Scheduled Today</h4>
+                            <span class="material-symbols-outlined" style="cursor:pointer; color:var(--text-muted);">more_horiz</span>
+                        </div>
+
+                        <div class="schedule-slot">
+                            <div class="schedule-time">3:00 PM - Second Fitting</div>
+                            <div class="schedule-client">Client: Marcus Holloway</div>
+                            <span class="act-pill pill-blue">Automated SMS</span>
+                        </div>
+
+                        <div class="schedule-slot" style="border-left-color:#8B5CF6;">
+                            <div class="schedule-time">5:30 PM - Ready for Pickup</div>
+                            <div class="schedule-client">Client: Sarah Kensington</div>
+                            <span class="act-pill pill-gray">Multi-channel</span>
+                        </div>
+
+                        <button class="btn-view-calendar">View Calendar</button>
+                    </div>
+
+                    <!-- Channel Performance -->
+                    <div class="card-box">
+                        <div style="font-size:14px; font-weight:800; margin-bottom:16px;">Channel Performance</div>
+
+                        <div class="chan-perf-row">
+                            <div class="chan-perf-header">
+                                <span>WhatsApp</span>
+                                <span style="color:var(--primary-teal);">88% Effectiveness</span>
+                            </div>
+                            <div class="bar-bg"><div class="bar-fill" style="width:88%;"></div></div>
+                        </div>
+
+                        <div class="chan-perf-row" style="margin-bottom:0;">
+                            <div class="chan-perf-header">
+                                <span>Email</span>
+                                <span style="color:#2B6CB0;">62% Effectiveness</span>
+                            </div>
+                            <div class="bar-bg"><div class="bar-fill" style="width:62%; background:#2B6CB0;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Automated Workflows -->
+            <div class="workflows-header">
+                <h3>Automated Workflows</h3>
+                <span class="badge-active">6 Active</span>
+            </div>
+
+            <div class="workflows-grid">
+                <!-- Card 1 -->
+                <div class="workflow-card">
+                    <div class="wf-top">
+                        <div class="wf-icon-box">
+                            <span class="material-symbols-outlined">bolt</span>
+                        </div>
+                        <div class="wf-status">
+                            <div class="wf-dot"></div> Running
+                        </div>
+                    </div>
+                    <div class="wf-title">Ready for Trial</div>
+                    <div class="wf-desc">Triggers when production stage moves to 'First Fitting Ready'. Sends SMS and Email with booking link.</div>
+                    <div class="wf-footer">
+                        <span>💬 ✉️</span>
+                        <span>142 Triggers/mo</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="workflow-card">
+                    <div class="wf-top">
+                        <div class="wf-icon-box" style="background:#FEE2E2; color:#E53E3E;">
+                            <span class="material-symbols-outlined">error_outline</span>
+                        </div>
+                        <div class="wf-status">
+                            <div class="wf-dot"></div> Running
+                        </div>
+                    </div>
+                    <div class="wf-title">Order Delayed</div>
+                    <div class="wf-desc">Triggers when a production milestone is missed by >48h. Notifies client and Shop Manager.</div>
+                    <div class="wf-footer">
+                        <span>💬 👤</span>
+                        <span>12 Triggers/mo</span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="workflow-card">
+                    <div class="wf-top">
+                        <div class="wf-icon-box" style="background:#EBF3FA; color:#2B6CB0;">
+                            <span class="material-symbols-outlined">sell</span>
+                        </div>
+                        <div class="wf-status">
+                            <div class="wf-dot"></div> Running
+                        </div>
+                    </div>
+                    <div class="wf-title">Post-Delivery Follow-up</div>
+                    <div class="wf-desc">Triggers 7 days after order delivery. Asks for feedback and provides a 'Next Suit' coupon.</div>
+                    <div class="wf-footer">
+                        <span>✉️</span>
+                        <span>89 Triggers/mo</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAB Button -->
+            <button class="fab-btn">
+                <span class="material-symbols-outlined" style="font-size:24px;">rate_review</span>
+            </button>
+        </main>
+    </div>
+
+</body>
+</html>

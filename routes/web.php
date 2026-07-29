@@ -63,6 +63,10 @@ Route::middleware(['auth', 'XSS'])->group(function () {
 
 Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
+
+// Public Self-Service Client Portal & Digital QR Receipt Routes
+Route::get('/order/track/{token}', [\App\Http\Controllers\PublicOrderTrackingController::class, 'track'])->name('order.public.track');
+Route::get('/order/qr-receipt/{token}', [\App\Http\Controllers\PublicOrderTrackingController::class, 'qrReceipt'])->name('order.public.qr-receipt');
 Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index']);
 
 Route::get('home', [HomeController::class, 'index'])->name('home')->middleware(
@@ -134,6 +138,17 @@ Route::group(
     function () {
 
         Route::post('subscription/{id}/stripe/payment', [SubscriptionController::class, 'stripePayment'])->name('subscription.stripe.payment');
+
+        // Thermal Print Web Routes
+        Route::get('/orders/{id}/print-receipt', function ($id) {
+            $order = \App\Models\Order::where('parent_id', parentId())->findOrFail($id);
+            return view('order.print_receipt', compact('order'));
+        })->name('orders.print-receipt');
+
+        Route::get('/orders/{id}/print-tag', function ($id) {
+            $order = \App\Models\Order::where('parent_id', parentId())->findOrFail($id);
+            return view('order.print_tag', compact('order'));
+        })->name('orders.print-tag');
     }
 );
 //-------------------------------Settings-------------------------------------------
@@ -216,6 +231,83 @@ Route::group(
         Route::get('logged/history', [UserController::class, 'loggedHistory'])->name('logged.history');
         Route::get('logged/{id}/history/show', [UserController::class, 'loggedHistoryShow'])->name('logged.history.show');
         Route::delete('logged/{id}/history', [UserController::class, 'loggedHistoryDestroy'])->name('logged.history.destroy');
+
+        // Production Management Routes
+        Route::get('production/kanban', [\App\Http\Controllers\ProductionKanbanController::class, 'index'])->name('production.kanban');
+        Route::post('production/stage-update', [\App\Http\Controllers\ProductionKanbanController::class, 'updateStage'])->name('production.stage.update');
+
+        Route::resource('production-stages', \App\Http\Controllers\ProductionStageController::class);
+        Route::resource('materials', \App\Http\Controllers\MaterialController::class);
+        Route::post('materials/{id}/restock', [\App\Http\Controllers\MaterialController::class, 'restock'])->name('materials.restock');
+
+        Route::resource('worker-assignments', \App\Http\Controllers\WorkerAssignmentController::class);
+        Route::post('worker-assignments/{id}/status', [\App\Http\Controllers\WorkerAssignmentController::class, 'updateStatus'])->name('worker-assignments.update-status');
+
+        // POS & Invoicing Routes
+        Route::get('pos', [\App\Http\Controllers\PosController::class, 'index'])->name('pos.index');
+        Route::post('pos/store', [\App\Http\Controllers\PosController::class, 'store'])->name('pos.store');
+
+        // Financial Analytics Routes
+        Route::get('financials/analytics', [\App\Http\Controllers\FinancialAnalyticsController::class, 'index'])->name('financials.analytics');
+        Route::get('financials', function () { return view('financials.index'); })->name('financials.index');
+
+        // Dashboard Pages Navigation Routes
+        Route::get('branches', function () { return view('branch.index'); })->name('branches.index');
+        Route::get('branches/create/step-1', function () { return view('branch.create-step1'); })->name('branches.create.step1');
+        Route::get('branches/create/step-2', function () { return view('branch.create-step2'); })->name('branches.create.step2');
+        Route::get('branches/create/step-3', function () { return view('branch.create-step3'); })->name('branches.create.step3');
+        Route::get('roles-permissions', function () { return view('roles.index'); })->name('roles.index');
+        Route::get('billing', function () { return view('billing.index'); })->name('billing.index');
+        Route::get('staff-management', function () { return view('staff.index'); })->name('staff.index');
+        Route::get('orders-list', function () { return view('order.index'); })->name('orders.index');
+        Route::get('business-profile', function () { return view('profile.index'); })->name('profile.index');
+
+        // Staff Onboarding Multi-step Wizard Routes
+        Route::get('staff-onboard/step-1', function () { return view('staff.onboard-step1'); })->name('staff.onboard.step1');
+        Route::get('staff-onboard/step-2', function () { return view('staff.onboard-step2'); })->name('staff.onboard.step2');
+        Route::get('staff-onboard/step-3', function () { return view('staff.onboard-step3'); })->name('staff.onboard.step3');
+
+        // Customer Directory & Detail Profile Routes
+        Route::get('customer-directory', function () { return view('customer.index'); })->name('customers.index');
+        Route::get('customer-directory/{id}', function ($id) { return view('customer.show'); })->name('customers.show');
+
+        // Production Pipeline Route
+        Route::get('production-pipeline', function () { return view('production.index'); })->name('production.index');
+
+        // Inventory Management & Add Material Routes
+        Route::get('inventory-management', function () { return view('inventory.index'); })->name('inventory.index');
+        Route::get('inventory/create', function () { return view('inventory.create'); })->name('inventory.create');
+
+        // New Custom Order Multi-step Wizard Routes
+        Route::get('orders/create/step-1', [\App\Http\Controllers\OrderController::class, 'createStep1'])->name('orders.create.step1');
+        Route::post('orders/create/step-1', [\App\Http\Controllers\OrderController::class, 'storeStep1'])->name('orders.store.step1');
+        Route::get('orders/create/step-2', [\App\Http\Controllers\OrderController::class, 'createStep2'])->name('orders.create.step2');
+        Route::post('orders/create/step-2', [\App\Http\Controllers\OrderController::class, 'storeStep2'])->name('orders.store.step2');
+        Route::get('orders/create/step-3', [\App\Http\Controllers\OrderController::class, 'createStep3'])->name('orders.create.step3');
+        Route::post('orders/create/step-3', [\App\Http\Controllers\OrderController::class, 'storeStep3'])->name('orders.store.step3');
+
+        // Communication Dashboard & Messaging Routes
+        Route::get('communication', [\App\Http\Controllers\CommunicationController::class, 'index'])->name('communication.index');
+        Route::get('communication/alerts', [\App\Http\Controllers\CommunicationController::class, 'alerts'])->name('communication.alerts');
+        Route::get('communication/templates', [\App\Http\Controllers\CommunicationController::class, 'templates'])->name('communication.templates');
+        Route::post('communication/send-alert', [\App\Http\Controllers\CommunicationController::class, 'sendAlert'])->name('communication.sendAlert');
+
+        // POS & Invoicing Console Route
+        Route::get('pos-console', function () { return view('pos.index'); })->name('pos.index');
+
+        // Checkout & Payment Route
+        Route::get('checkout', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
+        Route::post('checkout/process', [\App\Http\Controllers\CheckoutController::class, 'processPayment'])->name('checkout.process');
+
+        // Promotions & Rewards Route
+        Route::get('promotions', function () { return view('promotions.index'); })->name('promotions.index');
+
+        // Register Reconciliation Route
+        Route::get('reconciliation', [\App\Http\Controllers\ReconciliationController::class, 'index'])->name('reconciliation.index');
+        Route::post('reconciliation/store', [\App\Http\Controllers\ReconciliationController::class, 'store'])->name('reconciliation.store');
+
+        // Executive Overview Route
+        Route::get('executive-overview', [\App\Http\Controllers\ExecutiveAnalyticsController::class, 'index'])->name('executive.index');
     }
 );
 

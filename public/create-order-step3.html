@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Custom Order - Step 3: Detailed Measurements - DarziDesk</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <style>
+        :root {
+            --primary-teal: #006A67;
+            --accent-teal: #26A69A;
+            --dark-navy: #0B1C30;
+            --bg-light: #F4F7F9;
+            --card-border: #E2E8F0;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --font-main: 'Hanken Grotesk', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px; background: #FFFFFF; border-right: 1px solid var(--card-border);
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 24px 16px; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
+        }
+
+        .brand-box h2 { font-size: 20px; font-weight: 800; color: var(--primary-teal); }
+        .brand-box span { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; color: var(--text-muted); display: block; margin-top: 2px; }
+
+        .nav-list { list-style: none; margin-top: 24px; }
+        .nav-item { margin-bottom: 4px; }
+
+        .nav-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 12px; border-radius: 10px; font-size: 13.5px; font-weight: 600;
+            color: var(--text-dark); text-decoration: none; transition: all 0.2s;
+        }
+
+        .nav-link.active { background: #E6FFFA; color: var(--primary-teal); font-weight: 700; border-left: 3px solid var(--primary-teal); }
+
+        .main-wrapper { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
+
+        .top-header {
+            height: 64px; background: #FFFFFF; border-bottom: 1px solid var(--card-border);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 28px;
+            position: sticky; top: 0; z-index: 90;
+        }
+
+        .btn-switch-branch {
+            background: var(--primary-teal); color: #FFF; border: none; padding: 8px 16px;
+            border-radius: 8px; font-size: 12.5px; font-weight: 700; cursor: pointer;
+        }
+
+        .stepper-container {
+            display: flex; align-items: center; justify-content: center;
+            gap: 20px; padding: 24px 0 16px; max-width: 600px; margin: 0 auto;
+        }
+
+        .step-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+        .step-circle {
+            width: 34px; height: 34px; border-radius: 50%; background: #CBD5E1; color: #FFF;
+            font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center;
+        }
+
+        .step-circle.done { background: #10B981; }
+        .step-circle.active { background: var(--primary-teal); }
+        .step-lbl { font-size: 11.5px; font-weight: 700; color: var(--text-muted); }
+        .step-lbl.active { color: var(--primary-teal); }
+
+        .step-line { flex: 1; height: 2px; background: #10B981; max-width: 80px; }
+
+        .content-area { padding: 0 28px 40px; max-width: 1050px; margin: 0 auto; width: 100%; }
+
+        .page-intro-header { text-align: center; margin-bottom: 24px; }
+        .page-intro-header h2 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+        .page-intro-header p { font-size: 13.5px; color: var(--text-muted); }
+
+        .grid-2col { display: grid; grid-template-columns: 1.8fr 1fr; gap: 24px; }
+
+        /* Left Main Container */
+        .form-card {
+            background: #FFFFFF; border: 1px solid var(--card-border);
+            border-radius: 18px; padding: 32px; margin-bottom: 24px;
+        }
+
+        .section-header-title {
+            font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 8px;
+            margin-bottom: 16px; color: var(--primary-teal);
+        }
+
+        .form-row-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .form-row-3col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+
+        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+        .form-group label { font-size: 11px; font-weight: 800; color: var(--text-dark); }
+
+        .input-box {
+            background: #F8FAFC; border: 1.5px solid var(--card-border);
+            border-radius: 10px; padding: 12px 14px; font-family: var(--font-code);
+            font-size: 14px; font-weight: 700; color: var(--text-dark); outline: none;
+        }
+
+        .input-box input, .input-box textarea {
+            border: none; background: transparent; outline: none; width: 100%; font-family: var(--font-code); font-size: 14px; font-weight: 700;
+        }
+
+        .divider-line { height: 1px; background: var(--card-border); margin: 24px 0; }
+
+        .form-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 32px; }
+
+        .btn-back-link { font-size: 13.5px; font-weight: 700; color: var(--text-dark); text-decoration: none; display: flex; align-items: center; gap: 6px; }
+
+        .btn-finalize-order {
+            background: var(--primary-teal); color: #FFF; border: none;
+            padding: 12px 24px; border-radius: 10px; font-family: var(--font-main);
+            font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none;
+        }
+
+        /* Right Column Cards */
+        .guide-card {
+            background: #FFFFFF; border: 1px solid var(--card-border);
+            border-radius: 16px; padding: 20px; margin-bottom: 20px;
+        }
+
+        .guide-title { font-size: 14px; font-weight: 800; margin-bottom: 16px; }
+
+        .mannequin-illu-box {
+            background: #EBF3FA; border-radius: 12px; padding: 20px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 16px; position: relative;
+        }
+
+        .mannequin-silhouette {
+            width: 140px; height: 160px; border: 2px dashed var(--primary-teal); border-radius: 40px 40px 10px 10px; position: relative;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        .tag-overlay { position: absolute; font-size: 9px; font-weight: 800; background: #FFF; border: 1px solid var(--card-border); padding: 2px 6px; border-radius: 4px; color: var(--primary-teal); }
+
+        .pro-tip-box {
+            background: #E6FFFA; border: 1px solid var(--accent-teal); border-radius: 12px;
+            padding: 14px; font-size: 11.5px; color: var(--primary-teal); line-height: 1.4; display: flex; gap: 10px;
+        }
+
+        .order-summary-box {
+            background: #FFFFFF; border: 1px solid var(--card-border);
+            border-radius: 16px; padding: 20px;
+        }
+
+        .summary-row { display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 10px; }
+        .summary-row .lbl { font-size: 10px; font-weight: 800; letter-spacing: 0.5px; color: var(--text-muted); uppercase; }
+        .summary-row .val { font-weight: 800; text-align: right; }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Nav -->
+    <aside class="sidebar">
+        <div>
+            <div class="brand-box">
+                <h2>DarziDesk</h2>
+                <span>Precision Tailoring SaaS</span>
+            </div>
+
+            <div style="background:#EBF3FA; border-radius:12px; padding:10px; display:flex; align-items:center; gap:10px; margin-top:16px;">
+                <img src="assets/images/onboarding_tailor.jpg" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" alt="Avatar">
+                <div>
+                    <h5 style="font-size:13px; font-weight:700;">Bespoke Master</h5>
+                    <p style="font-size:11px; color:var(--text-muted);">London Branch</p>
+                </div>
+            </div>
+
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="orders.html" class="nav-link active">
+                        <span class="material-symbols-outlined">shopping_bag</span>
+                        Orders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="production.html" class="nav-link">
+                        <span class="material-symbols-outlined">cut</span>
+                        Production
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="inventory.html" class="nav-link">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                        Inventory
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="financials.html" class="nav-link">
+                        <span class="material-symbols-outlined">payments</span>
+                        Financials
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="staff.html" class="nav-link">
+                        <span class="material-symbols-outlined">group</span>
+                        Staff
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div style="display:flex; align-items:center; gap:12px; font-weight:800;">
+                <a href="create-order-step2.html" style="color:var(--text-dark); text-decoration:none;">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+                New Custom Order
+            </div>
+
+            <div style="display:flex; align-items:center; gap:14px;">
+                <span class="material-symbols-outlined" style="font-size:20px; color:var(--text-muted); cursor:pointer;">notifications</span>
+                <span class="material-symbols-outlined" style="font-size:20px; color:var(--text-muted); cursor:pointer;">grid_view</span>
+                <button class="btn-switch-branch">Switch Branch</button>
+            </div>
+        </header>
+
+        <!-- Stepper -->
+        <div class="stepper-container">
+            <div class="step-item">
+                <div class="step-circle done">1</div>
+                <div class="step-lbl">Customer</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item">
+                <div class="step-circle done">2</div>
+                <div class="step-lbl">Fabric</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item">
+                <div class="step-circle active">3</div>
+                <div class="step-lbl active">Measurements</div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <main class="content-area">
+            <div class="page-intro-header">
+                <h2>Detailed Measurements</h2>
+                <p>Enter the precise body dimensions for a perfect fit.</p>
+            </div>
+
+            <div class="grid-2col">
+                <!-- Left Section: Inputs Form -->
+                <div>
+                    <div class="form-card">
+                        <!-- Upper Body -->
+                        <div class="section-header-title">
+                            <span class="material-symbols-outlined">accessibility_new</span>
+                            Upper Body
+                        </div>
+
+                        <div class="form-row-2col">
+                            <div class="form-group">
+                                <label>Chest (Inches)</label>
+                                <div class="input-box"><input type="text" value="00.0"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Waist (Inches)</label>
+                                <div class="input-box"><input type="text" value="00.0"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row-2col">
+                            <div class="form-group">
+                                <label>Shoulder Width (Inches)</label>
+                                <div class="input-box"><input type="text" value="00.0"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Sleeve Length (Inches)</label>
+                                <div class="input-box"><input type="text" value="00.0"></div>
+                            </div>
+                        </div>
+
+                        <div class="divider-line"></div>
+
+                        <!-- Lower Body -->
+                        <div class="section-header-title">
+                            <span class="material-symbols-outlined">straighten</span>
+                            Lower Body
+                        </div>
+
+                        <div class="form-row-3col">
+                            <div class="form-group">
+                                <label>Trousers Waist</label>
+                                <div class="input-box"><input type="text" value="00.0"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Inseam</label>
+                                <div class="input-box"><input type="text" value="00.0"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Outseam</label>
+                                <div class="input-box"><input type="text" value="00.0"></div>
+                            </div>
+                        </div>
+
+                        <div class="divider-line"></div>
+
+                        <!-- Tailoring Notes -->
+                        <div class="section-header-title">
+                            <span class="material-symbols-outlined">edit_note</span>
+                            Tailoring Notes
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-box" style="height:90px; font-family:var(--font-main); font-weight:400;">
+                                <textarea placeholder="e.g., Sloped shoulder adjustment needed, prefer slim fit around thighs..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <a href="create-order-step2.html" class="btn-back-link">
+                                <span class="material-symbols-outlined" style="font-size:18px;">arrow_back</span>
+                                Back to Fabric Selection
+                            </a>
+                            <a href="orders.html" class="btn-finalize-order">
+                                Finalize & Create Order
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Guide & Summary -->
+                <div>
+                    <!-- Measurement Guide Card -->
+                    <div class="guide-card">
+                        <div class="guide-title">Measurement Guide</div>
+
+                        <div class="mannequin-illu-box">
+                            <div class="mannequin-silhouette">
+                                <span class="tag-overlay" style="top:10px;">Shoulder: 19 in</span>
+                                <span class="tag-overlay" style="top:50px;">Chest: 42 in</span>
+                                <span class="tag-overlay" style="top:90px;">Waist: 32 in</span>
+                                <span class="tag-overlay" style="top:120px; right:-10px;">Sleeve Length: 34 in</span>
+                            </div>
+                        </div>
+
+                        <div class="pro-tip-box">
+                            <span class="material-symbols-outlined" style="font-size:20px;">lightbulb</span>
+                            <div>
+                                <strong>Pro-Tip:</strong> Always measure twice to ensure absolute precision. Use a cloth tape for body contour accuracy.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="order-summary-box">
+                        <div class="summary-row">
+                            <span class="lbl">CUSTOMER</span>
+                            <span class="val">Julian Sterling</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="lbl">STYLE</span>
+                            <span class="val">Bespoke 3-Piece Suit</span>
+                        </div>
+                        <div class="summary-row" style="margin-bottom:0;">
+                            <span class="lbl">FABRIC</span>
+                            <span class="val">Italian Merino (Navy)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

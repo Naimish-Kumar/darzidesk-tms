@@ -14,10 +14,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('settings', function (Blueprint $table) {
-            // Using raw statement to avoid doctrine/dbal dependency in Laravel 9
+        if (DB::getDriverName() === 'mysql') {
             DB::statement('ALTER TABLE settings MODIFY value TEXT');
-        });
+        }
     }
 
     /**
@@ -27,8 +26,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('settings', function (Blueprint $table) {
+        if (DB::getDriverName() === 'mysql') {
             DB::statement('ALTER TABLE settings MODIFY value VARCHAR(255)');
-        });
+        }
     }
 };
