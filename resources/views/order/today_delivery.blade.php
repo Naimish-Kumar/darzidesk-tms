@@ -74,6 +74,18 @@
 
                                         <td>
                                             <div class="cart-action">
+                                                @php
+                                                    $waPhone = $order->customers->phone_number ?? '';
+                                                    $waMsg = \App\Helper\WhatsAppService::getReadyForPickupMessage($order);
+                                                    $waUrl = \App\Helper\WhatsAppService::generateClickToChatUrl($waPhone, $waMsg);
+                                                @endphp
+                                                @if(!empty($waPhone))
+                                                    <a class="avtar avtar-xs btn-link-success text-success"
+                                                        data-bs-toggle="tooltip" data-bs-original-title="{{ __('Send WhatsApp Delivery Alert') }}"
+                                                        href="{{ $waUrl }}" target="_blank">
+                                                        <i class="ti ti-brand-whatsapp f-18"></i>
+                                                    </a>
+                                                @endif
                                                 @can('show order')
                                                     <a class="avtar avtar-xs btn-link-warning text-warning"
                                                         data-bs-toggle="tooltip" data-bs-original-title="{{ __('Details') }}"

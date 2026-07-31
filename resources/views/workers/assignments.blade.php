@@ -1,58 +1,77 @@
 @extends('layouts.app')
+@section('hide_page_header', true)
 @section('page-title')
-    {{ __('Tailor Task Assignments & Piece-Rate Pay') }}
+    {{ __('Tailor Performance & Payouts') }}
 @endsection
 @section('breadcrumb')
-    <ul class="breadcrumb mb-0">
-        <li class="breadcrumb-item">
-            <a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a>
-        </li>
-        <li class="breadcrumb-item active">
-            <a href="#">{{ __('Tailor Assignments') }}</a>
-        </li>
-    </ul>
+    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ __('Tailor Payroll & Payouts') }}</li>
 @endsection
 
 @section('content')
-    <div class="row">
-        <!-- Artisan Earnings Overview -->
-        <div class="col-12 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header">
-                    <h5 class="mb-0">{{ __('Tailor Earnings & Productivity Summary') }}</h5>
+    <div class="dd-dashboard">
+        {{-- Hero Header Banner --}}
+        <div class="card border-0 shadow-sm rounded-4 mb-4 p-4" style="background:#FFFFFF; border:1px solid #E2E8F0;">
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-3 p-3" style="background:#E6F4F1; color:#00796B;">
+                        <i class="ti ti-user-check fs-2"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold text-dark mb-1" style="font-size: 20px;">{{ __('Tailor Workload & Piece-Rate Commission Payouts') }}</h4>
+                        <p class="text-muted small mb-0">{{ __('Track garments completed, turnaround times (TAT), and calculated piece-rate commission payouts per tailor') }}</p>
+                    </div>
                 </div>
-                <div class="card-body pt-0">
-                    <div class="row g-3">
-                        @forelse($workerEarnings as $earning)
-                            <div class="col-md-4 col-sm-6 col-12">
-                                <div class="p-3 border rounded bg-light">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="avatar avatar-md bg-primary text-white rounded-circle me-3 d-flex align-items-center justify-content-center">
-                                            <i class="ti ti-user fs-4"></i>
+                <div>
+                    <button class="btn text-white fw-bold px-4" data-bs-toggle="modal" data-bs-target="#newAssignmentModal" style="background:#00796B; border-radius:10px;">
+                        <i class="ti ti-plus me-1"></i> {{ __('Assign New Task') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tailor Workload & Payout Cards -->
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold" style="font-size: 16px;"><i class="ti ti-chart-dots me-2 text-primary"></i>{{ __('Tailor Productivity & Commission Summary') }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    @forelse($workerEarnings as $earning)
+                        <div class="col-md-4 col-sm-6 col-12">
+                            <div class="p-3 border rounded-3 bg-white shadow-sm h-100" style="border-color:#E2E8F0 !important;">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white" style="width:38px; height:38px; background:#00796B;">
+                                            {{ strtoupper(substr($earning['worker']->name ?? 'W', 0, 1)) }}
                                         </div>
                                         <div>
-                                            <h6 class="mb-0 fw-bold">{{ $earning['worker']->name ?? 'Worker' }}</h6>
-                                            <small class="text-muted">{{ $earning['completed_tasks'] }}/{{ $earning['total_tasks'] }} Tasks Completed</small>
+                                            <h6 class="mb-0 fw-bold text-dark">{{ $earning['worker']->name ?? 'Tailor' }}</h6>
+                                            <small class="text-muted" style="font-size: 11.5px;">{{ $earning['completed_tasks'] }}/{{ $earning['total_tasks'] }} {{ __('Garments Completed') }}</small>
                                         </div>
                                     </div>
-                                    <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
-                                        <div>
-                                            <small class="text-muted d-block">Earned Payout</small>
-                                            <span class="fw-bold text-success fs-6">${{ number_format($earning['total_earned'], 2) }}</span>
-                                        </div>
-                                        <div>
-                                            <small class="text-muted d-block">Pending Payout</small>
-                                            <span class="fw-bold text-warning fs-6">${{ number_format($earning['pending_earned'], 2) }}</span>
-                                        </div>
+                                    <span class="badge" style="background:#E6F4F1; color:#00796B; font-weight:700; font-size:11px;">
+                                        ⏱️ {{ $earning['avg_tat_days'] > 0 ? $earning['avg_tat_days'] . 'd TAT' : 'On Track' }}
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center pt-2 border-top" style="font-size: 13px;">
+                                    <div>
+                                        <small class="text-muted d-block" style="font-size: 11px;">{{ __('Earned Commission') }}</small>
+                                        <span class="fw-bold text-success">{{ priceFormat($earning['total_earned']) }}</span>
+                                    </div>
+                                    <div class="text-end">
+                                        <small class="text-muted d-block" style="font-size: 11px;">{{ __('Pending Payout') }}</small>
+                                        <span class="fw-bold text-warning">{{ priceFormat($earning['pending_earned']) }}</span>
                                     </div>
                                 </div>
                             </div>
-                        @empty
-                            <div class="col-12 text-muted text-center py-3">
-                                {{ __('No tailor task assignments recorded yet.') }}
-                            </div>
-                        @endforelse
-                    </div>
+                        </div>
+                    @empty
+                        <div class="col-12 text-muted text-center py-4">
+                            <i class="ti ti-user-x fs-1 d-block mb-2 text-secondary"></i>
+                            <small>{{ __('No tailor task assignments recorded yet.') }}</small>
+                        </div>
+                    @endforelse
                 </div>
             </div>
         </div>

@@ -468,3 +468,803 @@ form label {
     }
 }
 
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   DarziDesk Sidebar Redesign - Clean Minimal Style (Matching Flutter App)
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* Import Google Fonts for sidebar */
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap');
+
+/* ── Sidebar Container ── */
+.pc-sidebar {
+    background: #FFFFFF !important;
+    border-right: 1px solid #F0F1F3 !important;
+    box-shadow: none !important;
+    width: 260px !important;
+    transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.pc-sidebar .navbar-wrapper {
+    background: #FFFFFF !important;
+}
+
+.pc-sidebar .navbar-content {
+    background: #FFFFFF !important;
+    padding: 12px 0 !important;
+}
+
+/* ── Logo area ── */
+.pc-sidebar .m-header {
+    padding: 22px 24px 18px !important;
+    border-bottom: none !important;
+    background: #FFFFFF !important;
+    height: auto !important;
+}
+
+.pc-sidebar .m-header .b-brand {
+    display: flex;
+    align-items: center;
+}
+
+.pc-sidebar .m-header .logo-lg {
+    max-width: 150px !important;
+    height: auto !important;
+    transition: opacity 0.2s ease !important;
+}
+
+/* ── Hide Section Caption Headers ── */
+.pc-sidebar .pc-navbar > .pc-item.pc-caption {
+    display: none !important;
+}
+
+/* ── Menu Items - Exact match to reference ── */
+.pc-sidebar .pc-navbar {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    padding: 10px 0 !important;
+}
+
+.pc-sidebar .pc-navbar > .pc-item {
+    margin: 3px 12px !important;
+    padding: 0 !important;
+    border-radius: 12px !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.pc-sidebar .pc-navbar > .pc-item > .pc-link {
+    font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-size: 14.5px !important;
+    font-weight: 500 !important;
+    color: #2D2D2D !important;
+    padding: 13px 18px !important;
+    border-radius: 12px !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    position: relative !important;
+    border: none !important;
+    background: transparent !important;
+    min-height: 48px !important;
+    line-height: 1.2 !important;
+}
+
+.pc-sidebar .pc-navbar > .pc-item > .pc-link:hover {
+    background: #F0F9F8 !important;
+    color: #00695C !important;
+}
+
+/* ── Menu Icon Styling ── */
+.pc-sidebar .pc-navbar .pc-micon {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 24px !important;
+    height: 24px !important;
+    margin-right: 0 !important;
+    flex-shrink: 0 !important;
+}
+
+.pc-sidebar .pc-navbar .pc-micon i,
+.pc-sidebar .pc-navbar .pc-micon svg {
+    font-size: 21px !important;
+    width: 21px !important;
+    height: 21px !important;
+    color: #444444 !important;
+    stroke-width: 1.6 !important;
+    transition: color 0.15s ease !important;
+}
+
+.pc-sidebar .pc-navbar .pc-mtext {
+    font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-size: 14.5px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    transition: opacity 0.2s ease, width 0.25s ease !important;
+}
+
+/* ── Active State (Exact match to reference image) ── */
+.pc-sidebar .pc-navbar > .pc-item.active,
+.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+}
+
+.pc-sidebar .pc-navbar > .pc-item.active > .pc-link,
+.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link {
+    background: #E6F8F5 !important;
+    color: #00695C !important;
+    font-weight: 700 !important;
+    padding-left: 20px !important;
+    border-radius: 12px !important;
+}
+
+/* Dark Teal Left Pill Bar Indicator */
+.pc-sidebar .pc-navbar > .pc-item.active::before,
+.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active::before {
+    content: '' !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 5px !important;
+    background: #00695C !important;
+    border-top-left-radius: 12px !important;
+    border-bottom-left-radius: 12px !important;
+    z-index: 3 !important;
+    display: block !important;
+}
+
+.pc-sidebar .pc-navbar > .pc-item.active::after,
+.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active::after {
+    display: none !important;
+}
+
+.pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-micon i,
+.pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-micon svg,
+.pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-mtext,
+.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-micon i,
+.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-micon svg,
+.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-mtext {
+    color: #00695C !important;
+}
+
+/* ── Hover State ── */
+.pc-sidebar .pc-navbar > .pc-item > .pc-link:hover .pc-micon i,
+.pc-sidebar .pc-navbar > .pc-item > .pc-link:hover .pc-micon svg {
+    color: #00796B !important;
+}
+
+/* ── Submenu Arrow ── */
+.pc-sidebar .pc-navbar .pc-arrow {
+    margin-left: auto !important;
+}
+
+.pc-sidebar .pc-navbar .pc-arrow i,
+.pc-sidebar .pc-navbar .pc-arrow svg {
+    width: 16px !important;
+    height: 16px !important;
+    color: #AAAAAA !important;
+    transition: transform 0.25s ease, color 0.15s ease !important;
+}
+
+.pc-sidebar .pc-navbar > .pc-item.pc-trigger > .pc-link .pc-arrow i,
+.pc-sidebar .pc-navbar > .pc-item.pc-trigger > .pc-link .pc-arrow svg {
+    transform: rotate(90deg) !important;
+    color: #00796B !important;
+}
+
+/* ── Submenu Styling ── */
+.pc-sidebar .pc-submenu {
+    background: transparent !important;
+    padding: 2px 0 6px 0 !important;
+    margin: 0 !important;
+    border-left: none !important;
+}
+
+.pc-sidebar .pc-submenu .pc-item {
+    margin: 0 !important;
+}
+
+.pc-sidebar .pc-submenu .pc-link {
+    font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-size: 13.5px !important;
+    font-weight: 500 !important;
+    color: #666666 !important;
+    padding: 10px 24px 10px 62px !important;
+    border-radius: 0 !important;
+    transition: all 0.15s ease !important;
+    position: relative !important;
+}
+
+.pc-sidebar .pc-submenu .pc-link::before {
+    content: '' !important;
+    width: 5px !important;
+    height: 5px !important;
+    border-radius: 50% !important;
+    background: #CCCCCC !important;
+    position: absolute !important;
+    left: 44px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    transition: all 0.15s ease !important;
+}
+
+.pc-sidebar .pc-submenu .pc-link:hover {
+    color: #00796B !important;
+    background: #F5FAFA !important;
+}
+
+.pc-sidebar .pc-submenu .pc-link:hover::before {
+    background: #00796B !important;
+}
+
+.pc-sidebar .pc-submenu .pc-item.active .pc-link {
+    color: #00796B !important;
+    font-weight: 600 !important;
+    background: #E8F5F3 !important;
+}
+
+.pc-sidebar .pc-submenu .pc-item.active .pc-link::before {
+    background: #00796B !important;
+    width: 6px !important;
+    height: 6px !important;
+}
+
+/* ── Version Badge at Bottom ── */
+.pc-sidebar .theme-version {
+    font-family: 'Hanken Grotesk', sans-serif !important;
+    font-size: 10px !important;
+    color: #C5C6D2 !important;
+    background: #F8F9FA !important;
+    border: 1px solid #EDEEEF !important;
+}
+
+/* ── Scrollbar ── */
+.pc-sidebar .navbar-content::-webkit-scrollbar {
+    width: 3px;
+}
+.pc-sidebar .navbar-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+.pc-sidebar .navbar-content::-webkit-scrollbar-thumb {
+    background: #E0E0E0;
+    border-radius: 3px;
+}
+.pc-sidebar .navbar-content::-webkit-scrollbar-thumb:hover {
+    background: #BDBDBD;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Icon-Only Collapsed Sidebar (instead of completely hiding)
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1025px) {
+    /* Override: don't set width to 0, use icon-only width instead */
+    .pc-sidebar.pc-sidebar-hide,
+    body.pc-sidebar-hide .pc-sidebar {
+        width: 70px !important;
+        --pc-sidebar-border: 1px solid #F0F1F3 !important;
+    }
+
+    /* Keep inner containers at 70px */
+    .pc-sidebar.pc-sidebar-hide .navbar-wrapper,
+    body.pc-sidebar-hide .pc-sidebar .navbar-wrapper,
+    .pc-sidebar.pc-sidebar-hide .navbar-content,
+    body.pc-sidebar-hide .pc-sidebar .navbar-content,
+    .pc-sidebar.pc-sidebar-hide .simplebar-wrapper,
+    body.pc-sidebar-hide .pc-sidebar .simplebar-wrapper,
+    .pc-sidebar.pc-sidebar-hide .simplebar-mask,
+    body.pc-sidebar-hide .pc-sidebar .simplebar-mask,
+    .pc-sidebar.pc-sidebar-hide .simplebar-offset,
+    body.pc-sidebar-hide .pc-sidebar .simplebar-offset,
+    .pc-sidebar.pc-sidebar-hide .simplebar-content-wrapper,
+    body.pc-sidebar-hide .pc-sidebar .simplebar-content-wrapper,
+    .pc-sidebar.pc-sidebar-hide .simplebar-content,
+    body.pc-sidebar-hide .pc-sidebar .simplebar-content {
+        width: 70px !important;
+    }
+
+    /* Shift header and content for icon-only sidebar */
+    .pc-sidebar.pc-sidebar-hide ~ .pc-header,
+    body.pc-sidebar-hide .pc-header {
+        left: 70px !important;
+    }
+
+    .pc-sidebar.pc-sidebar-hide ~ .pc-footer,
+    .pc-sidebar.pc-sidebar-hide ~ .pc-container,
+    body.pc-sidebar-hide .pc-footer,
+    body.pc-sidebar-hide .pc-container {
+        margin-left: 70px !important;
+    }
+
+    /* Header in sidebar */
+    .pc-sidebar.pc-sidebar-hide .m-header,
+    body.pc-sidebar-hide .pc-sidebar .m-header {
+        padding: 18px 0 !important;
+        width: 70px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    .pc-sidebar.pc-sidebar-hide .m-header .logo-lg,
+    body.pc-sidebar-hide .pc-sidebar .m-header .logo-lg {
+        display: none !important;
+    }
+
+    /* Navbar items & links */
+    .pc-sidebar.pc-sidebar-hide .pc-navbar,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar {
+        width: 70px !important;
+        padding: 0 !important;
+    }
+
+    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item {
+        width: 70px !important;
+        margin: 0 !important;
+    }
+
+    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item > .pc-link,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item > .pc-link {
+        width: 70px !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 14px 0 !important;
+        gap: 0 !important;
+        display: flex !important;
+    }
+
+    .pc-sidebar.pc-sidebar-hide .pc-navbar .pc-micon,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar .pc-micon {
+        width: 24px !important;
+        height: 24px !important;
+        margin: 0 auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .pc-sidebar.pc-sidebar-hide .pc-navbar .pc-micon i,
+    .pc-sidebar.pc-sidebar-hide .pc-navbar .pc-micon svg,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar .pc-micon i,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar .pc-micon svg {
+        font-size: 21px !important;
+        width: 21px !important;
+        height: 21px !important;
+        color: #444444 !important;
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    .pc-sidebar.pc-sidebar-hide .pc-navbar .pc-mtext,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar .pc-mtext {
+        display: none !important;
+    }
+
+    .pc-sidebar.pc-sidebar-hide .pc-navbar .pc-arrow,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar .pc-arrow {
+        display: none !important;
+    }
+
+    /* Hide submenus in collapsed state */
+    .pc-sidebar.pc-sidebar-hide .pc-submenu,
+    body.pc-sidebar-hide .pc-sidebar .pc-submenu {
+        display: none !important;
+    }
+
+    /* Active indicator still visible */
+    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.active::after,
+    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.pc-trigger.active::after,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item.active::after,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item.pc-trigger.active::after {
+        top: 6px !important;
+        bottom: 6px !important;
+        right: 0 !important;
+    }
+
+    /* Active icon color in collapsed state */
+    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.active .pc-micon i,
+    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.active .pc-micon svg,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item.active .pc-micon i,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item.active .pc-micon svg {
+        color: #00796B !important;
+    }
+
+    /* Hide version badge */
+    .pc-sidebar.pc-sidebar-hide .theme-version,
+    body.pc-sidebar-hide .pc-sidebar .theme-version {
+        display: none !important;
+    }
+
+    /* Tooltip on hover for collapsed items */
+    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item {
+        position: relative !important;
+    }
+
+    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item > .pc-link::after,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item > .pc-link::after {
+        content: attr(data-dd-tooltip);
+        position: absolute;
+        left: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #333333;
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        font-family: 'Hanken Grotesk', sans-serif;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s ease;
+        z-index: 1050;
+        margin-left: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item > .pc-link:hover::after,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item > .pc-link:hover::after {
+        opacity: 1;
+    }
+
+    /* Show submenus as flyout on hover in collapsed mode */
+    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.pc-hasmenu:hover > .pc-submenu,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item.pc-hasmenu:hover > .pc-submenu {
+        display: block !important;
+        position: absolute !important;
+        left: 70px !important;
+        top: 0 !important;
+        min-width: 200px !important;
+        background: #FFFFFF !important;
+        border: 1px solid #F0F1F3 !important;
+        border-radius: 10px !important;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+        padding: 8px 0 !important;
+        z-index: 1050 !important;
+    }
+
+    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.pc-hasmenu:hover > .pc-submenu .pc-link,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item.pc-hasmenu:hover > .pc-submenu .pc-link {
+        padding: 10px 20px 10px 32px !important;
+    }
+
+    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.pc-hasmenu:hover > .pc-submenu .pc-link::before,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item.pc-hasmenu:hover > .pc-submenu .pc-link::before {
+        left: 16px !important;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Dark Mode Sidebar
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+[data-pc-theme="dark"] .pc-sidebar,
+[data-pc-theme="dark"] .pc-sidebar .navbar-wrapper,
+[data-pc-theme="dark"] .pc-sidebar .navbar-content {
+    background: #0B284A !important;
+    border-color: rgba(255,255,255,0.06) !important;
+}
+
+[data-pc-theme="dark"] .pc-sidebar .m-header {
+    background: #0B284A !important;
+    border-color: rgba(255,255,255,0.06) !important;
+}
+
+[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item > .pc-link {
+    color: rgba(255,255,255,0.75) !important;
+}
+
+[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item > .pc-link:hover {
+    background: rgba(0,121,107,0.12) !important;
+    color: #4DB6AC !important;
+}
+
+[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.active > .pc-link,
+[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link {
+    background: rgba(0,121,107,0.18) !important;
+    color: #4DB6AC !important;
+}
+
+[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.active::after,
+[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.pc-trigger.active::after {
+    background: #4DB6AC !important;
+}
+
+[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-micon i,
+[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-micon svg,
+[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-mtext,
+[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-micon i,
+[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-micon svg,
+[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-mtext {
+    color: #4DB6AC !important;
+}
+
+[data-pc-theme="dark"] .pc-sidebar .pc-navbar .pc-micon i,
+[data-pc-theme="dark"] .pc-sidebar .pc-navbar .pc-micon svg {
+    color: rgba(255,255,255,0.5) !important;
+}
+
+[data-pc-theme="dark"] .pc-sidebar .pc-submenu .pc-link {
+    color: rgba(255,255,255,0.55) !important;
+}
+
+[data-pc-theme="dark"] .pc-sidebar .pc-submenu .pc-link:hover {
+    color: #4DB6AC !important;
+    background: rgba(0,121,107,0.1) !important;
+}
+
+[data-pc-theme="dark"] .pc-sidebar .pc-submenu .pc-item.active .pc-link {
+    color: #4DB6AC !important;
+    background: rgba(0,121,107,0.15) !important;
+}
+
+@media (min-width: 1025px) {
+    [data-pc-theme="dark"] .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.pc-hasmenu:hover > .pc-submenu {
+        background: #12345C !important;
+        border-color: rgba(255,255,255,0.08) !important;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Header User Profile Pill Styling
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.pc-header .header-user-profile .pc-head-link {
+    width: auto !important;
+    min-width: 44px !important;
+    height: 42px !important;
+    padding: 4px 14px 4px 6px !important;
+    border-radius: 30px !important;
+    background: #EDEEEF !important;
+    border: 1px solid #E0E0E0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    transition: all 0.2s ease !important;
+    box-shadow: none !important;
+}
+
+.pc-header .header-user-profile .pc-head-link:hover {
+    background: #E0F2F1 !important;
+    border-color: #00796B !important;
+}
+
+.pc-header .header-user-profile .pc-head-link .user-avtar {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    margin-right: 0 !important;
+    border: 1.5px solid #00796B !important;
+}
+
+.pc-header .header-user-profile .pc-head-link .user-name {
+    font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    color: #333333 !important;
+    max-width: 140px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    line-height: 1 !important;
+}
+
+[data-pc-theme="dark"] .pc-header .header-user-profile .pc-head-link {
+    background: rgba(255,255,255,0.08) !important;
+    border-color: rgba(255,255,255,0.12) !important;
+}
+
+[data-pc-theme="dark"] .pc-header .header-user-profile .pc-head-link .user-name {
+    color: #FFFFFF !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Global Standardized Typography System (Hanken Grotesk Everywhere)
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+body, html, 
+.pc-container, 
+.pc-sidebar, 
+.pc-header, 
+.card, 
+.table, 
+.form-control, 
+.form-select, 
+.form-label, 
+.btn, 
+.modal, 
+.dropdown-menu, 
+.popover, 
+.tooltip, 
+.badge, 
+th, td, label, input, select, textarea {
+    font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+/* Base Body Font Size */
+body {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    color: #1E293B !important;
+}
+
+/* Sidebar Menu Text */
+.pc-sidebar .pc-mtext {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+/* Tables & DataTables Font Standardizing */
+.table, 
+table.dataTable {
+    font-size: 13.5px !important;
+}
+
+.table thead th, 
+table.dataTable thead th, 
+.table th {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    color: #64748B !important;
+    padding: 12px 16px !important;
+}
+
+.table tbody td, 
+table.dataTable tbody td, 
+.table td {
+    font-size: 13.5px !important;
+    padding: 12px 16px !important;
+    vertical-align: middle !important;
+    color: #1E293B !important;
+}
+
+/* Badges & Status Pills */
+.badge, 
+.dd-badge, 
+.bg-primary, 
+.bg-secondary, 
+.bg-success, 
+.bg-danger, 
+.bg-warning, 
+.bg-info {
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    padding: 5px 12px !important;
+    border-radius: 20px !important;
+    letter-spacing: 0.3px !important;
+}
+
+/* Form Controls & Inputs */
+.form-label, 
+label {
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    color: #334155 !important;
+    margin-bottom: 6px !important;
+}
+
+.form-control, 
+.form-select, 
+.select2-container .select2-selection--single {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: #0F172A !important;
+}
+
+/* Buttons */
+.btn {
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    padding: 8px 18px !important;
+    border-radius: 8px !important;
+}
+
+.btn-sm {
+    font-size: 12.5px !important;
+    padding: 5px 12px !important;
+}
+
+/* Headings */
+h1, .h1 { font-size: 24px !important; font-weight: 800 !important; }
+h2, .h2 { font-size: 22px !important; font-weight: 800 !important; }
+h3, .h3 { font-size: 20px !important; font-weight: 700 !important; }
+h4, .h4 { font-size: 18px !important; font-weight: 700 !important; }
+h5, .h5 { font-size: 16px !important; font-weight: 700 !important; }
+h6, .h6 { font-size: 14px !important; font-weight: 600 !important; }
+
+/* Small text fallback - minimum 12.5px */
+small, .text-sm, .text-muted {
+    font-size: 12.5px !important;
+}
+
+/* =========================================================================== */
+/* GLOBAL BUTTON SPACING & DATATABLES ACTION BUTTON ENHANCEMENTS */
+/* =========================================================================== */
+
+/* Spacing for DataTables Export Buttons (Excel, PDF, Copy, Column Visibility) */
+div.dt-buttons,
+.dt-buttons.btn-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+    margin-bottom: 14px !important;
+}
+
+div.dt-buttons .btn,
+div.dt-buttons .dt-button,
+.dt-buttons.btn-group .btn,
+.dt-buttons .btn-secondary {
+    border-radius: 8px !important;
+    margin-right: 8px !important;
+    margin-bottom: 4px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+}
+
+div.dt-buttons .btn:last-child,
+div.dt-buttons .dt-button:last-child,
+.dt-buttons.btn-group .btn:last-child {
+    margin-right: 0 !important;
+}
+
+/* Prevent Bootstrap btn-group from stripping border-radius and jamming buttons */
+.dt-buttons.btn-group > .btn:not(:first-child),
+.dt-buttons.btn-group > .btn-group:not(:first-child) > .btn {
+    border-top-left-radius: 8px !important;
+    border-bottom-left-radius: 8px !important;
+}
+
+.dt-buttons.btn-group > .btn:not(:last-child):not(.dropdown-toggle),
+.dt-buttons.btn-group > .btn-group:not(:last-child) > .btn {
+    border-top-right-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+}
+
+/* Action Buttons Spacing in Tables */
+.dd-action-btn,
+.action-btn,
+.btn-action {
+    margin: 0 4px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Ensure forms inside table action cells lay out children with gap */
+table td form,
+.table td form {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-bottom: 0 !important;
+}
+
+/* General Spacing between adjacent buttons */
+.btn + .btn,
+.btn + a.btn,
+a.btn + .btn,
+a.btn + a.btn,
+button + button,
+.btn + form,
+form + .btn,
+form + form {
+    margin-left: 8px !important;
+}
+

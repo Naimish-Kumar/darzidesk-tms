@@ -102,6 +102,16 @@
                                                                     href="{{ route('order.show', encrypt($order->id)) }}">
                                                                     <i data-feather="eye"></i>{{ __('Details') }}
                                                                 </a>
+                                                                @php
+                                                                    $waPhone = $order->customers->phone_number ?? '';
+                                                                    $waMsg = \App\Helper\WhatsAppService::getStatusUpdateMessage($order);
+                                                                    $waUrl = \App\Helper\WhatsAppService::generateClickToChatUrl($waPhone, $waMsg);
+                                                                @endphp
+                                                                @if(!empty($waPhone))
+                                                                    <a class="dropdown-item text-success" href="{{ $waUrl }}" target="_blank">
+                                                                        <i class="ti ti-brand-whatsapp text-success me-2"></i>{{ __('Send WhatsApp Update') }}
+                                                                    </a>
+                                                                @endif
                                                                 {!! Form::open(['method' => 'DELETE', 'route' => ['order.destroy', encrypt($order->id)]]) !!}
                                                                 <a class="dropdown-item confirm_dialog" href="#">
                                                                     <i data-feather="trash-2"></i>{{ __('Delete') }}

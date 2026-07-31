@@ -393,7 +393,20 @@
     </div>
 </form>
 
+{{-- Auto-add tooltip attributes for collapsed sidebar --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.pc-sidebar .pc-navbar > .pc-item > .pc-link').forEach(function(link) {
+            var textEl = link.querySelector('.pc-mtext');
+            if (textEl) {
+                link.setAttribute('data-dd-tooltip', textEl.textContent.trim());
+            }
+        });
+    });
+</script>
+
 @stack('script-page')
+
 <script>
     var successImg = '{{ asset('assets/images/notification/ok-48.png') }}';
     var errorImg = '{{ asset('assets/images/notification/high_priority-48.png') }}';

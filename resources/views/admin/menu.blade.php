@@ -3,7 +3,7 @@
     $ids = parentId();
     $authUser = \App\Models\User::find($ids);
     $subscription = \App\Models\Subscription::find($authUser->subscription);
-    $routeName = \Request::route()->getName();
+    $routeName = \Request::route() ? \Request::route()->getName() : '';
     $pricing_feature_settings = getSettingsValByIdName(1, 'pricing_feature');
 
     $theme_mode = getSettingsValByName('theme_mode');

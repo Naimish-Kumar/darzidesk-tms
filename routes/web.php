@@ -65,6 +65,8 @@ Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name
 Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
 
 // Public Self-Service Client Portal & Digital QR Receipt Routes
+Route::get('/track-order/{token?}', [\App\Http\Controllers\PublicOrderTrackingController::class, 'track'])->name('track.order');
+Route::post('/track-order/search', [\App\Http\Controllers\PublicOrderTrackingController::class, 'search'])->name('track.order.search');
 Route::get('/order/track/{token}', [\App\Http\Controllers\PublicOrderTrackingController::class, 'track'])->name('order.public.track');
 Route::get('/order/qr-receipt/{token}', [\App\Http\Controllers\PublicOrderTrackingController::class, 'qrReceipt'])->name('order.public.qr-receipt');
 Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index']);
@@ -235,6 +237,7 @@ Route::group(
         // Production Management Routes
         Route::get('production/kanban', [\App\Http\Controllers\ProductionKanbanController::class, 'index'])->name('production.kanban');
         Route::post('production/stage-update', [\App\Http\Controllers\ProductionKanbanController::class, 'updateStage'])->name('production.stage.update');
+        Route::post('production/assign-worker', [\App\Http\Controllers\ProductionKanbanController::class, 'assignWorker'])->name('production.assign.worker');
 
         Route::resource('production-stages', \App\Http\Controllers\ProductionStageController::class);
         Route::resource('materials', \App\Http\Controllers\MaterialController::class);
@@ -454,6 +457,7 @@ Route::group(
         Route::get('order/today/delivery', [OrderController::class, 'todayDelivery'])->name('order.today.delivery');
         Route::get('customers/measurement', [OrderController::class, 'customerMeasurement'])->name('customer.measurement');
         Route::resource('order', OrderController::class);
+        Route::get('order/{id}/job-card', [OrderController::class, 'jobCard'])->name('order.job_card');
         Route::get('order-kanban', [OrderController::class, 'kanban'])->name('order.kanban');
         Route::post('order-status-update', [OrderController::class, 'statusUpdate'])->name('order.status.update');
     }

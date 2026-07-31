@@ -141,6 +141,19 @@ if (!function_exists('settings')) {
             $details['CURRENCY'] = 'INR';
             $details['CURRENCY_SYMBOL'] = '₹';
 
+            $details['bank_transfer_payment_is_on'] = $details['bank_transfer_payment_is_on'] ?? ($details['bank_transfer_payment'] ?? 'off');
+            $details['stripe_payment_is_on'] = $details['stripe_payment_is_on'] ?? ($details['STRIPE_PAYMENT'] ?? 'off');
+            $details['paypal_payment_is_on'] = $details['paypal_payment_is_on'] ?? ($details['paypal_payment'] ?? 'off');
+            $details['paystack_payment_is_on'] = $details['paystack_payment_is_on'] ?? ($details['paystack_payment'] ?? 'off');
+            $details['flutterwave_payment_is_on'] = $details['flutterwave_payment_is_on'] ?? ($details['flutterwave_payment'] ?? 'off');
+            $details['razorpay_payment_is_on'] = $details['razorpay_payment_is_on'] ?? ($details['razorpay_payment'] ?? 'off');
+            $details['paytm_payment_is_on'] = $details['paytm_payment_is_on'] ?? ($details['paytm_payment'] ?? 'off');
+            $details['mercado_payment_is_on'] = $details['mercado_payment_is_on'] ?? ($details['mercado_payment'] ?? 'off');
+            $details['mollie_payment_is_on'] = $details['mollie_payment_is_on'] ?? ($details['mollie_payment'] ?? 'off');
+            $details['skrill_payment_is_on'] = $details['skrill_payment_is_on'] ?? ($details['skrill_payment'] ?? 'off');
+            $details['coingate_payment_is_on'] = $details['coingate_payment_is_on'] ?? ($details['coingate_payment'] ?? 'off');
+            $details['paymentwall_payment_is_on'] = $details['paymentwall_payment_is_on'] ?? ($details['paymentwall_payment'] ?? 'off');
+
             config([
                 'captcha.secret' => $details['recaptcha_secret'] ?? '',
                 'captcha.sitekey' => $details['recaptcha_key'] ?? '',
@@ -286,7 +299,7 @@ if (!function_exists('measurementNumber')) {
         if (!$latestMeasurement) {
             return 1;
         } else {
-            return $latestMeasurement->measurement_id + 1;
+            return ((int) $latestMeasurement->measurement_id) + 1;
         }
 
     }

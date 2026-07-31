@@ -138,7 +138,7 @@ class DemoDataSeeder extends Seeder
                 Customer::firstOrCreate(
                     ['user_id' => $user->id],
                     [
-                        'customer_id' => 'CUST-' . (1000 + $user->id),
+                        'customer_id' => (1000 + $user->id),
                         'city' => $c['city'],
                         'address' => $c['address'],
                         'notes' => $c['notes'],
@@ -178,7 +178,7 @@ class DemoDataSeeder extends Seeder
                 $m = Measurement::firstOrCreate(
                     ['customer' => $cUser->id],
                     [
-                        'measurement_id' => 'MS-' . (100 + $cUser->id),
+                        'measurement_id' => (100 + $cUser->id),
                         'date' => now()->subDays(5)->format('Y-m-d'),
                         'cloth_type' => $cType->id,
                         'responsible' => $createdStaff[0]->id,
@@ -239,30 +239,32 @@ class DemoDataSeeder extends Seeder
             }
 
             // 6. Fetch Production Stages
-            $stages = ProductionStage::where('parent_id', $parentId)->orderBy('order_by')->get();
+            $stages = ProductionStage::where('parent_id', $parentId)->orderBy('order_index')->get();
             if ($stages->isEmpty()) {
                 $stageNames = [
-                    ['name' => 'Pending Confirmation', 'color' => '#78909C', 'order_by' => 1],
-                    ['name' => 'Pattern & Cutting', 'color' => '#00897B', 'order_by' => 2],
-                    ['name' => 'Stitching & Canvas', 'color' => '#2196F3', 'order_by' => 3],
-                    ['name' => 'Trial & Fitting', 'color' => '#FF8F00', 'order_by' => 4],
-                    ['name' => 'Finishing & Pressing', 'color' => '#8E24AA', 'order_by' => 5],
-                    ['name' => 'Ready for Delivery', 'color' => '#43A047', 'order_by' => 6],
+                    ['name' => 'Pending Confirmation', 'color_code' => '#78909C', 'order_index' => 1],
+                    ['name' => 'Pattern & Cutting', 'color_code' => '#00897B', 'order_index' => 2],
+                    ['name' => 'Stitching & Canvas', 'color_code' => '#2196F3', 'order_index' => 3],
+                    ['name' => 'Trial & Fitting', 'color_code' => '#FF8F00', 'order_index' => 4],
+                    ['name' => 'Finishing & Pressing', 'color_code' => '#8E24AA', 'order_index' => 5],
+                    ['name' => 'Ready for Delivery', 'color_code' => '#43A047', 'order_index' => 6],
                 ];
                 foreach ($stageNames as $sn) {
-                    $stages->push(ProductionStage::create([
-                        'name' => $sn['name'],
-                        'color' => $sn['color'],
-                        'order_by' => $sn['order_by'],
-                        'parent_id' => $parentId,
-                    ]));
+                    $stages->push(ProductionStage::firstOrCreate(
+                        ['slug' => Str::slug($sn['name']), 'parent_id' => $parentId],
+                        [
+                            'name' => $sn['name'],
+                            'color_code' => $sn['color_code'],
+                            'order_index' => $sn['order_index'],
+                        ]
+                    ));
                 }
             }
 
             // 7. Create Custom Orders with Assignments, Invoices & Payments
             $sampleOrdersData = [
                 [
-                    'order_id' => "TXN-P{$parentId}-88294",
+                    'order_id' => 88294,
                     'customer_index' => 0,
                     'cloth_type_index' => 0,
                     'fabric' => 'Loro Piana Super 130s Merino Wool (Navy)',
@@ -276,7 +278,7 @@ class DemoDataSeeder extends Seeder
                     'notes' => 'Italian Wool • Slim Fit • Peak Lapel • Double Vent',
                 ],
                 [
-                    'order_id' => "TXN-P{$parentId}-88301",
+                    'order_id' => 88301,
                     'customer_index' => 1,
                     'cloth_type_index' => 2,
                     'fabric' => 'Banarasi Silk Velvet (Maroon)',
@@ -290,7 +292,7 @@ class DemoDataSeeder extends Seeder
                     'notes' => 'Royal Zardozi Embroidery on Collar & Sleeves.',
                 ],
                 [
-                    'order_id' => "TXN-P{$parentId}-88315",
+                    'order_id' => 88315,
                     'customer_index' => 2,
                     'cloth_type_index' => 3,
                     'fabric' => 'Pure Georgette Silk (Emerald Green)',
@@ -304,7 +306,7 @@ class DemoDataSeeder extends Seeder
                     'notes' => 'Anarkali flared skirt with gold thread work.',
                 ],
                 [
-                    'order_id' => "TXN-P{$parentId}-88320",
+                    'order_id' => 88320,
                     'customer_index' => 3,
                     'cloth_type_index' => 1,
                     'fabric' => 'Sea Island 120s Cotton (White)',
@@ -318,7 +320,7 @@ class DemoDataSeeder extends Seeder
                     'notes' => '3 Pack Monogrammed Executive Shirts.',
                 ],
                 [
-                    'order_id' => "TXN-P{$parentId}-88334",
+                    'order_id' => 88334,
                     'customer_index' => 4,
                     'cloth_type_index' => 4,
                     'fabric' => 'Italian Herringbone Tweed (Charcoal)',
@@ -336,7 +338,7 @@ class DemoDataSeeder extends Seeder
             foreach ($sampleOrdersData as $sOrder) {
                 $custUser = $createdCustomers[$sOrder['customer_index']];
                 $cType = $createdClothTypes[$sOrder['cloth_type_index']];
-                $stage = $stages->where('order_by', $sOrder['stage_order'])->first() ?? $stages->first();
+                $stage = $stages->where('order_index', $sOrder['stage_order'])->first() ?? $stages->first();
                 $responsibleStaff = $createdStaff[array_rand($createdStaff)];
 
                 $order = Order::firstOrCreate(

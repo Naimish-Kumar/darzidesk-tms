@@ -40,6 +40,7 @@ class Order extends Model
         'pending' => 'Pending',
         'in_progress' => 'In Progress',
         'completed' => 'Complete',
+        'ready_for_delivery' => 'Ready for Delivery',
         'delivered' => 'Delivered',
         'on_hold' => 'On Hold',
         'cancelled' => 'Cancelled',

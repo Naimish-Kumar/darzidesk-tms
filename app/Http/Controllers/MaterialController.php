@@ -21,6 +21,8 @@ class MaterialController extends Controller
             'name' => 'required|string|max:255',
             'code' => 'nullable|string|max:50',
             'category' => 'required|string|max:100',
+            'color_name' => 'nullable|string|max:100',
+            'color_code' => 'nullable|string|max:20',
             'unit' => 'required|string|max:50',
             'quantity' => 'required|numeric|min:0',
             'reorder_level' => 'required|numeric|min:0',
@@ -30,7 +32,7 @@ class MaterialController extends Controller
 
         Material::create($request->all());
 
-        return redirect()->back()->with('success', __('Material added to inventory successfully.'));
+        return redirect()->back()->with('success', __('Fabric / Material added to inventory successfully.'));
     }
 
     public function update(Request $request, $id)
@@ -41,6 +43,8 @@ class MaterialController extends Controller
             'name' => 'required|string|max:255',
             'code' => 'nullable|string|max:50',
             'category' => 'required|string|max:100',
+            'color_name' => 'nullable|string|max:100',
+            'color_code' => 'nullable|string|max:20',
             'unit' => 'required|string|max:50',
             'quantity' => 'required|numeric|min:0',
             'reorder_level' => 'required|numeric|min:0',
@@ -50,7 +54,7 @@ class MaterialController extends Controller
 
         $material->update($request->all());
 
-        return redirect()->back()->with('success', __('Material inventory updated successfully.'));
+        return redirect()->back()->with('success', __('Fabric inventory updated successfully.'));
     }
 
     public function destroy($id)

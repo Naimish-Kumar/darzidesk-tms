@@ -13,58 +13,85 @@ use Spatie\Permission\Models\Role;
 
 class UserManagementController extends Controller
 {
+    private function hasUserPermission($user, $permission)
+    {
+        if (!$user) return false;
+        if (in_array(strtolower($user->type ?? ''), ['owner', 'super admin', 'admin', 'super_admin', 'system admin'])) {
+            return true;
+        }
+        if ($user->id == parentId()) {
+            return true;
+        }
+        return $user->can($permission);
+    }
+
     public function getRoles()
     {
         $user = Auth::user();
-        if (!$user->can('manage role')) {
+        if (!$this->hasUserPermission($user, 'manage role')) {
             return response()->json(['success' => false, 'message' => 'Permission Denied.'], 403);
         }
 
-        $roles = Role::where('parent_id', parentId())
-            ->orderBy('id', 'desc')
+        $rolesQuery = Role::where('parent_id', parentId())
+            ->whereNotIn(\DB::raw('LOWER(name)'), ['admin', 'super admin', 'super_admin', 'system admin', 'system_admin']);
+
+        $roles = $rolesQuery->orderBy('id', 'desc')
             ->get()
             ->map(function ($role) {
+                $userCount = User::where('role_id', $role->id)->orWhereHas('roles', function($q) use ($role) {
+                    $q->where('id', $role->id);
+                })->count();
+
                 return [
                     'id' => $role->id,
                     'name' => $role->name,
+                    'user_count' => $userCount,
                     'permissions' => $role->permissions->pluck('id')->toArray(),
                 ];
             });
 
-        // Get permissions that the current user owns (so they can grant them)
-        $ownerPermissions = $user->permissions->map(function ($p) {
+        // Auto-seed default permissions if none exist in system
+        if (Permission::count() == 0) {
+            $defaultPermissions = [
+                'manage order', 'create order', 'edit order', 'delete order',
+                'manage measurement', 'create measurement', 'edit measurement',
+                'manage customer', 'create customer', 'edit customer',
+                'manage invoice', 'create invoice', 'process payment',
+                'manage expense', 'create expense',
+                'manage staff', 'create staff', 'edit staff', 'delete staff',
+                'manage role', 'create role', 'edit role', 'delete role',
+                'view reports', 'manage inventory', 'manage branch'
+            ];
+            foreach ($defaultPermissions as $perm) {
+                Permission::firstOrCreate(['name' => $perm, 'guard_name' => 'web']);
+            }
+        }
+
+        // Get all system permissions for dynamic assignment
+        $allPermissions = Permission::orderBy('name', 'asc')->get()->map(function ($p) {
             return [
                 'id' => $p->id,
                 'name' => $p->name,
             ];
         })->toArray();
 
-        // If the owner has no direct permissions, fall back to getting roles' permissions
-        if (empty($ownerPermissions)) {
-            $permissionList = collect();
-            foreach ($user->roles as $role) {
-                $permissionList = $permissionList->merge($role->permissions);
-            }
-            $ownerPermissions = $permissionList->unique('id')->map(function ($p) {
-                return [
-                    'id' => $p->id,
-                    'name' => $p->name,
-                ];
-            })->values()->toArray();
-        }
-
         return response()->json([
             'success' => true,
             'roles' => $roles,
-            'all_permissions' => $ownerPermissions,
+            'all_permissions' => $allPermissions,
         ]);
     }
 
     public function storeRole(Request $request)
     {
         $user = Auth::user();
-        if (!$user->can('create role')) {
+        if (!$this->hasUserPermission($user, 'create role')) {
             return response()->json(['success' => false, 'message' => 'Permission Denied.'], 403);
+        }
+
+        $roleNameLower = strtolower(trim($request->name));
+        if (in_array($roleNameLower, ['admin', 'super admin', 'super_admin', 'system admin', 'owner', 'customer'])) {
+            return response()->json(['success' => false, 'message' => 'Shop owners cannot create Admin or System reserved roles.'], 400);
         }
 
         $validator = \Validator::make($request->all(), [
@@ -103,7 +130,7 @@ class UserManagementController extends Controller
     public function updateRole(Request $request, $id)
     {
         $user = Auth::user();
-        if (!$user->can('edit role')) {
+        if (!$this->hasUserPermission($user, 'edit role')) {
             return response()->json(['success' => false, 'message' => 'Permission Denied.'], 403);
         }
 
@@ -112,8 +139,9 @@ class UserManagementController extends Controller
             return response()->json(['success' => false, 'message' => 'Role not found.'], 404);
         }
 
-        if (in_array($role->name, ['owner', 'customer'])) {
-            return response()->json(['success' => false, 'message' => 'Built-in roles cannot be edited.'], 400);
+        $roleNameLower = strtolower(trim($role->name));
+        if (in_array($roleNameLower, ['admin', 'super admin', 'super_admin', 'system admin', 'owner', 'customer'])) {
+            return response()->json(['success' => false, 'message' => 'Shop owners cannot modify Admin or Built-in roles.'], 400);
         }
 
         $validator = \Validator::make($request->all(), [
@@ -148,7 +176,7 @@ class UserManagementController extends Controller
     public function destroyRole($id)
     {
         $user = Auth::user();
-        if (!$user->can('delete role')) {
+        if (!$this->hasUserPermission($user, 'delete role')) {
             return response()->json(['success' => false, 'message' => 'Permission Denied.'], 403);
         }
 
@@ -157,8 +185,9 @@ class UserManagementController extends Controller
             return response()->json(['success' => false, 'message' => 'Role not found.'], 404);
         }
 
-        if (in_array($role->name, ['owner', 'customer'])) {
-            return response()->json(['success' => false, 'message' => 'Built-in roles cannot be deleted.'], 400);
+        $roleNameLower = strtolower(trim($role->name));
+        if (in_array($roleNameLower, ['admin', 'super admin', 'super_admin', 'system admin', 'owner', 'customer'])) {
+            return response()->json(['success' => false, 'message' => 'Shop owners cannot delete Admin or Built-in roles.'], 400);
         }
 
         $role->delete();
@@ -172,7 +201,7 @@ class UserManagementController extends Controller
     public function getLoggedHistory()
     {
         $user = Auth::user();
-        if (!$user->can('manage logged history')) {
+        if (!$this->hasUserPermission($user, 'manage logged history')) {
             return response()->json(['success' => false, 'message' => 'Permission Denied.'], 403);
         }
 
@@ -214,7 +243,7 @@ class UserManagementController extends Controller
     public function destroyLoggedHistory($id)
     {
         $user = Auth::user();
-        if (!$user->can('delete logged history')) {
+        if (!$this->hasUserPermission($user, 'delete logged history')) {
             return response()->json(['success' => false, 'message' => 'Permission Denied.'], 403);
         }
 

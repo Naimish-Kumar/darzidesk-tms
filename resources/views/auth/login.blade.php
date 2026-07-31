@@ -402,6 +402,26 @@
                     <p>Log in to manage your bespoke tailoring workspace.</p>
                 </div>
 
+                @if (session('error'))
+                    <div style="background: #FEE2E2; color: #991B1B; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; margin-bottom: 20px; border: 1px solid #FCA5A5;">
+                        {{ session('error') }}
+                    </div>
+                @endif
+                @if (session('status'))
+                    <div style="background: #D1FAE5; color: #065F46; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; margin-bottom: 20px; border: 1px solid #6EE7B7;">
+                        {{ session('status') }}
+                    </div>
+                @endif
+                @if ($errors->any())
+                    <div style="background: #FEE2E2; color: #991B1B; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; margin-bottom: 20px; border: 1px solid #FCA5A5;">
+                        <ul style="margin: 0; padding-left: 18px;">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <!-- Single Continue with Google Button -->
                 <a href="#" class="btn-social-google">
                     <svg width="20" height="20" viewBox="0 0 24 24">

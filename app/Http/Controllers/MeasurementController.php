@@ -91,6 +91,16 @@ class MeasurementController extends Controller
 
             $measurement->save();
 
+            // Record initial measurement history snapshot
+            \App\Models\MeasurementHistory::create([
+                'measurement_id' => $measurement->id,
+                'customer_id' => $measurement->customer,
+                'cloth_type_id' => $measurement->cloth_type,
+                'snapshot_data' => $measurementDetail,
+                'change_notes' => 'Initial measurement recorded',
+                'updated_by' => \Auth::id(),
+                'parent_id' => parentId(),
+            ]);
 
             // Initialize the measurement details string
             $measurementDetails = "";
@@ -176,8 +186,12 @@ class MeasurementController extends Controller
         if (\Auth::user()->can('show measurement')) {
             $id = Crypt::decrypt($ids);
             $measurement = Measurement::find($id);
+            $histories = \App\Models\MeasurementHistory::where('customer_id', $measurement->customer)
+                ->with(['clothType', 'updatedByUser'])
+                ->orderBy('created_at', 'desc')
+                ->get();
 
-            return view('measurement.show', compact('measurement'));
+            return view('measurement.show', compact('measurement', 'histories'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }

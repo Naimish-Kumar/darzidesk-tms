@@ -114,7 +114,8 @@ class Invoice extends Model
     public static $paymentMethodnew = [
         'bank' => 'Bank',
         'cash' => 'Cash',
-        'upi' => 'UPI',
+        'upi' => 'UPI / GPay / Paytm',
+        'UPI' => 'UPI / GPay / Paytm',
         'cheque' => 'Cheque',
         'Bank Transfer' => 'Bank Transfer',
         'Stripe' => 'Stripe',

@@ -46,8 +46,9 @@
     <link rel="stylesheet" href="{{ asset('assets/css/daterangepicker/daterangepicker.css')}}">
     
     <!-- [Google Font] Family -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
-        id="main-font-link" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" id="main-font-link">
     <link rel="stylesheet" href="{{ asset('assets/fonts/phosphor/duotone/style.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/fonts/tabler-icons.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/fonts/feather.css') }}" />

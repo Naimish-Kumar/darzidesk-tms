@@ -47,9 +47,15 @@ class Coupon extends Model
     {
 
         $coupons = Coupon::where('code', $couponCode)->where('status', '1')->first();
-        $package=Subscription::find($subscriptionId);
         if (!empty($coupons)) {
-            $applicable_packages = Coupon::whereRaw("find_in_set($package->id,applicable_packages)")->first();
+            $package = Subscription::find($subscriptionId);
+            $id = (string) $package->id;
+            $applicable_packages = Coupon::where('id', $coupons->id)->where(function ($query) use ($id) {
+                $query->where('applicable_packages', $id)
+                    ->orWhere('applicable_packages', 'like', $id . ',%')
+                    ->orWhere('applicable_packages', 'like', '%,' . $id . ',%')
+                    ->orWhere('applicable_packages', 'like', '%,' . $id);
+            })->first();
 
             if (empty($applicable_packages)) {
                 return $package->package_amount;

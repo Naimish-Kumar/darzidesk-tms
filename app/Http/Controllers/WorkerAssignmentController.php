@@ -24,17 +24,30 @@ class WorkerAssignmentController extends Controller
         $orders = Order::with('customers')->get();
         $stages = ProductionStage::orderBy('order_index', 'asc')->get();
 
-        // Calculate piece-rate earnings summary per worker
+        // Calculate piece-rate earnings & turnaround time summary per worker
         $workerEarnings = $assignments->groupBy('worker_id')->map(function ($items, $workerId) {
             $worker = User::find($workerId);
-            $totalEarned = $items->where('status', 'completed')->sum('piece_rate_pay');
+            $completedItems = $items->where('status', 'completed');
+            $totalEarned = $completedItems->sum('piece_rate_pay');
             $pendingEarned = $items->where('status', '!=', 'completed')->sum('piece_rate_pay');
+
+            // Calculate average turnaround time in days
+            $totalHours = 0;
+            $completedCount = $completedItems->count();
+            foreach ($completedItems as $ci) {
+                if ($ci->updated_at && $ci->created_at) {
+                    $totalHours += max(1, $ci->created_at->diffInHours($ci->updated_at));
+                }
+            }
+            $avgTatDays = $completedCount > 0 ? round(($totalHours / $completedCount) / 24, 1) : 0;
+
             return [
                 'worker' => $worker,
                 'total_earned' => $totalEarned,
                 'pending_earned' => $pendingEarned,
                 'total_tasks' => $items->count(),
-                'completed_tasks' => $items->where('status', 'completed')->count(),
+                'completed_tasks' => $completedCount,
+                'avg_tat_days' => $avgTatDays,
             ];
         });
 

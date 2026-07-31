@@ -160,10 +160,15 @@ class CouponController extends Controller
     {
         $package = Subscription::find(\Illuminate\Support\Facades\Crypt::decrypt($request->package));
         if ($package && $request->coupon != '') {
-            $originalPrice = dynamicPrice($package->package_amount);
             $couponData = Coupon::where('code', $request->coupon)->where('status', '1')->first();
             if (!empty($couponData)) {
-                $applicable_packages = Coupon::whereRaw("find_in_set($package->id,applicable_packages)")->first();
+                $id = (string) $package->id;
+                $applicable_packages = Coupon::where('id', $couponData->id)->where(function ($query) use ($id) {
+                    $query->where('applicable_packages', $id)
+                        ->orWhere('applicable_packages', 'like', $id . ',%')
+                        ->orWhere('applicable_packages', 'like', '%,' . $id . ',%')
+                        ->orWhere('applicable_packages', 'like', '%,' . $id);
+                })->first();
 
                 if (empty($applicable_packages)) {
                     $response=[

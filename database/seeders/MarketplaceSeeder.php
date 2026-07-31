@@ -161,7 +161,7 @@ class MarketplaceSeeder extends Seeder
         if ($customer) {
             // Seed Sample Orders
             Order::firstOrCreate(
-                ['order_id' => 'ORD-8829'],
+                ['order_id' => 8829],
                 [
                     'customer_id' => $customer->id,
                     'order_date' => now()->subDays(2)->toDateString(),
@@ -177,7 +177,7 @@ class MarketplaceSeeder extends Seeder
             );
 
             Order::firstOrCreate(
-                ['order_id' => 'ORD-8742'],
+                ['order_id' => 8742],
                 [
                     'customer_id' => $customer->id,
                     'order_date' => now()->subDays(5)->toDateString(),
@@ -193,7 +193,7 @@ class MarketplaceSeeder extends Seeder
             );
 
             Order::firstOrCreate(
-                ['order_id' => 'ORD-8910'],
+                ['order_id' => 8910],
                 [
                     'customer_id' => $customer->id,
                     'order_date' => now()->subDays(1)->toDateString(),

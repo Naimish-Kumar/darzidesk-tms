@@ -1,214 +1,427 @@
 @extends('layouts.app')
+@section('hide_page_header', true)
 @section('page-title')
-    {{ __('Fabric & Trim Inventory') }}
+    {{ __('Fabric & Inventory Stock') }}
 @endsection
 @section('breadcrumb')
-    <ul class="breadcrumb mb-0">
-        <li class="breadcrumb-item">
-            <a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a>
-        </li>
-        <li class="breadcrumb-item active">
-            <a href="#">{{ __('Inventory') }}</a>
-        </li>
-    </ul>
+    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ __('Inventory') }}</li>
 @endsection
 
-@section('content')
-    <div class="row">
-        <!-- Summary Cards -->
-        <div class="col-md-4 col-12 mb-3">
-            <div class="card bg-primary text-white shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <h6 class="text-white-50 text-uppercase fw-semibold mb-1">{{ __('Total Materials') }}</h6>
-                            <h3 class="text-white fw-bold mb-0">{{ $materials->count() }}</h3>
-                        </div>
-                        <div class="fs-1 text-white-50"><i class="ti ti-box"></i></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 col-12 mb-3">
-            <div class="card bg-warning text-white shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <h6 class="text-white-50 text-uppercase fw-semibold mb-1">{{ __('Low Stock Alerts') }}</h6>
-                            <h3 class="text-white fw-bold mb-0">{{ $lowStockMaterials->count() }}</h3>
-                        </div>
-                        <div class="fs-1 text-white-50"><i class="ti ti-alert-triangle"></i></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 col-12 mb-3">
-            <div class="card bg-success text-white shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <h6 class="text-white-50 text-uppercase fw-semibold mb-1">{{ __('Total Inventory Value') }}</h6>
-                            <h3 class="text-white fw-bold mb-0">${{ number_format($materials->sum(fn($m) => $m->quantity * $m->unit_cost), 2) }}</h3>
-                        </div>
-                        <div class="fs-1 text-white-50"><i class="ti ti-currency-dollar"></i></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+@push('css-page')
+    <style>
+        .dd-mat-banner {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 24px 28px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            margin-bottom: 24px;
+        }
+        .dd-mat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #E6F4F1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .dd-mat-icon i {
+            font-size: 24px;
+            color: #00796B;
+        }
+        .dd-mat-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #0F172A;
+            margin-bottom: 2px;
+        }
+        .dd-mat-subtitle {
+            font-size: 13.5px;
+            color: #64748B;
+            margin-bottom: 0;
+        }
 
-        <!-- Material Table & Add Form -->
-        <div class="col-12">
-            <div class="card shadow-sm">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">{{ __('Material Stock List') }}</h5>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMaterialModal">
-                        <i class="ti ti-plus me-1"></i> {{ __('Add Material') }}
+        .dd-stat-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .dd-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            overflow: hidden;
+        }
+        .dd-table th {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #F8FAFC;
+            padding: 14px 20px;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        .dd-table td {
+            font-size: 14px;
+            padding: 14px 20px;
+            vertical-align: middle;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        .dd-table tr:hover td {
+            background: #E6F4F1;
+        }
+
+        .dd-code-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #00796B;
+            background: #E6F4F1;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+    </style>
+@endpush
+
+@section('content')
+    <div class="dd-dashboard">
+        {{-- Banner Card --}}
+        <div class="dd-mat-banner">
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="dd-mat-icon">
+                        <i class="ti ti-box"></i>
+                    </div>
+                    <div>
+                        <h4 class="dd-mat-title">{{ __('Fabric & Inventory Stock Tracking') }}</h4>
+                        <p class="dd-mat-subtitle">{{ __('Track fabric roll quantities in meters/yards, color swatches, unit costs, and automated stock deduction') }}</p>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn text-white fw-bold px-4" data-bs-toggle="modal" data-bs-target="#addMaterialModal" style="background:#00796B; border-radius:10px;">
+                        <i class="ti ti-plus me-1"></i> {{ __('Add Fabric Roll') }}
                     </button>
                 </div>
-                <div class="card-body pt-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead>
-                                <tr>
-                                    <th>{{ __('Item Code / Name') }}</th>
-                                    <th>{{ __('Category') }}</th>
-                                    <th>{{ __('In Stock') }}</th>
-                                    <th>{{ __('Reorder Threshold') }}</th>
-                                    <th>{{ __('Unit Cost') }}</th>
-                                    <th>{{ __('Status') }}</th>
-                                    <th>{{ __('Actions') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($materials as $material)
-                                    <tr>
-                                        <td>
-                                            <div class="fw-bold text-dark">{{ $material->name }}</div>
-                                            <small class="text-muted">{{ $material->code ?? 'No Code' }}</small>
-                                        </td>
-                                        <td><span class="badge bg-light-primary text-primary">{{ $material->category }}</span></td>
-                                        <td>
-                                            <span class="fw-bold fs-6 {{ $material->isLowStock() ? 'text-danger' : 'text-dark' }}">
-                                                {{ number_format($material->quantity, 2) }} {{ $material->unit }}
-                                            </span>
-                                        </td>
-                                        <td>{{ number_format($material->reorder_level, 2) }} {{ $material->unit }}</td>
-                                        <td>${{ number_format($material->unit_cost, 2) }}</td>
-                                        <td>
-                                            @if($material->isLowStock())
-                                                <span class="badge bg-light-danger text-danger"><i class="ti ti-alert-circle me-1"></i>Low Stock</span>
-                                            @else
-                                                <span class="badge bg-light-success text-success"><i class="ti ti-check me-1"></i>In Stock</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#restockModal{{ $material->id }}">
-                                                <i class="ti ti-plus"></i> Restock
-                                            </button>
-                                            <form action="{{ route('materials.destroy', $material->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this material?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-sm btn-outline-danger"><i class="ti ti-trash"></i></button>
-                                            </form>
-                                        </td>
-                                    </tr>
+            </div>
+        </div>
 
-                                    <!-- Restock Modal -->
-                                    <div class="modal fade" id="restockModal{{ $material->id }}" tabindex="-1">
-                                        <div class="modal-dialog">
-                                            <form action="{{ route('materials.restock', $material->id) }}" method="POST" class="modal-content">
+        {{-- Summary Cards --}}
+        <div class="row g-3 mb-4">
+            <div class="col-md-4 col-12">
+                <div class="dd-stat-card">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted text-uppercase fw-semibold" style="font-size: 11.5px; letter-spacing: 0.5px;">{{ __('Total Fabric Items') }}</span>
+                            <h3 class="fw-bold text-dark mb-0 mt-1">{{ $materials->count() }}</h3>
+                        </div>
+                        <div class="rounded-3 p-3" style="background:#E6F4F1; color:#00796B;">
+                            <i class="ti ti-box fs-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-12">
+                <div class="dd-stat-card">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted text-uppercase fw-semibold" style="font-size: 11.5px; letter-spacing: 0.5px;">{{ __('Low Stock Alerts') }}</span>
+                            <h3 class="fw-bold {{ $lowStockMaterials->count() > 0 ? 'text-danger' : 'text-dark' }} mb-0 mt-1">
+                                {{ $lowStockMaterials->count() }}
+                            </h3>
+                        </div>
+                        <div class="rounded-3 p-3" style="background:#FEE2E2; color:#DC2626;">
+                            <i class="ti ti-alert-triangle fs-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-12">
+                <div class="dd-stat-card">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted text-uppercase fw-semibold" style="font-size: 11.5px; letter-spacing: 0.5px;">{{ __('Total Inventory Value') }}</span>
+                            <h3 class="fw-bold text-dark mb-0 mt-1">
+                                {{ priceFormat($materials->sum(fn($m) => $m->quantity * $m->unit_cost)) }}
+                            </h3>
+                        </div>
+                        <div class="rounded-3 p-3" style="background:#DCFCE7; color:#16A34A;">
+                            <i class="ti ti-coin fs-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Low Stock Alert Banner --}}
+        @if($lowStockMaterials->count() > 0)
+            <div class="alert alert-warning shadow-sm border-0 rounded-4 p-3 mb-4 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="ti ti-alert-circle fs-3 text-warning"></i>
+                    <div>
+                        <strong class="text-dark">{{ __('Low Stock Warning:') }}</strong>
+                        <span class="text-muted" style="font-size: 13.5px;">
+                            {{ $lowStockMaterials->count() }} {{ __('fabric item(s) are below reorder threshold!') }}
+                        </span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-1 flex-wrap">
+                    @foreach($lowStockMaterials->take(4) as $lowMat)
+                        <span class="badge bg-white text-danger border border-danger me-1">
+                            {{ $lowMat->name }}: {{ $lowMat->quantity }} {{ $lowMat->unit }}
+                        </span>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        {{-- Material Table Card --}}
+        <div class="dd-card">
+            <div class="table-responsive">
+                <table class="table dd-table advance-datatable mb-0">
+                    <thead>
+                        <tr>
+                            <th>{{ __('Fabric Roll / Code') }}</th>
+                            <th>{{ __('Color Swatch') }}</th>
+                            <th>{{ __('Category') }}</th>
+                            <th>{{ __('In Stock') }}</th>
+                            <th>{{ __('Reorder Threshold') }}</th>
+                            <th>{{ __('Unit Cost') }}</th>
+                            <th>{{ __('Status') }}</th>
+                            <th class="text-end">{{ __('Actions') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($materials as $material)
+                            <tr>
+                                <td>
+                                    <div class="fw-bold text-dark" style="font-size: 14px;">{{ $material->name }}</div>
+                                    <span class="dd-code-badge">{{ $material->code ?? 'FAB-ROLL' }}</span>
+                                </td>
+                                <td>
+                                    {!! $material->getColorSwatchHtml() !!}
+                                </td>
+                                <td>
+                                    <span class="badge" style="background:#F1F5F9; color:#475569; font-weight:600;">
+                                        {{ $material->category }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="fw-bold {{ $material->isLowStock() ? 'text-danger' : 'text-dark' }}" style="font-size: 14px;">
+                                        {{ number_format($material->quantity, 2) }} {{ $material->unit }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="text-muted" style="font-size: 13.5px;">
+                                        {{ number_format($material->reorder_level, 2) }} {{ $material->unit }}
+                                    </span>
+                                </td>
+                                <td class="fw-bold text-dark">
+                                    {{ priceFormat($material->unit_cost) }}
+                                </td>
+                                <td>
+                                    @if($material->isLowStock())
+                                        <span class="badge bg-danger text-white" style="font-size: 11px; font-weight: 700; border-radius: 20px;">
+                                            <i class="ti ti-alert-triangle me-1"></i>Low Stock
+                                        </span>
+                                    @else
+                                        <span class="badge bg-success text-white" style="font-size: 11px; font-weight: 700; border-radius: 20px;">
+                                            <i class="ti ti-check me-1"></i>In Stock
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex align-items-center gap-1">
+                                        {{-- Restock Button --}}
+                                        <button class="btn btn-outline-success btn-sm me-1" data-bs-toggle="modal" data-bs-target="#restockModal{{ $material->id }}" style="border-radius: 8px; font-size: 12px; font-weight: 700;">
+                                            <i class="ti ti-plus me-1"></i>{{ __('Restock') }}
+                                        </button>
+
+                                        {{-- Edit Button --}}
+                                        <button class="btn btn-outline-secondary btn-sm me-1" data-bs-toggle="modal" data-bs-target="#editMaterialModal{{ $material->id }}" style="border-radius: 8px;">
+                                            <i class="ti ti-pencil"></i>
+                                        </button>
+
+                                        {{-- Delete --}}
+                                        <form action="{{ route('materials.destroy', $material->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Are you sure you want to delete this material?') }}')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" style="border-radius: 8px;">
+                                                <i class="ti ti-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    {{-- Restock Modal --}}
+                                    <div class="modal fade text-start" id="restockModal{{ $material->id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-sm">
+                                            <form action="{{ route('materials.restock', $material->id) }}" method="POST" class="modal-content" style="border-radius: 16px;">
                                                 @csrf
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Restock {{ $material->name }}</h5>
+                                                <div class="modal-header border-0 pb-0">
+                                                    <h6 class="modal-title fw-bold">{{ __('Restock ') . $material->name }}</h6>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Add Quantity ({{ $material->unit }})</label>
-                                                        <input type="number" step="0.01" min="0.01" name="add_quantity" class="form-control" required>
-                                                    </div>
+                                                    <label class="form-label fw-semibold" style="font-size: 13px;">{{ __('Add Quantity (') . $material->unit . ')' }}</label>
+                                                    <input type="number" step="0.01" name="add_quantity" class="form-control" placeholder="0.00" required style="border-radius: 10px;">
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-success">Restock Stock</button>
+                                                <div class="modal-footer border-0 pt-0">
+                                                    <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                                                    <button type="submit" class="btn btn-success btn-sm fw-bold">{{ __('Confirm Restock') }}</button>
                                                 </div>
                                             </form>
                                         </div>
                                     </div>
-                                @empty
-                                    <tr>
-                                        <td colspan="7" class="text-center py-4 text-muted">
-                                            {{ __('No materials found in inventory. Add your first fabric or trim stock!') }}
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+
+                                    {{-- Edit Modal --}}
+                                    <div class="modal fade text-start" id="editMaterialModal{{ $material->id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <form action="{{ route('materials.update', $material->id) }}" method="POST" class="modal-content" style="border-radius: 16px;">
+                                                @csrf
+                                                @method('PUT')
+                                                <div class="modal-header border-0 pb-0">
+                                                    <h5 class="modal-title fw-bold">{{ __('Edit Fabric Roll') }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body row g-3">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-semibold">{{ __('Fabric Name') }} *</label>
+                                                        <input type="text" name="name" class="form-control" value="{{ $material->name }}" required style="border-radius: 10px;">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-semibold">{{ __('Item Code') }}</label>
+                                                        <input type="text" name="code" class="form-control" value="{{ $material->code }}" style="border-radius: 10px;">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-semibold">{{ __('Category') }} *</label>
+                                                        <select name="category" class="form-select" style="border-radius: 10px;">
+                                                            <option value="Fabric Roll" {{ $material->category == 'Fabric Roll' ? 'selected' : '' }}>Fabric Roll</option>
+                                                            <option value="Lining" {{ $material->category == 'Lining' ? 'selected' : '' }}>Lining</option>
+                                                            <option value="Buttons & Trims" {{ $material->category == 'Buttons & Trims' ? 'selected' : '' }}>Buttons & Trims</option>
+                                                            <option value="Threads & Zippers" {{ $material->category == 'Threads & Zippers' ? 'selected' : '' }}>Threads & Zippers</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-semibold">{{ __('Unit') }} *</label>
+                                                        <select name="unit" class="form-select" style="border-radius: 10px;">
+                                                            <option value="Meters" {{ $material->unit == 'Meters' ? 'selected' : '' }}>Meters (m)</option>
+                                                            <option value="Yards" {{ $material->unit == 'Yards' ? 'selected' : '' }}>Yards (yd)</option>
+                                                            <option value="Pcs" {{ $material->unit == 'Pcs' ? 'selected' : '' }}>Pcs</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-semibold">{{ __('Color Name') }}</label>
+                                                        <input type="text" name="color_name" class="form-control" value="{{ $material->color_name }}" placeholder="e.g. Navy Blue" style="border-radius: 10px;">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-semibold">{{ __('Color Swatch Hex') }}</label>
+                                                        <input type="color" name="color_code" class="form-control form-control-color w-100" value="{{ $material->color_code ?: '#00796B' }}" style="border-radius: 10px;">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="form-label fw-semibold">{{ __('Quantity') }} *</label>
+                                                        <input type="number" step="0.01" name="quantity" class="form-control" value="{{ $material->quantity }}" required style="border-radius: 10px;">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="form-label fw-semibold">{{ __('Reorder Level') }} *</label>
+                                                        <input type="number" step="0.01" name="reorder_level" class="form-control" value="{{ $material->reorder_level }}" required style="border-radius: 10px;">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="form-label fw-semibold">{{ __('Unit Cost') }} *</label>
+                                                        <input type="number" step="0.01" name="unit_cost" class="form-control" value="{{ $material->unit_cost }}" required style="border-radius: 10px;">
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer border-0 pt-0">
+                                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                                                    <button type="submit" class="btn text-white fw-bold" style="background:#00796B; border-radius:10px;">{{ __('Save Changes') }}</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="text-center text-muted py-5">
+                                    <i class="ti ti-box-x fs-1 d-block mb-2 text-secondary"></i>
+                                    <small>{{ __('No fabric items found in inventory') }}</small>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <!-- Add Material Modal -->
-    <div class="modal fade" id="addMaterialModal" tabindex="-1">
-        <div class="modal-dialog">
-            <form action="{{ route('materials.store') }}" method="POST" class="modal-content">
+    {{-- Add Material Modal --}}
+    <div class="modal fade" id="addMaterialModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <form action="{{ route('materials.store') }}" method="POST" class="modal-content" style="border-radius: 16px;">
                 @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title">{{ __('Add Material to Inventory') }}</h5>
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">{{ __('Add New Fabric Roll') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">{{ __('Material Name') }}</label>
-                        <input type="text" name="name" class="form-control" placeholder="e.g., Italian Linen, Brass Buttons" required>
+                <div class="modal-body row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">{{ __('Fabric Name') }} *</label>
+                        <input type="text" name="name" class="form-control" placeholder="e.g. Italian Wool 120s" required style="border-radius: 10px;">
                     </div>
-                    <div class="row">
-                        <div class="col-6 mb-3">
-                            <label class="form-label">{{ __('Item Code') }}</label>
-                            <input type="text" name="code" class="form-control" placeholder="e.g., FAB-001">
-                        </div>
-                        <div class="col-6 mb-3">
-                            <label class="form-label">{{ __('Category') }}</label>
-                            <select name="category" class="form-select" required>
-                                <option value="Fabric">Fabric</option>
-                                <option value="Trim">Trim</option>
-                                <option value="Button">Button</option>
-                                <option value="Zipper">Zipper</option>
-                                <option value="Thread">Thread</option>
-                                <option value="Accessory">Accessory</option>
-                            </select>
-                        </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">{{ __('Item Code') }}</label>
+                        <input type="text" name="code" class="form-control" placeholder="FAB-101" style="border-radius: 10px;">
                     </div>
-                    <div class="row">
-                        <div class="col-6 mb-3">
-                            <label class="form-label">{{ __('Unit') }}</label>
-                            <input type="text" name="unit" class="form-control" placeholder="meters, yards, pcs" required>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <label class="form-label">{{ __('Initial Quantity') }}</label>
-                            <input type="number" step="0.01" min="0" name="quantity" class="form-control" required>
-                        </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">{{ __('Category') }} *</label>
+                        <select name="category" class="form-select" style="border-radius: 10px;">
+                            <option value="Fabric Roll">Fabric Roll</option>
+                            <option value="Lining">Lining</option>
+                            <option value="Buttons & Trims">Buttons & Trims</option>
+                            <option value="Threads & Zippers">Threads & Zippers</option>
+                        </select>
                     </div>
-                    <div class="row">
-                        <div class="col-6 mb-3">
-                            <label class="form-label">{{ __('Reorder Alert Level') }}</label>
-                            <input type="number" step="0.01" min="0" name="reorder_level" class="form-control" value="5.00" required>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <label class="form-label">{{ __('Unit Cost ($)') }}</label>
-                            <input type="number" step="0.01" min="0" name="unit_cost" class="form-control" value="0.00" required>
-                        </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">{{ __('Unit') }} *</label>
+                        <select name="unit" class="form-select" style="border-radius: 10px;">
+                            <option value="Meters">Meters (m)</option>
+                            <option value="Yards">Yards (yd)</option>
+                            <option value="Pcs">Pcs</option>
+                        </select>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">{{ __('Description') }}</label>
-                        <textarea name="description" class="form-control" rows="2"></textarea>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">{{ __('Color Name') }}</label>
+                        <input type="text" name="color_name" class="form-control" placeholder="e.g. Midnight Blue" style="border-radius: 10px;">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">{{ __('Color Swatch Hex') }}</label>
+                        <input type="color" name="color_code" class="form-control form-control-color w-100" value="#00796B" style="border-radius: 10px;">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">{{ __('Initial Qty') }} *</label>
+                        <input type="number" step="0.01" name="quantity" class="form-control" placeholder="100.00" required style="border-radius: 10px;">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">{{ __('Reorder Level') }} *</label>
+                        <input type="number" step="0.01" name="reorder_level" class="form-control" placeholder="15.00" required style="border-radius: 10px;">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">{{ __('Unit Cost') }} *</label>
+                        <input type="number" step="0.01" name="unit_cost" class="form-control" placeholder="25.00" required style="border-radius: 10px;">
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
-                    <button type="submit" class="btn btn-primary">{{ __('Save Material') }}</button>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                    <button type="submit" class="btn text-white fw-bold" style="background:#00796B; border-radius:10px;">{{ __('Save Fabric Roll') }}</button>
                 </div>
             </form>
         </div>

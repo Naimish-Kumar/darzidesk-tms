@@ -31,7 +31,14 @@ class User extends Authenticatable
         'parent_id',
         'is_active',
         'twofa_secret',
-        'code'
+        'code',
+        'shop_name',
+        'address',
+        'city',
+        'shop_logo',
+        'shop_banner',
+        'whatsapp_number',
+        'business_hours',
     ];
 
 

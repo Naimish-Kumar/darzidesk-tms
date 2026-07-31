@@ -75,7 +75,12 @@ class HomeController extends Controller
                 $result['totalClothType'] = ClothType::where('parent_id', parentId())->count();
                 $result['totalIncome'] = InvoicePayment::where('parent_id', parentId())->sum('amount');
                 $result['totalExpense'] = Expense::where('parent_id', parentId())->sum('amount');
+                $result['totalOrders'] = Order::where('parent_id', parentId())->count();
+                $result['pendingOrders'] = Order::where('parent_id', parentId())->whereIn('status', ['pending', 'in_progress'])->count();
+                $result['completedOrders'] = Order::where('parent_id', parentId())->whereIn('status', ['completed', 'delivered'])->count();
+                $result['recentOrders'] = Order::where('parent_id', parentId())->with(['customers', 'clothTypes'])->orderBy('id', 'desc')->take(6)->get();
                 $result['incomeExpenseByMonth'] = $this->incomeByMonth();
+                $result['orderStatusDistribution'] = $this->orderStatusDistribution();
                 $result['settings'] = settings();
                 $result['subscription'] = Subscription::find(Auth::user()->subscription);
 
@@ -200,7 +205,20 @@ class HomeController extends Controller
         return $orderData;
     }
 
-public function getnotify()
+    public function orderStatusDistribution()
+    {
+        $statuses = Order::$status;
+        $labels = [];
+        $counts = [];
+        foreach ($statuses as $key => $label) {
+            $count = Order::where('parent_id', parentId())->where('status', $key)->count();
+            $labels[] = __($label);
+            $counts[] = $count;
+        }
+        return ['labels' => $labels, 'counts' => $counts];
+    }
+
+    public function getnotify()
 {
     if (Auth::user()->type == 'customer') {
         $orders = Order::where('customer_id', Auth::user()->id)

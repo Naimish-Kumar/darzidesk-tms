@@ -424,8 +424,29 @@
 
                         <div class="card-body p-3">
                             <div class="rounded p-3 bg-light-secondary">
-                                <div class="row justify-content-end">
-                                    <div class="col-auto">
+                                <div class="row align-items-center justify-content-between">
+                                    <div class="col-md-5 text-center text-md-start mb-3 mb-md-0">
+                                        @if($invoice->getInvoiceDueAmount() > 0)
+                                            @php
+                                                $dueAmt = $invoice->getInvoiceDueAmount();
+                                                $shopName = getSettingsValByName('company_name') ?: 'DarziDesk Tailors';
+                                                $upiId = getSettingsValByName('upi_id') ?: 'darzidesk@upi';
+                                                $upiUrl = "upi://pay?pa={$upiId}&pn=" . urlencode($shopName) . "&am={$dueAmt}&cu=INR";
+                                                $qrApiUrl = "https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=" . urlencode($upiUrl);
+                                            @endphp
+                                            <div class="d-inline-block border rounded p-2 bg-white text-center shadow-sm">
+                                                <img src="{{ $qrApiUrl }}" alt="UPI QR Code" class="img-fluid mb-1" style="width:120px; height:120px;">
+                                                <small class="d-block fw-bold text-dark" style="font-size: 11px;">
+                                                    <i class="ti ti-qrcode me-1 text-success"></i>Scan to Pay via UPI / GPay
+                                                </small>
+                                            </div>
+                                        @else
+                                            <div class="badge bg-success text-white p-2 px-3 fs-6">
+                                                <i class="ti ti-circle-check me-1"></i>Invoice Fully Paid
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-6 col-auto">
                                         <div class="table-responsive">
                                             <table class="table table-borderless text-end mb-0">
                                                 <tbody>
@@ -497,7 +518,7 @@
                                     <tr role="row">
                                         <td>{{ $payment->transaction_id }} </td>
                                         <td>{{ dateFormat($payment->payment_date) }} </td>
-                                        <td>{{ \App\Models\Invoice::$paymentMethodnew[$payment->payment_type] }} </td>
+                                        <td>{{ \App\Models\Invoice::$paymentMethodnew[$payment->payment_type] ?? $payment->payment_type }} </td>
                                         <td>{{ priceFormat($payment->amount) }} </td>
                                         <td>{{ !empty($payment->notes) ? $payment->notes : '-' }} </td>
                                         <td>

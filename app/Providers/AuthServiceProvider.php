@@ -25,6 +25,15 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::before(function ($user, $ability) {
+            if (in_array($user->type, ['super admin', 'owner'])) {
+                return true;
+            }
+            if ($user->type === 'customer') {
+                if (in_array($ability, ['manage order', 'manage measurement', 'manage invoice'])) {
+                    return true;
+                }
+            }
+        });
     }
 }

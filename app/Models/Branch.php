@@ -16,6 +16,7 @@ class Branch extends Model
         'phone',
         'manager_id',
         'parent_id',
+        'is_active',
     ];
 
     public function manager()

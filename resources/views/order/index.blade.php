@@ -113,6 +113,29 @@
                                                     @endif
                                                 @endcan --}}
 
+                                                {{-- Send WhatsApp Status Update --}}
+                                                @php
+                                                    $waPhone = $order->customers->phone_number ?? '';
+                                                    $waMsg = \App\Helper\WhatsAppService::getStatusUpdateMessage($order);
+                                                    $waUrl = \App\Helper\WhatsAppService::generateClickToChatUrl($waPhone, $waMsg);
+                                                @endphp
+                                                @if(!empty($waPhone))
+                                                    <a class="avtar avtar-xs btn-link-success text-success"
+                                                        data-bs-toggle="tooltip" data-bs-original-title="{{ __('Send WhatsApp Update') }}"
+                                                        href="{{ $waUrl }}" target="_blank">
+                                                        <i class="ti ti-brand-whatsapp f-18"></i>
+                                                    </a>
+                                                @endif
+
+                                                {{-- Print Job Card --}}
+                                                @can('show order')
+                                                    <a class="avtar avtar-xs btn-link-primary text-primary"
+                                                        data-bs-toggle="tooltip" data-bs-original-title="{{ __('Print Job Card') }}"
+                                                        href="{{ route('order.job_card', \Illuminate\Support\Facades\Crypt::encrypt($order->id)) }}" target="_blank">
+                                                        <i class="ti ti-printer f-18"></i>
+                                                    </a>
+                                                @endcan
+
                                                 {{-- View Order --}}
                                                 @can('show order')
                                                     <a class="avtar avtar-xs btn-link-warning text-warning"

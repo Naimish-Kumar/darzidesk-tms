@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 /*
@@ -16,29 +17,103 @@ use Illuminate\Validation\ValidationException;
 |--------------------------------------------------------------------------
 */
 
+Route::post('/social-login', function (Request $request) {
+    $request->validate([
+        'provider' => 'required|string',
+        'email' => 'required|email',
+        'provider_id' => 'required|string',
+        'name' => 'nullable|string',
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user) {
+        $nameParts = explode('@', $request->email);
+        $user = User::create([
+            'name' => !empty($request->name) ? $request->name : ucfirst($nameParts[0]),
+            'email' => $request->email,
+            'password' => Hash::make(Str::random(16)),
+            'type' => 'owner',
+            'lang' => 'en',
+            'parent_id' => 1,
+        ]);
+        $user->parent_id = $user->id;
+        $user->save();
+    }
+
+    if (isset($user->is_active) && $user->is_active == 0) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Your account is temporarily inactive. Please contact administrator.',
+        ], 403);
+    }
+
+    $deviceName = $request->device_name ?? 'mobile_app';
+    $token = $user->createToken($deviceName)->plainTextToken;
+
+    $profileUrl = !empty($user->profile) ? asset('/storage/upload/profile/' . $user->profile) : null;
+
+    return response()->json([
+        'success' => true,
+        'token' => $token,
+        'message' => 'Social sign-in successful',
+        'user' => [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone_number' => $user->phone_number,
+            'type' => $user->type,
+            'profile' => $profileUrl,
+            'profile_photo_url' => $profileUrl,
+            'lang' => $user->lang ?? 'en',
+            'parent_id' => $user->parent_id ?? 1,
+        ]
+    ]);
+});
+
 Route::post('/login', function (Request $request) {
     $request->validate([
         'email' => 'required|email',
         'password' => 'required',
-        'device_name' => 'required',
     ]);
 
     $user = User::where('email', $request->email)->first();
 
     if (! $user || ! Hash::check($request->password, $user->password)) {
-        throw ValidationException::withMessages([
-            'email' => ['The provided credentials are incorrect.'],
-        ]);
+        return response()->json([
+            'success' => false,
+            'message' => 'The provided credentials do not match our records.',
+            'errors' => ['email' => ['Invalid email or password.']]
+        ], 422);
     }
+
+    if (isset($user->is_active) && $user->is_active == 0) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Your account is temporarily inactive. Please contact administrator.',
+        ], 403);
+    }
+
+    $deviceName = $request->device_name ?? 'web_client';
+    $token = $user->createToken($deviceName)->plainTextToken;
+
+    $profileUrl = !empty($user->profile) ? asset('/storage/upload/profile/' . $user->profile) : null;
 
     return response()->json([
         'success' => true,
-        'token' => $user->createToken($request->device_name)->plainTextToken,
+        'token' => $token,
+        'message' => 'Login successful',
         'user' => [
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
+            'phone_number' => $user->phone_number,
             'type' => $user->type,
+            'profile' => $profileUrl,
+            'profile_photo_url' => $profileUrl,
+            'lang' => $user->lang ?? 'en',
+            'parent_id' => $user->parent_id ?? 1,
+            'created_at' => $user->created_at,
         ]
     ]);
 });
@@ -48,26 +123,38 @@ Route::post('/register', function (Request $request) {
         'name' => 'required|string|max:255',
         'email' => 'required|string|email|max:255|unique:users',
         'password' => 'required|string|min:8|confirmed',
-        'device_name' => 'required',
     ]);
 
+    $type = $request->type ?? 'owner';
     $user = User::create([
         'name' => $request->name,
         'email' => $request->email,
         'password' => Hash::make($request->password),
-        'type' => 'owner',
+        'type' => $type,
+        'phone_number' => $request->phone_number ?? null,
         'parent_id' => 1,
         'lang' => 'en',
+        'email_verified_at' => now(),
     ]);
+
+    $deviceName = $request->device_name ?? 'web_client';
+    $token = $user->createToken($deviceName)->plainTextToken;
 
     return response()->json([
         'success' => true,
-        'token' => $user->createToken($request->device_name)->plainTextToken,
+        'token' => $token,
+        'message' => 'Registration successful',
         'user' => [
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
+            'phone_number' => $user->phone_number,
             'type' => $user->type,
+            'profile' => null,
+            'profile_photo_url' => null,
+            'lang' => $user->lang ?? 'en',
+            'parent_id' => $user->parent_id ?? 1,
+            'created_at' => $user->created_at,
         ]
     ]);
 });
@@ -185,6 +272,45 @@ Route::get('/marketplace/shops/{id}', [\App\Http\Controllers\Api\TailorMarketpla
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
 
+    // FCM Push Notification Token Storage & Testing
+    Route::post('/save-fcm-token', function (Request $request) {
+        $request->validate(['fcm_token' => 'required|string']);
+        $user = $request->user();
+        $user->fcm_token = $request->fcm_token;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'FCM device token registered successfully',
+        ]);
+    });
+
+    Route::post('/test-push-notification', function (Request $request) {
+        $user = $request->user();
+        $token = $request->fcm_token ?? $user->fcm_token;
+
+        if (empty($token)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No FCM device token registered for current user.',
+            ], 422);
+        }
+
+        $title = $request->title ?? '✂️ DarziDesk Boutique Update';
+        $body = $request->body ?? 'Order #ORD-1088 custom suit has been assigned to Master Tailor.';
+
+        $sent = \App\Services\FcmService::sendNotification($token, $title, $body, [
+            'order_id' => '1088',
+            'type' => 'order_status_update',
+            'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+        ]);
+
+        return response()->json([
+            'success' => $sent,
+            'message' => $sent ? 'Test FCM notification sent successfully!' : 'Failed to deliver FCM notification. Check server logs.',
+        ]);
+    });
+
     // Authenticated Customer Portal Routes
     Route::get('/customer/dashboard', [\App\Http\Controllers\Api\CustomerPortalController::class, 'dashboard']);
     Route::get('/customer/orders', [\App\Http\Controllers\Api\CustomerPortalController::class, 'myOrders']);
@@ -210,6 +336,8 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::get('/profile', function (Request $request) {
         $user = $request->user();
+        $profileUrl = !empty($user->profile) ? asset('/storage/upload/profile/' . $user->profile) : null;
+        $logoUrl = !empty($user->shop_logo) ? asset('/storage/upload/profile/' . $user->shop_logo) : null;
         return response()->json([
             'success' => true,
             'data' => [
@@ -217,19 +345,159 @@ Route::middleware('auth:sanctum')->group(function () {
                 'name' => $user->name,
                 'email' => $user->email,
                 'phone_number' => $user->phone_number,
+                'bio' => $user->bio ?? '',
                 'type' => $user->type,
-                'profile' => !empty($user->profile) ? asset('/storage/upload/profile/' . $user->profile) : null,
+                'shop_name' => $user->shop_name ?? '',
+                'address' => $user->address ?? '',
+                'city' => $user->city ?? '',
+                'shop_logo' => $logoUrl,
+                'profile' => $profileUrl,
+                'profile_photo_url' => $profileUrl,
+                'lang' => $user->lang ?? 'en',
+                'parent_id' => $user->parent_id ?? 1,
             ]
         ]);
     });
     Route::post('/profile', function (Request $request) {
         $user = $request->user();
-        $request->validate(['name' => 'required', 'email' => 'required|email|unique:users,email,' . $user->id]);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        if ($request->phone_number) $user->phone_number = $request->phone_number;
+        $request->validate([
+            'name' => 'nullable|string',
+            'email' => 'nullable|email|unique:users,email,' . $user->id,
+            'profile_image' => 'nullable|image|max:10240',
+            'logo' => 'nullable|image|max:10240',
+            'shop_logo' => 'nullable|image|max:10240',
+        ]);
+
+        if ($request->has('name')) $user->name = $request->name;
+        if ($request->has('email')) $user->email = $request->email;
+        if ($request->has('phone_number')) $user->phone_number = $request->phone_number;
+        if ($request->has('bio')) $user->bio = $request->bio;
+        if ($request->has('shop_name')) $user->shop_name = $request->shop_name;
+        if ($request->has('business_name')) $user->shop_name = $request->business_name;
+        if ($request->has('address')) $user->address = $request->address;
+        if ($request->has('shop_address')) $user->address = $request->shop_address;
+        if ($request->has('city')) $user->city = $request->city;
+
+        if ($request->hasFile('profile_image') || $request->hasFile('profile')) {
+            $file = $request->file('profile_image') ?? $request->file('profile');
+            $filename = time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
+            $dir = public_path('storage/upload/profile');
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+            $file->move($dir, $filename);
+            $user->profile = $filename;
+        }
+
+        if ($request->hasFile('logo') || $request->hasFile('shop_logo')) {
+            $file = $request->file('logo') ?? $request->file('shop_logo');
+            $filename = 'logo_' . time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
+            $dir = public_path('storage/upload/profile');
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+            $file->move($dir, $filename);
+            $user->shop_logo = $filename;
+        }
+
         $user->save();
-        return response()->json(['success' => true, 'message' => 'Profile updated successfully', 'data' => $user]);
+
+        $profileUrl = !empty($user->profile) ? asset('/storage/upload/profile/' . $user->profile) : null;
+        $logoUrl = !empty($user->shop_logo) ? asset('/storage/upload/profile/' . $user->shop_logo) : null;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Profile updated successfully',
+            'data' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone_number' => $user->phone_number,
+                'bio' => $user->bio ?? '',
+                'type' => $user->type,
+                'shop_name' => $user->shop_name ?? '',
+                'address' => $user->address ?? '',
+                'city' => $user->city ?? '',
+                'shop_logo' => $logoUrl,
+                'profile' => $profileUrl,
+                'profile_photo_url' => $profileUrl,
+                'lang' => $user->lang ?? 'en',
+                'parent_id' => $user->parent_id ?? 1,
+            ]
+        ]);
+    });
+    Route::post('/business-details', function (Request $request) {
+        $user = $request->user();
+        $request->validate([
+            'name' => 'nullable|string|max:255',
+            'shop_name' => 'nullable|string|max:255',
+            'business_name' => 'nullable|string|max:255',
+            'address' => 'nullable|string|max:1000',
+            'shop_address' => 'nullable|string|max:1000',
+            'email' => 'nullable|email',
+            'phone_number' => 'nullable|string',
+            'city' => 'nullable|string',
+        ]);
+
+        if ($request->has('name')) $user->name = $request->name;
+        if ($request->has('email')) $user->email = $request->email;
+        if ($request->has('phone_number')) $user->phone_number = $request->phone_number;
+        if ($request->has('whatsapp_number')) $user->whatsapp_number = $request->whatsapp_number;
+        if ($request->has('website')) $user->website = $request->website;
+        if ($request->has('business_hours')) {
+            $user->business_hours = is_string($request->business_hours)
+                ? $request->business_hours
+                : json_encode($request->business_hours);
+        }
+
+        $shopName = $request->shop_name ?? $request->business_name ?? $user->shop_name;
+        $address = $request->address ?? $request->shop_address ?? $user->address;
+
+        if ($shopName) $user->shop_name = $shopName;
+        if ($address) $user->address = $address;
+        if ($request->has('city')) $user->city = $request->city;
+
+        if ($request->hasFile('logo') || $request->hasFile('shop_logo')) {
+            $file = $request->file('logo') ?? $request->file('shop_logo');
+            if ($file && $file->isValid()) {
+                $ext = $file->getClientOriginalExtension() ?: ($file->guessExtension() ?: 'png');
+                $filename = 'logo_' . time() . '_' . $user->id . '.' . $ext;
+                $dir = public_path('storage/upload/profile');
+                if (!file_exists($dir)) {
+                    mkdir($dir, 0777, true);
+                }
+                $file->move($dir, $filename);
+                $user->shop_logo = $filename;
+            }
+        }
+
+        $user->save();
+
+        $profileUrl = !empty($user->profile) ? asset('/storage/upload/profile/' . $user->profile) : null;
+        $logoUrl = !empty($user->shop_logo) ? asset('/storage/upload/profile/' . $user->shop_logo) : null;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Business details updated successfully',
+            'data' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone_number' => $user->phone_number,
+                'whatsapp_number' => $user->whatsapp_number ?? $user->phone_number,
+                'type' => $user->type,
+                'shop_name' => $user->shop_name ?? '',
+                'address' => $user->address ?? '',
+                'city' => $user->city ?? '',
+                'website' => $user->website ?? '',
+                'business_hours' => $user->business_hours,
+                'shop_logo' => $logoUrl,
+                'profile' => $profileUrl,
+                'profile_photo_url' => $profileUrl,
+                'lang' => $user->lang ?? 'en',
+                'parent_id' => $user->parent_id ?? 1,
+            ]
+        ]);
     });
     Route::post('/change-password', function (Request $request) {
         $request->validate(['current_password' => 'required', 'new_password' => 'required|min:6|confirmed']);
@@ -327,6 +595,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/user-management/roles', [\App\Http\Controllers\Api\UserManagementController::class, 'storeRole']);
     Route::put('/user-management/roles/{id}', [\App\Http\Controllers\Api\UserManagementController::class, 'updateRole']);
     Route::delete('/user-management/roles/{id}', [\App\Http\Controllers\Api\UserManagementController::class, 'destroyRole']);
+    Route::post('/user-management/roles/{id}/delete', [\App\Http\Controllers\Api\UserManagementController::class, 'destroyRole']);
     Route::get('/user-management/logged-history', [\App\Http\Controllers\Api\UserManagementController::class, 'getLoggedHistory']);
     Route::delete('/user-management/logged-history/{id}', [\App\Http\Controllers\Api\UserManagementController::class, 'destroyLoggedHistory']);
 
@@ -437,6 +706,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/branches', [\App\Http\Controllers\Api\BranchController::class, 'index']);
     Route::post('/branches', [\App\Http\Controllers\Api\BranchController::class, 'store']);
     Route::post('/branches/switch', [\App\Http\Controllers\Api\BranchController::class, 'switchBranch']);
+    Route::post('/branches/{id}/toggle-status', [\App\Http\Controllers\Api\BranchController::class, 'toggleStatus']);
+    Route::delete('/branches/{id}', [\App\Http\Controllers\Api\BranchController::class, 'destroy']);
+    Route::post('/branches/{id}/delete', [\App\Http\Controllers\Api\BranchController::class, 'destroy']);
 
     // WebSocket / Pusher Broadcast Config & Channel Authentication
     Route::get('/broadcasting/config', function () {

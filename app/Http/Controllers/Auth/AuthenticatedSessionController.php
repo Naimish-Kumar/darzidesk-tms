@@ -14,48 +14,58 @@ class AuthenticatedSessionController extends Controller
 {
     public function create()
     {
-        if (!file_exists(setup())) {
+        if (function_exists('setup') && !file_exists(setup())) {
             header('location:install');
             die;
         }
 
-        $user=\App\Models\User::find(1);
-        \App::setLocale($user->lang);
+        $user = \App\Models\User::find(1);
+        if ($user && !empty($user->lang)) {
+            \App::setLocale($user->lang);
+        }
 
         return view('auth.login');
     }
 
     public function store(LoginRequest $request)
     {
-        $google_recaptcha = getSettingsValByName('google_recaptcha');
-        if($google_recaptcha == 'on')
-        {
+        $google_recaptcha = function_exists('getSettingsValByName') ? getSettingsValByName('google_recaptcha') : 'off';
+        if ($google_recaptcha == 'on') {
             $validation['g-recaptcha-response'] = 'required|captcha';
-        }else{
+        } else {
             $validation = [];
         }
-        $this->validate($request, $validation);
+        if (!empty($validation)) {
+            $this->validate($request, $validation);
+        }
 
         $request->authenticate();
         $request->session()->regenerate();
         $loginUser = Auth::user();
-        if($loginUser->is_active == 0)
-        {
+
+        if (isset($loginUser->is_active) && $loginUser->is_active == 0) {
             auth()->logout();
             return redirect()->route('login')->with('error', __('Your account is temporarily inactive. Please contact your administrator to reactivate your account.'));
         }
-        if(empty($loginUser->email_verified_at)) {
+
+        $owner_email_verification = function_exists('getSettingsValByName') ? getSettingsValByName('owner_email_verification') : 'off';
+        if ($owner_email_verification == 'on' && empty($loginUser->email_verified_at)) {
             auth()->logout();
             return redirect()->route('login')->with('error', __('Verification required: Please check your email to verify your account before continuing.'));
         }
-        if( $loginUser->type=='owner'){
 
-            if($loginUser->subscription_expire_date!=null && date('Y-m-d') > $loginUser->subscription_expire_date){
-                assignSubscription(1);
-                 return redirect()->intended(RouteServiceProvider::HOME)->with('error', __('Your subscription has ended, and access to premium features is now restricted. To continue using our services without interruption, please renew your plan or upgrade to a higher-tier package.'));
+        if ($loginUser->type == 'owner') {
+            if ($loginUser->subscription_expire_date != null && date('Y-m-d') > $loginUser->subscription_expire_date) {
+                if (function_exists('assignSubscription')) {
+                    assignSubscription(1);
+                }
+                return redirect()->intended(RouteServiceProvider::HOME)->with('error', __('Your subscription has ended, and access to premium features is now restricted. To continue using our services without interruption, please renew your plan or upgrade to a higher-tier package.'));
             }
         }
-        userLoggedHistory();
+
+        if (function_exists('userLoggedHistory')) {
+            userLoggedHistory();
+        }
 
         return redirect()->intended(RouteServiceProvider::HOME);
     }

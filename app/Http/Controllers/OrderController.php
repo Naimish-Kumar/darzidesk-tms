@@ -181,23 +181,23 @@ class OrderController extends Controller
             $setting = settings();
             $errorMessage = '';
 
-            if (!empty($notification) && $notification->enabled_email == 1) {
+            if (!empty($notification)) {
                 $notificationResponse = MessageReplace($notification, $order->id);
 
-                $data['subject'] = $notificationResponse['subject'];
-                $data['message'] = $notificationResponse['message'];
-                $data['module'] = $module;
-                $data['logo'] = $setting['company_logo'];
-                $to = $order->customers->email;
+                if ($notification->enabled_email == 1 && !empty($order->customers->email)) {
+                    $data['subject'] = $notificationResponse['subject'];
+                    $data['message'] = $notificationResponse['message'];
+                    $data['module'] = $module;
+                    $data['logo'] = $setting['company_logo'];
+                    $to = $order->customers->email;
 
-                if (!empty($notification) && $notification->enabled_email == 1) {
                     $response = commonEmailSend($to, $data);
                     if ($response['status'] == 'error') {
                         $errorMessage = $response['message'];
                     }
                 }
 
-                if (!empty($notification) && $notification->enabled_sms == 1 && !empty($notification->sms_message)) {
+                if ($notification->enabled_sms == 1 && !empty($notification->sms_message) && !empty($order->customers->phone_number)) {
                     $twilio_sid = getSettingsValByName('twilio_sid');
                     if (!empty($twilio_sid)) {
                         send_twilio_msg($order->customers->phone_number, $notificationResponse['sms_message']);
@@ -209,25 +209,24 @@ class OrderController extends Controller
             $notification = Notification::where('parent_id', parentId())->where('module', $module)->first();
             $notification->measurement = $measurementDetails;
             $setting = settings();
-            $errorMessage = '';
 
-            if (!empty($notification) && $notification->enabled_email == 1) {
+            if (!empty($notification)) {
                 $notificationResponse = MessageReplace($notification, $order->id);
 
-                $data['subject'] = $notificationResponse['subject'];
-                $data['message'] = $notificationResponse['message'];
-                $data['module'] = $module;
-                $data['logo'] = $setting['company_logo'];
-                $to = $order->users->email;
+                if ($notification->enabled_email == 1 && !empty($order->users->email)) {
+                    $data['subject'] = $notificationResponse['subject'];
+                    $data['message'] = $notificationResponse['message'];
+                    $data['module'] = $module;
+                    $data['logo'] = $setting['company_logo'];
+                    $to = $order->users->email;
 
-                if (!empty($notification) && $notification->enabled_email == 1) {
                     $response = commonEmailSend($to, $data);
                     if ($response['status'] == 'error') {
                         $errorMessage = $response['message'];
                     }
                 }
 
-                if (!empty($notification) && $notification->enabled_sms == 1 && !empty($notification->sms_message)) {
+                if ($notification->enabled_sms == 1 && !empty($notification->sms_message) && !empty($order->users->phone_number)) {
                     $twilio_sid = getSettingsValByName('twilio_sid');
                     if (!empty($twilio_sid)) {
                         send_twilio_msg($order->users->phone_number, $notificationResponse['sms_message']);
@@ -349,23 +348,23 @@ class OrderController extends Controller
                 $setting = settings();
                 $errorMessage = '';
 
-                if (!empty($notification) && $notification->enabled_email == 1) {
+                if (!empty($notification)) {
                     $notificationResponse = MessageReplace($notification, $order->id);
 
-                    $data['subject'] = $notificationResponse['subject'];
-                    $data['message'] = $notificationResponse['message'];
-                    $data['module'] = $module;
-                    $data['logo'] = $setting['company_logo'];
-                    $to = $order->customers->email;
+                    if ($notification->enabled_email == 1 && !empty($order->customers->email)) {
+                        $data['subject'] = $notificationResponse['subject'];
+                        $data['message'] = $notificationResponse['message'];
+                        $data['module'] = $module;
+                        $data['logo'] = $setting['company_logo'];
+                        $to = $order->customers->email;
 
-                    if (!empty($notification) && $notification->enabled_email == 1) {
                         $response = commonEmailSend($to, $data);
                         if ($response['status'] == 'error') {
                             $errorMessage = $response['message'];
                         }
                     }
 
-                    if (!empty($notification) && $notification->enabled_sms == 1 && !empty($notification->sms_message)) {
+                    if ($notification->enabled_sms == 1 && !empty($notification->sms_message) && !empty($order->customers->phone_number)) {
                         $twilio_sid = getSettingsValByName('twilio_sid');
                         if (!empty($twilio_sid)) {
                             send_twilio_msg($order->customers->phone_number, $notificationResponse['sms_message']);
@@ -488,23 +487,22 @@ class OrderController extends Controller
         $setting = settings();
         $errorMessage = '';
 
-        if (!empty($notification) && $notification->enabled_email == 1) {
+        if (!empty($notification)) {
             $notificationResponse = MessageReplace($notification, $order->id);
 
-            $data['subject'] = $notificationResponse['subject'];
-            $data['message'] = $notificationResponse['message'];
-            $data['module'] = $module;
-            $data['logo'] = $setting['company_logo'];
-            $to = $order->customers->email;
-
-            if (!empty($notification) && $notification->enabled_email == 1) {
+            if ($notification->enabled_email == 1 && !empty($order->customers->email)) {
+                $data['subject'] = $notificationResponse['subject'];
+                $data['message'] = $notificationResponse['message'];
+                $data['module'] = $module;
+                $data['logo'] = $setting['company_logo'];
+                $to = $order->customers->email;
                 $response = commonEmailSend($to, $data);
                 if ($response['status'] == 'error') {
                     $errorMessage = $response['message'];
                 }
             }
 
-            if (!empty($notification) && $notification->enabled_sms == 1 && !empty($notification->sms_message)) {
+            if ($notification->enabled_sms == 1 && !empty($notification->sms_message) && !empty($order->customers->phone_number)) {
                 $twilio_sid = getSettingsValByName('twilio_sid');
                 if (!empty($twilio_sid)) {
                     send_twilio_msg($order->customers->phone_number, $notificationResponse['sms_message']);
@@ -587,5 +585,20 @@ class OrderController extends Controller
         session()->forget(['order_step1', 'order_step2']);
 
         return redirect()->route('orders.index')->with('success', 'Bespoke Order #' . $orderNumber . ' created successfully!');
+    }
+
+    public function jobCard($ids)
+    {
+        if (\Auth::user()->can('show order')) {
+            $id = Crypt::decrypt($ids);
+            $order = Order::with(['customers', 'users', 'clothTypes', 'productionStage'])->find($id);
+            if (!$order) {
+                return redirect()->back()->with('error', __('Order not found.'));
+            }
+            $settings = settings();
+            return view('order.job_card', compact('order', 'settings'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 }

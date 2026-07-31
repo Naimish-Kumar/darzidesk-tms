@@ -99,39 +99,49 @@
                                 {{ dateFormat($order->deadline_date) }}</p>
                             <p class="text-muted mb-1">
                                 {{ __('Status') }} :
-                                @if ($order->status == 'pending')
-                                    <span
-                                        class="badge text-bg-warning">{{ \App\Models\Order::$status[$order->status] }}</span>
-                                @elseif($order->status == 'in_progress')
-                                    <span
-                                        class="badge text-bg-primary">{{ \App\Models\Order::$status[$order->status] }}</span>
-                                @elseif($order->status == 'completed')
-                                    <span
-                                        class="badge text-bg-success">{{ \App\Models\Order::$status[$order->status] }}</span>
-                                @elseif($order->status == 'delivered')
-                                    <span
-                                        class="badge text-bg-danger">{{ \App\Models\Order::$status[$order->status] }}</span>
-                                @else
-                                    <span
-                                        class="badge text-bg-info">{{ \App\Models\Order::$status[$order->status] }}</span>
-                                @endif
+                                <span class="badge text-bg-primary">{{ \App\Models\Order::$status[$order->status] ?? ucwords(str_replace('_', ' ', $order->status)) }}</span>
                             </p>
                             @php
                                 $waPhone = $order->customers->phone_number ?? '';
+                                $waConfirmMsg = \App\Helper\WhatsAppService::getOrderConfirmationMessage($order);
                                 $waTrialMsg = \App\Helper\WhatsAppService::getTrialReminderMessage($order);
-                                $waStatusMsg = \App\Helper\WhatsAppService::getStatusUpdateMessage($order);
+                                $waPickupMsg = \App\Helper\WhatsAppService::getReadyForPickupMessage($order);
+
+                                $waConfirmUrl = \App\Helper\WhatsAppService::generateClickToChatUrl($waPhone, $waConfirmMsg);
                                 $waTrialUrl = \App\Helper\WhatsAppService::generateClickToChatUrl($waPhone, $waTrialMsg);
-                                $waStatusUrl = \App\Helper\WhatsAppService::generateClickToChatUrl($waPhone, $waStatusMsg);
+                                $waPickupUrl = \App\Helper\WhatsAppService::generateClickToChatUrl($waPhone, $waPickupMsg);
+
                                 $trackingUrl = route('order.public.track', $order->tracking_token ?? $order->id);
                                 $qrReceiptUrl = route('order.public.qr-receipt', $order->tracking_token ?? $order->id);
                             @endphp
                             <div class="mt-3 d-flex flex-wrap gap-2">
-                                <a href="{{ $waTrialUrl }}" target="_blank" class="btn btn-sm btn-success">
-                                    <i class="ti ti-brand-whatsapp me-1"></i> WhatsApp Trial Reminder
+                                <a href="{{ route('order.job_card', encrypt($order->id)) }}" target="_blank" class="btn btn-sm btn-primary">
+                                    <i class="ti ti-printer me-1"></i> {{ __('Print Job Card') }}
                                 </a>
-                                <a href="{{ $waStatusUrl }}" target="_blank" class="btn btn-sm btn-outline-success">
-                                    <i class="ti ti-brand-whatsapp me-1"></i> Send WhatsApp Status
-                                </a>
+
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm text-white fw-bold dropdown-toggle" style="background:#25D366; border:none;" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="ti ti-brand-whatsapp me-1"></i> 1-Click WhatsApp Alerts
+                                    </button>
+                                    <ul class="dropdown-menu shadow" style="border-radius:12px;">
+                                        <li>
+                                            <a class="dropdown-item py-2" href="{{ $waConfirmUrl }}" target="_blank">
+                                                🧾 {{ __('Order Confirmation & Receipt') }}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item py-2" href="{{ $waTrialUrl }}" target="_blank">
+                                                🧵 {{ __('Fitting Trial Reminder') }}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item py-2" href="{{ $waPickupUrl }}" target="_blank">
+                                                🛍️ {{ __('Garment Ready for Pickup') }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
                                 <a href="{{ $trackingUrl }}" target="_blank" class="btn btn-sm btn-outline-primary">
                                     <i class="ti ti-external-link me-1"></i> Public Track Portal
                                 </a>
@@ -203,11 +213,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($order->measurement as $details)
+                                @foreach ((array)$order->measurement as $details)
+                                    @php $details = (object)$details; @endphp
                                     <tr>
-                                        <td>{{ $details->type }}</td>
-                                        <td>{{ $details->measurement }}</td>
-                                        <td>{{ $details->unit }}</td>
+                                        <td>{{ $details->type ?? '' }}</td>
+                                        <td>{{ $details->measurement ?? '' }}</td>
+                                        <td>{{ $details->unit ?? '' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

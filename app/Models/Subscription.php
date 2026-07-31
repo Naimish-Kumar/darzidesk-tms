@@ -25,8 +25,13 @@ class Subscription extends Model
 
     public function couponCheck()
     {
-       $packages= Coupon::whereRaw("find_in_set($this->id,applicable_packages)")->count();
-      return $packages;
+        $id = (string) $this->id;
+        return Coupon::where(function ($query) use ($id) {
+            $query->where('applicable_packages', $id)
+                ->orWhere('applicable_packages', 'like', $id . ',%')
+                ->orWhere('applicable_packages', 'like', '%,' . $id . ',%')
+                ->orWhere('applicable_packages', 'like', '%,' . $id);
+        })->count();
     }
 
 }

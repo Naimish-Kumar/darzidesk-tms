@@ -54,7 +54,7 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if (Gate::check('manage general settings'))
+                                 @if (\Auth::user()->type == 'super admin' && Gate::check('manage general settings'))
                                     <li class="nav-item">
                                         <a class="nav-link {{ empty($activeTab) || $activeTab == 'general_settings' ? ' active ' : '' }}"
                                             id="profile-tab-3" data-bs-toggle="tab" href="#general_settings" role="tab"
@@ -71,7 +71,7 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if (Gate::check('manage company settings'))
+                                @if ((\Auth::user()->type == 'super admin' || \Auth::user()->type == 'owner') && Gate::check('manage company settings'))
                                     <li class="nav-item">
                                         <a class="nav-link {{ empty($activeTab) || $activeTab == 'company_settings' ? ' active ' : '' }}"
                                             id="profile-tab-4" data-bs-toggle="tab" href="#company_settings" role="tab"
@@ -88,7 +88,7 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if (Gate::check('manage email settings'))
+                                @if (\Auth::user()->type == 'super admin' && Gate::check('manage email settings'))
                                     <li class="nav-item">
                                         <a class="nav-link {{ empty($activeTab) || $activeTab == 'email_SMTP_settings' ? ' active ' : '' }} "
                                             id="profile-tab-5" data-bs-toggle="tab" href="#email_SMTP_settings"
@@ -105,7 +105,7 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if (Gate::check('manage payment settings'))
+                                @if (\Auth::user()->type == 'super admin' && Gate::check('manage payment settings'))
                                     <li class="nav-item">
                                         <a class="nav-link {{ empty($activeTab) || $activeTab == 'payment_settings' ? ' active ' : '' }}"
                                             id="profile-tab-6" data-bs-toggle="tab" href="#payment_settings" role="tab"
@@ -122,7 +122,7 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if (Gate::check('manage seo settings'))
+                                @if (\Auth::user()->type == 'super admin' && Gate::check('manage seo settings'))
                                     <li class="nav-item">
                                         <a class="nav-link {{ empty($activeTab) || $activeTab == 'site_SEO_settings' ? ' active ' : '' }} "
                                             id="profile-tab-7" data-bs-toggle="tab" href="#site_SEO_settings" role="tab"
@@ -139,7 +139,7 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if (Gate::check('manage google recaptcha settings'))
+                                @if (\Auth::user()->type == 'super admin' && Gate::check('manage google recaptcha settings'))
                                     <li class="nav-item">
                                         <a class="nav-link {{ empty($activeTab) || $activeTab == 'google_recaptcha_settings' ? ' active ' : '' }} "
                                             id="profile-tab-8" data-bs-toggle="tab" href="#google_recaptcha_settings"
@@ -175,7 +175,7 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if (Gate::check('manage twilio settings'))
+                                @if (\Auth::user()->type == 'super admin' && Gate::check('manage twilio settings'))
                                     <li class="nav-item">
                                         <a class="nav-link {{ empty($activeTab) || $activeTab == 'twilio' ? ' active ' : '' }} "
                                             id="profile-tab-9" data-bs-toggle="tab" href="#twilio" role="tab"
@@ -275,7 +275,7 @@
                                         {{ Form::close() }}
                                     </div>
                                 @endif
-                                @if (Gate::check('manage general settings'))
+                                 @if (\Auth::user()->type == 'super admin' && Gate::check('manage general settings'))
                                     <div class="tab-pane {{ !empty($activeTab) && $activeTab == 'general_settings' ? ' active show ' : '' }}"
                                         id="general_settings" role="tabpanel" aria-labelledby="general_settings">
                                         {{ Form::model($settings, ['route' => ['setting.general'], 'method' => 'post', 'enctype' => 'multipart/form-data']) }}
@@ -785,9 +785,6 @@
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-6">
-                                                {{ Form::label('razorpay_key', __('Key'), ['class' => 'form-label']) }}
-                                                {{ Form::text('razorpay_key', $settings['razorpay_key'] ?? '', ['class' => 'form-control', 'placeholder' => __('Enter Razorpay key')]) }}
-                                            </div>
                                             <div class="form-group col-md-6">
                                                 {{ Form::label('razorpay_secret', __('Secret Key'), ['class' => 'form-label']) }}
                                                 {{ Form::text('razorpay_secret', $settings['razorpay_secret'] ?? '', ['class' => 'form-control', 'placeholder' => __('Enter Razorpay secret key')]) }}
@@ -804,7 +801,195 @@
                                         {{ Form::close() }}
                                     </div>
                                 @endif
-                                @if (Gate::check('manage seo settings'))
+                                @if (\Auth::user()->type == 'super admin' && Gate::check('manage email settings'))
+                                    <div class="tab-pane {{ !empty($activeTab) && $activeTab == 'email_SMTP_settings' ? ' active show ' : '' }}"
+                                        id="email_SMTP_settings" role="tabpanel" aria-labelledby="email_SMTP_settings">
+                                        {{ Form::model($settings, ['route' => ['setting.smtp'], 'method' => 'post']) }}
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                {{ Form::label('sender_name', __('Sender Name'), ['class' => 'form-label']) }}
+                                                {{ Form::text('sender_name', $settings['FROM_NAME'], ['class' => 'form-control', 'placeholder' => __('Enter sender name')]) }}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                {{ Form::label('sender_email', __('Sender Email'), ['class' => 'form-label']) }}
+                                                {{ Form::text('sender_email', $settings['FROM_EMAIL'], ['class' => 'form-control', 'placeholder' => __('Enter sender email')]) }}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                {{ Form::label('server_driver', __('SMTP Driver'), ['class' => 'form-label']) }}
+                                                {{ Form::text('server_driver', $settings['SERVER_DRIVER'], ['class' => 'form-control', 'placeholder' => __('Enter smtp driver')]) }}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                {{ Form::label('server_host', __('SMTP Host'), ['class' => 'form-label']) }}
+                                                {{ Form::text('server_host', $settings['SERVER_HOST'], ['class' => 'form-control ', 'placeholder' => __('Enter smtp host')]) }}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                {{ Form::label('server_username', __('SMTP Username'), ['class' => 'form-label']) }}
+                                                {{ Form::text('server_username', $settings['SERVER_USERNAME'], ['class' => 'form-control', 'placeholder' => __('Enter smtp username')]) }}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                {{ Form::label('server_password', __('SMTP Password'), ['class' => 'form-label']) }}
+                                                {{ Form::text('server_password', $settings['SERVER_PASSWORD'], ['class' => 'form-control', 'placeholder' => __('Enter smtp password')]) }}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                {{ Form::label('server_encryption', __('SMTP Encryption'), ['class' => 'form-label']) }}
+                                                {{ Form::text('server_encryption', $settings['SERVER_ENCRYPTION'], ['class' => 'form-control', 'placeholder' => __('Enter smtp encryption')]) }}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                {{ Form::label('server_port', __('SMTP Port'), ['class' => 'form-label']) }}
+                                                {{ Form::text('server_port', $settings['SERVER_PORT'], ['class' => 'form-control', 'placeholder' => __('Enter smtp port')]) }}
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-6"></div>
+                                            <div class="col-6  text-end">
+                                                <a href="#" data-size="md"
+                                                    data-url="{{ route('setting.smtp.test') }}"
+                                                    data-title="{{ __('Add Email') }}"
+                                                    class='btn btn-primary btn-rounded customModal me-1'>
+                                                    {{ __('Test Mail') }} </a>
+                                                {{ Form::submit(__('Save'), ['class' => 'btn btn-secondary btn-rounded']) }}
+                                            </div>
+                                        </div>
+                                        {{ Form::close() }}
+                                    </div>
+                                @endif
+                                @if (\Auth::user()->type == 'super admin' && Gate::check('manage payment settings'))
+                                    <div class="tab-pane {{ !empty($activeTab) && $activeTab == 'payment_settings' ? ' active show ' : '' }}"
+                                        id="payment_settings" role="tabpanel" aria-labelledby="payment_settings">
+
+                                        {{ Form::model($settings, ['route' => ['setting.payment'], 'method' => 'post']) }}
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                {{ Form::label('CURRENCY_SYMBOL', __('Currency Icon'), ['class' => 'form-label']) }}
+                                                {{ Form::text('CURRENCY_SYMBOL', $settings['CURRENCY_SYMBOL'], ['class' => 'form-control', 'placeholder' => __('Enter currency icon'), 'required', 'readonly' => 'readonly']) }}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                {{ Form::label('CURRENCY', __('Currency Code'), ['class' => 'form-label']) }}
+                                                {{ Form::text('CURRENCY', $settings['CURRENCY'], ['class' => 'form-control', 'placeholder' => __('Enter currency code'), 'required', 'readonly' => 'readonly']) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 me-2">
+                                                @if (($settings['bank_transfer_payment_is_on'] ?? ($settings['bank_transfer_payment'] ?? 'off')) == 'on')
+                                                    <a href="#bank_transfer_payment_setting"
+                                                        class="btn btn-sm btn-primary rounded-pill text-white mt-1 me-2"
+                                                        data-bs-toggle="collapse" role="button" aria-expanded="false"
+                                                        aria-controls="bank_transfer_payment_setting">
+                                                        {{ __('Bank Transfer') }}
+                                                    </a>
+                                                @endif
+
+                                                @if (($settings['stripe_payment_is_on'] ?? ($settings['STRIPE_PAYMENT'] ?? 'off')) == 'on')
+                                                    <a href="#stripe_payment_setting"
+                                                        class="btn btn-sm btn-primary rounded-pill text-white mt-1 me-2"
+                                                        data-bs-toggle="collapse" role="button" aria-expanded="false"
+                                                        aria-controls="stripe_payment_setting">
+                                                        {{ __('Stripe') }}
+                                                    </a>
+                                                @endif
+
+                                                @if (($settings['paypal_payment_is_on'] ?? ($settings['paypal_payment'] ?? 'off')) == 'on')
+                                                    <a href="#paypal_payment_setting"
+                                                        class="btn btn-sm btn-primary rounded-pill text-white mt-1 me-2"
+                                                        data-bs-toggle="collapse" role="button" aria-expanded="false"
+                                                        aria-controls="paypal_payment_setting">
+                                                        {{ __('Paypal') }}
+                                                    </a>
+                                                @endif
+
+                                                @if (($settings['paystack_payment_is_on'] ?? ($settings['paystack_payment'] ?? 'off')) == 'on')
+                                                    <a href="#paystack_payment_setting"
+                                                        class="btn btn-sm btn-primary rounded-pill text-white mt-1 me-2"
+                                                        data-bs-toggle="collapse" role="button" aria-expanded="false"
+                                                        aria-controls="paystack_payment_setting">
+                                                        {{ __('Paystack') }}
+                                                    </a>
+                                                @endif
+
+                                                @if (($settings['flutterwave_payment_is_on'] ?? ($settings['flutterwave_payment'] ?? 'off')) == 'on')
+                                                    <a href="#flutterwave_payment_setting"
+                                                        class="btn btn-sm btn-primary rounded-pill text-white mt-1 me-2"
+                                                        data-bs-toggle="collapse" role="button" aria-expanded="false"
+                                                        aria-controls="flutterwave_payment_setting">
+                                                        {{ __('Flutterwave') }}
+                                                    </a>
+                                                @endif
+
+                                                @if (($settings['razorpay_payment_is_on'] ?? ($settings['razorpay_payment'] ?? 'off')) == 'on')
+                                                    <a href="#razorpay_payment_setting"
+                                                        class="btn btn-sm btn-primary rounded-pill text-white mt-1 me-2"
+                                                        data-bs-toggle="collapse" role="button" aria-expanded="false"
+                                                        aria-controls="razorpay_payment_setting">
+                                                        {{ __('Razorpay') }}
+                                                    </a>
+                                                @endif
+
+                                                @if (($settings['paytm_payment_is_on'] ?? 'off') == 'on')
+                                                    <a href="#paytm_payment_setting"
+                                                        class="btn btn-sm btn-primary rounded-pill text-white mt-1 me-2"
+                                                        data-bs-toggle="collapse" role="button" aria-expanded="false"
+                                                        aria-controls="paytm_payment_setting">
+                                                        {{ __('Paytm') }}
+                                                    </a>
+                                                @endif
+
+                                                @if (($settings['mercado_payment_is_on'] ?? 'off') == 'on')
+                                                    <a href="#mercado_payment_setting"
+                                                        class="btn btn-sm btn-primary rounded-pill text-white mt-1 me-2"
+                                                        data-bs-toggle="collapse" role="button" aria-expanded="false"
+                                                        aria-controls="mercado_payment_setting">
+                                                        {{ __('Mercado Pago') }}
+                                                    </a>
+                                                @endif
+
+                                                @if (($settings['mollie_payment_is_on'] ?? 'off') == 'on')
+                                                    <a href="#mollie_payment_setting"
+                                                        class="btn btn-sm btn-primary rounded-pill text-white mt-1 me-2"
+                                                        data-bs-toggle="collapse" role="button" aria-expanded="false"
+                                                        aria-controls="mollie_payment_setting">
+                                                        {{ __('Mollie') }}
+                                                    </a>
+                                                @endif
+
+                                                @if (($settings['skrill_payment_is_on'] ?? 'off') == 'on')
+                                                    <a href="#skrill_payment_setting"
+                                                        class="btn btn-sm btn-primary rounded-pill text-white mt-1 me-2"
+                                                        data-bs-toggle="collapse" role="button" aria-expanded="false"
+                                                        aria-controls="skrill_payment_setting">
+                                                        {{ __('Skrill') }}
+                                                    </a>
+                                                @endif
+
+                                                @if (($settings['coingate_payment_is_on'] ?? 'off') == 'on')
+                                                    <a href="#coingate_payment_setting"
+                                                        class="btn btn-sm btn-primary rounded-pill text-white mt-1 me-2"
+                                                        data-bs-toggle="collapse" role="button" aria-expanded="false"
+                                                        aria-controls="coingate_payment_setting">
+                                                        {{ __('Coingate') }}
+                                                    </a>
+                                                @endif
+
+                                                @if (($settings['paymentwall_payment_is_on'] ?? 'off') == 'on')
+                                                    <a href="#paymentwall_payment_setting"
+                                                        class="btn btn-sm btn-primary rounded-pill text-white mt-1 me-2"
+                                                        data-bs-toggle="collapse" role="button" aria-expanded="false"
+                                                        aria-controls="paymentwall_payment_setting">
+                                                        {{ __('Paymentwall') }}
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-3">
+                                            <div class="col-6"></div>
+                                            <div class="col-6 text-end">
+                                                {{ Form::submit(__('Save'), ['class' => 'btn btn-secondary btn-rounded']) }}
+                                            </div>
+                                        </div>
+                                        {{ Form::close() }}
+                                    </div>
+                                @endif
+                                @if (\Auth::user()->type == 'super admin' && Gate::check('manage seo settings'))
                                     <div class="tab-pane {{ !empty($activeTab) && $activeTab == 'site_SEO_settings' ? ' active show ' : '' }}"
                                         id="site_SEO_settings" role="tabpanel" aria-labelledby="site_SEO_settings">
                                         {{ Form::model($settings, ['route' => ['setting.site.seo'], 'method' => 'post', 'enctype' => 'multipart/form-data']) }}
@@ -860,7 +1045,7 @@
                                         {{ Form::close() }}
                                     </div>
                                 @endif
-                                @if (Gate::check('manage google recaptcha settings'))
+                                @if (\Auth::user()->type == 'super admin' && Gate::check('manage google recaptcha settings'))
                                     <div class="tab-pane {{ !empty($activeTab) && $activeTab == 'google_recaptcha_settings' ? ' active show ' : '' }}"
                                         id="google_recaptcha_settings" role="tabpanel"
                                         aria-labelledby="google_recaptcha_settings">
@@ -966,7 +1151,7 @@
 
                                     </div>
                                 @endif
-                                @if (Gate::check('manage twilio settings'))
+                                @if (\Auth::user()->type == 'super admin' && Gate::check('manage twilio settings'))
                                     <div class="tab-pane {{ !empty($activeTab) && $activeTab == 'twilio' ? ' active show ' : '' }}"
                                         id="twilio" role="tabpanel" aria-labelledby="twilio">
 

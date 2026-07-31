@@ -30,6 +30,7 @@
     <div class="pc-container">
         <div class="pc-content">
             <!-- [ breadcrumb ] start -->
+            @if (!View::hasSection('hide_page_header'))
             <div class="page-header">
                 <div class="page-block">
                     <div class="row align-items-center">
@@ -46,6 +47,7 @@
                     </div>
                 </div>
             </div>
+            @endif
             <!-- [ breadcrumb ] end -->
 
 

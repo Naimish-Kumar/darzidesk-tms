@@ -1,6 +1,11 @@
 "use strict";
+if (typeof $.fn.dataTable !== "undefined") {
+    $.fn.dataTable.ext.errMode = "none";
+}
 $(document).ready(function () {
-
+    if (typeof $.fn.dataTable !== "undefined") {
+        $.fn.dataTable.ext.errMode = "none";
+    }
     select2();
     datatable();
     ckediter();

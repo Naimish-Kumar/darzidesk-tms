@@ -438,14 +438,16 @@ class DefaultDataUsersTableSeeder extends Seeder
                     'guard_name' => 'web'
                 ],
             ];
-            Permission::insert($allPermission);
+            foreach ($allPermission as $perm) {
+                Permission::firstOrCreate(['name' => $perm['name'], 'guard_name' => 'web']);
+            }
 
             // Default Super Admin Role
             $superAdminRoleData =  [
                 'name' => 'super admin',
                 'parent_id' => 0,
             ];
-            $systemSuperAdminRole = Role::create($superAdminRoleData);
+            $systemSuperAdminRole = Role::firstOrCreate(['name' => 'super admin', 'guard_name' => 'web'], $superAdminRoleData);
             $systemSuperAdminPermission = [
                 ['name' => 'manage user'],
                 ['name' => 'create user'],
@@ -507,7 +509,7 @@ class DefaultDataUsersTableSeeder extends Seeder
                 'email_verified_at' => now(),
                 'profile' => 'avatar.png',
             ];
-            $systemSuperAdmin = User::create($superAdminData);
+            $systemSuperAdmin = User::firstOrCreate(['email' => $superAdminData['email']], $superAdminData);
             $systemSuperAdmin->assignRole($systemSuperAdminRole);
             HomePageSection();
             CustomPage();
@@ -519,7 +521,7 @@ class DefaultDataUsersTableSeeder extends Seeder
                 'name' => 'owner',
                 'parent_id' => $systemSuperAdmin->id,
             ];
-            $systemOwnerRole = Role::create($ownerRoleData);
+            $systemOwnerRole = Role::firstOrCreate(['name' => 'owner', 'guard_name' => 'web'], $ownerRoleData);
 
             // Default Owner All Permissions
             $systemOwnerPermission = [
@@ -617,7 +619,7 @@ class DefaultDataUsersTableSeeder extends Seeder
                 'subscription_expire_date' => Carbon::now()->addMonths(1)->isoFormat('YYYY-MM-DD'),
                 'parent_id' => $systemSuperAdmin->id,
             ];
-            $systemOwner = User::create($ownerData);
+            $systemOwner = User::firstOrCreate(['email' => $ownerData['email']], $ownerData);
             // Default Template Assign
             defaultTemplate($systemOwner->id);
             // Default Owner Role Assign
@@ -629,7 +631,7 @@ class DefaultDataUsersTableSeeder extends Seeder
                 'name' => 'manager',
                 'parent_id' => $systemOwner->id,
             ];
-            $systemManagerRole = Role::create($managerRoleData);
+            $systemManagerRole = Role::firstOrCreate(['name' => 'manager', 'guard_name' => 'web'], $managerRoleData);
             // Default Manager All Permissions
             $systemManagerPermission = [
                 ['name' => 'manage user'],
@@ -709,7 +711,7 @@ class DefaultDataUsersTableSeeder extends Seeder
                 'subscription' => 0,
                 'parent_id' => $systemOwner->id,
             ];
-            $systemManager = User::create($managerData);
+            $systemManager = User::firstOrCreate(['email' => $managerData['email']], $managerData);
             // Default Manager Role Assign
             $systemManager->assignRole($systemManagerRole);
 
@@ -718,17 +720,39 @@ class DefaultDataUsersTableSeeder extends Seeder
             defaultEmployeeCreate($systemOwner->id);
 
 
-            // Subscription default data
-            $subscriptionData = [
-                'title' => 'Basic',
-                'package_amount' => 0,
-                'interval' => 'Monthly',
-                'user_limit' => 10,
-                'customer_limit' => 10,
-                'cloth_type_limit' => 10,
-                'enabled_logged_history' => 1,
+            // Subscription default data - 3 Plans for Shop Owners
+            $subscriptions = [
+                [
+                    'title' => 'Starter Tailor',
+                    'package_amount' => 0,
+                    'interval' => 'Monthly',
+                    'user_limit' => 3,
+                    'customer_limit' => 100,
+                    'cloth_type_limit' => 15,
+                    'enabled_logged_history' => 0,
+                ],
+                [
+                    'title' => 'Boutique Pro',
+                    'package_amount' => 29,
+                    'interval' => 'Monthly',
+                    'user_limit' => 15,
+                    'customer_limit' => 1500,
+                    'cloth_type_limit' => 100,
+                    'enabled_logged_history' => 1,
+                ],
+                [
+                    'title' => 'Master Studio',
+                    'package_amount' => 79,
+                    'interval' => 'Monthly',
+                    'user_limit' => 100,
+                    'customer_limit' => 10000,
+                    'cloth_type_limit' => 500,
+                    'enabled_logged_history' => 1,
+                ],
             ];
-            \App\Models\Subscription::create($subscriptionData);
+            foreach ($subscriptions as $sub) {
+                \App\Models\Subscription::firstOrCreate(['title' => $sub['title']], $sub);
+            }
 
             NewPermission();
         } else {

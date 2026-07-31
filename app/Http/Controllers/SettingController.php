@@ -44,23 +44,22 @@ class SettingController extends Controller
         if ($request->hasFile('profile')) {
             $fileNameToStore = $request->file('profile')->hashName();
 
-            $dir = storage_path('uploads/profile/');
-            $image_path = $dir . $loginUser->profile;
-
-            if (\File::exists($image_path)) {
-                \File::delete($image_path);
-            }
-
+            $dir = public_path('storage/upload/profile/');
             if (!file_exists($dir)) {
                 mkdir($dir, 0777, true);
             }
 
-            $request->file('profile')->storeAs('upload/profile/', $fileNameToStore);
-        }
+            if (!empty($loginUser->profile) && $loginUser->profile != 'avatar.png') {
+                $old_image = $dir . $loginUser->profile;
+                if (\File::exists($old_image)) {
+                    \File::delete($old_image);
+                }
+            }
 
-        if (!empty($request->profile)) {
+            $request->file('profile')->move($dir, $fileNameToStore);
             $user->profile = $fileNameToStore;
         }
+
         $user->name = $request->name;
         $user->email = $request->email;
         $user->phone_number = $request->phone_number;
