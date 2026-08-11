@@ -320,6 +320,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/customer/appointments', [\App\Http\Controllers\Api\CustomerPortalController::class, 'bookAppointment']);
     Route::post('/customer/orders/request', [\App\Http\Controllers\Api\CustomerPortalController::class, 'requestCustomOrder']);
 
+    // Customer Payment Methods
+    Route::get('/customer/payment-methods', [\App\Http\Controllers\Api\CustomerPaymentMethodController::class, 'index']);
+    Route::post('/customer/payment-methods', [\App\Http\Controllers\Api\CustomerPaymentMethodController::class, 'store']);
+    Route::put('/customer/payment-methods/{id}', [\App\Http\Controllers\Api\CustomerPaymentMethodController::class, 'update']);
+    Route::delete('/customer/payment-methods/{id}', [\App\Http\Controllers\Api\CustomerPaymentMethodController::class, 'destroy']);
+
     // Shop Owner Services & Price List Management
     Route::get('/tailor-services', [\App\Http\Controllers\Api\TailorServiceController::class, 'index']);
     Route::post('/tailor-services', [\App\Http\Controllers\Api\TailorServiceController::class, 'store']);
@@ -579,6 +585,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/reports/orders', [\App\Http\Controllers\Api\ReportController::class, 'getOrderReport']);
     Route::get('/reports/income', [\App\Http\Controllers\Api\ReportController::class, 'getIncomeReport']);
     Route::get('/reports/expense', [\App\Http\Controllers\Api\ReportController::class, 'getExpenseReport']);
+    Route::get('/reports/export-pdf', [\App\Http\Controllers\Api\ReportController::class, 'exportPdf']);
+    Route::get('/reports/export-csv', [\App\Http\Controllers\Api\ReportController::class, 'exportCsv']);
 
     // Subscription Routes
     Route::get('/subscriptions', [\App\Http\Controllers\Api\SubscriptionController::class, 'index']);
@@ -612,6 +620,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Materials / Inventory Routes
     Route::get('/materials', [\App\Http\Controllers\Api\MaterialController::class, 'index']);
     Route::post('/materials', [\App\Http\Controllers\Api\MaterialController::class, 'store']);
+    Route::get('/materials/{id}', [\App\Http\Controllers\Api\MaterialController::class, 'show']);
+    Route::put('/materials/{id}', [\App\Http\Controllers\Api\MaterialController::class, 'update']);
+    Route::delete('/materials/{id}', [\App\Http\Controllers\Api\MaterialController::class, 'destroy']);
     Route::post('/materials/{id}/restock', [\App\Http\Controllers\Api\MaterialController::class, 'restock']);
 
     // Supplier Directory Routes
@@ -621,7 +632,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/suppliers/{id}', [\App\Http\Controllers\Api\SupplierController::class, 'update']);
     Route::delete('/suppliers/{id}', [\App\Http\Controllers\Api\SupplierController::class, 'destroy']);
 
-    // POS Checkout Route
+    // POS Routes
+    Route::get('/pos/catalog', [\App\Http\Controllers\Api\PosController::class, 'catalog']);
+    Route::get('/pos/queue', [\App\Http\Controllers\Api\PosController::class, 'queue']);
+    Route::get('/pos/history', [\App\Http\Controllers\Api\PosController::class, 'history']);
     Route::post('/pos/store', [\App\Http\Controllers\Api\PosController::class, 'store']);
 
     // Financial Analytics Route
@@ -658,6 +672,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications', [\App\Http\Controllers\Api\NotificationController::class, 'index']);
     Route::post('/notifications/read-all', [\App\Http\Controllers\Api\NotificationController::class, 'markAllAsRead']);
     Route::post('/notifications/{id}/read', [\App\Http\Controllers\Api\NotificationController::class, 'markAsRead']);
+    Route::delete('/notifications/clear-all', [\App\Http\Controllers\Api\NotificationController::class, 'clearAll']);
+    Route::post('/notifications/clear-all', [\App\Http\Controllers\Api\NotificationController::class, 'clearAll']);
+    Route::delete('/notifications/{id}', [\App\Http\Controllers\Api\NotificationController::class, 'destroy']);
+
 
     // Expense Categories Routes
     Route::get('/expense-categories', [\App\Http\Controllers\Api\ExpenseCategoryController::class, 'index']);
@@ -705,6 +723,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Multi-Store Branch Routes
     Route::get('/branches', [\App\Http\Controllers\Api\BranchController::class, 'index']);
     Route::post('/branches', [\App\Http\Controllers\Api\BranchController::class, 'store']);
+    Route::put('/branches/{id}', [\App\Http\Controllers\Api\BranchController::class, 'update']);
+    Route::post('/branches/{id}', [\App\Http\Controllers\Api\BranchController::class, 'update']);
     Route::post('/branches/switch', [\App\Http\Controllers\Api\BranchController::class, 'switchBranch']);
     Route::post('/branches/{id}/toggle-status', [\App\Http\Controllers\Api\BranchController::class, 'toggleStatus']);
     Route::delete('/branches/{id}', [\App\Http\Controllers\Api\BranchController::class, 'destroy']);

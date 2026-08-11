@@ -21,9 +21,8 @@
                     </div>
                     @if (Gate::check('create customer'))
                         <div>
-                            <a href="#" data-size="lg" data-url="{{ route('customer.create') }}"
-                                data-title="{{ __('Create New Customer') }}"
-                                class="btn btn-primary customModal" style="background: #00796B; border-color: #00796B;">
+                            <a href="{{ route('customer.create') }}"
+                                class="btn btn-primary" style="background: #00796B; border-color: #00796B;">
                                 <i class="ti ti-user-plus me-1"></i> {{ __('New Customer') }}
                             </a>
                         </div>
@@ -69,7 +68,7 @@
                                             <div class="d-flex justify-content-end gap-1">
                                                 @if (Gate::check('edit customer'))
                                                     <a href="#" data-size="lg"
-                                                        data-url="{{ route('customer.edit', $customer->id) }}"
+                                                        data-url="{{ route('customer.edit', \Illuminate\Support\Facades\Crypt::encrypt($customer->id)) }}"
                                                         data-title="{{ __('Edit Customer') }}"
                                                         class="btn btn-sm btn-light-primary customModal"
                                                         data-bs-toggle="tooltip" title="{{ __('Edit') }}">

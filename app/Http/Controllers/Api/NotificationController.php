@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Notification;
+use App\Models\User;
+use App\Services\FcmService;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class NotificationController extends Controller
 {
@@ -15,25 +18,58 @@ class NotificationController extends Controller
     {
         $user = $request->user();
 
-        $notifications = Notification::where('user_id', $user->id)
-            ->orWhere(function($q) use ($user) {
-                if ($user->parent_id && $user->parent_id > 0) {
-                    $q->where('parent_id', $user->parent_id);
+        $notifications = Notification::where(function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+            if ($user->parent_id && $user->parent_id > 0) {
+                $query->orWhere(function ($sub) use ($user) {
+                    $sub->where('parent_id', $user->parent_id)
+                        ->where(function ($q2) {
+                            $q2->whereNull('user_id')->orWhere('user_id', 0);
+                        });
+                });
+            } else {
+                $query->orWhere(function ($sub) {
+                    $sub->whereNull('user_id')->orWhere('user_id', 0);
+                });
+            }
+        })
+        ->orderBy('id', 'desc')
+        ->get()
+        ->map(function ($n) {
+            $createdAt = $n->created_at ? Carbon::parse($n->created_at) : null;
+            $dateGroup = 'older';
+            $timeFormatted = '';
+
+            if ($createdAt) {
+                $now = Carbon::now();
+                if ($createdAt->isToday()) {
+                    $dateGroup = 'today';
+                    $timeFormatted = $createdAt->format('h:i A');
+                } elseif ($createdAt->isYesterday()) {
+                    $dateGroup = 'yesterday';
+                    $timeFormatted = 'Yesterday';
+                } elseif ($createdAt->greaterThanOrEqualTo($now->copy()->subDays(7))) {
+                    $dateGroup = 'earlier_this_week';
+                    $timeFormatted = $createdAt->format('D');
+                } else {
+                    $dateGroup = 'older';
+                    $timeFormatted = $createdAt->format('M d');
                 }
-            })
-            ->orderBy('id', 'desc')
-            ->get()
-            ->map(function ($n) {
-                return [
-                    'id' => $n->id,
-                    'type' => $n->type ?? 'general',
-                    'module' => $n->module ?? 'system',
-                    'subject' => $n->subject ?? 'Notification',
-                    'message' => $n->message ?? '',
-                    'is_read' => (bool) ($n->is_read ?? false),
-                    'created_at' => $n->created_at ? $n->created_at->format('Y-m-d H:i') : '',
-                ];
-            });
+            }
+
+            return [
+                'id' => (int) $n->id,
+                'type' => $n->type ?? 'general',
+                'module' => $n->module ?? 'system',
+                'title' => $n->subject ?? 'Notification',
+                'subject' => $n->subject ?? 'Notification',
+                'message' => $n->message ?? '',
+                'is_read' => (bool) ($n->is_read ?? false),
+                'created_at' => $createdAt ? $createdAt->format('Y-m-d H:i') : '',
+                'time_formatted' => $timeFormatted,
+                'date_group' => $dateGroup,
+            ];
+        });
 
         $unreadCount = $notifications->where('is_read', false)->count();
 
@@ -51,12 +87,12 @@ class NotificationController extends Controller
     {
         $user = $request->user();
 
-        Notification::where('user_id', $user->id)
-            ->orWhere(function($q) use ($user) {
-                if ($user->parent_id && $user->parent_id > 0) {
-                    $q->where('parent_id', $user->parent_id);
-                }
-            })->update(['is_read' => true]);
+        Notification::where(function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+            if ($user->parent_id && $user->parent_id > 0) {
+                $query->orWhere('parent_id', $user->parent_id);
+            }
+        })->update(['is_read' => true]);
 
         return response()->json(['success' => true, 'message' => 'All notifications marked as read']);
     }
@@ -68,7 +104,7 @@ class NotificationController extends Controller
     {
         $user = $request->user();
 
-        $notification = Notification::where('id', $id)->first();
+        $notification = Notification::find($id);
         if ($notification) {
             $notification->is_read = true;
             $notification->save();
@@ -78,11 +114,41 @@ class NotificationController extends Controller
     }
 
     /**
-     * Helper method to send in-app notification
+     * Delete single notification
+     */
+    public function destroy(Request $request, $id)
+    {
+        $notification = Notification::find($id);
+        if ($notification) {
+            $notification->delete();
+        }
+
+        return response()->json(['success' => true, 'message' => 'Notification deleted successfully']);
+    }
+
+    /**
+     * Clear all notifications for user
+     */
+    public function clearAll(Request $request)
+    {
+        $user = $request->user();
+
+        Notification::where(function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+            if ($user->parent_id && $user->parent_id > 0) {
+                $query->orWhere('parent_id', $user->parent_id);
+            }
+        })->delete();
+
+        return response()->json(['success' => true, 'message' => 'All notifications cleared']);
+    }
+
+    /**
+     * Helper method to send in-app notification & optional FCM Push
      */
     public static function createNotification($userId, $type, $subject, $message, $parentId = 0)
     {
-        return Notification::create([
+        $notification = Notification::create([
             'user_id' => $userId,
             'type' => $type,
             'subject' => $subject,
@@ -91,5 +157,27 @@ class NotificationController extends Controller
             'is_read' => false,
             'parent_id' => $parentId,
         ]);
+
+        // Trigger FCM Push if target user has registered FCM token
+        try {
+            if ($userId && $userId > 0) {
+                $targetUser = User::find($userId);
+                if ($targetUser && !empty($targetUser->fcm_token)) {
+                    FcmService::sendNotification(
+                        $targetUser->fcm_token,
+                        $subject,
+                        $message,
+                        [
+                            'type' => $type,
+                            'notification_id' => (string) $notification->id,
+                        ]
+                    );
+                }
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('Failed to dispatch FCM push: ' . $e->getMessage());
+        }
+
+        return $notification;
     }
 }

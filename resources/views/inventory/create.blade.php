@@ -1,390 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Material - {{ env('APP_NAME', 'DarziDesk') }}</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
-    <style>
-        :root {
-            --primary-teal: #006A67;
-            --accent-teal: #26A69A;
-            --dark-navy: #0B1C30;
-            --bg-light: #F4F7F9;
-            --card-border: #E2E8F0;
-            --text-dark: #1E293B;
-            --text-muted: #64748B;
-            --font-main: 'Hanken Grotesk', sans-serif;
-            --font-code: 'JetBrains Mono', monospace;
-        }
+@extends('layouts.app')
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+@section('page-title')
+    {{ __('Add Fabric / Material') }}
+@endsection
 
-        body {
-            font-family: var(--font-main);
-            background: var(--bg-light);
-            color: var(--text-dark);
-            display: flex;
-            min-height: 100vh;
-        }
+@section('breadcrumb')
+    <ul class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('inventory.index') }}">{{ __('Inventory') }}</a></li>
+        <li class="breadcrumb-item active">{{ __('Add Material') }}</li>
+    </ul>
+@endsection
 
-        .sidebar {
-            width: 240px; background: #FFFFFF; border-right: 1px solid var(--card-border);
-            display: flex; flex-direction: column; justify-content: space-between;
-            padding: 24px 16px; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
-        }
+@section('content')
+<div class="card p-4 max-w-700 mx-auto">
+    <h4 class="fw-bold mb-3">{{ __('Register New Fabric / Accessory Material') }}</h4>
+    <p class="text-muted mb-4" style="font-size: 13.5px;">{{ __('Add raw fabrics, lining, buttons, threads or zippers to your inventory database.') }}</p>
 
-        .brand-box h2 { font-size: 20px; font-weight: 800; color: var(--primary-teal); }
-        .brand-box span { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; color: var(--text-muted); display: block; margin-top: 2px; }
-
-        .nav-list { list-style: none; margin-top: 24px; }
-        .nav-item { margin-bottom: 4px; }
-
-        .nav-link {
-            display: flex; align-items: center; gap: 12px;
-            padding: 10px 12px; border-radius: 10px; font-size: 13.5px; font-weight: 600;
-            color: var(--text-dark); text-decoration: none; transition: all 0.2s;
-        }
-
-        .nav-link.active { background: #E6FFFA; color: var(--primary-teal); font-weight: 700; border-left: 3px solid var(--primary-teal); }
-
-        .main-wrapper { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
-
-        .top-header {
-            height: 64px; background: #FFFFFF; border-bottom: 1px solid var(--card-border);
-            display: flex; align-items: center; justify-content: space-between; padding: 0 28px;
-            position: sticky; top: 0; z-index: 90;
-        }
-
-        .breadcrumb-path { font-size: 13px; font-weight: 700; color: var(--text-muted); }
-        .breadcrumb-path a { color: var(--primary-teal); text-decoration: none; }
-
-        .content-area { padding: 28px; max-width: 1100px; margin: 0 auto; width: 100%; }
-
-        .grid-2col { display: grid; grid-template-columns: 240px 1fr; gap: 28px; }
-
-        .stepper-sidebar-card { position: sticky; top: 92px; }
-
-        .stepper-header { font-size: 13px; font-weight: 800; margin-bottom: 16px; }
-
-        .vertical-steps { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
-
-        .step-row {
-            display: flex; align-items: center; gap: 12px; padding: 8px 12px;
-            border-radius: 10px; font-size: 12.5px; font-weight: 700; color: var(--text-muted);
-        }
-
-        .step-row.active { background: #FFFFFF; border: 1px solid var(--card-border); color: var(--primary-teal); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-
-        .num-circle {
-            width: 24px; height: 24px; border-radius: 50%; background: #CBD5E1; color: #FFF;
-            font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center;
-        }
-
-        .step-row.active .num-circle { background: var(--primary-teal); }
-
-        .info-callout-box {
-            background: #EBF8FF; border: 1px solid #BAE6FD; border-radius: 12px;
-            padding: 14px; font-size: 11.5px; color: #0369A1; line-height: 1.4;
-        }
-
-        .form-section-card {
-            background: #FFFFFF; border: 1px solid var(--card-border);
-            border-radius: 16px; padding: 24px; margin-bottom: 24px;
-        }
-
-        .section-header {
-            font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 10px;
-            margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px;
-        }
-
-        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-        .form-group label { font-size: 11px; font-weight: 800; letter-spacing: 0.5px; color: var(--text-dark); }
-
-        .input-box {
-            background: #FFFFFF; border: 1.5px solid var(--card-border);
-            border-radius: 10px; padding: 10px 14px; font-family: var(--font-main);
-            font-size: 13.5px; outline: none; transition: border-color 0.2s; display: flex; align-items: center; gap: 10px;
-        }
-
-        .input-box input, .input-box select, .input-box textarea {
-            border: none; background: transparent; outline: none; width: 100%; font-family: var(--font-main); font-size: 13.5px;
-        }
-
-        .form-row-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .form-row-3col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-
-        .tag-selected {
-            background: #E6FFFA; color: var(--primary-teal); border: 1px solid var(--accent-teal);
-            padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; margin-top: 6px;
-        }
-
-        .upload-swatch-box {
-            border: 2px dashed #CBD5E1; border-radius: 14px; padding: 32px;
-            text-align: center; background: #F8FAFC; cursor: pointer; transition: all 0.2s;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
-        }
-
-        .upload-swatch-box:hover { border-color: var(--primary-teal); background: #E6FFFA; }
-
-        .upload-icon-circle {
-            width: 48px; height: 48px; background: #E2E8F0; color: var(--text-muted);
-            border-radius: 12px; display: flex; align-items: center; justify-content: center;
-        }
-
-        .bottom-action-bar { display: flex; align-items: center; justify-content: flex-end; gap: 16px; margin-top: 12px; margin-bottom: 40px; }
-
-        .btn-discard { font-size: 13.5px; font-weight: 700; color: var(--text-dark); text-decoration: none; }
-
-        .btn-save-material {
-            background: var(--primary-teal); color: #FFF; border: none;
-            padding: 12px 24px; border-radius: 10px; font-family: var(--font-main);
-            font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Sidebar Nav -->
-    <aside class="sidebar">
-        <div>
-            <div class="brand-box">
-                <img src="{{ asset('assets/images/logo_wide.png') }}" alt="DarziDesk" style="height: 32px;">
-                <span>LONDON BRANCH</span>
+    <form method="POST" action="{{ route('inventory.store') }}">
+        @csrf
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <label class="form-label fw-bold">{{ __('Material Name') }} <span class="text-danger">*</span></label>
+                <input type="text" name="name" class="form-control" placeholder="e.g. Loro Piana Super 150s Wool" required>
             </div>
 
-            <ul class="nav-list">
-                <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link">
-                        <span class="material-symbols-outlined">dashboard</span>
-                        Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('orders.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">shopping_bag</span>
-                        Orders
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('production.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">cut</span>
-                        Production
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('inventory.index') }}" class="nav-link active">
-                        <span class="material-symbols-outlined">inventory_2</span>
-                        Inventory
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('financials.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">payments</span>
-                        Financials
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('staff.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">group</span>
-                        Staff
-                    </a>
-                </li>
-            </ul>
+            <div class="col-md-6">
+                <label class="form-label fw-bold">{{ __('Material Code / SKU') }}</label>
+                <input type="text" name="code" class="form-control font-monospace" placeholder="e.g. FAB-LP-01">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-bold">{{ __('Unit of Measurement') }}</label>
+                <select name="unit" class="form-select">
+                    <option value="Meters">Meters</option>
+                    <option value="Yards">Yards</option>
+                    <option value="Pieces">Pieces</option>
+                    <option value="Spools">Spools</option>
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-bold">{{ __('Initial Quantity in Stock') }} <span class="text-danger">*</span></label>
+                <input type="number" step="0.01" name="quantity" class="form-control" placeholder="e.g. 150" required>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-bold">{{ __('Cost Price per Unit') }}</label>
+                <input type="number" step="0.01" name="unit_price" class="form-control font-monospace" placeholder="e.g. 85.00">
+            </div>
         </div>
-    </aside>
 
-    <!-- Main Wrapper -->
-    <div class="main-wrapper">
-        <!-- Top Header -->
-        <header class="top-header">
-            <div class="breadcrumb-path">
-                <a href="{{ route('inventory.index') }}">Inventory Management</a> / Add New Material
-            </div>
-
-            <div style="display:flex; align-items:center; gap:14px;">
-                <div class="input-box" style="padding:4px 10px; border-radius:20px; width:220px;">
-                    <span class="material-symbols-outlined" style="font-size:16px; color:var(--text-muted);">search</span>
-                    <input type="text" placeholder="Quick search catalog...">
-                </div>
-                <span class="material-symbols-outlined" style="font-size:20px; color:var(--text-muted); cursor:pointer;">notifications</span>
-                <span class="material-symbols-outlined" style="font-size:24px; color:var(--text-muted); cursor:pointer;">account_circle</span>
-            </div>
-        </header>
-
-        <!-- Content Area -->
-        <main class="content-area">
-            <div class="grid-2col">
-                <!-- Left Stepper -->
-                <div class="stepper-sidebar-card">
-                    <div class="stepper-header">Creation Progress</div>
-                    <div class="vertical-steps">
-                        <div class="step-row active">
-                            <div class="num-circle">1</div>
-                            Basic Identity
-                        </div>
-                        <div class="step-row">
-                            <div class="num-circle">2</div>
-                            Inventory Logic
-                        </div>
-                        <div class="step-row">
-                            <div class="num-circle">3</div>
-                            Sourcing & Value
-                        </div>
-                        <div class="step-row">
-                            <div class="num-circle">4</div>
-                            Visual Asset
-                        </div>
-                    </div>
-
-                    <div class="info-callout-box">
-                        ⓘ Ensure all measurements use the standardized workshop UoM (Meters).
-                    </div>
-                </div>
-
-                <!-- Right Form Cards -->
-                <div>
-                    <!-- Card 1: Basic Information -->
-                    <div class="form-section-card">
-                        <div class="section-header">
-                            <span class="material-symbols-outlined" style="color:var(--primary-teal);">info</span>
-                            Basic Information
-                        </div>
-
-                        <div class="form-group">
-                            <label>Material Name</label>
-                            <div class="input-box">
-                                <input type="text" placeholder="e.g. Italian Super 120s Wool - Midnight Blue">
-                            </div>
-                        </div>
-
-                        <div class="form-row-2col">
-                            <div class="form-group">
-                                <label>Category</label>
-                                <div class="input-box">
-                                    <select><option>Fabric</option><option>Trims</option><option>Threads</option><option>Linings</option></select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>SKU / Material ID</label>
-                                <div class="input-box">
-                                    <input type="text" value="SKU-882-WL" class="font-mono">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Detailed Description</label>
-                            <div class="input-box" style="height:80px;">
-                                <textarea placeholder="Describe the texture, weight (gsm), and suitability..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 2: Inventory Details -->
-                    <div class="form-section-card">
-                        <div class="section-header">
-                            <span class="material-symbols-outlined" style="color:var(--primary-teal);">inventory</span>
-                            Inventory Details
-                        </div>
-
-                        <div class="form-row-3col">
-                            <div class="form-group">
-                                <label>Initial Stock Level</label>
-                                <div class="input-box">
-                                    <input type="text" value="0.00">
-                                    <span style="font-size:11px; color:var(--text-muted);">Units</span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Unit of Measure</label>
-                                <div class="input-box">
-                                    <select><option>Meters</option><option>Yards</option><option>Pieces</option><option>Spools</option></select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Reorder Point (Min)</label>
-                                <div class="input-box">
-                                    <input type="text" value="5.00">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 3: Pricing & Sourcing -->
-                    <div class="form-section-card">
-                        <div class="section-header">
-                            <span class="material-symbols-outlined" style="color:var(--primary-teal);">payments</span>
-                            Pricing & Sourcing
-                        </div>
-
-                        <div class="form-row-2col">
-                            <div class="form-group">
-                                <label>Cost Price (per unit)</label>
-                                <div class="input-box">
-                                    <span style="font-weight:700; color:var(--text-muted);">£</span>
-                                    <input type="text" value="0.00">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Suggested Markup (%)</label>
-                                <div class="input-box">
-                                    <input type="text" value="45">
-                                    <span style="font-weight:700; color:var(--text-muted);">%</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div style="display:flex; justify-content:space-between; align-items:center;">
-                                <label>Supplier</label>
-                                <a href="#" style="font-size:11px; font-weight:700; color:var(--primary-teal); text-decoration:none;">+ New Supplier</a>
-                            </div>
-                            <div class="input-box">
-                                <span class="material-symbols-outlined" style="font-size:16px; color:var(--text-muted);">search</span>
-                                <input type="text" placeholder="Search suppliers...">
-                            </div>
-                            <div>
-                                <span class="tag-selected">Hollands & Sherry ✕</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 4: Visual Swatch -->
-                    <div class="form-section-card">
-                        <div class="section-header">
-                            <span class="material-symbols-outlined" style="color:var(--primary-teal);">image</span>
-                            Visual Swatch
-                        </div>
-
-                        <div class="upload-swatch-box">
-                            <div class="upload-icon-circle">
-                                <span class="material-symbols-outlined" style="font-size:24px;">upload</span>
-                            </div>
-                            <div style="font-size:13px; font-weight:700;">Upload Image</div>
-                            <div style="font-size:11.5px; color:var(--text-muted); max-width:400px; line-height:1.4;">
-                                High-resolution swatch images help the design team and clients visualize the final garment. Recommended size: 1024x1024px.
-                                <br>✓ Accepted formats: JPG, PNG, WEBP • Max file size: 5MB
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Bottom Actions -->
-                    <div class="bottom-action-bar">
-                        <a href="{{ route('inventory.index') }}" class="btn-discard">Discard Changes</a>
-                        <button class="btn-save-material">
-                            <span class="material-symbols-outlined" style="font-size:18px;">save</span>
-                            Save New Material
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-</body>
-</html>
+        <div class="d-flex justify-content-between border-top pt-3">
+            <a href="{{ route('inventory.index') }}" class="btn btn-light fw-bold">{{ __('Cancel') }}</a>
+            <button type="submit" class="btn btn-primary px-4" style="background:#006A67; border:none; border-radius:8px; font-weight:700;">
+                <i class="ti ti-check me-1"></i> {{ __('Save Material') }}
+            </button>
+        </div>
+    </form>
+</div>
+@endsection

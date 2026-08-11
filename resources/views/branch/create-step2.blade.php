@@ -1,403 +1,104 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Branch - Step 2: Location & Contact - {{ env('APP_NAME', 'DarziDesk') }}</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
-    <style>
-        :root {
-            --primary-teal: #006A67;
-            --accent-teal: #26A69A;
-            --dark-navy: #0B1C30;
-            --bg-light: #F4F7F9;
-            --card-border: #E2E8F0;
-            --text-dark: #1E293B;
-            --text-muted: #64748B;
-            --font-main: 'Hanken Grotesk', sans-serif;
-        }
+@extends('layouts.app')
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+@section('page-title')
+    {{ __('Add New Branch - Step 2: Manager & Operations') }}
+@endsection
 
-        body {
-            font-family: var(--font-main);
-            background: var(--bg-light);
-            color: var(--text-dark);
-            display: flex;
-            min-height: 100vh;
-        }
+@section('breadcrumb')
+    <ul class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('branches.index') }}">{{ __('Branches') }}</a></li>
+        <li class="breadcrumb-item active">{{ __('Add Step 2') }}</li>
+    </ul>
+@endsection
 
-        .sidebar {
-            width: 240px; background: #FFFFFF; border-right: 1px solid var(--card-border);
-            display: flex; flex-direction: column; justify-content: space-between;
-            padding: 24px 16px; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
-        }
+@section('content')
+<style>
+    .stepper-container {
+        display: flex; align-items: center; justify-content: center;
+        gap: 16px; padding: 16px 0 28px; max-width: 600px; margin: 0 auto;
+    }
+    .step-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .step-circle {
+        width: 36px; height: 36px; border-radius: 50%; background: #CBD5E1; color: #FFF;
+        font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center;
+    }
+    .step-circle.done { background: #10B981; }
+    .step-circle.active { background: #006A67; }
+    .step-lbl { font-size: 12px; font-weight: 700; color: #64748B; }
+    .step-lbl.active { color: #006A67; }
+    .step-line { flex: 1; height: 2px; background: #CBD5E1; }
 
-        .brand-box h2 { font-size: 20px; font-weight: 800; color: var(--primary-teal); }
-        .brand-box span { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; color: var(--text-muted); display: block; margin-top: 2px; }
+    .form-card {
+        background: #FFFFFF; border: 1px solid #E2E8F0;
+        border-radius: 18px; padding: 36px; margin-bottom: 28px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+    }
+    .btn-save-next {
+        background: #006A67; color: #FFF; border: none;
+        padding: 12px 24px; border-radius: 10px;
+        font-size: 14px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px;
+        cursor: pointer; text-decoration: none;
+    }
+    .btn-save-next:hover { background: #004D40; color: #FFF; }
+</style>
 
-        .nav-list { list-style: none; margin-top: 28px; }
-        .nav-item { margin-bottom: 4px; }
+<div class="stepper-container">
+    <div class="step-item">
+        <div class="step-circle done"><i class="ti ti-check"></i></div>
+        <div class="step-lbl">Basic Info</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step-item">
+        <div class="step-circle active">2</div>
+        <div class="step-lbl active">Manager & Operations</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step-item">
+        <div class="step-circle">3</div>
+        <div class="step-lbl">Confirmation</div>
+    </div>
+</div>
 
-        .nav-link {
-            display: flex; align-items: center; gap: 12px;
-            padding: 10px 12px; border-radius: 10px; font-size: 13.5px; font-weight: 600;
-            color: var(--text-dark); text-decoration: none; transition: all 0.2s;
-        }
-
-        .nav-link.active { background: #E6FFFA; color: var(--primary-teal); font-weight: 700; border-left: 3px solid var(--primary-teal); }
-
-        .btn-add-branch-nav {
-            width: 100%; background: var(--primary-teal); color: #FFF; border: none;
-            padding: 12px; border-radius: 10px; font-family: var(--font-main);
-            font-size: 13.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
-        }
-
-        .main-wrapper { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
-
-        .top-header {
-            height: 64px; background: #FFFFFF; border-bottom: 1px solid var(--card-border);
-            display: flex; align-items: center; justify-content: space-between; padding: 0 28px;
-            position: sticky; top: 0; z-index: 90;
-        }
-
-        .header-left { display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 700; }
-        .header-left span { color: var(--primary-teal); font-weight: 700; }
-
-        .header-right { display: flex; align-items: center; gap: 16px; }
-
-        .stepper-container {
-            display: flex; align-items: center; justify-content: center;
-            gap: 16px; padding: 24px 0 16px; max-width: 700px; margin: 0 auto;
-        }
-
-        .step-item { display: flex; align-items: center; gap: 8px; }
-
-        .step-circle {
-            width: 32px; height: 32px; border-radius: 50%; background: #CBD5E1; color: #FFF;
-            font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center;
-        }
-
-        .step-circle.done { background: #10B981; }
-        .step-circle.active { background: var(--primary-teal); }
-        .step-lbl { font-size: 13px; font-weight: 700; color: var(--text-muted); }
-        .step-lbl.active { color: var(--primary-teal); }
-
-        .step-line { flex: 1; height: 2px; background: #CBD5E1; max-width: 80px; }
-
-        .content-area { padding: 0 28px 28px; }
-
-        .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-
-        .form-column h4 { font-size: 17px; font-weight: 800; margin-bottom: 4px; }
-        .form-column p { font-size: 12.5px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.4; }
-
-        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-        .form-group label { font-size: 10px; font-weight: 800; letter-spacing: 0.8px; color: var(--text-muted); text-transform: uppercase; }
-
-        .input-box {
-            background: #FFFFFF; border: 1.5px solid var(--card-border);
-            border-radius: 10px; padding: 10px 14px; font-family: var(--font-main);
-            font-size: 13px; outline: none; transition: border-color 0.2s; display: flex; align-items: center; gap: 10px;
-        }
-
-        .input-box input, .input-box select, .input-box textarea {
-            border: none; background: transparent; outline: none; width: 100%; font-family: var(--font-main); font-size: 13px; color: var(--text-dark);
-        }
-
-        .form-row-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-
-        .map-wrapper {
-            background: #FFFFFF; border: 1px solid var(--card-border); border-radius: 16px;
-            overflow: hidden; display: flex; flex-direction: column; position: relative; height: 560px;
-        }
-
-        .map-graphic {
-            flex: 1; background: #E2E8F0; position: relative;
-            background-image: radial-gradient(#CBD5E1 1.5px, transparent 1.5px); background-size: 24px 24px;
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        .map-controls { position: absolute; top: 16px; left: 16px; display: flex; flex-direction: column; gap: 6px; }
-
-        .map-btn {
-            width: 32px; height: 32px; background: #FFFFFF; border: 1px solid var(--card-border);
-            border-radius: 8px; font-size: 16px; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .pin-drop-card {
-            background: #FFFFFF; border: 1px solid var(--card-border); border-radius: 14px;
-            padding: 12px 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            display: flex; align-items: center; gap: 12px; position: absolute; top: 40%;
-        }
-
-        .pin-icon {
-            width: 36px; height: 36px; background: var(--primary-teal); color: #FFF;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-        }
-
-        .pin-info h5 { font-size: 13px; font-weight: 800; }
-        .pin-info p { font-size: 11px; color: var(--text-muted); }
-
-        .map-bottom-banner {
-            position: absolute; bottom: 16px; left: 16px; right: 16px;
-            background: rgba(255,255,255,0.95); backdrop-filter: blur(8px);
-            border: 1px solid var(--card-border); border-radius: 12px; padding: 14px;
-            display: flex; align-items: flex-start; gap: 10px; font-size: 12px; color: var(--text-dark);
-        }
-
-        .map-bottom-banner strong { font-weight: 800; color: var(--primary-teal); display: block; margin-bottom: 2px; }
-
-        .bottom-actions-bar {
-            background: #FFFFFF; border-top: 1px solid var(--card-border);
-            padding: 16px 28px; display: flex; justify-content: space-between; align-items: center;
-            position: fixed; bottom: 0; left: 240px; right: 0; z-index: 100;
-        }
-
-        .btn-previous {
-            padding: 10px 20px; border: 1.5px solid var(--card-border); border-radius: 10px;
-            background: #FFF; font-family: var(--font-main); font-size: 13.5px; font-weight: 700;
-            display: flex; align-items: center; gap: 6px; color: var(--text-dark); text-decoration: none;
-        }
-
-        .btn-save-next {
-            background: var(--primary-teal); color: #FFF; border: none;
-            padding: 10px 24px; border-radius: 10px; font-family: var(--font-main);
-            font-size: 13.5px; font-weight: 700; display: flex; align-items: center; gap: 8px;
-            cursor: pointer; text-decoration: none;
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div>
-            <div class="brand-box">
-                <h2>Bespoke Pro</h2>
-                <span>ENTERPRISE SUITE</span>
-            </div>
-
-            <ul class="nav-list">
-                <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link">
-                        <span class="material-symbols-outlined">dashboard</span>
-                        Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('profile.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">storefront</span>
-                        Business Profile
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('branches.index') }}" class="nav-link active">
-                        <span class="material-symbols-outlined">account_tree</span>
-                        Branch Management
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('roles.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">verified_user</span>
-                        Roles & Permissions
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('billing.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">receipt_long</span>
-                        Billing
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('orders.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">shopping_bag</span>
-                        Orders
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <span class="material-symbols-outlined">cut</span>
-                        Production
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <span class="material-symbols-outlined">inventory_2</span>
-                        Inventory
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('staff.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">group</span>
-                        Staff
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <div>
-            <a href="{{ route('branches.create.step1') }}" class="btn-add-branch-nav">
-                <span class="material-symbols-outlined">add</span>
-                Add New Branch
-            </a>
-        </div>
-    </aside>
-
-    <!-- Main Wrapper -->
-    <div class="main-wrapper">
-        <!-- Top Header -->
-        <header class="top-header">
-            <div class="header-left">
-                Management Console <span>/ Add New Branch</span> › <span>Location & Contact</span>
-            </div>
-
-            <div class="header-right">
-                <span class="material-symbols-outlined" style="font-size: 20px; color: var(--text-muted); cursor: pointer;">history</span>
-                <span class="material-symbols-outlined" style="font-size: 20px; color: var(--text-muted); cursor: pointer;">notifications</span>
-                <span class="material-symbols-outlined" style="font-size: 20px; color: var(--text-muted); cursor: pointer;">settings</span>
-                <img src="{{ asset('assets/images/onboarding_tailor.jpg') }}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" alt="User">
-            </div>
-        </header>
-
-        <!-- Stepper Header -->
-        <div class="stepper-container">
-            <div class="step-item">
-                <div class="step-circle done">✓</div>
-                <div class="step-lbl">Basic Information</div>
-            </div>
-            <div class="step-line"></div>
-            <div class="step-item">
-                <div class="step-circle active">2</div>
-                <div class="step-lbl active">Location & Contact</div>
-            </div>
-            <div class="step-line"></div>
-            <div class="step-item">
-                <div class="step-circle">3</div>
-                <div class="step-lbl">Operating Hours</div>
-            </div>
-        </div>
-
-        <!-- Main Content Area -->
-        <main class="content-area" style="padding-bottom: 80px;">
-            <div class="split-grid">
-                <!-- Left Form Column -->
-                <div class="form-column">
-                    <h4>Establish Physical Presence</h4>
-                    <p>Provide the exact location for your new branch. This information will be used for both internal logistics and customer-facing discovery.</p>
-
-                    <div class="form-group">
-                        <label>PHYSICAL ADDRESS</label>
-                        <div class="input-box">
-                            <input type="text" placeholder="e.g. 124 Savile Row, Mayfair">
-                        </div>
-                    </div>
-
-                    <div class="form-row-2col">
-                        <div class="form-group">
-                            <label>CITY</label>
-                            <div class="input-box">
-                                <span class="material-symbols-outlined" style="font-size: 16px; color: var(--text-muted);">location_city</span>
-                                <input type="text" value="London">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>REGION / STATE</label>
-                            <div class="input-box">
-                                <select>
-                                    <option>Greater London</option>
-                                    <option>Westminster</option>
-                                    <option>Kensington & Chelsea</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-row-2col">
-                        <div class="form-group">
-                            <label>POSTAL CODE</label>
-                            <div class="input-box">
-                                <input type="text" value="W1S 3PR">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>PHONE NUMBER</label>
-                            <div class="input-box">
-                                <span class="material-symbols-outlined" style="font-size: 16px; color: var(--text-muted);">call</span>
-                                <input type="text" value="+44 20 7123 4567">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>BRANCH EMAIL</label>
-                        <div class="input-box">
-                            <input type="email" value="mayfair-branch@tailorshop.com">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>LOCATION NOTES (OPTIONAL)</label>
-                        <div class="input-box" style="height: 90px; align-items: flex-start;">
-                            <textarea rows="3" placeholder="e.g. Second floor, above the luxury watch gallery. Private elevator access available."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Interactive Map Column -->
-                <div class="map-wrapper">
-                    <div class="map-graphic">
-                        <div class="map-controls">
-                            <button class="map-btn">🎯</button>
-                            <button class="map-btn">+</button>
-                            <button class="map-btn">-</button>
-                        </div>
-
-                        <div class="pin-drop-card">
-                            <div class="pin-icon">
-                                <span class="material-symbols-outlined">location_on</span>
-                            </div>
-                            <div class="pin-info">
-                                <h5>Savile Row Branch - Mayfair</h5>
-                                <p>12 Savile Row, W1S 3PL • Open Mon-Sat</p>
-                            </div>
-                        </div>
-
-                        <div class="map-bottom-banner">
-                            <span class="material-symbols-outlined" style="color: var(--primary-teal); font-size: 20px;">info</span>
-                            <div>
-                                <strong>Geolocation Precise</strong>
-                                Drag the map to refine the exact entrance coordinates. This ensures clients can find your luxury suite with ease.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Bottom Action Bar -->
-        <footer class="bottom-actions-bar">
-            <a href="{{ route('branches.create.step1') }}" class="btn-previous">
-                <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span>
-                Previous
-            </a>
-
-            <div style="display:flex; align-items:center; gap:16px;">
-                <a href="{{ route('branches.index') }}" style="font-size:13.5px; font-weight:700; color:var(--text-muted); text-decoration:none;">Cancel</a>
-                <a href="{{ route('branches.create.step3') }}" class="btn-save-next">
-                    Save & Next
-                    <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
-                </a>
-            </div>
-        </footer>
+<div class="form-card">
+    <div class="mb-4">
+        <h3 class="font-weight-bold mb-1" style="font-weight: 800;">{{ __('Manager & Operational Hours') }}</h3>
+        <p class="text-muted mb-0" style="font-size: 13.5px;">{{ __('Assign a store manager and define operating capacity for') }} <strong>{{ session('branch_draft.name', 'this branch') }}</strong>.</p>
     </div>
 
-</body>
-</html>
+    <form method="POST" action="{{ route('branches.store.step2') }}">
+        @csrf
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <label class="form-label fw-bold">{{ __('Assign Store Manager') }}</label>
+                <select name="manager_id" class="form-select">
+                    <option value="">-- {{ __('Select Manager (Optional)') }} --</option>
+                    @foreach($managers as $manager)
+                        <option value="{{ $manager->id }}" {{ (session('branch_draft.manager_id') == $manager->id) ? 'selected' : '' }}>
+                            {{ $manager->name }} ({{ ucfirst($manager->type) }})
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-bold">{{ __('Operating Hours') }}</label>
+                <input type="text" name="operating_hours" class="form-control" placeholder="e.g. Mon - Sat: 9:00 AM - 8:00 PM" value="{{ old('operating_hours', session('branch_draft.operating_hours', 'Mon - Sat: 09:00 - 19:00')) }}">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-bold">{{ __('Daily Fitting Capacity (Orders)') }}</label>
+                <input type="number" name="capacity" class="form-control" placeholder="e.g. 25" value="{{ old('capacity', session('branch_draft.capacity', 20)) }}">
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between pt-3 border-top">
+            <a href="{{ route('branches.create.step1') }}" class="btn btn-outline-secondary fw-bold">{{ __('Back') }}</a>
+            <button type="submit" class="btn-save-next">
+                {{ __('Review & Finalize') }}
+                <i class="ti ti-arrow-right me-1"></i>
+            </button>
+        </div>
+    </form>
+</div>
+@endsection

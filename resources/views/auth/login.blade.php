@@ -473,10 +473,11 @@
                 </div>
 
                 <div class="footer-links">
-                    <a href="#">PRIVACY POLICY</a>
-                    <a href="#">TERMS OF SERVICE</a>
-                    <a href="#">HELP CENTER</a>
+                    <a href="{{ route('privacy.policy') }}">PRIVACY POLICY</a>
+                    <a href="{{ route('terms.conditions') }}">TERMS OF SERVICE</a>
+                    <a href="{{ route('about.us') }}">ABOUT US</a>
                 </div>
+
             </div>
         </div>
     </div>

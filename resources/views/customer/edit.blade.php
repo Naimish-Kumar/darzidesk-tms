@@ -19,15 +19,15 @@
         </div>
         <div class="form-group col-md-6">
             {{ Form::label('city', __('City'), ['class' => 'form-label']) }}
-            {{ Form::text('city', !empty($user) ? $user->customers->city : null, ['class' => 'form-control', 'placeholder' => __('Enter city'), 'required' => 'required']) }}
+            {{ Form::text('city', (!empty($user) && $user->customers) ? $user->customers->city : null, ['class' => 'form-control', 'placeholder' => __('Enter city')]) }}
         </div>
         <div class="form-group  col-md-6">
             {{ Form::label('address', __('Address'), ['class' => 'form-label']) }}
-            {{ Form::textarea('address', !empty($user) ? $user->customers->address : null, ['class' => 'form-control', 'rows' => 3]) }}
+            {{ Form::textarea('address', (!empty($user) && $user->customers) ? $user->customers->address : null, ['class' => 'form-control', 'rows' => 3]) }}
         </div>
         <div class="form-group  col-md-6">
             {{ Form::label('notes', __('Notes'), ['class' => 'form-label']) }}
-            {{ Form::textarea('notes', !empty($user) ? $user->customers->notes : null, ['class' => 'form-control', 'rows' => 3]) }}
+            {{ Form::textarea('notes', (!empty($user) && $user->customers) ? $user->customers->notes : null, ['class' => 'form-control', 'rows' => 3]) }}
         </div>
     </div>
 </div>

@@ -77,9 +77,24 @@
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <div class="flex-shrink-0 wid-40">
-                                                    <img class="img-radius img-fluid wid-40"
-                                                        src="{{ !empty($user->profile) ? asset(Storage::url('upload/profile')) . '/' . $user->profile : asset(Storage::url('upload/profile')) . '/avatar.png' }}"
-                                                        alt="User image">
+                                                    @php
+                                                        $userAvatar = '';
+                                                        if (!empty($user->profile)) {
+                                                            if (file_exists(public_path('storage/upload/profile/' . $user->profile))) {
+                                                                $userAvatar = asset('storage/upload/profile/' . $user->profile);
+                                                            } elseif (file_exists(storage_path('upload/profile/' . $user->profile))) {
+                                                                $userAvatar = asset('storage/upload/profile/' . $user->profile);
+                                                            }
+                                                        }
+                                                        if (empty($userAvatar)) {
+                                                            $userAvatar = asset('storage/upload/profile/avatar.png');
+                                                        }
+                                                    @endphp
+                                                    <img class="img-radius img-fluid wid-40 border"
+                                                        src="{{ $userAvatar }}"
+                                                        alt="User image"
+                                                        style="width: 40px; height: 40px; object-fit: cover;"
+                                                        onerror="this.onerror=null;this.src='{{ asset('storage/upload/profile/avatar.png') }}';">
                                                 </div>
                                                 <div class="flex-grow-1 ms-3">
                                                     <h5 class="mb-1">

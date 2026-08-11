@@ -1,373 +1,269 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Production Pipeline - {{ env('APP_NAME', 'DarziDesk') }}</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
-    <style>
-        :root {
-            --primary-teal: #006A67;
-            --accent-teal: #26A69A;
-            --dark-navy: #0B1C30;
-            --bg-light: #F4F7F9;
-            --card-border: #E2E8F0;
-            --text-dark: #1E293B;
-            --text-muted: #64748B;
-            --font-main: 'Hanken Grotesk', sans-serif;
-            --font-code: 'JetBrains Mono', monospace;
-        }
+@extends('layouts.app')
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+@section('page-title')
+    {{ __('Production Pipeline') }}
+@endsection
 
-        body {
-            font-family: var(--font-main);
-            background: var(--bg-light);
-            color: var(--text-dark);
-            display: flex;
-            min-height: 100vh;
-        }
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ __('Production Pipeline') }}</li>
+@endsection
 
-        .sidebar {
-            width: 240px; background: #FFFFFF; border-right: 1px solid var(--card-border);
-            display: flex; flex-direction: column; justify-content: space-between;
-            padding: 24px 16px; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
-        }
+@section('content')
+<style>
+    .kanban-wrapper {
+        display: flex;
+        gap: 1.25rem;
+        overflow-x: auto;
+        padding-bottom: 1.5rem;
+        align-items: flex-start;
+        min-height: calc(100vh - 220px);
+    }
+    .kanban-col-wrap {
+        flex: 0 0 300px;
+        max-width: 300px;
+        min-width: 280px;
+        display: flex;
+        flex-direction: column;
+        background: #F8FAFC;
+        border-radius: 16px;
+        border: 1px solid #E2E8F0;
+        padding: 14px;
+        max-height: calc(100vh - 210px);
+    }
+    .col-header-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 14px;
+        background: #FFFFFF;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        border-left: 4px solid #00796B;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .col-title {
+        font-weight: 700;
+        font-size: 14px;
+        color: #1E293B;
+        margin: 0;
+    }
+    .col-badge-count {
+        background: #E0F2F1;
+        color: #00796B;
+        font-size: 11px;
+        font-weight: 800;
+        padding: 3px 9px;
+        border-radius: 20px;
+    }
+    .kanban-drop-zone {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 150px;
+        padding: 4px;
+        border-radius: 12px;
+        transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .kanban-drop-zone.drag-over {
+        background: #E0F2F1;
+        border: 2px dashed #00796B;
+    }
+    .order-card {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 14px;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.03);
+        cursor: grab;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .order-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,121,107,0.1);
+        border-color: #00796B;
+    }
+    .order-card:active {
+        cursor: grabbing;
+        opacity: 0.6;
+    }
+    .empty-stage-box {
+        text-align: center;
+        padding: 30px 15px;
+        color: #94A3B8;
+        font-size: 12px;
+        background: #FFFFFF;
+        border: 1px dashed #CBD5E1;
+        border-radius: 12px;
+    }
+    .metric-pill {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 12px;
+        padding: 12px 18px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+</style>
 
-        .brand-box h2 { font-size: 20px; font-weight: 800; color: var(--primary-teal); }
-        .brand-box span { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; color: var(--text-muted); display: block; margin-top: 2px; }
-
-        .nav-list { list-style: none; margin-top: 24px; }
-        .nav-item { margin-bottom: 4px; }
-
-        .nav-link {
-            display: flex; align-items: center; gap: 12px;
-            padding: 10px 12px; border-radius: 10px; font-size: 13.5px; font-weight: 600;
-            color: var(--text-dark); text-decoration: none; transition: all 0.2s;
-        }
-
-        .nav-link.active { background: #E6FFFA; color: var(--primary-teal); font-weight: 700; border-left: 3px solid var(--primary-teal); }
-
-        .main-wrapper { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
-
-        .top-header {
-            height: 64px; background: #FFFFFF; border-bottom: 1px solid var(--card-border);
-            display: flex; align-items: center; justify-content: space-between; padding: 0 28px;
-            position: sticky; top: 0; z-index: 90;
-        }
-
-        .search-bar {
-            background: #F1F5F9; border-radius: 20px; padding: 6px 16px;
-            display: flex; align-items: center; gap: 8px; width: 340px;
-        }
-
-        .search-bar input { border: none; background: transparent; outline: none; font-family: var(--font-main); font-size: 12.5px; width: 100%; }
-
-        .header-right { display: flex; align-items: center; gap: 16px; }
-
-        .branch-btn {
-            background: #EBF8FF; border: 1px solid #BAE6FD; border-radius: 8px;
-            padding: 6px 12px; font-size: 12px; font-weight: 700; color: #0284C7;
-            display: flex; align-items: center; gap: 6px; cursor: pointer;
-        }
-
-        .content-area { padding: 28px; flex: 1; }
-
-        .title-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
-        .title-row h2 { font-size: 24px; font-weight: 800; }
-        .title-row p { font-size: 13.5px; color: var(--text-muted); margin-top: 2px; }
-
-        .header-controls { display: flex; gap: 10px; align-items: center; }
-
-        .view-toggle { display: flex; background: #E2E8F0; padding: 3px; border-radius: 8px; }
-        .view-btn { padding: 6px 14px; border-radius: 6px; font-size: 12.5px; font-weight: 700; border: none; background: transparent; cursor: pointer; }
-        .view-btn.active { background: #FFFFFF; color: var(--primary-teal); }
-
-        .ctrl-btn {
-            background: #FFF; border: 1px solid var(--card-border); border-radius: 8px;
-            padding: 6px 14px; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer;
-        }
-
-        .kanban-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-
-        .kanban-col { background: transparent; }
-
-        .col-header {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 16px; font-size: 12.5px; font-weight: 800; letter-spacing: 0.8px;
-        }
-
-        .col-title { display: flex; align-items: center; gap: 8px; }
-
-        .col-dot { width: 8px; height: 8px; border-radius: 50%; }
-        .dot-pending { background: #64748B; }
-        .dot-cutting { background: #0284C7; }
-        .dot-stitching { background: #8B5CF6; }
-
-        .count-badge { font-size: 11px; background: #CBD5E1; color: var(--text-dark); padding: 2px 8px; border-radius: 10px; }
-
-        .kanban-card {
-            background: #FFFFFF; border: 1.5px solid var(--card-border);
-            border-radius: 14px; padding: 16px; margin-bottom: 14px;
-            cursor: grab; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-
-        .kanban-card:hover { border-color: var(--primary-teal); transform: translateY(-2px); }
-
-        .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-
-        .order-id { font-family: var(--font-code); font-size: 12px; font-weight: 700; color: var(--primary-teal); }
-
-        .priority-badge { font-size: 9px; font-weight: 800; letter-spacing: 0.5px; padding: 2px 6px; border-radius: 4px; }
-        .prio-high { background: #FEE2E2; color: #DC2626; }
-        .prio-medium { background: #FEFCBF; color: #D69E2E; }
-        .prio-low { background: #E2E8F0; color: #475569; }
-
-        .client-name { font-size: 14.5px; font-weight: 800; margin-bottom: 2px; }
-        .garment-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; }
-
-        .card-footer { display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: var(--text-muted); }
-
-        .artisan-pill { display: flex; align-items: center; gap: 6px; font-weight: 600; }
-        .artisan-avatar { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; }
-
-        .footer-bar {
-            height: 40px; background: #EBF3FA; border-top: 1px solid var(--card-border);
-            display: flex; align-items: center; justify-content: space-between; padding: 0 28px;
-            font-size: 11.5px; color: var(--text-muted);
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Sidebar Nav -->
-    <aside class="sidebar">
-        <div>
-            <div class="brand-box">
-                <img src="{{ asset('assets/images/logo_wide.png') }}" alt="DarziDesk" style="height: 32px;">
-                <span>MASTER TAILOR WORKSPACE</span>
-            </div>
-
-            <div style="background:#EBF3FA; border-radius:12px; padding:10px; display:flex; align-items:center; gap:10px; margin-top:16px;">
-                <img src="{{ asset('assets/images/onboarding_tailor.jpg') }}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" alt="Avatar">
-                <div>
-                    <h5 style="font-size:13px; font-weight:700;">Bespoke Master</h5>
-                    <p style="font-size:11px; color:var(--text-muted);">London Branch</p>
+<!-- Top Banner Header & Statistics -->
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-body p-4">
+        <div class="row align-items-center g-3">
+            <div class="col-md-6">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-light-teal p-3 rounded-4 d-flex align-items-center justify-content-center" style="width: 54px; height: 54px;">
+                        <i class="ti ti-transform text-teal fs-2"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold mb-1 text-dark">{{ __('Production & Tailoring Board') }}</h4>
+                        <p class="text-muted mb-0 small">{{ __('Drag and drop bespoke garments across stages to track real-time workshop progress.') }}</p>
+                    </div>
                 </div>
             </div>
 
-            <ul class="nav-list">
-                <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link">
-                        <span class="material-symbols-outlined">dashboard</span>
-                        Dashboard
+            <div class="col-md-6">
+                <div class="d-flex justify-content-md-end align-items-center gap-3 flex-wrap">
+                    <div class="metric-pill shadow-none">
+                        <i class="ti ti-shirt text-teal fs-4"></i>
+                        <div>
+                            <span class="d-block text-muted fs-8 text-uppercase fw-bold">{{ __('In Production') }}</span>
+                            <strong class="fs-6 text-dark">{{ $totalInProduction }} {{ __('Garments') }}</strong>
+                        </div>
+                    </div>
+
+                    <div class="metric-pill shadow-none">
+                        <i class="ti ti-calendar-event text-warning fs-4"></i>
+                        <div>
+                            <span class="d-block text-muted fs-8 text-uppercase fw-bold">{{ __('Due Today') }}</span>
+                            <strong class="fs-6 text-dark">{{ $dueToday }} {{ __('Orders') }}</strong>
+                        </div>
+                    </div>
+
+                    <a href="{{ route('orders.create.step1') }}" class="btn btn-primary rounded-3 px-3 py-2 fw-bold" style="background:#00796B; border-color:#00796B;">
+                        <i class="ti ti-plus me-1"></i> {{ __('New Order') }}
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('orders.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">shopping_bag</span>
-                        Orders
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('production.index') }}" class="nav-link active">
-                        <span class="material-symbols-outlined">cut</span>
-                        Production
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('inventory.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">inventory_2</span>
-                        Inventory
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('financials.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">payments</span>
-                        Financials
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('staff.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">group</span>
-                        Staff
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('profile.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">storefront</span>
-                        Business Profile
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('branches.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">account_tree</span>
-                        Branch Management
-                    </a>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
-    </aside>
-
-    <!-- Main Wrapper -->
-    <div class="main-wrapper">
-        <!-- Top Header -->
-        <header class="top-header">
-            <div class="search-bar">
-                <span class="material-symbols-outlined" style="font-size: 16px; color: var(--text-muted);">search</span>
-                <input type="text" placeholder="Search orders, clients, or fabric ID...">
-            </div>
-
-            <div class="header-right">
-                <button class="branch-btn">
-                    <span class="material-symbols-outlined" style="font-size: 16px;">storefront</span>
-                    Switch Branch ▾
-                </button>
-                <span class="material-symbols-outlined" style="font-size: 20px; color: var(--text-muted); cursor: pointer;">notifications</span>
-                <span class="material-symbols-outlined" style="font-size: 20px; color: var(--text-muted); cursor: pointer;">grid_view</span>
-            </div>
-        </header>
-
-        <!-- Content Area -->
-        <main class="content-area">
-            <div class="title-row">
-                <div>
-                    <h2>Production Pipeline</h2>
-                    <p>Manage current tailoring workflows across all workshop stages.</p>
-                </div>
-
-                <div class="header-controls">
-                    <div class="view-toggle">
-                        <button class="view-btn active">Board</button>
-                        <button class="view-btn">List</button>
-                    </div>
-                    <button class="ctrl-btn">
-                        <span class="material-symbols-outlined" style="font-size: 16px;">filter_list</span>
-                        Filters
-                    </button>
-                    <button class="ctrl-btn">
-                        <span class="material-symbols-outlined" style="font-size: 16px;">sort</span>
-                        Sort
-                    </button>
-                </div>
-            </div>
-
-            <!-- Kanban Board -->
-            <div class="kanban-board">
-                <!-- Column 1: Pending -->
-                <div class="kanban-col">
-                    <div class="col-header">
-                        <div class="col-title">
-                            <div class="col-dot dot-pending"></div>
-                            PENDING <span class="count-badge">4</span>
-                        </div>
-                        <span class="material-symbols-outlined" style="cursor:pointer; color:var(--text-muted);">add</span>
-                    </div>
-
-                    <!-- Card 1 -->
-                    <div class="kanban-card">
-                        <div class="card-top">
-                            <span class="order-id">#UK-89240</span>
-                            <span class="priority-badge prio-high">HIGH</span>
-                        </div>
-                        <div class="client-name">Eleanor Rigby</div>
-                        <div class="garment-desc">Evening Gala Gown</div>
-                        <div class="card-footer">
-                            <div class="artisan-pill">
-                                <img src="{{ asset('assets/images/onboarding_tailor.jpg') }}" class="artisan-avatar" alt="Arthur">
-                                Arthur M.
-                            </div>
-                            <div>📅 24 Oct</div>
-                        </div>
-                    </div>
-
-                    <!-- Card 2 -->
-                    <div class="kanban-card">
-                        <div class="card-top">
-                            <span class="order-id">#UK-89241</span>
-                            <span class="priority-badge prio-low">LOW</span>
-                        </div>
-                        <div class="client-name">Julian Barnes</div>
-                        <div class="garment-desc">Oxford Shirt x3</div>
-                        <div class="card-footer">
-                            <div class="artisan-pill">
-                                <div style="width:20px; height:20px; border-radius:50%; background:#CBD5E1; font-size:9px; display:flex; align-items:center; justify-content:center; font-weight:800;">JB</div>
-                                Unassigned
-                            </div>
-                            <div>📅 28 Oct</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Column 2: Cutting -->
-                <div class="kanban-col">
-                    <div class="col-header">
-                        <div class="col-title">
-                            <div class="col-dot dot-cutting"></div>
-                            CUTTING <span class="count-badge">2</span>
-                        </div>
-                    </div>
-
-                    <!-- Card -->
-                    <div class="kanban-card" style="border-left: 3px solid #0284C7;">
-                        <div class="card-top">
-                            <span class="order-id">#UK-89192</span>
-                            <span class="priority-badge prio-medium">MEDIUM</span>
-                        </div>
-                        <div class="client-name">Thomas Shelby</div>
-                        <div class="garment-desc">3-Piece Bespoke Suit</div>
-                        <div class="card-footer">
-                            <div class="artisan-pill">
-                                <img src="{{ asset('assets/images/onboarding_tailor_light.jpg') }}" class="artisan-avatar" alt="Sarah">
-                                Sarah L.
-                            </div>
-                            <div>📅 22 Oct</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Column 3: Stitching -->
-                <div class="kanban-col">
-                    <div class="col-header">
-                        <div class="col-title">
-                            <div class="col-dot dot-stitching"></div>
-                            STITCHING <span class="count-badge">5</span>
-                        </div>
-                    </div>
-
-                    <!-- Card -->
-                    <div class="kanban-card" style="border-left: 3px solid #8B5CF6;">
-                        <div class="card-top">
-                            <span class="order-id">#UK-89100</span>
-                        </div>
-                        <div class="client-name">Victoria Beckham</div>
-                        <div class="garment-desc">Silk Lining Alterations</div>
-                        <div class="card-footer">
-                            <div class="artisan-pill">
-                                <img src="{{ asset('assets/images/hero_tailor_atelier.jpg') }}" class="artisan-avatar" alt="David">
-                                David K.
-                            </div>
-                            <div style="color:#E53E3E; font-weight:700;">!</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Footer -->
-        <footer class="footer-bar">
-            <div>© 2024 DarziDesk. Precision Tailoring SaaS.</div>
-            <div style="display:flex; gap:16px;">
-                <span><span style="color:#10B981;">●</span> Shop Online</span>
-                <span><span style="color:#DD6B20;">●</span> 8 Orders Overdue</span>
-                <span><span style="color:#0284C7;">●</span> 14 Tailors Active</span>
-            </div>
-        </footer>
     </div>
+</div>
 
-</body>
-</html>
+<!-- Horizontal Scrollable Kanban Pipeline Board -->
+<div class="kanban-wrapper">
+    @forelse($stages as $stage)
+        @php
+            $stageOrders = $orders->filter(function($o) use ($stage) {
+                return $o->status == $stage->slug || $o->production_stage_id == $stage->id;
+            });
+            $stageColor = $stage->color_code ?: '#00796B';
+        @endphp
+
+        <div class="kanban-col-wrap">
+            <div class="col-header-box" style="border-left-color: {{ $stageColor }};">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="rounded-circle d-inline-block" style="width: 8px; height: 8px; background: {{ $stageColor }};"></span>
+                    <h6 class="col-title">{{ $stage->name }}</h6>
+                </div>
+                <span class="col-badge-count" id="count-stage-{{ $stage->id }}">
+                    {{ $stageOrders->count() }}
+                </span>
+            </div>
+
+            <div class="kanban-drop-zone" data-stage-id="{{ $stage->id }}" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, {{ $stage->id }})">
+                @forelse($stageOrders as $order)
+                    <div class="order-card" draggable="true" ondragstart="handleDragStart(event, {{ $order->id }})" id="order-card-{{ $order->id }}">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-light-primary text-primary fw-bold fs-8">#{{ $order->order_id ?? 'ORD-'.$order->id }}</span>
+                            @if(!empty($order->delivery_date))
+                                <span class="badge bg-light-warning text-warning fs-8">
+                                    <i class="ti ti-clock me-1"></i>{{ $order->delivery_date }}
+                                </span>
+                            @endif
+                        </div>
+
+                        <h6 class="fw-bold mb-1 text-dark text-truncate">{{ $order->customer ? $order->customer->name : 'Walk-in Client' }}</h6>
+                        <p class="text-muted small mb-3"><i class="ti ti-hanger me-1"></i>{{ $order->clothType ? $order->clothType->name : 'Bespoke Item' }}</p>
+
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                            <span class="fw-bold text-teal fs-6">{{ priceFormat($order->total_amount ?? 0) }}</span>
+                            <a href="{{ route('order.show', encrypt($order->id)) }}" class="btn btn-sm btn-outline-teal rounded-pill px-3 py-1 fs-8">
+                                {{ __('Details') }}
+                            </a>
+                        </div>
+                    </div>
+                @empty
+                    <div class="empty-stage-box empty-msg">
+                        <i class="ti ti-sparkles fs-3 d-block mb-2 text-muted"></i>
+                        No garments in {{ strtolower($stage->name) }}
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    @empty
+        <div class="col-12 text-center text-muted py-5 bg-white rounded-4 border">
+            <i class="ti ti-layout-board fs-1 d-block mb-2 text-muted"></i>
+            <p class="mb-0">{{ __('No production stages configured.') }}</p>
+        </div>
+    @endforelse
+</div>
+
+@push('script-page')
+<script>
+    let draggedOrderId = null;
+
+    function handleDragStart(e, orderId) {
+        draggedOrderId = orderId;
+        e.dataTransfer.setData('text/plain', orderId);
+        e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        var zone = e.currentTarget.closest('.kanban-drop-zone');
+        if (zone) zone.classList.add('drag-over');
+    }
+
+    function handleDragLeave(e) {
+        var zone = e.currentTarget.closest('.kanban-drop-zone');
+        if (zone) zone.classList.remove('drag-over');
+    }
+
+    function handleDrop(e, stageId) {
+        e.preventDefault();
+        var zone = e.currentTarget.closest('.kanban-drop-zone');
+        if (zone) zone.classList.remove('drag-over');
+
+        if (!draggedOrderId) return;
+
+        const card = document.getElementById('order-card-' + draggedOrderId);
+        if (card && zone) {
+            zone.appendChild(card);
+            const emptyMsg = zone.querySelector('.empty-msg');
+            if (emptyMsg) emptyMsg.style.display = 'none';
+        }
+
+        fetch("{{ route('production.update-stage') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                order_id: draggedOrderId,
+                stage_id: stageId
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && typeof notifier !== 'undefined') {
+                notifier.show('Stage Updated', data.message, 'success', '{{ asset("assets/images/notification/ok-48.png") }}', 3000);
+            }
+        })
+        .catch(err => console.error(err));
+    }
+</script>
+@endpush
+@endsection

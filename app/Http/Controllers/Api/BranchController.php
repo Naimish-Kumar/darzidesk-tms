@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Branch;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 
 class BranchController extends Controller
@@ -56,7 +57,21 @@ class BranchController extends Controller
             $branches = Branch::where('parent_id', parentId())->with('manager')->get();
         }
 
-        $activeBranchId = session('active_branch_id', $branches->first()->id ?? 1);
+        $activeBranchId = null;
+        if (auth()->check()) {
+            $user = auth()->user();
+            if (Schema::hasColumn('users', 'active_branch_id') && $user->active_branch_id) {
+                $activeBranchId = $user->active_branch_id;
+            } elseif (Schema::hasColumn('users', 'branch_id') && $user->branch_id) {
+                $activeBranchId = $user->branch_id;
+            } else {
+                $activeBranchId = Cache::get('user_active_branch_' . $user->id);
+            }
+        }
+
+        if (!$activeBranchId) {
+            $activeBranchId = session('active_branch_id', $branches->first()->id ?? 1);
+        }
 
         return response()->json([
             'success' => true,
@@ -67,6 +82,9 @@ class BranchController extends Controller
                     'code' => $b->code ?? 'BR-' . $b->id,
                     'address' => $b->address ?? '',
                     'phone' => $b->phone ?? '',
+                    'opening_time' => $b->opening_time ?? '09:00 AM',
+                    'closing_time' => $b->closing_time ?? '07:00 PM',
+                    'weekly_holiday' => $b->weekly_holiday ?? 'Sunday',
                     'manager_name' => $b->manager->name ?? 'Alex Rivera',
                     'is_active' => $hasIsActive ? (bool) ($b->is_active ?? true) : true,
                     'is_current' => $b->id == $activeBranchId,
@@ -74,7 +92,7 @@ class BranchController extends Controller
                     'orders' => ($b->id == 1 ? '284' : ($b->id == 2 ? '142' : '95')) . ' Active',
                 ];
             }),
-            'active_branch_id' => $activeBranchId,
+            'active_branch_id' => (int) $activeBranchId,
             'total_branches' => $branches->count(),
             'active_capacity' => '94%',
         ]);
@@ -87,6 +105,9 @@ class BranchController extends Controller
             'code' => 'nullable|string|max:50',
             'phone' => 'nullable|string|max:50',
             'address' => 'nullable|string',
+            'opening_time' => 'nullable|string',
+            'closing_time' => 'nullable|string',
+            'weekly_holiday' => 'nullable|string',
         ]);
 
         $data = [
@@ -94,6 +115,9 @@ class BranchController extends Controller
             'code' => $request->code ?? ('BR-' . rand(100, 999)),
             'phone' => $request->phone,
             'address' => $request->address,
+            'opening_time' => $request->opening_time ?? '09:00 AM',
+            'closing_time' => $request->closing_time ?? '07:00 PM',
+            'weekly_holiday' => $request->weekly_holiday ?? 'Sunday',
             'parent_id' => parentId(),
         ];
 
@@ -106,12 +130,57 @@ class BranchController extends Controller
         return response()->json(['success' => true, 'message' => 'Branch location created successfully', 'branch' => $branch]);
     }
 
+    public function update(Request $request, $id)
+    {
+        $branch = Branch::where('parent_id', parentId())->findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'nullable|string|max:50',
+            'phone' => 'nullable|string|max:50',
+            'address' => 'nullable|string',
+            'opening_time' => 'nullable|string',
+            'closing_time' => 'nullable|string',
+            'weekly_holiday' => 'nullable|string',
+        ]);
+
+        $updateData = [
+            'name' => $request->name,
+            'code' => $request->code ?? $branch->code,
+            'phone' => $request->phone ?? $branch->phone,
+            'address' => $request->address ?? $branch->address,
+            'opening_time' => $request->opening_time ?? $branch->opening_time,
+            'closing_time' => $request->closing_time ?? $branch->closing_time,
+            'weekly_holiday' => $request->weekly_holiday ?? $branch->weekly_holiday,
+        ];
+
+        $branch->update($updateData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Branch updated successfully',
+            'branch' => $branch,
+        ]);
+    }
+
     public function switchBranch(Request $request)
     {
         $request->validate(['branch_id' => 'required|integer']);
 
         $branch = Branch::where('parent_id', parentId())->findOrFail($request->branch_id);
         session(['active_branch_id' => $branch->id]);
+
+        if (auth()->check()) {
+            $user = auth()->user();
+            if (Schema::hasColumn('users', 'active_branch_id')) {
+                $user->active_branch_id = $branch->id;
+                $user->save();
+            } elseif (Schema::hasColumn('users', 'branch_id')) {
+                $user->branch_id = $branch->id;
+                $user->save();
+            }
+            Cache::put('user_active_branch_' . $user->id, $branch->id, 86400 * 30);
+        }
 
         return response()->json([
             'success' => true,

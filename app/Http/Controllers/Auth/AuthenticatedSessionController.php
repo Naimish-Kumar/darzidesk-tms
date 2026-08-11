@@ -48,13 +48,16 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('login')->with('error', __('Your account is temporarily inactive. Please contact your administrator to reactivate your account.'));
         }
 
-        $owner_email_verification = function_exists('getSettingsValByName') ? getSettingsValByName('owner_email_verification') : 'off';
-        if ($owner_email_verification == 'on' && empty($loginUser->email_verified_at)) {
-            auth()->logout();
-            return redirect()->route('login')->with('error', __('Verification required: Please check your email to verify your account before continuing.'));
-        }
-
         if ($loginUser->type == 'owner') {
+            if (empty($loginUser->email_verified_at)) {
+                session(['pending_verify_user_id' => $loginUser->id, 'verify_email' => $loginUser->email]);
+                return redirect()->route('verify.otp')->with('error', __('Verification required: Please enter your 6-digit OTP code to verify your account.'));
+            }
+
+            if (empty($loginUser->shop_name)) {
+                return redirect()->route('onboarding.business.details')->with('info', __('Please complete your shop & business profile to activate your dashboard.'));
+            }
+
             if ($loginUser->subscription_expire_date != null && date('Y-m-d') > $loginUser->subscription_expire_date) {
                 if (function_exists('assignSubscription')) {
                     assignSubscription(1);

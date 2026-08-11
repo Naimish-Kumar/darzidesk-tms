@@ -38,6 +38,42 @@
                         <span class="pc-mtext">{{ __('Dashboard') }}</span>
                     </a>
                 </li>
+                @if (\Auth::user()->type == 'customer')
+                    <li class="pc-item pc-caption">
+                        <label>{{ __('My Portal') }}</label>
+                        <i class="ti ti-user"></i>
+                    </li>
+                    <li class="pc-item {{ in_array($routeName, ['customer.orders', 'customer.orders.show']) ? 'active' : '' }}">
+                        <a href="{{ route('customer.orders') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-shopping-cart"></i></span>
+                            <span class="pc-mtext">{{ __('My Orders') }}</span>
+                        </a>
+                    </li>
+                    <li class="pc-item {{ in_array($routeName, ['customer.measurements']) ? 'active' : '' }}">
+                        <a href="{{ route('customer.measurements') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-ruler"></i></span>
+                            <span class="pc-mtext">{{ __('My Measurements') }}</span>
+                        </a>
+                    </li>
+                    <li class="pc-item {{ in_array($routeName, ['customer.invoices', 'customer.invoices.show']) ? 'active' : '' }}">
+                        <a href="{{ route('customer.invoices') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-receipt"></i></span>
+                            <span class="pc-mtext">{{ __('My Invoices') }}</span>
+                        </a>
+                    </li>
+                    <li class="pc-item {{ in_array($routeName, ['track.order']) ? 'active' : '' }}">
+                        <a href="{{ route('track.order') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-search"></i></span>
+                            <span class="pc-mtext">{{ __('Track Order') }}</span>
+                        </a>
+                    </li>
+                    <li class="pc-item {{ in_array($routeName, ['customer.profile']) ? 'active' : '' }}">
+                        <a href="{{ route('customer.profile') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-user"></i></span>
+                            <span class="pc-mtext">{{ __('My Profile') }}</span>
+                        </a>
+                    </li>
+                @endif
                 @if (\Auth::user()->type == 'super admin')
                     @if (Gate::check('manage user'))
                         <li class="pc-item {{ in_array($routeName, ['users.index', 'users.show']) ? 'active' : '' }}">

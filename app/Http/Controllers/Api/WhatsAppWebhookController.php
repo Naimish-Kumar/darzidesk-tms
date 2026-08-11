@@ -102,34 +102,69 @@ class WhatsAppWebhookController extends Controller
         $twilioToken = $settings['twilio_auth_token'] ?? env('TWILIO_AUTH_TOKEN', '');
         $twilioFrom = $settings['twilio_from_number'] ?? env('TWILIO_FROM', '');
 
-        if ($provider === 'twilio' && !empty($twilioSid) && !empty($twilioToken)) {
+        $whatsappApiKey = $settings['whatsapp_api_key'] ?? env('META_WHATSAPP_TOKEN', '');
+        $whatsappPhoneId = $settings['whatsapp_phone_number'] ?? env('META_WHATSAPP_PHONE_ID', '');
+
+        // 1. Meta / WhatsApp Cloud API Integration
+        if ($provider === 'meta' || ($provider === 'whatsapp' && !empty($whatsappApiKey) && !empty($whatsappPhoneId))) {
             try {
-                // Twilio SMS API dispatch
+                $cleanPhone = preg_replace('/[^0-9]/', '', $toPhone);
+                $url = "https://graph.facebook.com/v18.0/{$whatsappPhoneId}/messages";
+
+                $response = Http::withToken($whatsappApiKey)->post($url, [
+                    'messaging_product' => 'whatsapp',
+                    'to' => $cleanPhone,
+                    'type' => 'text',
+                    'text' => [
+                        'preview_url' => true,
+                        'body' => $messageBody,
+                    ],
+                ]);
+
+                Log::info("Meta WhatsApp Cloud API dispatch to {$toPhone}. Response: " . $response->body());
+                return $response->successful();
+            } catch (\Exception $e) {
+                Log::error("Meta WhatsApp Cloud API Dispatch Error: " . $e->getMessage());
+            }
+        }
+
+        // 2. Twilio SMS / WhatsApp API Dispatch
+        if (($provider === 'twilio' || $provider === 'twilio_whatsapp') && !empty($twilioSid) && !empty($twilioToken)) {
+            try {
+                $fromNumber = $provider === 'twilio_whatsapp' ? 'whatsapp:' . $twilioFrom : $twilioFrom;
+                $targetNumber = $provider === 'twilio_whatsapp' ? 'whatsapp:' . $toPhone : $toPhone;
+
                 $response = Http::withBasicAuth($twilioSid, $twilioToken)
                     ->asForm()
                     ->post("https://api.twilio.com/2010-04-01/Accounts/{$twilioSid}/Messages.json", [
-                        'From' => $twilioFrom,
-                        'To' => $toPhone,
+                        'From' => $fromNumber,
+                        'To' => $targetNumber,
                         'Body' => $messageBody,
                     ]);
 
-                Log::info("Twilio SMS sent to {$toPhone}. Status: " . $response->status());
+                Log::info("Twilio dispatch to {$targetNumber}. Status: " . $response->status());
                 return $response->successful();
             } catch (\Exception $e) {
                 Log::error("Twilio Dispatch Error: " . $e->getMessage());
             }
-        } elseif ($provider === 'ultramsg' && !empty($settings['whatsapp_api_key'])) {
+        }
+
+        // 3. UltraMsg WhatsApp API Dispatch
+        if ($provider === 'ultramsg' && !empty($settings['whatsapp_api_key'])) {
             try {
-                Http::post('https://api.ultramsg.com/' . ($settings['whatsapp_phone_number'] ?? '') . '/messages/chat', [
+                $response = Http::post('https://api.ultramsg.com/' . ($settings['whatsapp_phone_number'] ?? '') . '/messages/chat', [
                     'token' => $settings['whatsapp_api_key'],
                     'to' => $toPhone,
                     'body' => $messageBody
                 ]);
-                return true;
-            } catch (\Exception $e) {}
+                Log::info("UltraMsg dispatch to {$toPhone}. Status: " . $response->status());
+                return $response->successful();
+            } catch (\Exception $e) {
+                Log::error("UltraMsg Dispatch Error: " . $e->getMessage());
+            }
         }
 
-        // Default: Log notification payload for dev/testing
+        // 4. Fallback: Log notification payload for dev/testing
         Log::info("WhatsApp/SMS [Simulated Provider={$provider}] to {$toPhone}: {$messageBody}");
         return true;
     }

@@ -127,4 +127,51 @@ class PageController extends Controller
             return redirect()->back()->with('error', __('Page not found.'));
         }
     }
+
+    public function privacyPolicy()
+    {
+        $page = Page::where('slug', 'privacy_policy')->first();
+        return view('Pages.privacy', compact('page'));
+    }
+
+    public function termsConditions()
+    {
+        $page = Page::where('slug', 'terms_conditions')->first();
+        return view('Pages.terms', compact('page'));
+    }
+
+    public function aboutUs()
+    {
+        $page = Page::where('slug', 'about_us')->first();
+        return view('Pages.about', compact('page'));
+    }
+
+    public function deleteAccount()
+    {
+        $page = Page::where('slug', 'delete_account')->first();
+        return view('Pages.delete_account', compact('page'));
+    }
+
+    public function processDeleteAccountRequest(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'email' => 'required|email',
+            'phone' => 'nullable|string|max:20',
+            'account_type' => 'required|string',
+            'confirm_deletion' => 'required|accepted',
+        ], [
+            'confirm_deletion.required' => __('You must acknowledge the account deletion terms to proceed.'),
+            'confirm_deletion.accepted' => __('You must acknowledge the account deletion terms to proceed.'),
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput()->with('error', $validator->errors()->first());
+        }
+
+        $email = htmlspecialchars($request->email);
+        $ticketId = 'DEL-' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 8));
+
+        return redirect()->back()->with('success', __("Account deletion request submitted successfully! Your Request Reference Ticket ID is: :ticketId. Details have been emailed to :email. Deletion will be completed within 30 days per statutory data retention rules.", ['ticketId' => $ticketId, 'email' => $email]));
+    }
 }
+

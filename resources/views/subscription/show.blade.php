@@ -59,32 +59,34 @@
             stripe_card.mount('#card-element');
 
             var stripe_form = document.getElementById('stripe-payment-form');
-            stripe_form.addEventListener('submit', function(event) {
-                event.preventDefault();
-                var billingDetails = {
-                    line1: document.querySelector('[name="state"]')?.value || '',
-                    city: document.querySelector('[name="city"]')?.value || '',
-                    postal_code: document.querySelector('[name="zipcode"]')?.value || '',
-                    country: document.querySelector('[name="country"]')?.value || ''
-                };
+            if (stripe_form) {
+                stripe_form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    var billingDetails = {
+                        line1: document.querySelector('[name="state"]')?.value || '',
+                        city: document.querySelector('[name="city"]')?.value || '',
+                        postal_code: document.querySelector('[name="zipcode"]')?.value || '',
+                        country: document.querySelector('[name="country"]')?.value || ''
+                    };
 
-                stripe_key.createToken(stripe_card).then(function(result) {
-                    if (result.error) {
-                        $("#stripe_card_errors").html(result.error.message);
-                        $.NotificationApp.send("Error", result.error.message, "top-right",
-                            "rgba(0,0,0,0.2)", "error");
-                    } else {
-                        var token = result.token;
-                        var stripeForm = document.getElementById('stripe-payment-form');
-                        var stripeHiddenData = document.createElement('input');
-                        stripeHiddenData.setAttribute('type', 'hidden');
-                        stripeHiddenData.setAttribute('name', 'stripeToken');
-                        stripeHiddenData.setAttribute('value', token.id);
-                        stripeForm.appendChild(stripeHiddenData);
-                        stripeForm.submit();
-                    }
+                    stripe_key.createToken(stripe_card).then(function(result) {
+                        if (result.error) {
+                            $("#stripe_card_errors").html(result.error.message);
+                            $.NotificationApp.send("Error", result.error.message, "top-right",
+                                "rgba(0,0,0,0.2)", "error");
+                        } else {
+                            var token = result.token;
+                            var stripeForm = document.getElementById('stripe-payment-form');
+                            var stripeHiddenData = document.createElement('input');
+                            stripeHiddenData.setAttribute('type', 'hidden');
+                            stripeHiddenData.setAttribute('name', 'stripeToken');
+                            stripeHiddenData.setAttribute('value', token.id);
+                            stripeForm.appendChild(stripeHiddenData);
+                            stripeForm.submit();
+                        }
+                    });
                 });
-            });
+            }
         @endif
     </script>
 
@@ -110,46 +112,6 @@
             // Initialize first available payment method
             $('.payment-tile').first().trigger('click');
         });
-    </script>
-
-    <script>
-        @if ($settings['STRIPE_PAYMENT'] == 'on' && !empty($settings['STRIPE_KEY']) && !empty($settings['STRIPE_SECRET']))
-            var stripe_key = Stripe('{{ $settings['STRIPE_KEY'] }}');
-            var stripe_elements = stripe_key.elements();
-            var strip_css = {
-                base: {
-                    fontSize: '14px',
-                    color: '#32325d',
-                },
-            };
-            var stripe_card = stripe_elements.create('card', {
-            
-                style: strip_css
-            });
-            stripe_card.mount('#card-element');
-
-            var stripe_form = document.getElementById('stripe-payment-form');
-            if (stripe_form) {
-                stripe_form.addEventListener('submit', function(event) {
-                    event.preventDefault();
-                    stripe_key.createToken(stripe_card).then(function(result) {
-                        if (result.error) {
-                            $("#stripe_card_errors").html(result.error.message);
-                            show_toastr('Error', result.error.message, 'error');
-                        } else {
-                            var token = result.token;
-                            var stripeForm = document.getElementById('stripe-payment-form');
-                            var stripeHiddenData = document.createElement('input');
-                            stripeHiddenData.setAttribute('type', 'hidden');
-                            stripeHiddenData.setAttribute('name', 'stripeToken');
-                            stripeHiddenData.setAttribute('value', token.id);
-                            stripeForm.appendChild(stripeHiddenData);
-                            stripeForm.submit();
-                        }
-                    });
-                });
-            }
-        @endif
     </script>
 
     <script>
@@ -284,7 +246,7 @@
 
     {{-- Razorpay --}}
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    @if (!empty($settings['razorpay_payment']) && $settings['razorpay_payment'] == 'on')
+    @if (!empty($settings['razorpay_payment'] ?? 'off') && $settings['razorpay_payment'] == 'on')
         <script>
             $(document).on("click", "#subscription_pay_with_razorpay", function(e) {
                 e.preventDefault();
@@ -320,7 +282,7 @@
                                     "contact": ""
                                 },
                                 "theme": {
-                                    "color": "#3399cc"
+                                    "color": "#00796B"
                                 }
                             };
                             var rzp1 = new Razorpay(options);
@@ -345,13 +307,66 @@
         </script>
     @endif
 @endpush
+
 @push('css-page')
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+    :root {
+        --dd-brand-teal: #00796B;
+        --dd-brand-teal-hover: #005A50;
+        --dd-brand-teal-light: #E6F4F1;
+        --dd-brand-teal-border: #B2E0D8;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .package-summary-card {
+        background: linear-gradient(135deg, #00796B 0%, #004D40 100%);
+        color: #ffffff;
+        border-radius: 16px;
+        padding: 1.75rem 2rem;
+        margin-bottom: 1.75rem;
+        box-shadow: 0 8px 24px rgba(0, 121, 107, 0.18);
+    }
+
+    .package-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .info-item {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 12px 14px;
+    }
+
+    .info-item h6 {
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-bottom: 0.35rem;
+    }
+
+    .info-item p {
+        font-size: 1.15rem;
+        font-weight: 800;
+        margin-bottom: 0;
+        color: #ffffff;
+    }
+
     .payment-tile-container {
         display: flex;
         flex-wrap: wrap;
-        gap: 1.25rem;
-        margin-bottom: 2rem;
+        gap: 1rem;
+        margin-bottom: 1.75rem;
     }
 
     .payment-tile {
@@ -359,12 +374,12 @@
         min-width: 140px;
         max-width: 180px;
         background: #ffffff;
-        border: 2px solid #eef2f6;
+        border: 1.5px solid #E2E8F0;
         border-radius: 12px;
-        padding: 1.25rem;
+        padding: 1.25rem 1rem;
         text-align: center;
         cursor: pointer;
-        transition: all 0.25s ease;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -373,15 +388,15 @@
     }
 
     .payment-tile:hover {
-        border-color: #5856d6;
-        transform: translateY(-3px);
-        box-shadow: 0 8px 16px rgba(88, 86, 214, 0.08);
+        border-color: var(--dd-brand-teal);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 121, 107, 0.08);
     }
 
     .payment-tile.active {
-        border-color: #5856d6;
-        background: #f8f9ff;
-        box-shadow: 0 8px 16px rgba(88, 86, 214, 0.12);
+        border-color: var(--dd-brand-teal);
+        background: var(--dd-brand-teal-light);
+        box-shadow: 0 6px 16px rgba(0, 121, 107, 0.12);
     }
 
     .payment-tile.active::after {
@@ -391,101 +406,111 @@
         position: absolute;
         top: 8px;
         right: 8px;
-        background: #5856d6;
+        background: var(--dd-brand-teal);
         color: white;
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
         border-radius: 50%;
         font-size: 10px;
-        line-height: 18px;
+        line-height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .payment-tile i {
-        font-size: 2rem;
-        margin-bottom: 0.75rem;
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        color: var(--dd-brand-teal) !important;
     }
 
     .payment-tile span {
         font-weight: 600;
-        font-size: 0.9rem;
-        color: #2c3e50;
+        font-size: 0.88rem;
+        color: #0F172A;
     }
 
     .payment-form-container {
         background: #ffffff;
-        border-radius: 16px;
-        padding: 2rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-        border: 1px solid #f1f4f8;
-    }
-
-    .package-summary-card {
-        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
-        color: white;
-        border-radius: 16px;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-    }
-
-    .package-info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        gap: 1rem;
-        text-align: center;
-    }
-
-    .info-item h6 {
-        color: rgba(255,255,255,0.7);
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        margin-bottom: 0.25rem;
-    }
-
-    .info-item p {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin-bottom: 0;
+        border-radius: 14px;
+        padding: 1.75rem;
+        border: 1px solid #E2E8F0;
     }
 
     .coupon-box {
-        background: #fdfdfd;
-        border-radius: 10px;
+        background: #F8FAFC;
+        border-radius: 12px;
         padding: 1.25rem;
         margin-bottom: 1.5rem;
-        border: 1px dashed #d1d9e6;
+        border: 1px dashed #CBD5E1;
     }
 
-    .btn-pay-now {
-        padding: 10px 24px;
+    .btn-pay-now, .btn-primary {
+        background-color: var(--dd-brand-teal) !important;
+        border-color: var(--dd-brand-teal) !important;
+        color: #ffffff !important;
+        padding: 11px 24px;
         font-weight: 700;
+        font-size: 0.9rem;
         border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-pay-now:hover, .btn-primary:hover {
+        background-color: var(--dd-brand-teal-hover) !important;
+        border-color: var(--dd-brand-teal-hover) !important;
+        box-shadow: 0 4px 14px rgba(0, 121, 107, 0.25) !important;
+    }
+
+    .info-box-item {
+        background: #F8FAFC;
+        border: 1px solid #E2E8F0;
+        border-radius: 10px;
+        padding: 14px 16px;
+    }
+
+    .info-box-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        color: #64748B;
+        margin-bottom: 4px;
+        display: block;
+    }
+
+    .info-box-value {
+        font-size: 15px;
+        font-weight: 700;
+        color: #0F172A;
+        margin-bottom: 0;
     }
 </style>
 @endpush
+
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
     <li class="breadcrumb-item"><a href="{{ route('subscriptions.index') }}">{{ __('Subscription') }}</a></li>
     <li class="breadcrumb-item" aria-current="page">{{ __('Details') }}</li>
 @endsection
+
 @section('content')
     <!-- Package Summary Section -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="package-summary-card shadow">
+            <div class="package-summary-card shadow-sm">
                 <div class="row align-items-center">
                     <div class="col-md-4">
-                        <h3 class="text-white mb-1">{{ $subscription->title }}</h3>
-                        <span class="badge bg-white text-primary px-3 py-2 rounded-pill">{{ __('Active Subscription Selection') }}</span>
+                        <h3 class="text-white mb-2 fw-bold">{{ $subscription->title }}</h3>
+                        <span class="badge bg-white text-dark px-3 py-2 rounded-pill fw-semibold" style="font-size: 0.78rem;">{{ __('Active Subscription Selection') }}</span>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-8 mt-3 mt-md-0">
                         <div class="package-info-grid">
                             <div class="info-item">
                                 <h6>{{ __('Amount') }}</h6>
                                 <p class="discoutedPrice mb-0">{{ dynamicPrice($subscription->package_amount) }}</p>
                                 @if(session('geo_location') && session('geo_location')['currency'] != (subscriptionPaymentSettings()['CURRENCY'] ?? 'INR'))
-                                    <small class="opacity-75" style="font-size: 0.7rem;">(≈ {{ priceFormat($subscription->package_amount) }})</small>
+                                    <small class="opacity-75 d-block mt-1" style="font-size: 0.7rem;">(≈ {{ priceFormat($subscription->package_amount) }})</small>
                                 @endif
                             </div>
                             <div class="info-item">
@@ -494,11 +519,11 @@
                             </div>
                             <div class="info-item">
                                 <h6>{{ __('User Limit') }}</h6>
-                                <p>{{ $subscription->user_limit }}</p>
+                                <p>{{ $subscription->user_limit >= 1000 ? '∞' : $subscription->user_limit }}</p>
                             </div>
                             <div class="info-item">
                                 <h6>{{ __('Customer Limit') }}</h6>
-                                <p>{{ $subscription->customer_limit }}</p>
+                                <p>{{ $subscription->customer_limit >= 10000 ? '∞' : number_format($subscription->customer_limit) }}</p>
                             </div>
                         </div>
                     </div>
@@ -510,52 +535,52 @@
     <!-- Main Payment Selection Card -->
     <div class="row">
         <div class="col-12">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-transparent border-0 pt-4 px-4">
-                    <h5 class="fw-bold mb-0"><i class="ti ti-wallet me-2 text-primary"></i>{{ __('Choose Payment Method') }}</h5>
-                    <p class="text-muted small mt-1">{{ __('Select your preferred gateway to complete the transaction.') }}</p>
+            <div class="card border-0 shadow-sm" style="border-radius: 16px;">
+                <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0">
+                    <h5 class="fw-bold mb-1" style="color: #0F172A;"><i class="ti ti-wallet me-2" style="color: var(--dd-brand-teal);"></i>{{ __('Choose Payment Method') }}</h5>
+                    <p class="text-muted small mb-0">{{ __('Select your preferred gateway to complete the transaction.') }}</p>
                 </div>
                 <div class="card-body p-4">
                     <!-- Method Selector -->
                     <div class="payment-tile-container">
                         @if ($settings['bank_transfer_payment'] == 'on')
                             <div class="payment-tile" data-target="#bank-transfer-form">
-                                <i class="ti ti-building-bank text-primary"></i>
+                                <i class="ti ti-building-bank"></i>
                                 <span>{{ __('Bank Transfer') }}</span>
                             </div>
                         @endif
 
                         @if ($settings['STRIPE_PAYMENT'] == 'on' && !empty($settings['STRIPE_KEY']) && !empty($settings['STRIPE_SECRET']))
                             <div class="payment-tile" data-target="#stripe-form">
-                                <i class="ti ti-credit-card text-info"></i>
+                                <i class="ti ti-credit-card"></i>
                                 <span>{{ __('Stripe') }}</span>
                             </div>
                         @endif
 
                         @if ($settings['paypal_payment'] == 'on' && !empty($settings['paypal_client_id']) && !empty($settings['paypal_secret_key']))
                             <div class="payment-tile" data-target="#paypal-form">
-                                <i class="ti ti-brand-paypal text-primary"></i>
+                                <i class="ti ti-brand-paypal"></i>
                                 <span>{{ __('Paypal') }}</span>
                             </div>
                         @endif
 
                         @if (!empty($settings['flutterwave_payment']) && $settings['flutterwave_payment'] == 'on' && !empty($settings['flutterwave_public_key']) && !empty($settings['flutterwave_secret_key']))
                             <div class="payment-tile" data-target="#flutterwave-form">
-                                <i class="ti ti-wave-sine text-warning"></i>
+                                <i class="ti ti-wave-sine"></i>
                                 <span>{{ __('Flutterwave') }}</span>
                             </div>
                         @endif
 
                         @if ($settings['paystack_payment'] == 'on' && !empty($settings['paystack_public_key']) && !empty($settings['paystack_secret_key']))
                             <div class="payment-tile" data-target="#paystack-form">
-                                <i class="ti ti-stack text-success"></i>
+                                <i class="ti ti-stack"></i>
                                 <span>{{ __('Paystack') }}</span>
                             </div>
                         @endif
 
                         @if (($settings['razorpay_payment'] ?? 'off') == 'on' && !empty($settings['razorpay_key'] ?? '') && !empty($settings['razorpay_secret'] ?? ''))
                             <div class="payment-tile" data-target="#razorpay-form">
-                                <i class="ti ti-rocket text-info"></i>
+                                <i class="ti ti-rocket"></i>
                                 <span>{{ __('Razorpay') }}</span>
                             </div>
                         @endif
@@ -569,12 +594,12 @@
                                     <div class="col-md-5">
                                         <div class="form-check custom-option mb-0">
                                             <input class="form-check-input have_coupon" type="checkbox" value="" id="global_have_coupon">
-                                            <label class="form-check-label fw-bold" for="global_have_coupon">
+                                            <label class="form-check-label fw-bold" for="global_have_coupon" style="color: #0F172A;">
                                                 {{ __('Have a Discount Coupon?') }}
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-7 d-none coupon_div">
+                                    <div class="col-md-7 d-none coupon_div mt-2 mt-md-0">
                                         <div class="input-group">
                                             <input type="text" class="form-control packageCouponCodeInput" placeholder="{{ __('Enter Code') }}">
                                             <button class="btn btn-primary packageCouponApplyBtn" type="button">{{ __('Apply') }}</button>
@@ -594,43 +619,43 @@
                                     <input type="hidden" name="coupon" class="packageCouponCodeHidden">
                                     <div class="row g-3">
                                         <div class="col-md-6">
-                                            <div class="p-3 bg-light rounded border">
-                                                <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 10px;">{{ __('Bank Name') }}</small>
-                                                <h6 class="mb-0">{{ $settings['bank_name'] }}</h6>
+                                            <div class="info-box-item">
+                                                <span class="info-box-label">{{ __('Bank Name') }}</span>
+                                                <h6 class="info-box-value">{{ $settings['bank_name'] }}</h6>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="p-3 bg-light rounded border">
-                                                <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 10px;">{{ __('Account Holder') }}</small>
-                                                <h6 class="mb-0">{{ $settings['bank_holder_name'] }}</h6>
+                                            <div class="info-box-item">
+                                                <span class="info-box-label">{{ __('Account Holder') }}</span>
+                                                <h6 class="info-box-value">{{ $settings['bank_holder_name'] }}</h6>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="p-3 bg-light rounded border">
-                                                <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 10px;">{{ __('Account Number') }}</small>
-                                                <h6 class="mb-0">{{ $settings['bank_account_number'] }}</h6>
+                                            <div class="info-box-item">
+                                                <span class="info-box-label">{{ __('Account Number') }}</span>
+                                                <h6 class="info-box-value">{{ $settings['bank_account_number'] }}</h6>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="p-3 bg-light rounded border">
-                                                <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 10px;">{{ __('IFSC Code') }}</small>
-                                                <h6 class="mb-0">{{ $settings['bank_ifsc_code'] }}</h6>
+                                            <div class="info-box-item">
+                                                <span class="info-box-label">{{ __('IFSC Code') }}</span>
+                                                <h6 class="info-box-value">{{ $settings['bank_ifsc_code'] }}</h6>
                                             </div>
                                         </div>
                                         @if (!empty($settings['bank_other_details']))
                                             <div class="col-12">
-                                                <div class="p-3 bg-light rounded border">
-                                                    <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 10px;">{{ __('Instructions') }}</small>
-                                                    <p class="mb-0 small">{{ $settings['bank_other_details'] }}</p>
+                                                <div class="info-box-item">
+                                                    <span class="info-box-label">{{ __('Instructions') }}</span>
+                                                    <p class="mb-0 small" style="color: #334155;">{{ $settings['bank_other_details'] }}</p>
                                                 </div>
                                             </div>
                                         @endif
                                         <div class="col-12 mt-3">
-                                            <label class="form-label fw-bold">{{ __('Payment Receipt (Image/PDF)') }}</label>
-                                            <input type="file" name="payment_receipt" class="form-control" required>
+                                            <label class="form-label fw-bold" style="color: #0F172A;">{{ __('Payment Receipt (Image/PDF)') }}</label>
+                                            <input type="file" name="payment_receipt" class="form-control" required style="border-radius: 8px;">
                                         </div>
                                         <div class="col-12">
-                                            <button type="submit" class="btn btn-primary btn-pay-now w-100 shadow-sm mt-2">{{ __('Submit Bank Transfer') }}</button>
+                                            <button type="submit" class="btn btn-primary btn-pay-now w-100 mt-2">{{ __('Submit Bank Transfer') }}</button>
                                         </div>
                                     </div>
                                 </form>
@@ -645,16 +670,16 @@
                                     <input type="hidden" name="coupon" class="packageCouponCodeHidden">
                                     <div class="row g-3">
                                         <div class="col-md-12">
-                                            <label class="form-label fw-bold">{{ __('Card Holder Name') }}</label>
-                                            <input type="text" name="name" class="form-control" placeholder="Full Name" required>
+                                            <label class="form-label fw-bold" style="color: #0F172A;">{{ __('Card Holder Name') }}</label>
+                                            <input type="text" name="name" class="form-control" placeholder="Full Name" required style="border-radius: 8px;">
                                         </div>
                                         <div class="col-md-12">
-                                            <label class="form-label fw-bold">{{ __('Card Details') }}</label>
-                                            <div id="card-element" class="form-control" style="padding: 12px; border: 1px solid #ced4da;"></div>
+                                            <label class="form-label fw-bold" style="color: #0F172A;">{{ __('Card Details') }}</label>
+                                            <div id="card-element" class="form-control" style="padding: 12px; border-radius: 8px;"></div>
                                             <div id="stripe_card_errors" class="text-danger mt-2 small" role="alert"></div>
                                         </div>
                                         <div class="col-12 mt-4">
-                                            <button type="submit" class="btn btn-primary btn-pay-now w-100 shadow-sm">{{ __('Pay Securely with Stripe') }}</button>
+                                            <button type="submit" class="btn btn-primary btn-pay-now w-100">{{ __('Pay Securely with Stripe') }}</button>
                                         </div>
                                     </div>
                                 </form>
@@ -668,10 +693,10 @@
                                     @csrf
                                     <input type="hidden" name="coupon" class="packageCouponCodeHidden">
                                     <div class="text-center py-3">
-                                        <i class="ti ti-brand-paypal text-primary display-4 mb-3"></i>
-                                        <h5 class="mb-2">{{ __('PayPal Checkout') }}</h5>
+                                        <i class="ti ti-brand-paypal display-4 mb-3" style="color: var(--dd-brand-teal);"></i>
+                                        <h5 class="mb-2 fw-bold" style="color: #0F172A;">{{ __('PayPal Checkout') }}</h5>
                                         <p class="text-muted small px-md-5">{{ __('You will be redirected to PayPal\'s secure portal to complete your payment.') }}</p>
-                                        <button type="submit" class="btn btn-primary btn-pay-now w-100 shadow-sm mt-3">{{ __('Proceed to PayPal') }}</button>
+                                        <button type="submit" class="btn btn-primary btn-pay-now w-100 mt-3">{{ __('Proceed to PayPal') }}</button>
                                     </div>
                                 </form>
                             </div>
@@ -681,10 +706,10 @@
                         @if (!empty($settings['flutterwave_payment']) && $settings['flutterwave_payment'] == 'on')
                             <div id="flutterwave-form" class="payment-form-section d-none">
                                 <div class="text-center py-3">
-                                    <i class="ti ti-wave-sine text-warning display-4 mb-3"></i>
-                                    <h5 class="mb-2">{{ __('Flutterwave Payment') }}</h5>
+                                    <i class="ti ti-wave-sine display-4 mb-3" style="color: var(--dd-brand-teal);"></i>
+                                    <h5 class="mb-2 fw-bold" style="color: #0F172A;">{{ __('Flutterwave Payment') }}</h5>
                                     <p class="text-muted small">{{ __('Safe and fast payment via Flutterwave gateway.') }}</p>
-                                    <button type="button" id="flutterwavePaymentBtn" class="btn btn-primary btn-pay-now w-100 shadow-sm mt-3">{{ __('Pay with Flutterwave') }}</button>
+                                    <button type="button" id="flutterwavePaymentBtn" class="btn btn-primary btn-pay-now w-100 mt-3">{{ __('Pay with Flutterwave') }}</button>
                                 </div>
                             </div>
                         @endif
@@ -697,10 +722,10 @@
                                     <input type="hidden" name="plan_id" value="{{ Crypt::encrypt($subscription->id) }}">
                                     <input type="hidden" name="coupon" class="packageCouponCodeHidden">
                                     <div class="text-center py-3">
-                                        <i class="ti ti-stack text-success display-4 mb-3"></i>
-                                        <h5 class="mb-2">{{ __('Paystack Checkout') }}</h5>
+                                        <i class="ti ti-stack display-4 mb-3" style="color: var(--dd-brand-teal);"></i>
+                                        <h5 class="mb-2 fw-bold" style="color: #0F172A;">{{ __('Paystack Checkout') }}</h5>
                                         <p class="text-muted small">{{ __('Fast and secure payment processing via Paystack.') }}</p>
-                                        <button type="button" class="btn btn-primary btn-pay-now w-100 shadow-sm mt-3" id="subscription_pay_with_paystack">{{ __('Pay with Paystack') }}</button>
+                                        <button type="button" class="btn btn-primary btn-pay-now w-100 mt-3" id="subscription_pay_with_paystack">{{ __('Pay with Paystack') }}</button>
                                     </div>
                                 </form>
                             </div>
@@ -714,10 +739,10 @@
                                     <input type="hidden" name="plan_id" value="{{ Crypt::encrypt($subscription->id) }}">
                                     <input type="hidden" name="coupon" class="packageCouponCodeHidden">
                                     <div class="text-center py-3">
-                                        <i class="ti ti-rocket text-info display-4 mb-3"></i>
-                                        <h5 class="mb-2">{{ __('Razorpay Secure') }}</h5>
+                                        <i class="ti ti-rocket display-4 mb-3" style="color: var(--dd-brand-teal);"></i>
+                                        <h5 class="mb-2 fw-bold" style="color: #0F172A;">{{ __('Razorpay Secure') }}</h5>
                                         <p class="text-muted small">{{ __('India\'s most popular and secure payment gateway.') }}</p>
-                                        <button type="button" class="btn btn-primary btn-pay-now w-100 shadow-sm mt-3" id="subscription_pay_with_razorpay">{{ __('Pay with Razorpay') }}</button>
+                                        <button type="button" class="btn btn-primary btn-pay-now w-100 mt-3" id="subscription_pay_with_razorpay">{{ __('Pay with Razorpay') }}</button>
                                     </div>
                                 </form>
                             </div>

@@ -209,8 +209,15 @@ class UserController extends Controller
     }
 
 
-    public function show(User $user)
+    public function show($id)
     {
+        try {
+            $id = decrypt($id);
+        } catch (\Exception $e) {
+            $id = $id;
+        }
+        $user = User::findOrFail($id);
+
         if (!\Auth::user()->can('show user')) {
             return redirect()->back()->with('error', __('Permission Denied.'));
         } else {

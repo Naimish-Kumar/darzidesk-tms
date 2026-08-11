@@ -14,7 +14,7 @@ class PosController extends Controller
 {
     public function index()
     {
-        $customers = User::where('parent_id', parentId())->where('type', 'customer')->get()->pluck('name', 'id');
+        $customers = User::where('parent_id', parentId())->where('type', 'customer')->get();
         $clothTypes = ClothType::where('parent_id', parentId())->get();
         $taxes = Tax::where('parent_id', parentId())->get();
         $invoiceNumber = $this->invoiceNumber();
@@ -25,7 +25,7 @@ class PosController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'customer_id' => 'required|exists:users,id',
+            'customer_id' => 'nullable',
             'items' => 'required|array|min:1',
             'items.*.cloth_type_id' => 'required|exists:cloth_types,id',
             'items.*.quantity' => 'required|numeric|min:1',
@@ -36,10 +36,24 @@ class PosController extends Controller
             'payment_notes' => 'nullable|string',
         ]);
 
-        \DB::transaction(function () use ($request) {
+        $customerId = $request->customer_id;
+        if (empty($customerId)) {
+            $walkIn = User::firstOrCreate(
+                ['email' => 'walkin@darzidesk.local', 'parent_id' => parentId()],
+                [
+                    'name' => 'Walk-in Client',
+                    'password' => \Hash::make('password'),
+                    'type' => 'customer',
+                    'phone_number' => '0000000000',
+                ]
+            );
+            $customerId = $walkIn->id;
+        }
+
+        \DB::transaction(function () use ($request, $customerId) {
             $invoice = Invoice::create([
                 'invoice_id' => $this->invoiceNumber(),
-                'customer_id' => $request->customer_id,
+                'customer_id' => $customerId,
                 'invoice_date' => now()->format('Y-m-d'),
                 'due_date' => now()->addDays(7)->format('Y-m-d'),
                 'status' => 'unpaid',

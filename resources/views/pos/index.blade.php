@@ -1,504 +1,596 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POS & Invoicing Console - {{ env('APP_NAME', 'DarziDesk') }}</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
-    <style>
-        :root {
-            --primary-teal: #006A67;
-            --accent-teal: #26A69A;
-            --dark-navy: #0B1C30;
-            --bg-light: #F4F7F9;
-            --card-border: #E2E8F0;
-            --text-dark: #1E293B;
-            --text-muted: #64748B;
-            --font-main: 'Hanken Grotesk', sans-serif;
-            --font-code: 'JetBrains Mono', monospace;
-        }
+@extends('layouts.app')
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+@section('page-title')
+    {{ __('POS & Invoicing Console') }}
+@endsection
 
-        body {
-            font-family: var(--font-main);
-            background: var(--bg-light);
-            color: var(--text-dark);
-            display: flex;
-            min-height: 100vh;
-        }
+@section('breadcrumb')
+    <li class="breadcrumb-item">
+        <a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a>
+    </li>
+    <li class="breadcrumb-item active">
+        {{ __('POS Billing') }}
+    </li>
+@endsection
 
-        .sidebar {
-            width: 240px; background: #FFFFFF; border-right: 1px solid var(--card-border);
-            display: flex; flex-direction: column; justify-content: space-between;
-            padding: 24px 16px; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
-        }
+@section('content')
+<style>
+    :root {
+        --primary-teal: #006A67;
+        --accent-teal: #26A69A;
+        --dark-navy: #0B1C30;
+        --card-border: #E2E8F0;
+        --text-dark: #1E293B;
+        --text-muted: #64748B;
+        --font-code: 'JetBrains Mono', monospace;
+    }
 
-        .brand-box h2 { font-size: 20px; font-weight: 800; color: var(--primary-teal); }
-        .brand-box span { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; color: var(--text-muted); display: block; margin-top: 2px; }
+    .pos-grid-layout {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 24px;
+    }
 
-        .nav-list { list-style: none; margin-top: 24px; }
-        .nav-item { margin-bottom: 4px; }
+    .catalog-filter-bar {
+        background: #FFFFFF;
+        border: 1px solid var(--card-border);
+        border-radius: 14px;
+        padding: 12px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
 
-        .nav-link {
-            display: flex; align-items: center; gap: 12px;
-            padding: 10px 12px; border-radius: 10px; font-size: 13.5px; font-weight: 600;
-            color: var(--text-dark); text-decoration: none; transition: all 0.2s;
-        }
+    .filter-pills {
+        display: flex;
+        gap: 10px;
+        font-size: 12.5px;
+        font-weight: 700;
+    }
 
-        .nav-link.active { background: #E6FFFA; color: var(--primary-teal); font-weight: 700; border-left: 3px solid var(--primary-teal); }
+    .filter-pill {
+        padding: 6px 16px;
+        border-radius: 8px;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+    }
 
-        .main-wrapper { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
+    .filter-pill.active {
+        background: #E6FFFA;
+        color: var(--primary-teal);
+        font-weight: 800;
+    }
 
-        .top-header {
-            height: 64px; background: #FFFFFF; border-bottom: 1px solid var(--card-border);
-            display: flex; align-items: center; justify-content: space-between; padding: 0 28px;
-            position: sticky; top: 0; z-index: 90;
-        }
+    .catalog-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-bottom: 24px;
+    }
 
-        .search-bar {
-            background: #F1F5F9; border-radius: 20px; padding: 6px 16px;
-            display: flex; align-items: center; gap: 8px; width: 400px;
-        }
+    .product-card {
+        background: #FFFFFF;
+        border: 1.5px solid var(--card-border);
+        border-radius: 16px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 
-        .search-bar input { border: none; background: transparent; outline: none; font-family: var(--font-main); font-size: 12.5px; width: 100%; }
+    .product-card:hover {
+        border-color: var(--primary-teal);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 106, 103, 0.08);
+    }
 
-        .header-right { display: flex; align-items: center; gap: 16px; }
+    .product-img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+        background: #F8FAFC;
+    }
 
-        .content-area { padding: 24px 28px; flex: 1; }
+    .product-body {
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 1;
+    }
 
-        .pos-grid-layout { display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
+    .prod-title {
+        font-size: 14px;
+        font-weight: 800;
+        color: var(--dark-navy);
+        margin-bottom: 2px;
+    }
 
-        .catalog-filter-bar {
-            background: #FFFFFF; border: 1px solid var(--card-border); border-radius: 14px;
-            padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
-        }
+    .prod-desc {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+        line-height: 1.3;
+    }
 
-        .filter-pills { display: flex; gap: 10px; font-size: 12.5px; font-weight: 700; }
-        .filter-pill { padding: 6px 14px; border-radius: 8px; color: var(--text-muted); cursor: pointer; }
-        .filter-pill.active { background: #E6FFFA; color: var(--primary-teal); font-weight: 800; }
+    .prod-price-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+    }
 
-        .catalog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 24px; }
+    .price-num {
+        font-family: var(--font-code);
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--primary-teal);
+    }
 
-        .product-card {
-            background: #FFFFFF; border: 1.5px solid var(--card-border);
-            border-radius: 16px; overflow: hidden; cursor: pointer; transition: all 0.2s; position: relative;
-            display: flex; flex-direction: column; justify-content: space-between;
-        }
+    .btn-add-cart-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #E6FFFA;
+        color: var(--primary-teal);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s ease;
+    }
 
-        .product-card:hover { border-color: var(--primary-teal); transform: translateY(-2px); }
+    .btn-add-cart-icon:hover {
+        background: var(--primary-teal);
+        color: #FFFFFF;
+    }
 
-        .badge-tag {
-            position: absolute; top: 12px; left: 12px; font-size: 9.5px; font-weight: 800;
-            padding: 3px 8px; border-radius: 6px; letter-spacing: 0.5px; color: #FFF; z-index: 10;
-        }
+    .cart-card {
+        background: #FFFFFF;
+        border: 1px solid var(--card-border);
+        border-radius: 18px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 
-        .badge-bestseller { background: #006A67; }
-        .badge-service { background: #0284C7; }
-        .badge-premium { background: #7E22CE; }
+    .customer-info-box {
+        background: #F8FAFC;
+        border: 1px solid var(--card-border);
+        border-radius: 14px;
+        padding: 14px;
+        margin-bottom: 20px;
+    }
 
-        .product-img { height: 160px; width: 100%; object-fit: cover; }
+    .cust-avatar-circle {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #E6FFFA;
+        color: var(--primary-teal);
+        font-size: 13px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-        .product-body { padding: 16px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .cart-item-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px dashed var(--card-border);
+    }
 
-        .prod-name-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
-        .prod-title { font-size: 14px; font-weight: 800; }
-        .prod-desc { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; margin-bottom: 16px; }
+    .cart-item-name {
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--dark-navy);
+    }
 
-        .prod-price-row { display: flex; justify-content: space-between; align-items: flex-end; }
-        .price-label { font-size: 9px; font-weight: 800; color: var(--text-muted); uppercase; }
-        .price-num { font-family: var(--font-code); font-size: 16px; font-weight: 800; color: var(--primary-teal); }
+    .cart-item-price {
+        font-family: var(--font-code);
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--primary-teal);
+    }
 
-        .btn-add-cart-icon {
-            width: 34px; height: 34px; border-radius: 50%; background: #E6FFFA; color: var(--primary-teal);
-            display: flex; align-items: center; justify-content: center; cursor: pointer; border: none;
-        }
+    .qty-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #F1F5F9;
+        padding: 3px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 800;
+    }
 
-        .shortcuts-bar {
-            background: #FFFFFF; border: 1px solid var(--card-border); border-radius: 12px;
-            padding: 10px 16px; display: flex; gap: 20px; font-size: 11.5px; font-weight: 700; color: var(--text-muted); justify-content: center;
-        }
+    .qty-btn {
+        cursor: pointer;
+        user-select: none;
+        color: var(--text-muted);
+    }
 
-        .key-badge { background: #E2E8F0; padding: 2px 6px; border-radius: 4px; font-family: var(--font-code); font-size: 10.5px; color: var(--text-dark); }
+    .qty-btn:hover {
+        color: var(--primary-teal);
+    }
 
-        .cart-card {
-            background: #FFFFFF; border: 1px solid var(--card-border);
-            border-radius: 18px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; height: 100%;
-        }
+    .financial-summary-stack {
+        border-top: 1px solid var(--card-border);
+        padding-top: 16px;
+        margin-bottom: 20px;
+    }
 
-        .customer-info-box {
-            background: #F8FAFC; border: 1px solid var(--card-border);
-            border-radius: 14px; padding: 14px; margin-bottom: 20px;
-        }
+    .summary-line {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12.5px;
+        margin-bottom: 8px;
+    }
 
-        .cust-box-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .cust-avatar-circle { width: 36px; height: 36px; border-radius: 50%; background: #E6FFFA; color: var(--primary-teal); font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+    .total-line {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--card-border);
+    }
 
-        .cust-details h5 { font-size: 13.5px; font-weight: 800; }
-        .cust-details p { font-size: 11px; color: var(--text-muted); }
+    .total-val {
+        font-family: var(--font-code);
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--primary-teal);
+    }
 
-        .cust-badges-row { display: flex; gap: 6px; font-size: 9.5px; font-weight: 800; }
-        .c-badge { background: #E2E8F0; padding: 2px 8px; border-radius: 6px; }
+    .btn-proceed-pay {
+        background: var(--primary-teal);
+        color: #FFFFFF;
+        border: none;
+        border-radius: 12px;
+        padding: 14px;
+        font-size: 14px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
 
-        .cart-header-row { display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 800; margin-bottom: 14px; }
+    .btn-proceed-pay:hover {
+        background: #004D40;
+    }
 
-        .cart-items-stack { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+    @media (max-width: 1100px) {
+        .pos-grid-layout { grid-template-columns: 1fr; }
+        .catalog-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+</style>
 
-        .cart-item-row {
-            border: 1px solid var(--card-border); border-radius: 12px; padding: 12px;
-            display: flex; gap: 10px; align-items: center; justify-content: space-between;
-        }
-
-        .cart-item-img { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; }
-
-        .cart-item-name { font-size: 13px; font-weight: 800; }
-        .cart-item-sub { font-size: 10.5px; color: var(--text-muted); }
-        .cart-item-price { font-family: var(--font-code); font-size: 13.5px; font-weight: 800; }
-
-        .qty-controls { display: flex; align-items: center; gap: 6px; background: #F1F5F9; padding: 2px 6px; border-radius: 6px; font-size: 12px; font-weight: 800; }
-
-        .financial-summary-stack { border-top: 1px solid var(--card-border); padding-top: 16px; margin-bottom: 20px; }
-        .summary-line { display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 8px; }
-
-        .total-line { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 12px; pt-3; border-top: 1px solid var(--card-border); }
-        .total-val { font-family: var(--font-code); font-size: 28px; font-weight: 800; color: var(--primary-teal); }
-
-        .cart-actions-row { display: grid; grid-template-columns: 1fr 1.6fr; gap: 12px; }
-
-        .btn-hold-quote {
-            background: #FFF; border: 1px solid var(--card-border); border-radius: 10px;
-            padding: 12px; font-size: 13px; font-weight: 700; cursor: pointer; color: var(--text-dark);
-        }
-
-        .btn-proceed-pay {
-            background: var(--primary-teal); color: #FFF; border: none; border-radius: 10px;
-            padding: 12px; font-size: 13.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Sidebar Nav -->
-    <aside class="sidebar">
-        <div>
-            <div class="brand-box">
-                <img src="{{ asset('assets/images/logo_wide.png') }}" alt="DarziDesk" style="height: 32px;">
-                <span>ENTERPRISE SUITE</span>
+<div class="pos-grid-layout">
+    <!-- Left Section: Catalog Grid -->
+    <div>
+        <!-- Filter Bar & Search -->
+        <div class="catalog-filter-bar">
+            <div class="filter-pills">
+                <span class="filter-pill active" onclick="filterCategory('all', this)">{{ __('All Items') }}</span>
+                <span class="filter-pill" onclick="filterCategory('Male', this)">{{ __('Male') }}</span>
+                <span class="filter-pill" onclick="filterCategory('Female', this)">{{ __('Female') }}</span>
             </div>
 
-            <ul class="nav-list">
-                <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link">
-                        <span class="material-symbols-outlined">dashboard</span>
-                        Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('orders.index') }}" class="nav-link active">
-                        <span class="material-symbols-outlined">shopping_cart</span>
-                        Orders & POS
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('production.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">cut</span>
-                        Production
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('inventory.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">inventory_2</span>
-                        Inventory
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('staff.index') }}" class="nav-link">
-                        <span class="material-symbols-outlined">group</span>
-                        Staff
-                    </a>
-                </li>
-            </ul>
+            <div class="d-flex align-items-center gap-2">
+                <i class="ti ti-search text-muted"></i>
+                <input type="text" id="posSearchInput" placeholder="{{ __('Search garments...') }}" onkeyup="searchCatalog()" class="form-control form-control-sm border-0 bg-light" style="width: 180px; font-weight:600;">
+            </div>
         </div>
-    </aside>
 
-    <!-- Main Wrapper -->
-    <div class="main-wrapper">
-        <!-- Top Header -->
-        <header class="top-header">
-            <div style="font-size:13px; font-weight:700;">Management Console</div>
-
-            <div class="search-bar">
-                <span class="material-symbols-outlined" style="font-size: 16px; color: var(--text-muted);">search</span>
-                <input type="text" placeholder="Global search for orders or clients...">
-            </div>
-
-            <div class="header-right">
-                <span class="material-symbols-outlined" style="font-size: 20px; color: var(--text-muted); cursor: pointer;">history</span>
-                <span class="material-symbols-outlined" style="font-size: 20px; color: var(--text-muted); cursor: pointer;">notifications</span>
-                <span class="material-symbols-outlined" style="font-size: 20px; color: var(--text-muted); cursor: pointer;">settings</span>
-                <div style="display:flex; align-items:center; gap:8px; font-size:12px; font-weight:700;">
-                    <span>Julian Vane<br><small style="color:var(--text-muted);">Shop Administrator</small></span>
-                    <img src="{{ asset('assets/images/onboarding_tailor.jpg') }}" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" alt="Avatar">
-                </div>
-            </div>
-        </header>
-
-        <!-- Content Area -->
-        <main class="content-area">
-            <div class="pos-grid-layout">
-                <!-- Left Section: Catalog Grid -->
-                <div>
-                    <!-- Filter Pills Bar -->
-                    <div class="catalog-filter-bar">
-                        <div class="filter-pills">
-                            <span class="filter-pill active">All</span>
-                            <span class="filter-pill">Garments</span>
-                            <span class="filter-pill">Fabrics</span>
-                            <span class="filter-pill">Services</span>
+        <!-- Dynamic Catalog Items Grid -->
+        <div class="catalog-grid" id="posCatalogGrid">
+            @forelse($clothTypes as $cloth)
+                @php
+                    $clothImg = asset('assets/images/bespoke_tailor_atelier_hero.jpg');
+                    if (str_contains(strtolower($cloth->title), 'shirt')) {
+                        $clothImg = asset('assets/images/onboarding_tailor.jpg');
+                    } elseif (str_contains(strtolower($cloth->title), 'alter')) {
+                        $clothImg = asset('assets/images/hero_tailor_atelier.jpg');
+                    }
+                @endphp
+                <div class="product-card" data-gender="{{ $cloth->gender }}" data-title="{{ strtolower($cloth->title) }}">
+                    <img src="{{ $clothImg }}" class="product-img" alt="{{ $cloth->title }}">
+                    <div class="product-body">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h6 class="prod-title">{{ $cloth->title }}</h6>
+                                <span class="badge bg-light-primary text-primary px-2 py-1 fs-8 rounded-pill">{{ $cloth->gender ?: 'Unisex' }}</span>
+                            </div>
+                            <p class="prod-desc">{{ $cloth->note ?: __('Bespoke tailor crafted item') }}</p>
                         </div>
-
-                        <div style="font-size:12px; font-weight:700; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
-                            SORT BY:
-                            <select style="border:none; background:transparent; font-family:var(--font-main); font-weight:700; color:var(--primary-teal); outline:none;"><option>Popularity ▾</option></select>
-                        </div>
-                    </div>
-
-                    <!-- Catalog Items Grid (5 items) -->
-                    <div class="catalog-grid">
-                        <!-- Item 1: Bestseller Suit -->
-                        <div class="product-card">
-                            <span class="badge-tag badge-bestseller">BESTSELLER</span>
-                            <img src="{{ asset('assets/images/bespoke_tailor_atelier_hero.jpg') }}" class="product-img" alt="Suit">
-                            <div class="product-body">
-                                <div>
-                                    <div class="prod-name-row">
-                                        <div class="prod-title">Bespoke Two-Piece Suit</div>
-                                        <span class="material-symbols-outlined" style="font-size:16px; color:var(--primary-teal);">info</span>
-                                    </div>
-                                    <div class="prod-desc">Premium Italian wool, canvas construction...</div>
-                                </div>
-                                <div class="prod-price-row">
-                                    <div>
-                                        <div class="price-label">STARTING FROM</div>
-                                        <div class="price-num">$1,250.00</div>
-                                    </div>
-                                    <button class="btn-add-cart-icon">
-                                        <span class="material-symbols-outlined" style="font-size:18px;">add_shopping_cart</span>
-                                    </button>
-                                </div>
+                        <div class="prod-price-row">
+                            <div>
+                                <small class="text-muted d-block fw-bold fs-8">{{ __('PRICE') }}</small>
+                                <span class="price-num">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] . number_format($cloth->amount, 2) }}</span>
                             </div>
-                        </div>
-
-                        <!-- Item 2: Alteration Service -->
-                        <div class="product-card">
-                            <span class="badge-tag badge-service">SERVICE</span>
-                            <img src="{{ asset('assets/images/hero_tailor_atelier.jpg') }}" class="product-img" alt="Alteration">
-                            <div class="product-body">
-                                <div>
-                                    <div class="prod-name-row">
-                                        <div class="prod-title">Suit Jacket Alteration</div>
-                                        <span class="material-symbols-outlined" style="font-size:16px; color:var(--primary-teal);">info</span>
-                                    </div>
-                                    <div class="prod-desc">Sleeve shortening, waist suppression, or...</div>
-                                </div>
-                                <div class="prod-price-row">
-                                    <div>
-                                        <div class="price-label">PRICE PER UNIT</div>
-                                        <div class="price-num">$85.00</div>
-                                    </div>
-                                    <button class="btn-add-cart-icon">
-                                        <span class="material-symbols-outlined" style="font-size:18px;">add_shopping_cart</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Item 3: Premium Wool Fabric -->
-                        <div class="product-card">
-                            <span class="badge-tag badge-premium">PREMIUM</span>
-                            <img src="{{ asset('assets/images/bespoke_tailor_atelier_hero.jpg') }}" class="product-img" alt="Fabric">
-                            <div class="product-body">
-                                <div>
-                                    <div class="prod-name-row">
-                                        <div class="prod-title">Super 150s Merino Wool</div>
-                                        <span class="material-symbols-outlined" style="font-size:16px; color:var(--primary-teal);">info</span>
-                                    </div>
-                                    <div class="prod-desc">Pure merino wool fabric from Vitale...</div>
-                                </div>
-                                <div class="prod-price-row">
-                                    <div>
-                                        <div class="price-label">PRICE PER YARD</div>
-                                        <div class="price-num">$120.00</div>
-                                    </div>
-                                    <button class="btn-add-cart-icon">
-                                        <span class="material-symbols-outlined" style="font-size:18px;">add_shopping_cart</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Item 4: Shirt -->
-                        <div class="product-card">
-                            <img src="{{ asset('assets/images/onboarding_tailor.jpg') }}" class="product-img" alt="Shirt">
-                            <div class="product-body">
-                                <div>
-                                    <div class="prod-name-row">
-                                        <div class="prod-title">Egyptian Cotton Shirt</div>
-                                        <span class="material-symbols-outlined" style="font-size:16px; color:var(--primary-teal);">info</span>
-                                    </div>
-                                    <div class="prod-desc">Giza 45 cotton, 18 stitches per inch...</div>
-                                </div>
-                                <div class="prod-price-row">
-                                    <div>
-                                        <div class="price-label">STARTING FROM</div>
-                                        <div class="price-num">$210.00</div>
-                                    </div>
-                                    <button class="btn-add-cart-icon">
-                                        <span class="material-symbols-outlined" style="font-size:18px;">add_shopping_cart</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Item 5: Consultation -->
-                        <div class="product-card">
-                            <img src="{{ asset('assets/images/bespoke_tailor_atelier_hero.jpg') }}" class="product-img" alt="Consultation">
-                            <div class="product-body">
-                                <div>
-                                    <div class="prod-name-row">
-                                        <div class="prod-title">Consultation & Fit</div>
-                                        <span class="material-symbols-outlined" style="font-size:16px; color:var(--primary-teal);">info</span>
-                                    </div>
-                                    <div class="prod-desc">60-minute style consultation, full body...</div>
-                                </div>
-                                <div class="prod-price-row">
-                                    <div>
-                                        <div class="price-label">SERVICE FEE</div>
-                                        <div class="price-num">$50.00</div>
-                                    </div>
-                                    <button class="btn-add-cart-icon">
-                                        <span class="material-symbols-outlined" style="font-size:18px;">add_shopping_cart</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Keyboard Shortcuts Bar -->
-                    <div class="shortcuts-bar">
-                        <span><span class="key-badge">F1</span> Search</span>
-                        <span><span class="key-badge">⌘ P</span> Pay</span>
-                        <span><span class="key-badge">ESC</span> Close</span>
-                    </div>
-                </div>
-
-                <!-- Right Section: Active Cart -->
-                <div class="cart-card">
-                    <div>
-                        <!-- Customer Profile Box -->
-                        <div style="font-size:10px; font-weight:800; letter-spacing:0.8px; color:var(--text-muted); margin-bottom:8px;">CUSTOMER INFORMATION</div>
-                        <div class="customer-info-box">
-                            <div class="cust-box-top">
-                                <div style="display:flex; align-items:center; gap:10px;">
-                                    <div class="cust-avatar-circle">MA</div>
-                                    <div class="cust-details">
-                                        <h5>Marcus Aurelius</h5>
-                                        <p>m.aurelius@empire.com</p>
-                                    </div>
-                                </div>
-                                <span class="material-symbols-outlined" style="cursor:pointer; color:var(--text-muted);">edit</span>
-                            </div>
-                            <div class="cust-badges-row">
-                                <span class="c-badge" style="background:#FEFCBF; color:#744210;">VIP Member</span>
-                                <span class="c-badge" style="background:#E6FFFA; color:var(--primary-teal);">3 Active Orders</span>
-                                <span class="c-badge">Credit: $500</span>
-                            </div>
-                        </div>
-
-                        <!-- Active Cart List -->
-                        <div class="cart-header-row">
-                            <span>Active Cart <small style="font-weight:400; color:var(--text-muted);">(3 items)</small></span>
-                            <a href="#" style="font-size:11px; color:#E53E3E; text-decoration:none; font-weight:700;">Clear All</a>
-                        </div>
-
-                        <div class="cart-items-stack">
-                            <!-- Item 1 -->
-                            <div class="cart-item-row">
-                                <div style="display:flex; gap:10px; align-items:center;">
-                                    <img src="{{ asset('assets/images/bespoke_tailor_atelier_hero.jpg') }}" class="cart-item-img" alt="Suit">
-                                    <div>
-                                        <div class="cart-item-name">Two-Piece Suit</div>
-                                        <div class="cart-item-sub">Service: Bespoke Fitting</div>
-                                        <div class="cart-item-price">$1,250.00</div>
-                                    </div>
-                                </div>
-
-                                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
-                                    <span class="material-symbols-outlined" style="cursor:pointer; font-size:16px; color:var(--text-muted);">delete</span>
-                                    <div class="qty-controls">
-                                        <span>-</span> <span>1</span> <span>+</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Item 2 -->
-                            <div class="cart-item-row">
-                                <div style="display:flex; gap:10px; align-items:center;">
-                                    <img src="{{ asset('assets/images/hero_tailor_atelier.jpg') }}" class="cart-item-img" alt="Alteration">
-                                    <div>
-                                        <div class="cart-item-name">Sleeve Shortening</div>
-                                        <div class="cart-item-sub">Service: Standard Alteration</div>
-                                        <div class="cart-item-price">$170.00</div>
-                                    </div>
-                                </div>
-
-                                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
-                                    <span class="material-symbols-outlined" style="cursor:pointer; font-size:16px; color:var(--text-muted);">delete</span>
-                                    <div class="qty-controls">
-                                        <span>-</span> <span>2</span> <span>+</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Bottom Financial Totals -->
-                    <div>
-                        <div class="financial-summary-stack">
-                            <div class="summary-line">
-                                <span style="color:var(--text-muted);">Subtotal</span>
-                                <span style="font-weight:700;">$1,420.00</span>
-                            </div>
-                            <div class="summary-line">
-                                <span style="color:var(--text-muted);">Tax (VAT 15%)</span>
-                                <span style="font-weight:700;">$213.00</span>
-                            </div>
-                            <div class="summary-line">
-                                <span style="color:#E53E3E; font-weight:700;">Discount (VIP 10%)</span>
-                                <span style="color:#E53E3E; font-weight:700;">-$142.00</span>
-                            </div>
-
-                            <div class="total-line">
-                                <span style="font-size:12px; font-weight:800; color:var(--text-dark);">TOTAL</span>
-                                <span class="total-val">$1,491.00</span>
-                            </div>
-                        </div>
-
-                        <div class="cart-actions-row">
-                            <button class="btn-hold-quote">Hold Quote</button>
-                            <button class="btn-proceed-pay">
-                                Proceed to Payment →
+                            <button class="btn-add-cart-icon" onclick="addToCart({{ $cloth->id }}, '{{ addslashes($cloth->title) }}', {{ $cloth->amount }}, '{{ $clothImg }}', '{{ $cloth->gender }}')">
+                                <i class="ti ti-shopping-cart-plus fs-5"></i>
                             </button>
                         </div>
                     </div>
                 </div>
-            </div>
-        </main>
+            @empty
+                <div class="col-12 text-center text-muted py-5 bg-white border rounded-4">
+                    <i class="ti ti-hanger fs-1 text-muted d-block mb-2"></i>
+                    {{ __('No garments or cloth types found in your inventory.') }}
+                </div>
+            @endforelse
+        </div>
     </div>
 
-</body>
-</html>
+    <!-- Right Section: Active POS Cart -->
+    <div class="cart-card">
+        <div>
+            <!-- Dynamic Customer Select -->
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="text-muted fw-bold text-uppercase fs-8">{{ __('CUSTOMER SELECTION') }}</span>
+                <a href="{{ route('customer.create') }}" class="text-teal fw-bold fs-8 text-decoration-none"><i class="ti ti-user-plus me-1"></i>{{ __('New Customer') }}</a>
+            </div>
+
+            <div class="customer-info-box">
+                <select class="form-select border-0 bg-transparent fw-bold" id="posCustomerSelect" onchange="updateSelectedCustomer()">
+                    <option value="" data-name="{{ __('Walk-in Client') }}" data-email="walkin@darzidesk.local" data-phone="0000000000">
+                        {{ __('Walk-in Client (Default Counter Customer)') }}
+                    </option>
+                    @foreach($customers as $c)
+                        <option value="{{ $c->id }}" data-name="{{ $c->name }}" data-email="{{ $c->email }}" data-phone="{{ $c->phone_number }}">
+                            {{ $c->name }} ({{ $c->phone_number ?: $c->email }})
+                        </option>
+                    @endforeach
+                </select>
+
+                <div class="d-flex align-items-center gap-3 mt-3 pt-3 border-top" id="custDetailDisplay">
+                    <div class="cust-avatar-circle" id="custAvatar">C</div>
+                    <div>
+                        <h6 class="mb-0 fw-bold text-dark fs-7" id="custNameDisplay">{{ __('Walk-in Client') }}</h6>
+                        <small class="text-muted fs-8 d-block" id="custContactDisplay">{{ __('Standard Counter POS') }}</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cart Items Stack -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold text-dark fs-7">{{ __('Active Cart') }} <small id="cartItemsCount" class="text-muted">(0 items)</small></span>
+                <button type="button" class="btn btn-sm text-danger p-0 fw-bold border-0 bg-transparent fs-8" onclick="clearCart()">{{ __('Clear All') }}</button>
+            </div>
+
+            <div class="cart-items-stack" id="cartItemsStack" style="max-height: 280px; overflow-y: auto;">
+                <div class="text-center py-4 text-muted fs-7">
+                    <i class="ti ti-shopping-cart-x fs-2 d-block mb-1 text-muted"></i>
+                    {{ __('Cart is empty. Click garment + button to add.') }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Calculation & Submit -->
+        <div>
+            <div class="financial-summary-stack">
+                <div class="summary-line">
+                    <span class="text-muted">{{ __('Subtotal') }}</span>
+                    <span id="summarySubtotal" class="fw-bold">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}0.00</span>
+                </div>
+                <div class="summary-line">
+                    <span class="text-muted">{{ __('Tax') }}</span>
+                    <span id="summaryTax" class="fw-bold">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}0.00</span>
+                </div>
+                <div class="total-line">
+                    <span class="fw-bold text-dark fs-7">{{ __('TOTAL AMOUNT') }}</span>
+                    <span class="total-val" id="summaryTotal">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}0.00</span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-muted fs-8 fw-bold text-uppercase mb-1">{{ __('Advance Payment Received') }}</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-0 fw-bold">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}</span>
+                    <input type="number" step="0.01" min="0" class="form-control form-control-sm border-0 bg-light fw-bold" id="posAdvanceInput" placeholder="0.00">
+                </div>
+            </div>
+
+            <button type="button" class="btn-proceed-pay" id="btnSubmitPos" onclick="submitPosInvoice()">
+                <i class="ti ti-check fs-5"></i> {{ __('Complete & Generate POS Invoice') }}
+            </button>
+        </div>
+    </div>
+</div>
+
+@push('script-page')
+<script>
+    let cart = [];
+    const currencySymbol = "{!! subscriptionPaymentSettings()['CURRENCY_SYMBOL'] !!}";
+
+    $(document).ready(function() {
+        updateSelectedCustomer();
+    });
+
+    function updateSelectedCustomer() {
+        const select = document.getElementById('posCustomerSelect');
+        if (!select || !select.options.length) return;
+        const opt = select.options[select.selectedIndex];
+        if (!opt) return;
+
+        const name = opt.getAttribute('data-name') || 'Walk-in Client';
+        const contact = opt.getAttribute('data-phone') || opt.getAttribute('data-email') || '';
+
+        document.getElementById('custNameDisplay').textContent = name;
+        document.getElementById('custContactDisplay').textContent = contact || 'Standard Counter POS';
+        document.getElementById('custAvatar').textContent = name.charAt(0).toUpperCase();
+    }
+
+    function filterCategory(gender, el) {
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+        el.classList.add('active');
+
+        const cards = document.querySelectorAll('#posCatalogGrid .product-card');
+        cards.forEach(card => {
+            const cardGender = card.getAttribute('data-gender');
+            if (gender === 'all' || cardGender === gender) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    function searchCatalog() {
+        const query = document.getElementById('posSearchInput').value.toLowerCase();
+        const cards = document.querySelectorAll('#posCatalogGrid .product-card');
+
+        cards.forEach(card => {
+            const title = card.getAttribute('data-title') || '';
+            if (title.includes(query)) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    function renderCart() {
+        const stack = document.getElementById('cartItemsStack');
+        const count = document.getElementById('cartItemsCount');
+
+        if (cart.length === 0) {
+            stack.innerHTML = `<div class="text-center py-4 text-muted fs-7"><i class="ti ti-shopping-cart-x fs-2 d-block mb-1 text-muted"></i>{{ __('Cart is empty. Click garment + button to add.') }}</div>`;
+            count.textContent = '(0 items)';
+            calculateTotals();
+            return;
+        }
+
+        let totalQty = 0;
+        stack.innerHTML = cart.map(item => {
+            totalQty += item.qty;
+            const lineTotal = (item.price * item.qty).toFixed(2);
+            return `
+                <div class="cart-item-row">
+                    <div>
+                        <div class="cart-item-name">${item.name}</div>
+                        <small class="text-muted fs-8">${item.gender || 'Bespoke'}</small>
+                        <div class="cart-item-price">${currencySymbol}${lineTotal}</div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="qty-controls">
+                            <span class="qty-btn" onclick="updateQty(${item.id}, -1)">-</span>
+                            <span>${item.qty}</span>
+                            <span class="qty-btn" onclick="updateQty(${item.id}, 1)">+</span>
+                        </div>
+                        <i class="ti ti-trash text-danger ms-1" style="cursor:pointer;" onclick="removeCartItem(${item.id})"></i>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        count.textContent = `(${totalQty} items)`;
+        calculateTotals();
+    }
+
+    function addToCart(id, name, price, img, gender) {
+        const existing = cart.find(i => i.id === id);
+        if (existing) {
+            existing.qty++;
+        } else {
+            cart.push({ id, name, price: parseFloat(price), qty: 1, img, gender });
+        }
+        renderCart();
+    }
+
+    function updateQty(id, delta) {
+        const item = cart.find(i => i.id === id);
+        if (!item) return;
+        item.qty += delta;
+        if (item.qty <= 0) {
+            cart = cart.filter(i => i.id !== id);
+        }
+        renderCart();
+    }
+
+    function removeCartItem(id) {
+        cart = cart.filter(i => i.id !== id);
+        renderCart();
+    }
+
+    function clearCart() {
+        cart = [];
+        renderCart();
+    }
+
+    function calculateTotals() {
+        const subtotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+        const total = subtotal;
+
+        document.getElementById('summarySubtotal').textContent = currencySymbol + subtotal.toFixed(2);
+        document.getElementById('summaryTotal').textContent = currencySymbol + total.toFixed(2);
+    }
+
+    function submitPosInvoice() {
+        const customerId = $('#posCustomerSelect').val();
+
+        if (cart.length === 0) {
+            show_toastr('Error', 'Please add at least one garment to cart.', 'error');
+            return;
+        }
+
+        const advance = $('#posAdvanceInput').val() || 0;
+        const payload = {
+            customer_id: customerId,
+            advance_payment: advance,
+            payment_method: 'Cash',
+            items: cart.map(item => ({
+                cloth_type_id: item.id,
+                quantity: item.qty,
+                amount: item.price
+            }))
+        };
+
+        $('#btnSubmitPos').prop('disabled', true).html('<i class="ti ti-spin ti-spinner me-1"></i> Processing...');
+
+        fetch("{{ route('pos.store') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            $('#btnSubmitPos').prop('disabled', false).html('<i class="ti ti-check fs-5"></i> {{ __("Complete & Generate POS Invoice") }}');
+            if (data.success) {
+                show_toastr('Success', data.message, 'success');
+                clearCart();
+                $('#posAdvanceInput').val('');
+                setTimeout(() => window.location.href = "{{ route('invoice.index') }}", 1200);
+            } else {
+                show_toastr('Error', data.message || 'Payment failed', 'error');
+            }
+        })
+        .catch(err => {
+            $('#btnSubmitPos').prop('disabled', false).html('<i class="ti ti-check fs-5"></i> {{ __("Complete & Generate POS Invoice") }}');
+            show_toastr('Error', 'An unexpected error occurred.', 'error');
+            console.error(err);
+        });
+    }
+</script>
+@endpush
+@endsection

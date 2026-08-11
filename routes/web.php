@@ -26,6 +26,7 @@ use App\Models\User;
 
 
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CustomerDashboardController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\MeasurementUnitController;
 use App\Http\Controllers\TaxController;
@@ -236,6 +237,7 @@ Route::group(
 
         // Production Management Routes
         Route::get('production/kanban', [\App\Http\Controllers\ProductionKanbanController::class, 'index'])->name('production.kanban');
+        Route::post('production/update-stage', [\App\Http\Controllers\ProductionPipelineController::class, 'updateStage'])->name('production.update-stage');
         Route::post('production/stage-update', [\App\Http\Controllers\ProductionKanbanController::class, 'updateStage'])->name('production.stage.update');
         Route::post('production/assign-worker', [\App\Http\Controllers\ProductionKanbanController::class, 'assignWorker'])->name('production.assign.worker');
 
@@ -252,34 +254,44 @@ Route::group(
 
         // Financial Analytics Routes
         Route::get('financials/analytics', [\App\Http\Controllers\FinancialAnalyticsController::class, 'index'])->name('financials.analytics');
-        Route::get('financials', function () { return view('financials.index'); })->name('financials.index');
+        Route::get('financials', [\App\Http\Controllers\FinancialDashboardController::class, 'index'])->name('financials.index');
 
         // Dashboard Pages Navigation Routes
-        Route::get('branches', function () { return view('branch.index'); })->name('branches.index');
-        Route::get('branches/create/step-1', function () { return view('branch.create-step1'); })->name('branches.create.step1');
-        Route::get('branches/create/step-2', function () { return view('branch.create-step2'); })->name('branches.create.step2');
-        Route::get('branches/create/step-3', function () { return view('branch.create-step3'); })->name('branches.create.step3');
-        Route::get('roles-permissions', function () { return view('roles.index'); })->name('roles.index');
-        Route::get('billing', function () { return view('billing.index'); })->name('billing.index');
-        Route::get('staff-management', function () { return view('staff.index'); })->name('staff.index');
-        Route::get('orders-list', function () { return view('order.index'); })->name('orders.index');
-        Route::get('business-profile', function () { return view('profile.index'); })->name('profile.index');
+        Route::get('branches', [\App\Http\Controllers\BranchController::class, 'index'])->name('branches.index');
+        Route::get('branches/create/step-1', [\App\Http\Controllers\BranchController::class, 'createStep1'])->name('branches.create.step1');
+        Route::post('branches/create/step-1', [\App\Http\Controllers\BranchController::class, 'storeStep1'])->name('branches.store.step1');
+        Route::get('branches/create/step-2', [\App\Http\Controllers\BranchController::class, 'createStep2'])->name('branches.create.step2');
+        Route::post('branches/create/step-2', [\App\Http\Controllers\BranchController::class, 'storeStep2'])->name('branches.store.step2');
+        Route::get('branches/create/step-3', [\App\Http\Controllers\BranchController::class, 'createStep3'])->name('branches.create.step3');
+        Route::post('branches/create/step-3', [\App\Http\Controllers\BranchController::class, 'storeStep3'])->name('branches.store.step3');
+        Route::delete('branches/{id}', [\App\Http\Controllers\BranchController::class, 'destroy'])->name('branches.destroy');
+        Route::get('roles-permissions', [\App\Http\Controllers\RolesManagementController::class, 'index'])->name('roles.index');
+        Route::post('roles-permissions', [\App\Http\Controllers\RolesManagementController::class, 'store'])->name('roles.store');
+        Route::get('billing', [\App\Http\Controllers\BillingManagementController::class, 'index'])->name('billing.index');
+        Route::get('business-profile', [\App\Http\Controllers\BusinessProfileController::class, 'index'])->name('profile.index');
+        Route::post('business-profile', [\App\Http\Controllers\BusinessProfileController::class, 'update'])->name('profile.update');
+        Route::get('staff-management', [\App\Http\Controllers\StaffManagementController::class, 'index'])->name('staff.index');
+        Route::delete('staff/{id}', [\App\Http\Controllers\StaffManagementController::class, 'destroy'])->name('staff.destroy');
 
         // Staff Onboarding Multi-step Wizard Routes
-        Route::get('staff-onboard/step-1', function () { return view('staff.onboard-step1'); })->name('staff.onboard.step1');
-        Route::get('staff-onboard/step-2', function () { return view('staff.onboard-step2'); })->name('staff.onboard.step2');
-        Route::get('staff-onboard/step-3', function () { return view('staff.onboard-step3'); })->name('staff.onboard.step3');
+        Route::get('staff-onboard/step-1', [\App\Http\Controllers\StaffManagementController::class, 'onboardStep1'])->name('staff.onboard.step1');
+        Route::post('staff-onboard/step-1', [\App\Http\Controllers\StaffManagementController::class, 'storeOnboardStep1'])->name('staff.onboard.store.step1');
+        Route::get('staff-onboard/step-2', [\App\Http\Controllers\StaffManagementController::class, 'onboardStep2'])->name('staff.onboard.step2');
+        Route::post('staff-onboard/step-2', [\App\Http\Controllers\StaffManagementController::class, 'storeOnboardStep2'])->name('staff.onboard.store.step2');
+        Route::get('staff-onboard/step-3', [\App\Http\Controllers\StaffManagementController::class, 'onboardStep3'])->name('staff.onboard.step3');
+        Route::post('staff-onboard/step-3', [\App\Http\Controllers\StaffManagementController::class, 'storeOnboardStep3'])->name('staff.onboard.store.step3');
 
         // Customer Directory & Detail Profile Routes
-        Route::get('customer-directory', function () { return view('customer.index'); })->name('customers.index');
-        Route::get('customer-directory/{id}', function ($id) { return view('customer.show'); })->name('customers.show');
+        Route::get('customer-directory/{id}', [\App\Http\Controllers\CustomerProfileController::class, 'show'])->name('customers.show');
 
         // Production Pipeline Route
-        Route::get('production-pipeline', function () { return view('production.index'); })->name('production.index');
+        Route::get('production-pipeline', [\App\Http\Controllers\ProductionPipelineController::class, 'index'])->name('production.index');
 
         // Inventory Management & Add Material Routes
-        Route::get('inventory-management', function () { return view('inventory.index'); })->name('inventory.index');
-        Route::get('inventory/create', function () { return view('inventory.create'); })->name('inventory.create');
+        Route::get('inventory-management', [\App\Http\Controllers\InventoryManagementController::class, 'index'])->name('inventory.index');
+        Route::get('inventory/create', [\App\Http\Controllers\InventoryManagementController::class, 'create'])->name('inventory.create');
+        Route::post('inventory/create', [\App\Http\Controllers\InventoryManagementController::class, 'store'])->name('inventory.store');
+        Route::delete('inventory/{id}', [\App\Http\Controllers\InventoryManagementController::class, 'destroy'])->name('inventory.destroy');
 
         // New Custom Order Multi-step Wizard Routes
         Route::get('orders/create/step-1', [\App\Http\Controllers\OrderController::class, 'createStep1'])->name('orders.create.step1');
@@ -296,14 +308,14 @@ Route::group(
         Route::post('communication/send-alert', [\App\Http\Controllers\CommunicationController::class, 'sendAlert'])->name('communication.sendAlert');
 
         // POS & Invoicing Console Route
-        Route::get('pos-console', function () { return view('pos.index'); })->name('pos.index');
+        Route::get('pos-console', [\App\Http\Controllers\PosController::class, 'index']);
 
         // Checkout & Payment Route
         Route::get('checkout', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
         Route::post('checkout/process', [\App\Http\Controllers\CheckoutController::class, 'processPayment'])->name('checkout.process');
 
         // Promotions & Rewards Route
-        Route::get('promotions', function () { return view('promotions.index'); })->name('promotions.index');
+        Route::get('promotions', [\App\Http\Controllers\PromotionsController::class, 'index'])->name('promotions.index');
 
         // Register Reconciliation Route
         Route::get('reconciliation', [\App\Http\Controllers\ReconciliationController::class, 'index'])->name('reconciliation.index');
@@ -311,6 +323,17 @@ Route::group(
 
         // Executive Overview Route
         Route::get('executive-overview', [\App\Http\Controllers\ExecutiveAnalyticsController::class, 'index'])->name('executive.index');
+
+        // Customer Portal Routes
+        Route::prefix('my')->group(function () {
+            Route::get('orders', [CustomerDashboardController::class, 'orders'])->name('customer.orders');
+            Route::get('orders/{id}', [CustomerDashboardController::class, 'orderDetail'])->name('customer.orders.show');
+            Route::get('measurements', [CustomerDashboardController::class, 'measurements'])->name('customer.measurements');
+            Route::get('invoices', [CustomerDashboardController::class, 'invoices'])->name('customer.invoices');
+            Route::get('invoices/{id}', [CustomerDashboardController::class, 'invoiceDetail'])->name('customer.invoices.show');
+            Route::get('profile', [CustomerDashboardController::class, 'profile'])->name('customer.profile');
+            Route::post('profile', [CustomerDashboardController::class, 'updateProfile'])->name('customer.profile.update');
+        });
     }
 );
 
@@ -529,7 +552,21 @@ Route::group(
 
 Route::get('page/{slug}', [PageController::class, 'page'])->name('page');
 
+// Public Legal, About Us & Google Play Console Account Deletion Compliance Routes
+Route::get('privacy-policy', [PageController::class, 'privacyPolicy'])->name('privacy.policy');
+Route::get('terms-and-conditions', [PageController::class, 'termsConditions'])->name('terms.conditions');
+Route::get('terms', [PageController::class, 'termsConditions'])->name('terms');
+Route::get('about-us', [PageController::class, 'aboutUs'])->name('about.us');
+Route::get('delete-account', [PageController::class, 'deleteAccount'])->name('delete.account');
+Route::post('delete-account/request', [PageController::class, 'processDeleteAccountRequest'])->name('delete.account.request');
+
+// Tailor & Studio Marketplace Detail Routes
+Route::get('tailor/{id}', [HomeController::class, 'tailorDetail'])->name('tailor.detail');
+Route::post('tailor/{id}/book-appointment', [HomeController::class, 'bookTailorAppointment'])->name('tailor.book.appointment');
+
 Route::get('download-apk', function () {
+
+
     $file = public_path('download/darzidesk.apk');
     if (file_exists($file)) {
         return response()->download($file, 'darzidesk.apk', [

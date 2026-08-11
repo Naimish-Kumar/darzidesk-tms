@@ -476,18 +476,21 @@
             </button>
             <ul class="nav-links">
                 <li><a href="{{ route('home') }}">{{ __('Home') }}</a></li>
-                <li><a href="{{ route('home') }}#pricing">{{ __('Pricing') }}</a></li>
-                <li><a href="{{ route('home') }}#features">{{ __('Features') }}</a></li>
+                <li><a href="{{ route('about.us') }}">{{ __('About Us') }}</a></li>
+                <li><a href="{{ route('privacy.policy') }}">{{ __('Privacy Policy') }}</a></li>
+                <li><a href="{{ route('terms.conditions') }}">{{ __('Terms & Services') }}</a></li>
+                <li><a href="{{ route('blog.index') }}">{{ __('Blog') }}</a></li>
+
                 @php
                     $HomePage = App\Models\HomePage::where('section', 'Section 0')->first();
                 @endphp
                 @if (!empty($HomePage->content_value))
                     @php
-                        $HomePage = json_decode($HomePage->content_value, true);
-                        $active_menus = !empty($HomePage['menu_pages']) ? $HomePage['menu_pages'] : [];
+                        $HomePageData = json_decode($HomePage->content_value, true);
+                        $active_menus = !empty($HomePageData['menu_pages']) ? $HomePageData['menu_pages'] : [];
                     @endphp
                     @foreach ($menus as $menu)
-                        @if (in_array($menu->id, $active_menus))
+                        @if (in_array($menu->id, $active_menus) && !in_array($menu->slug, ['about_us', 'privacy_policy', 'terms_conditions', 'delete_account']))
                             <li>
                                 <a class="{{ !empty($routeParameters['slug']) && $menu->slug == $routeParameters['slug'] ? 'active' : '' }}"
                                    href="{{ route('page', $menu->slug) }}">{{ $menu->title }}</a>
@@ -500,6 +503,7 @@
             </ul>
         </div>
     </nav>
+
 
     <!-- [ Hero ] -->
     <section class="policy-hero">

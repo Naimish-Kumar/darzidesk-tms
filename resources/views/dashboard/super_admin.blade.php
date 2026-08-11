@@ -34,16 +34,17 @@
         }
 
         .dd-welcome-banner {
-            background: var(--dd-card);
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
             border: 1px solid var(--dd-border);
+            border-left: 5px solid var(--dd-teal);
             border-radius: 16px;
             padding: 24px 28px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
             margin-bottom: 28px;
         }
         .dd-welcome-label {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
+            font-size: 10.5px;
             font-weight: 700;
             color: var(--dd-teal);
             letter-spacing: 1.2px;
@@ -51,25 +52,28 @@
             margin-bottom: 4px;
         }
         .dd-welcome-title {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 800;
             color: var(--dd-text);
             margin-bottom: 0;
+            letter-spacing: -0.3px;
         }
         .dd-welcome-subtitle {
-            font-size: 13px;
+            font-size: 13.5px;
             color: var(--dd-text-muted);
             margin-top: 4px;
         }
         .dd-welcome-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
             background: var(--dd-teal-light);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            border: 1px solid rgba(0, 121, 107, 0.15);
+            box-shadow: 0 2px 8px rgba(0, 121, 107, 0.1);
         }
         .dd-welcome-avatar i {
             font-size: 24px;
@@ -380,76 +384,120 @@
         {{-- Stat Cards Grid --}}
         <div class="row g-3 mb-4">
             {{-- Total Users --}}
-            <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
-                <div class="dd-stat-card">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="dd-stat-icon" style="background: var(--dd-teal-light);">
-                            <i class="ti ti-users" style="color: var(--dd-teal);"></i>
+            <div class="col-xl-2 col-lg-4 col-sm-6 col-12">
+                <a href="{{ route('users.index') }}" class="text-decoration-none">
+                    <div class="dd-stat-card">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="dd-stat-icon" style="background: var(--dd-teal-light);">
+                                <i class="ti ti-users" style="color: var(--dd-teal);"></i>
+                            </div>
+                            <span class="dd-live-dot"></span>
                         </div>
-                        <span class="dd-live-dot"></span>
-                    </div>
-                    <div>
-                        <div class="dd-stat-value">{{ $result['totalOrganization'] }}</div>
-                        <div class="dd-stat-label">{{ __('Registered Owners') }}</div>
-                        <div class="dd-stat-subtext" style="color: var(--dd-teal);">
-                            <i class="ti ti-building-store" style="font-size: 11px;"></i> {{ __('Active boutiques') }}
+                        <div>
+                            <div class="dd-stat-value">{{ $result['totalOrganization'] }}</div>
+                            <div class="dd-stat-label">{{ __('Boutique Owners') }}</div>
+                            <div class="dd-stat-subtext" style="color: var(--dd-teal);">
+                                <i class="ti ti-building-store" style="font-size: 11px;"></i> {{ __('Active tenants') }}
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
 
             {{-- Total Packages --}}
-            <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
-                <div class="dd-stat-card">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="dd-stat-icon" style="background: var(--dd-orange-bg);">
-                            <i class="ti ti-package" style="color: var(--dd-orange);"></i>
+            <div class="col-xl-2 col-lg-4 col-sm-6 col-12">
+                <a href="{{ route('subscriptions.index') }}" class="text-decoration-none">
+                    <div class="dd-stat-card">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="dd-stat-icon" style="background: var(--dd-orange-bg);">
+                                <i class="ti ti-package" style="color: var(--dd-orange);"></i>
+                            </div>
+                            <i class="ti ti-arrow-up-right" style="color: var(--dd-orange); font-size: 18px;"></i>
                         </div>
-                        <i class="ti ti-dots" style="color: #C5C6D2; font-size: 18px;"></i>
-                    </div>
-                    <div>
-                        <div class="dd-stat-value">{{ $result['totalSubscription'] }}</div>
-                        <div class="dd-stat-label">{{ __('Active Packages') }}</div>
-                        <div class="dd-stat-subtext" style="color: var(--dd-orange);">
-                            <i class="ti ti-crown" style="font-size: 11px;"></i> {{ __('Plans available') }}
+                        <div>
+                            <div class="dd-stat-value">{{ $result['totalSubscription'] }}</div>
+                            <div class="dd-stat-label">{{ __('Active Packages') }}</div>
+                            <div class="dd-stat-subtext" style="color: var(--dd-orange);">
+                                <i class="ti ti-crown" style="font-size: 11px;"></i> {{ __('Plans available') }}
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
 
             {{-- Total Transactions --}}
-            <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
+            <div class="col-xl-2 col-lg-4 col-sm-6 col-12">
+                <a href="{{ route('subscription.transaction') }}" class="text-decoration-none">
+                    <div class="dd-stat-card">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="dd-stat-icon" style="background: var(--dd-blue-bg);">
+                                <i class="ti ti-receipt" style="color: var(--dd-blue);"></i>
+                            </div>
+                            <i class="ti ti-arrow-up-right" style="color: var(--dd-blue); font-size: 18px;"></i>
+                        </div>
+                        <div>
+                            <div class="dd-stat-value">{{ $result['totalTransaction'] }}</div>
+                            <div class="dd-stat-label">{{ __('Transactions') }}</div>
+                            <div class="dd-stat-subtext" style="color: var(--dd-blue);">
+                                <i class="ti ti-history" style="font-size: 11px;"></i> {{ __('Completed billing') }}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {{-- Total Revenue --}}
+            <div class="col-xl-2 col-lg-4 col-sm-6 col-12">
+                <a href="{{ route('subscription.transaction') }}" class="text-decoration-none">
+                    <div class="dd-stat-card">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="dd-stat-icon" style="background: var(--dd-green-bg);">
+                                <i class="ti ti-wallet" style="color: var(--dd-green);"></i>
+                            </div>
+                            <i class="ti ti-arrow-up-right" style="color: var(--dd-green); font-size: 18px;"></i>
+                        </div>
+                        <div>
+                            <div class="dd-stat-value">{{ getSettingsValByName('CURRENCY_SYMBOL') . number_format($result['totalIncome'], 2) }}</div>
+                            <div class="dd-stat-label">{{ __('Revenue') }}</div>
+                            <div class="dd-stat-subtext" style="color: var(--dd-green);">
+                                <i class="ti ti-trending-up" style="font-size: 11px;"></i> {{ __('Total earnings') }}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {{-- Total Customers Platform Wide --}}
+            <div class="col-xl-2 col-lg-4 col-sm-6 col-12">
                 <div class="dd-stat-card">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div class="dd-stat-icon" style="background: var(--dd-blue-bg);">
-                            <i class="ti ti-receipt" style="color: var(--dd-blue);"></i>
+                        <div class="dd-stat-icon" style="background: #F3E5F5;">
+                            <i class="ti ti-user-check" style="color: #8E24AA;"></i>
                         </div>
-                        <i class="ti ti-dots" style="color: #C5C6D2; font-size: 18px;"></i>
                     </div>
                     <div>
-                        <div class="dd-stat-value">{{ $result['totalTransaction'] }}</div>
-                        <div class="dd-stat-label">{{ __('Total Transactions') }}</div>
-                        <div class="dd-stat-subtext" style="color: var(--dd-blue);">
-                            <i class="ti ti-history" style="font-size: 11px;"></i> {{ __('Completed billing') }}
+                        <div class="dd-stat-value">{{ $result['totalPlatformCustomers'] }}</div>
+                        <div class="dd-stat-label">{{ __('Total Clients') }}</div>
+                        <div class="dd-stat-subtext" style="color: #8E24AA;">
+                            <i class="ti ti-users" style="font-size: 11px;"></i> {{ __('Across all boutiques') }}
                         </div>
                     </div>
                 </div>
             </div>
 
-            {{-- Total Revenue --}}
-            <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
+            {{-- Total Bespoke Orders Platform Wide --}}
+            <div class="col-xl-2 col-lg-4 col-sm-6 col-12">
                 <div class="dd-stat-card">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div class="dd-stat-icon" style="background: var(--dd-green-bg);">
-                            <i class="ti ti-wallet" style="color: var(--dd-green);"></i>
+                        <div class="dd-stat-icon" style="background: #E0F7FA;">
+                            <i class="ti ti-needle" style="color: #00838F;"></i>
                         </div>
-                        <i class="ti ti-dots" style="color: #C5C6D2; font-size: 18px;"></i>
                     </div>
                     <div>
-                        <div class="dd-stat-value">{{ getSettingsValByName('CURRENCY_SYMBOL') . number_format($result['totalIncome'], 2) }}</div>
-                        <div class="dd-stat-label">{{ __('Platform Revenue') }}</div>
-                        <div class="dd-stat-subtext" style="color: var(--dd-green);">
-                            <i class="ti ti-trending-up" style="font-size: 11px;"></i> {{ __('Total subscription earnings') }}
+                        <div class="dd-stat-value">{{ $result['totalPlatformOrders'] }}</div>
+                        <div class="dd-stat-label">{{ __('Total Orders') }}</div>
+                        <div class="dd-stat-subtext" style="color: #00838F;">
+                            <i class="ti ti-cut" style="font-size: 11px;"></i> {{ __('System order volume') }}
                         </div>
                     </div>
                 </div>
@@ -468,6 +516,90 @@
                 </span>
             </div>
             <div id="users_and_payments_overview"></div>
+        </div>
+
+        {{-- Recent Activity Tables Grid --}}
+        <div class="row g-4 mb-4">
+            {{-- Recent Owners --}}
+            <div class="col-lg-6 col-12">
+                <div class="dd-chart-card h-100 mb-0">
+                    <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                        <div>
+                            <h5 class="dd-chart-title"><i class="ti ti-building-store me-2" style="color: var(--dd-teal);"></i>{{ __('Recent Boutique Registrations') }}</h5>
+                            <p class="dd-stat-label mb-0 mt-1">{{ __('Latest shop owners onboarded to DarziDesk') }}</p>
+                        </div>
+                        <a href="{{ route('users.index') }}" class="dd-btn-outline" style="padding: 4px 12px; font-size: 11px;">{{ __('View All') }}</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0" style="font-size: 13px;">
+                            <thead>
+                                <tr class="text-muted text-uppercase" style="font-size: 10px; font-family: 'JetBrains Mono', monospace;">
+                                    <th>{{ __('Owner') }}</th>
+                                    <th>{{ __('Email') }}</th>
+                                    <th>{{ __('Joined') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($result['recentOwners'] as $owner)
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="avatar rounded-circle bg-light-teal text-teal fw-bold p-2 text-center" style="width:32px; height:32px; font-size:12px;">
+                                                    {{ strtoupper(substr($owner->name, 0, 2)) }}
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold text-dark">{{ $owner->name }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-muted">{{ $owner->email }}</td>
+                                        <td class="font-monospace text-muted" style="font-size: 11px;">{{ $owner->created_at->format('M d, Y') }}</td>
+                                    </tr>
+                                @empty
+                                    <tr><td colspan="3" class="text-center text-muted py-4">{{ __('No recent owners registered.') }}</td></tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Recent Transactions --}}
+            <div class="col-lg-6 col-12">
+                <div class="dd-chart-card h-100 mb-0">
+                    <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                        <div>
+                            <h5 class="dd-chart-title"><i class="ti ti-receipt me-2" style="color: var(--dd-green);"></i>{{ __('Recent Subscription Billing') }}</h5>
+                            <p class="dd-stat-label mb-0 mt-1">{{ __('Latest transactions processed on platform') }}</p>
+                        </div>
+                        <a href="{{ route('subscription.transaction') }}" class="dd-btn-outline" style="padding: 4px 12px; font-size: 11px;">{{ __('View All') }}</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0" style="font-size: 13px;">
+                            <thead>
+                                <tr class="text-muted text-uppercase" style="font-size: 10px; font-family: 'JetBrains Mono', monospace;">
+                                    <th>{{ __('Boutique Owner') }}</th>
+                                    <th>{{ __('Amount') }}</th>
+                                    <th>{{ __('Payment Method') }}</th>
+                                    <th>{{ __('Date') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($result['recentTransactions'] as $txn)
+                                    <tr>
+                                        <td class="fw-bold text-dark">{{ $txn->user ? $txn->user->name : 'N/A' }}</td>
+                                        <td class="fw-bold text-success font-monospace">{{ getSettingsValByName('CURRENCY_SYMBOL') . number_format($txn->amount, 2) }}</td>
+                                        <td><span class="badge bg-light-primary text-primary" style="font-size: 10px;">{{ $txn->payment_type ?? 'Stripe' }}</span></td>
+                                        <td class="font-monospace text-muted" style="font-size: 11px;">{{ $txn->created_at->format('M d, Y') }}</td>
+                                    </tr>
+                                @empty
+                                    <tr><td colspan="4" class="text-center text-muted py-4">{{ __('No recent transactions recorded.') }}</td></tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

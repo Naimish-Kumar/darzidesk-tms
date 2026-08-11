@@ -138,19 +138,31 @@
 <header class="fixed top-0 w-full bg-surface-container-lowest dark:bg-inverse-surface shadow-sm z-50">
 <nav class="flex justify-between items-center px-gutter py-4 w-full max-w-container-max mx-auto">
 <div class="flex items-center gap-stack-xl">
-<img src="{{ asset('assets/images/logo_wide.png') }}" alt="DarziDesk" class="h-9 w-auto">
+<a href="{{ route('home') }}">
+    <img src="{{ asset('assets/images/logo_wide.png') }}" alt="DarziDesk" class="h-9 w-auto">
+</a>
 <div class="hidden lg:flex items-center gap-stack-md">
-<a class="text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1 font-title-md text-title-md hover:text-primary transition-colors" href="#">Bespoke Suits</a>
-<a class="text-on-surface-variant dark:text-outline-variant font-title-md text-title-md hover:text-primary transition-colors" href="#">Traditional Wear</a>
-<a class="text-on-surface-variant dark:text-outline-variant font-title-md text-title-md hover:text-primary transition-colors" href="#">Alterations</a>
-<a class="text-on-surface-variant dark:text-outline-variant font-title-md text-title-md hover:text-primary transition-colors" href="#">Fabrics</a>
-<a class="text-on-surface-variant dark:text-outline-variant font-title-md text-title-md hover:text-primary transition-colors" href="#">Measurements</a>
-<a class="text-on-surface-variant dark:text-outline-variant font-title-md text-title-md hover:text-primary transition-colors" href="#">Help</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-title-md text-title-md hover:text-primary transition-colors" href="{{ route('home') }}">Home</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-title-md text-title-md hover:text-primary transition-colors" href="{{ route('about.us') }}">About Us</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-title-md text-title-md hover:text-primary transition-colors" href="{{ route('privacy.policy') }}">Privacy Policy</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-title-md text-title-md hover:text-primary transition-colors" href="{{ route('terms.conditions') }}">Terms & Services</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-title-md text-title-md hover:text-primary transition-colors" href="{{ route('blog.index') }}">Blog</a>
+@php
+    $dynamicHeaderPages = \App\Models\Page::where('enabled', 1)->get();
+@endphp
+@foreach($dynamicHeaderPages as $dynHeaderPage)
+    @if(!in_array($dynHeaderPage->slug, ['about_us', 'privacy_policy', 'terms_conditions', 'delete_account']))
+        <a class="text-on-surface-variant dark:text-outline-variant font-title-md text-title-md hover:text-primary transition-colors" href="{{ route('page', $dynHeaderPage->slug) }}">{{ $dynHeaderPage->title }}</a>
+    @endif
+@endforeach
 </div>
+
 </div>
 <div class="flex items-center gap-stack-md">
 <a href="{{ route('login') }}" class="px-stack-lg py-2 rounded-full border border-primary text-primary font-title-md hover:bg-primary/5 transition-all">Partner Login</a>
+<a href="{{ route('register') }}" class="px-stack-lg py-2 rounded-full bg-primary text-white font-title-md hover:bg-primary-container transition-all">Get Started</a>
 </div>
+
 </nav>
 </header>
 <main class="pt-20">
@@ -165,35 +177,37 @@
 <span class="inline-block px-4 py-1 rounded-full bg-primary-container/20 text-on-primary-container border border-primary-container/30 w-fit font-label-md text-label-md tracking-widest uppercase">The Artisan Standard</span>
 <h1 class="font-display-lg text-display-lg text-on-background max-w-2xl leading-tight">Tailored Precision for the Modern Silhouette.</h1>
 <p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">Connect with the world's finest master tailors. From bespoke Savile Row suits to intricate traditional heritage wear.</p>
-<div class="mt-stack-md glass-card p-2 rounded-full flex items-center shadow-lg max-w-2xl">
-<div class="flex-1 flex items-center px-6 gap-3">
+<form id="hero-search-form" action="#nearby-tailors" method="GET" class="mt-stack-md glass-card p-2 rounded-full flex flex-col md:flex-row items-stretch md:items-center shadow-lg max-w-2xl gap-2 md:gap-0">
+<div class="flex-1 flex items-center px-6 gap-3 py-2 md:py-0">
 <span class="material-symbols-outlined text-outline">search</span>
-<input class="w-full bg-transparent border-none focus:ring-0 font-body-md placeholder:text-outline-variant" placeholder="Bespoke Tuxedo..." type="text"/>
+<input id="search-keyword-input" name="search" value="{{ request('search') }}" class="w-full bg-transparent border-none focus:ring-0 font-body-md placeholder:text-outline-variant text-on-surface" placeholder="Bespoke Tuxedo, Suit, Alteration..." type="text" aria-label="Search tailor or service"/>
 </div>
-<div class="h-8 w-[1px] bg-outline-variant"></div>
-<div class="flex-1 flex items-center px-6 gap-3">
+<div class="hidden md:block h-8 w-[1px] bg-outline-variant"></div>
+<div class="flex-1 flex items-center px-6 gap-3 py-2 md:py-0">
 <span class="material-symbols-outlined text-outline">location_on</span>
-<input class="w-full bg-transparent border-none focus:ring-0 font-body-md placeholder:text-outline-variant" placeholder="London, UK" type="text"/>
+<input id="search-location-input" name="location" value="{{ request('location') }}" class="w-full bg-transparent border-none focus:ring-0 font-body-md placeholder:text-outline-variant text-on-surface" placeholder="London, UK" type="text" aria-label="Location"/>
 </div>
-<button class="bg-primary text-on-primary px-8 py-4 rounded-full font-title-md hover:bg-primary-container transition-all active:scale-95">Find Tailor</button>
+<button type="submit" id="search-submit-button" class="bg-primary text-on-primary px-8 py-4 rounded-full font-title-md hover:bg-primary-container transition-all active:scale-95 flex items-center justify-center gap-2">Find Tailor</button>
+</form>
 </div>
 </div>
-</div>
-</section><section class="py-margin-desktop bg-surface-bright">
+</section><section class="py-margin-desktop bg-surface-bright" id="nearby-tailors">
 <div class="max-w-container-max mx-auto px-gutter">
 <div class="flex justify-between items-end mb-stack-xl">
 <div>
-<h2 class="font-headline-lg text-headline-lg text-on-background mb-2">Nearby Tailors</h2>
-<p class="text-on-surface-variant font-body-md">Expert artisans in your current location.</p>
+<h2 class="font-headline-lg text-headline-lg text-on-background mb-2" id="nearby-tailors-title">Nearby Tailors</h2>
+<p class="text-on-surface-variant font-body-md" id="nearby-tailors-subtitle">Expert artisans in your current location.</p>
 </div>
-<button class="text-primary font-title-md flex items-center gap-2 hover:underline">View All <span class="material-symbols-outlined">arrow_forward</span></button>
+<button id="view-all-tailors-btn" type="button" class="text-primary font-title-md flex items-center gap-2 hover:underline">View All <span class="material-symbols-outlined">arrow_forward</span></button>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-<div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-outline-variant/30 hover:shadow-md transition-all">
-<img alt="Tailor Studio" class="w-full h-48 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTofFhlszzb4XMgLGIycWmtciG4qIX08l8gPQVljpqesW2pJuh5Sydae5K2xUVcR1KiXqulx5WHAe5t9yxQDYJtj8khOIcGTTdBROaLczrcCKI6wNNfKPJMG57MdqzOC1E8Bal18xNepiMjszK_uK7E_OVszwykK-OJDRGdWXOFXEzbBlySOfdcnxb3BGg7xQOdUKZ0CacLkHtmKWPWEE1xKAKEKKgMnO85CdHuIi_OSiSSLfIt2U8gbkWoQSVnm3l9-95DG7_bS73"/>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter" id="tailors-grid">
+<a href="{{ route('tailor.detail', 1) }}" class="tailor-card block bg-white rounded-2xl overflow-hidden shadow-sm border border-outline-variant/30 hover:shadow-xl hover:border-primary/50 transition-all cursor-pointer group" data-name="Savile & Row Atelier" data-location="Mayfair, London" data-tags="Bespoke Suits Tuxedos Savile Row Mayfair London">
+<div class="overflow-hidden h-48">
+<img alt="Savile & Row Studio" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="{{ asset('assets/images/hero_tailor_atelier.jpg') }}"/>
+</div>
 <div class="p-6">
 <div class="flex justify-between items-start mb-2">
-<h3 class="font-title-lg text-title-lg">Savile &amp; Row</h3>
+<h3 class="font-title-lg text-title-lg text-on-background group-hover:text-primary transition-colors">Savile &amp; Row Atelier</h3>
 <div class="flex items-center gap-1 text-alert-low-stock">
 <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
 <span class="font-label-md">4.9</span>
@@ -205,12 +219,15 @@
 <span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-label-md">Tuxedos</span>
 </div>
 </div>
+</a>
+
+<a href="{{ route('tailor.detail', 2) }}" class="tailor-card block bg-white rounded-2xl overflow-hidden shadow-sm border border-outline-variant/30 hover:shadow-xl hover:border-primary/50 transition-all cursor-pointer group" data-name="The Stitch Lab Studio" data-location="Soho, London" data-tags="Modern Cut Alterations Stitch Lab Soho London">
+<div class="overflow-hidden h-48">
+<img alt="The Stitch Lab Studio" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBCKpNm4uGZJ737JheYRs8Z3qgXvty1VDZH0udo5U8A8L4gnJGFqg6oKt_YWOB5Sp2b6pdmQ1r27AGV-W_u_2PEvjbV4A0gJt8Y6zy1Dpy5qxybvo3aa6dlyAeuyibsUTDpNAILE6n8mgAo4N9xdDXcT3re_hmNvhpCnGUHJTBgGFnOK3EsF4YrNjtlEH4pMvZ0hQEUw5mJPwoGAR9lpIDtWRL0ohnpAbG6A9psiUmAF0TGm2rrkl9qfvRG6chlKofpiIXfwcsGbky"/>
 </div>
-<div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-outline-variant/30 hover:shadow-md transition-all">
-<img alt="Tailor Studio" class="w-full h-48 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBCKpNm4uGZJ737JheYRs8Z3qgXvty1VDZH0udo5U8A8L4gnJGFqg6oKt_YWOB5Sp2b6pdmQ1r27AGV-W_u_2PEvjbV4A0gJt8Y6zy1Dpy5qxybvo3aa6dlyAeuyibsUTDpNAILE6n8mgAo4N9xdDXcT3re_hmNvhpCnGUHJTBgGFnOK3EsF4YrNjtlEH4pMvZ0hQEUw5mJPwoGAR9lpIDtWRL0ohnpAbG6A9psiUmAF0TGm2rrkl9qfvRG6chlKofpiIXfwcsGbky"/>
 <div class="p-6">
 <div class="flex justify-between items-start mb-2">
-<h3 class="font-title-lg text-title-lg">The Stitch Lab</h3>
+<h3 class="font-title-lg text-title-lg text-on-background group-hover:text-primary transition-colors">The Stitch Lab Studio</h3>
 <div class="flex items-center gap-1 text-alert-low-stock">
 <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
 <span class="font-label-md">4.8</span>
@@ -222,12 +239,15 @@
 <span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-label-md">Alterations</span>
 </div>
 </div>
+</a>
+
+<a href="{{ route('tailor.detail', 3) }}" class="tailor-card block bg-white rounded-2xl overflow-hidden shadow-sm border border-outline-variant/30 hover:shadow-xl hover:border-primary/50 transition-all cursor-pointer group" data-name="Heritage Threads Atelier" data-location="Kensington, London" data-tags="Traditional Silk Royal Sherwanis Bandhgala Suits Heritage Threads Kensington London">
+<div class="overflow-hidden h-48">
+<img alt="Heritage Threads Studio" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcEVN8xjtl7eWAjtty8NbkVL3nwMubVfrePu8uzijUEWLJHZDF82jyvvzcTuUiulx6Ouj5mQtPLTUEN12Lepir8hhgvMJ0e_OSSuc9pT5jMc1ts85-oDp3fk40XT-sG16JLk2ygdOoczFu8visPDzviL_XZ2PQ-8T1zBV2a9rj4E_rCIAti1R7dZeDCu7YGl5pDoS13OC8YXlx0T_dVNLZX0ig3QXI8bljO3NilBt4YI4xlmi9P8wqkQPdFf7EAk-ZI64-8kHgTSci"/>
 </div>
-<div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-outline-variant/30 hover:shadow-md transition-all">
-<img alt="Tailor Studio" class="w-full h-48 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcEVN8xjtl7eWAjtty8NbkVL3nwMubVfrePu8uzijUEWLJHZDF82jyvvzcTuUiulx6Ouj5mQtPLTUEN12Lepir8hhgvMJ0e_OSSuc9pT5jMc1ts85-oDp3fk40XT-sG16JLk2ygdOoczFu8visPDzviL_XZ2PQ-8T1zBV2a9rj4E_rCIAti1R7dZeDCu7YGl5pDoS13OC8YXlx0T_dVNLZX0ig3QXI8bljO3NilBt4YI4xlmi9P8wqkQPdFf7EAk-ZI64-8kHgTSci"/>
 <div class="p-6">
 <div class="flex justify-between items-start mb-2">
-<h3 class="font-title-lg text-title-lg">Heritage Threads</h3>
+<h3 class="font-title-lg text-title-lg text-on-background group-hover:text-primary transition-colors">Heritage Threads Atelier</h3>
 <div class="flex items-center gap-1 text-alert-low-stock">
 <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
 <span class="font-label-md">5.0</span>
@@ -239,8 +259,16 @@
 <span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-label-md">Silk</span>
 </div>
 </div>
+</a>
+
+<div id="no-tailors-found" class="hidden text-center py-12 px-4 bg-white rounded-2xl border border-outline-variant/30 col-span-1 md:col-span-3">
+<span class="material-symbols-outlined text-5xl text-outline-variant mb-3">search_off</span>
+<h3 class="font-title-lg text-title-lg text-on-background mb-2">No tailors found</h3>
+<p class="text-on-surface-variant font-body-md mb-6 max-w-md mx-auto">We couldn't find any tailor matching your search criteria. Try searching for a different keyword or location.</p>
+<button type="button" id="reset-search-btn" class="px-6 py-2 bg-primary text-white rounded-full font-title-md hover:bg-primary-container transition-all">Clear Search</button>
 </div>
 </div>
+
 </div>
 </section>
 <!-- Stats Section -->
@@ -691,15 +719,16 @@
 <a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Fabric Library</a>
 </div>
 <div class="flex flex-col gap-4">
-<span class="font-title-md text-title-md text-on-surface font-bold">Company</span>
-<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Business Resources</a>
-<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Partner Program</a>
-<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<span class="font-title-md text-title-md text-on-surface font-bold">Company & Legal</span>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="{{ route('about.us') }}">About Us</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="{{ route('privacy.policy') }}">Privacy Policy</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="{{ route('terms.conditions') }}">Terms & Services</a>
 </div>
 <div class="flex flex-col gap-4">
 <span class="font-title-md text-title-md text-on-surface font-bold">Support</span>
-<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Contact Support</a>
-<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Fitting Guide</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="{{ route('delete.account') }}">Play Console Data Policy</a>
+<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="{{ route('blog.index') }}">Blog & News</a>
+
 <div class="mt-4 p-4 rounded-lg bg-surface-container-low border border-outline-variant/30">
 <p class="font-label-md text-label-md text-on-surface-variant mb-2">Subscribe to our Artisan Journal</p>
 <div class="flex gap-2">
@@ -723,12 +752,115 @@
         // Micro-interaction for scroll effects
         window.addEventListener('scroll', () => {
             const header = document.querySelector('header');
-            if (window.scrollY > 50) {
-                header.classList.add('shadow-md');
-                header.classList.remove('shadow-sm');
-            } else {
-                header.classList.add('shadow-sm');
-                header.classList.remove('shadow-md');
+            if (header) {
+                if (window.scrollY > 50) {
+                    header.classList.add('shadow-md');
+                    header.classList.remove('shadow-sm');
+                } else {
+                    header.classList.add('shadow-sm');
+                    header.classList.remove('shadow-md');
+                }
+            }
+        });
+
+        // Search Bar Interactive Filtering & Navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.getElementById('hero-search-form');
+            const keywordInput = document.getElementById('search-keyword-input');
+            const locationInput = document.getElementById('search-location-input');
+            const tailorCards = document.querySelectorAll('.tailor-card');
+            const noResultsDiv = document.getElementById('no-tailors-found');
+            const subtitle = document.getElementById('nearby-tailors-subtitle');
+            const resetBtn = document.getElementById('reset-search-btn');
+            const viewAllBtn = document.getElementById('view-all-tailors-btn');
+
+            function performSearch(shouldScroll = false) {
+                const keyword = (keywordInput ? keywordInput.value : '').toLowerCase().trim();
+                const location = (locationInput ? locationInput.value : '').toLowerCase().trim();
+                
+                let visibleCount = 0;
+
+                tailorCards.forEach(card => {
+                    const name = (card.getAttribute('data-name') || '').toLowerCase();
+                    const cardLoc = (card.getAttribute('data-location') || '').toLowerCase();
+                    const tags = (card.getAttribute('data-tags') || '').toLowerCase();
+
+                    const matchKeyword = !keyword || name.includes(keyword) || tags.includes(keyword) || cardLoc.includes(keyword);
+                    const matchLocation = !location || cardLoc.includes(location) || name.includes(location) || tags.includes(location);
+
+                    if (matchKeyword && matchLocation) {
+                        card.style.display = '';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                if (noResultsDiv) {
+                    if (visibleCount === 0) {
+                        noResultsDiv.classList.remove('hidden');
+                    } else {
+                        noResultsDiv.classList.add('hidden');
+                    }
+                }
+
+                if (subtitle) {
+                    if (keyword || location) {
+                        subtitle.textContent = `Found ${visibleCount} tailor${visibleCount === 1 ? '' : 's'} matching your search criteria.`;
+                    } else {
+                        subtitle.textContent = 'Expert artisans in your current location.';
+                    }
+                }
+
+                if (shouldScroll) {
+                    const target = document.getElementById('nearby-tailors');
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            }
+
+            if (searchForm) {
+                searchForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    performSearch(true);
+                });
+            }
+
+            if (keywordInput) {
+                keywordInput.addEventListener('input', function() {
+                    performSearch(false);
+                });
+            }
+
+            if (locationInput) {
+                locationInput.addEventListener('input', function() {
+                    performSearch(false);
+                });
+            }
+
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function() {
+                    if (keywordInput) keywordInput.value = '';
+                    if (locationInput) locationInput.value = '';
+                    performSearch(false);
+                });
+            }
+
+            if (viewAllBtn) {
+                viewAllBtn.addEventListener('click', function() {
+                    if (keywordInput) keywordInput.value = '';
+                    if (locationInput) locationInput.value = '';
+                    performSearch(true);
+                });
+            }
+
+            // Parse URL Query Params on Load
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('search') || urlParams.has('location')) {
+                if (keywordInput && urlParams.get('search')) keywordInput.value = urlParams.get('search');
+                if (locationInput && urlParams.get('location')) locationInput.value = urlParams.get('location');
+                performSearch(true);
             }
         });
     </script>

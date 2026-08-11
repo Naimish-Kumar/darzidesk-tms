@@ -88,11 +88,18 @@
                         <a class="nav-link" href="{{ route('home') }}#features">{{ __('Features') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('blog.index') }}">{{ __('Blog') }}</a>
+                        <a class="nav-link" href="{{ route('about.us') }}">{{ __('About Us') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('privacy.policy') }}">{{ __('Privacy Policy') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('terms.conditions') }}">{{ __('Terms & Services') }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link me-2" href="{{ route('login') }}">{{ __('Login') }}</a>
                     </li>
+
                     <li class="nav-item">
                         <a class="btn btn-secondary" href="{{ route('register') }}">
                             {{ __('Get Started') }}
@@ -107,12 +114,22 @@
         @yield('content')
     </div>
 
-    <!-- Footer logic simplified for layout -->
-    <footer class="footer bg-dark py-5 text-white">
-        <div class="container text-center">
-            <p class="mb-0">{{ $copyright ?? '© 2026 DarziDesk. All rights reserved.' }}</p>
+    <!-- Footer -->
+    <footer class="footer bg-dark py-4 text-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                    <p class="mb-0 text-white-50">{{ $copyright ?? '© ' . date('Y') . ' DarziDesk. All rights reserved.' }}</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="{{ route('about.us') }}" class="text-white-50 me-3 text-decoration-none small">{{ __('About Us') }}</a>
+                    <a href="{{ route('privacy.policy') }}" class="text-white-50 me-3 text-decoration-none small">{{ __('Privacy Policy') }}</a>
+                    <a href="{{ route('terms.conditions') }}" class="text-white-50 text-decoration-none small">{{ __('Terms & Services') }}</a>
+                </div>
+            </div>
         </div>
     </footer>
+
 
     <script src="{{ asset('assets/js/plugins/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/bootstrap.min.js') }}"></script>

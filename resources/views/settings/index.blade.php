@@ -159,8 +159,8 @@
                                 @endif
                                 @if (Gate::check('manage 2FA settings'))
                                     <li class="nav-item">
-                                        <a class="nav-link {{ empty($activeTab) || $activeTab == '2FA' ? ' active ' : '' }} "
-                                            id="profile-tab-9" data-bs-toggle="tab" href="#2FA" role="tab"
+                                        <a class="nav-link {{ empty($activeTab) || $activeTab == '2FA' || $activeTab == 'two_factor_authentication' ? ' active ' : '' }} "
+                                            id="profile-tab-9" data-bs-toggle="tab" href="#two_factor_authentication" role="tab"
                                             aria-selected="true">
                                             <div class="d-flex align-items-center">
                                                 <div class="flex-shrink-0">
@@ -178,7 +178,7 @@
                                 @if (\Auth::user()->type == 'super admin' && Gate::check('manage twilio settings'))
                                     <li class="nav-item">
                                         <a class="nav-link {{ empty($activeTab) || $activeTab == 'twilio' ? ' active ' : '' }} "
-                                            id="profile-tab-9" data-bs-toggle="tab" href="#twilio" role="tab"
+                                            id="profile-tab-10" data-bs-toggle="tab" href="#twilio" role="tab"
                                             aria-selected="true">
                                             <div class="d-flex align-items-center">
                                                 <div class="flex-shrink-0">

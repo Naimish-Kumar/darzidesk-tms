@@ -17,6 +17,9 @@ class Branch extends Model
         'manager_id',
         'parent_id',
         'is_active',
+        'opening_time',
+        'closing_time',
+        'weekly_holiday',
     ];
 
     public function manager()

@@ -24,7 +24,6 @@ class QrCodeController extends Controller
 
             return response($svg)->header('Content-Type', 'image/svg+xml');
         } catch (\Exception $e) {
-            // Fallback Google Chart QR API
             $url = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' . urlencode($code);
             return redirect($url);
         }
@@ -34,35 +33,43 @@ class QrCodeController extends Controller
     {
         $request->validate(['code' => 'required|string']);
 
-        $token = $request->code;
-        // Search by tracking_token or order_id
-        $order = Order::where('parent_id', parentId())
-            ->where(function ($q) use ($token) {
-                $q->where('tracking_token', $token)
-                  ->orWhere('order_id', $token)
-                  ->orWhere('id', $token);
+        $rawToken = trim($request->code);
+        $cleanToken = preg_replace('/^#?(ORD-)?/i', '', $rawToken);
+
+        $parentId = parentId();
+
+        $order = Order::where('parent_id', $parentId)
+            ->where(function ($q) use ($rawToken, $cleanToken) {
+                $q->where('tracking_token', $rawToken)
+                  ->orWhere('order_id', $rawToken)
+                  ->orWhere('id', $rawToken)
+                  ->orWhere('order_id', $cleanToken)
+                  ->orWhere('id', $cleanToken);
             })
             ->with(['customers', 'clothTypes', 'productionStage'])
             ->first();
 
         if (!$order) {
-            return response()->json(['success' => false, 'message' => 'Order not found for code: ' . $token], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'No active order found for barcode: ' . $rawToken,
+            ], 404);
         }
 
         return response()->json([
             'success' => true,
             'order' => [
                 'id' => $order->id,
-                'order_id' => $order->order_id,
-                'customer_name' => $order->customers->name ?? 'Unknown',
+                'order_id' => $order->order_id ?? ('ORD-' . $order->id),
+                'customer_name' => $order->customers->name ?? 'Walk-in Client',
                 'customer_phone' => $order->customers->phone_number ?? '',
-                'cloth_type' => $order->clothTypes->title ?? '-',
-                'status' => $order->status,
-                'production_stage_id' => $order->production_stage_id,
-                'stage_name' => $order->productionStage->name ?? 'Pending',
-                'deadline' => $order->deadline_date,
-                'tracking_token' => $order->tracking_token,
-                'total_amount' => $order->total_amount,
+                'cloth_type' => $order->clothTypes->title ?? 'Bespoke Garment',
+                'status' => $order->status ?? 'in_progress',
+                'production_stage_id' => $order->production_stage_id ?? 1,
+                'stage_name' => $order->productionStage->name ?? 'Cutting & Trimming',
+                'deadline' => $order->deadline_date ?? now()->addDays(7)->format('Y-m-d'),
+                'tracking_token' => $order->tracking_token ?? 'TRK-' . $order->id,
+                'total_amount' => (float) ($order->total_amount ?? 0),
             ],
         ]);
     }

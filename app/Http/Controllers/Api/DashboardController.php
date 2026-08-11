@@ -75,26 +75,56 @@ class DashboardController extends Controller
             $result['recent_orders'] = $this->getRecentOrders($user);
         } else {
             // Owner / Manager
+            $totalOrders = Order::where('parent_id', parentId())->count();
+            $thisMonthOrders = Order::where('parent_id', parentId())
+                ->whereMonth('created_at', Carbon::now()->month)
+                ->whereYear('created_at', Carbon::now()->year)
+                ->count();
+
+            $monthlyIncome = InvoicePayment::where('parent_id', parentId())
+                ->whereMonth('payment_date', Carbon::now()->month)
+                ->whereYear('payment_date', Carbon::now()->year)
+                ->sum('amount');
+            if ($monthlyIncome == 0) {
+                $monthlyIncome = Order::where('parent_id', parentId())
+                    ->whereMonth('created_at', Carbon::now()->month)
+                    ->whereYear('created_at', Carbon::now()->year)
+                    ->sum('total_amount');
+            }
+
+            $activeFittings = Order::where('parent_id', parentId())
+                ->whereIn('status', ['fitting', 'trial', 'pending', 'in_progress', 'in_stitching'])
+                ->count();
+            $scheduledToday = Order::where('parent_id', parentId())
+                ->whereDate('delivery_date', Carbon::today())
+                ->count();
+
+            $totalCustomers = User::where('parent_id', parentId())->where('type', 'customer')->count();
+
             $result['stats'] = [
-                'total_customer' => [
-                    'label' => 'Total Customers',
-                    'value' => (string)User::where('parent_id', parentId())->where('type', 'customer')->count(),
-                    'icon' => 'people',
+                'total_orders' => [
+                    'label' => 'Total Orders',
+                    'value' => (string) $totalOrders,
+                    'subtext' => '+' . $thisMonthOrders . ' this month',
+                    'icon' => 'shopping_bag_outlined',
                 ],
-                'total_cloth_type' => [
-                    'label' => 'Cloth Types',
-                    'value' => (string)ClothType::where('parent_id', parentId())->count(),
-                    'icon' => 'inventory_2',
+                'revenue' => [
+                    'label' => 'Monthly Revenue',
+                    'value' => $currency_symbol . number_format($monthlyIncome, 0),
+                    'subtext' => 'This month',
+                    'icon' => 'account_balance_wallet_outlined',
                 ],
-                'total_income' => [
-                    'label' => 'Total Income',
-                    'value' => $currency_symbol . number_format(InvoicePayment::where('parent_id', parentId())->sum('amount'), 2),
-                    'icon' => 'trending_up',
+                'active_fittings' => [
+                    'label' => 'Active Fittings',
+                    'value' => (string) $activeFittings,
+                    'subtext' => $scheduledToday . ' scheduled today',
+                    'icon' => 'checkroom_rounded',
                 ],
-                'total_expense' => [
-                    'label' => 'Total Expense',
-                    'value' => $currency_symbol . number_format(Expense::where('parent_id', parentId())->sum('amount'), 2),
-                    'icon' => 'trending_down',
+                'customers' => [
+                    'label' => 'Total Clients',
+                    'value' => (string) $totalCustomers,
+                    'subtext' => 'Registered clients',
+                    'icon' => 'people_outline_rounded',
                 ],
             ];
             $result['chart_data'] = $this->incomeByMonth();
@@ -111,8 +141,9 @@ class DashboardController extends Controller
 
     private function getRecentOrders($user)
     {
-        $query = Order::orderBy('id', 'desc');
-        
+        $currency_symbol = settings()['CURRENCY_SYMBOL'] ?? '₹';
+        $query = Order::with(['customer'])->orderBy('id', 'desc');
+
         if ($user->type == 'customer') {
             $query->where('customer_id', $user->id);
         } elseif ($user->type == 'employee') {
@@ -121,14 +152,31 @@ class DashboardController extends Controller
             $query->where('parent_id', parentId());
         }
 
-        return $query->limit(10)->get()->map(function($order) {
+        return $query->limit(10)->get()->map(function ($order) use ($currency_symbol) {
+            $customerName = 'Guest Customer';
+            if ($order->customer) {
+                $customerName = $order->customer->name;
+            } elseif (!empty($order->customer_name)) {
+                $customerName = $order->customer_name;
+            }
+
+            $garmentName = 'Bespoke Garment';
+            if (!empty($order->product_name)) {
+                $garmentName = $order->product_name;
+            } elseif (!empty($order->item_name)) {
+                $garmentName = $order->item_name;
+            }
+
             return [
                 'id' => $order->id,
-                'order_id' => "#DD" . $order->id,
-                'customer_name' => $order->customer_name ?? 'Unknown',
-                'date' => $order->created_at->format('M d, Y'),
-                'status' => ucfirst($order->status),
-                'total_amount' => $order->total_amount,
+                'order_id' => "#DD-" . str_pad($order->id, 3, '0', STR_PAD_LEFT),
+                'client_name' => $customerName,
+                'customer_name' => $customerName,
+                'garment' => $garmentName,
+                'date' => $order->created_at ? $order->created_at->format('M d, h:i A') : 'Today',
+                'status' => ucfirst(str_replace('_', ' ', $order->status ?? 'pending')),
+                'total_amount' => $currency_symbol . number_format($order->total_amount ?? 0, 0),
+                'amount' => $currency_symbol . number_format($order->total_amount ?? 0, 0),
             ];
         });
     }

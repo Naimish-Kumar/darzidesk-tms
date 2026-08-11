@@ -32,11 +32,12 @@
 
         /* Clean Modern Header Banner */
         .dd-welcome-banner {
-            background: var(--dd-card);
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
             border: 1px solid var(--dd-border);
+            border-left: 5px solid var(--dd-teal);
             border-radius: 16px;
             padding: 24px 28px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
             margin-bottom: 24px;
         }
         .dd-welcome-label {
@@ -44,34 +45,37 @@
             font-size: 10.5px;
             font-weight: 700;
             color: var(--dd-teal);
-            letter-spacing: 1px;
+            letter-spacing: 1.2px;
             text-transform: uppercase;
             margin-bottom: 6px;
         }
         .dd-welcome-title {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 800;
             color: var(--dd-text);
             margin-bottom: 0;
+            letter-spacing: -0.3px;
         }
         .dd-welcome-subtitle {
-            font-size: 13px;
+            font-size: 13.5px;
             color: var(--dd-text-muted);
             margin-top: 4px;
             margin-bottom: 0;
         }
         .dd-welcome-avatar {
-            width: 46px;
-            height: 46px;
-            border-radius: 12px;
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
             background: var(--dd-teal-light);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            border: 1px solid rgba(0, 121, 107, 0.15);
+            box-shadow: 0 2px 8px rgba(0, 121, 107, 0.1);
         }
         .dd-welcome-avatar i {
-            font-size: 22px;
+            font-size: 24px;
             color: var(--dd-teal);
         }
 
@@ -473,23 +477,115 @@
             var chart = new ApexCharts(document.querySelector('#incomeExpenseByMonth'), options);
             chart.render();
 
-            var donutOptions = {
-                chart: {
-                    type: 'donut',
-                    height: 290,
-                    fontFamily: 'Hanken Grotesk, sans-serif'
-                },
-                colors: ['#00796B', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'],
-                series: {!! json_encode($result['orderStatusDistribution']['counts'] ?? [0]) !!},
-                labels: {!! json_encode($result['orderStatusDistribution']['labels'] ?? ['No Orders']) !!},
-                legend: {
-                    position: 'bottom',
-                    fontFamily: 'JetBrains Mono',
-                    fontSize: '11px'
-                },
-                dataLabels: { enabled: true },
-                tooltip: { theme: 'dark' }
-            };
+            var rawCounts = {!! json_encode($result['orderStatusDistribution']['counts'] ?? []) !!};
+            var rawLabels = {!! json_encode($result['orderStatusDistribution']['labels'] ?? []) !!};
+            var totalOrders = rawCounts.reduce(function(a, b) { return a + Number(b); }, 0);
+
+            var donutOptions;
+            if (totalOrders > 0) {
+                donutOptions = {
+                    chart: {
+                        type: 'donut',
+                        height: 250,
+                        fontFamily: 'Inter, sans-serif'
+                    },
+                    colors: ['#F59E0B', '#3B82F6', '#10B981', '#06B6D4', '#00796B', '#8B5CF6', '#EF4444'],
+                    series: rawCounts,
+                    labels: rawLabels,
+                    stroke: { width: 2, colors: ['#ffffff'] },
+                    plotOptions: {
+                        pie: {
+                            donut: {
+                                size: '74%',
+                                labels: {
+                                    show: true,
+                                    name: {
+                                        show: true,
+                                        fontSize: '12px',
+                                        fontFamily: 'Inter, sans-serif',
+                                        color: '#64748B',
+                                        offsetY: -4
+                                    },
+                                    value: {
+                                        show: true,
+                                        fontSize: '22px',
+                                        fontFamily: 'Inter, sans-serif',
+                                        fontWeight: '800',
+                                        color: '#0F172A',
+                                        offsetY: 6
+                                    },
+                                    total: {
+                                        show: true,
+                                        label: 'Total Orders',
+                                        fontSize: '11px',
+                                        fontFamily: 'Inter, sans-serif',
+                                        color: '#64748B',
+                                        formatter: function (w) {
+                                            return w.globals.seriesTotals.reduce(function(a, b) { return a + b; }, 0);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    legend: { show: false },
+                    dataLabels: { enabled: false },
+                    tooltip: {
+                        theme: 'dark',
+                        y: { formatter: function(val) { return val + ' Orders'; } }
+                    }
+                };
+            } else {
+                donutOptions = {
+                    chart: {
+                        type: 'donut',
+                        height: 250,
+                        fontFamily: 'Inter, sans-serif'
+                    },
+                    colors: ['#E2E8F0'],
+                    series: [1],
+                    labels: ['No Orders Yet'],
+                    stroke: { width: 2, colors: ['#ffffff'] },
+                    plotOptions: {
+                        pie: {
+                            donut: {
+                                size: '74%',
+                                labels: {
+                                    show: true,
+                                    name: {
+                                        show: true,
+                                        fontSize: '11px',
+                                        fontFamily: 'Inter, sans-serif',
+                                        color: '#94A3B8',
+                                        offsetY: -4
+                                    },
+                                    value: {
+                                        show: true,
+                                        fontSize: '22px',
+                                        fontFamily: 'Inter, sans-serif',
+                                        fontWeight: '800',
+                                        color: '#64748B',
+                                        offsetY: 6,
+                                        formatter: function() { return '0'; }
+                                    },
+                                    total: {
+                                        show: true,
+                                        label: 'Total Orders',
+                                        fontSize: '11px',
+                                        fontFamily: 'Inter, sans-serif',
+                                        color: '#94A3B8',
+                                        formatter: function() { return '0'; }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    legend: { show: false },
+                    dataLabels: { enabled: false },
+                    tooltip: { enabled: false }
+                };
+            }
+
             if (document.querySelector('#orderStatusDonut')) {
                 var donutChart = new ApexCharts(document.querySelector('#orderStatusDonut'), donutOptions);
                 donutChart.render();
@@ -586,14 +682,17 @@
                     </div>
                 </div>
                 <div class="dd-quick-actions">
-                    <a href="{{ route('order.index') }}" class="dd-btn-primary">
-                        <i class="ti ti-plus"></i> {{ __('New Order') }}
+                    <a href="{{ route('orders.create.step1') }}" class="dd-btn-primary">
+                        <i class="ti ti-plus"></i> {{ __('New Custom Order') }}
                     </a>
-                    <a href="{{ route('measurement.index') }}" class="dd-btn-outline">
-                        <i class="ti ti-ruler-2"></i> {{ __('Take Measurements') }}
+                    <a href="{{ route('pos.index') }}" class="dd-btn-outline">
+                        <i class="ti ti-calculator"></i> {{ __('POS Billing') }}
+                    </a>
+                    <a href="{{ route('production.index') }}" class="dd-btn-outline">
+                        <i class="ti ti-timeline"></i> {{ __('Production Pipeline') }}
                     </a>
                     <a href="{{ route('customer.index') }}" class="dd-btn-outline">
-                        <i class="ti ti-users"></i> {{ __('View Clients') }}
+                        <i class="ti ti-users"></i> {{ __('Clients Directory') }}
                     </a>
                 </div>
             </div>
@@ -622,72 +721,80 @@
                 </div>
 
                 {{-- Total Customer --}}
-                <div class="dd-stat-card">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                        <div class="dd-stat-icon">
-                            <i class="ti ti-users"></i>
+                <a href="{{ route('customer.index') }}" class="text-decoration-none">
+                    <div class="dd-stat-card">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="dd-stat-icon">
+                                <i class="ti ti-users"></i>
+                            </div>
+                            <i class="ti ti-arrow-up-right" style="color: var(--dd-teal); font-size: 18px;"></i>
                         </div>
-                        <i class="ti ti-dots-vertical" style="color: #CBD5E1; font-size: 18px;"></i>
-                    </div>
-                    <div>
-                        <div class="dd-stat-value">{{ $result['totalCustomer'] }}</div>
-                        <div class="dd-stat-label">{{ __('Total Clients') }}</div>
-                        <div class="dd-stat-subtext">
-                            <i class="ti ti-trending-up" style="font-size: 11px;"></i> {{ __('Active clients') }}
+                        <div>
+                            <div class="dd-stat-value">{{ $result['totalCustomer'] }}</div>
+                            <div class="dd-stat-label">{{ __('Total Clients') }}</div>
+                            <div class="dd-stat-subtext">
+                                <i class="ti ti-trending-up" style="font-size: 11px;"></i> {{ __('Active clients') }}
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
 
                 {{-- Total Cloth Type --}}
-                <div class="dd-stat-card">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                        <div class="dd-stat-icon">
-                            <i class="ti ti-hanger"></i>
+                <a href="{{ route('cloth-type.index') }}" class="text-decoration-none">
+                    <div class="dd-stat-card">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="dd-stat-icon">
+                                <i class="ti ti-hanger"></i>
+                            </div>
+                            <i class="ti ti-arrow-up-right" style="color: var(--dd-teal); font-size: 18px;"></i>
                         </div>
-                        <i class="ti ti-dots-vertical" style="color: #CBD5E1; font-size: 18px;"></i>
-                    </div>
-                    <div>
-                        <div class="dd-stat-value">{{ $result['totalClothType'] }}</div>
-                        <div class="dd-stat-label">{{ __('Cloth Types') }}</div>
-                        <div class="dd-stat-subtext">
-                            <i class="ti ti-category" style="font-size: 11px;"></i> {{ __('Categories') }}
+                        <div>
+                            <div class="dd-stat-value">{{ $result['totalClothType'] }}</div>
+                            <div class="dd-stat-label">{{ __('Cloth Types') }}</div>
+                            <div class="dd-stat-subtext">
+                                <i class="ti ti-category" style="font-size: 11px;"></i> {{ __('Categories') }}
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
 
                 {{-- Total Income --}}
-                <div class="dd-stat-card">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                        <div class="dd-stat-icon">
-                            <i class="ti ti-wallet"></i>
+                <a href="{{ route('income.data') }}" class="text-decoration-none">
+                    <div class="dd-stat-card">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="dd-stat-icon">
+                                <i class="ti ti-wallet"></i>
+                            </div>
+                            <i class="ti ti-arrow-up-right" style="color: var(--dd-teal); font-size: 18px;"></i>
                         </div>
-                        <i class="ti ti-dots-vertical" style="color: #CBD5E1; font-size: 18px;"></i>
-                    </div>
-                    <div>
-                        <div class="dd-stat-value">{{ getSettingsValByName('CURRENCY_SYMBOL') . number_format($result['totalIncome'], 2) }}</div>
-                        <div class="dd-stat-label">{{ __('Total Income') }}</div>
-                        <div class="dd-stat-subtext">
-                            <i class="ti ti-trending-up" style="font-size: 11px;"></i> {{ __('Revenue earned') }}
+                        <div>
+                            <div class="dd-stat-value">{{ getSettingsValByName('CURRENCY_SYMBOL') . number_format($result['totalIncome'], 2) }}</div>
+                            <div class="dd-stat-label">{{ __('Total Income') }}</div>
+                            <div class="dd-stat-subtext">
+                                <i class="ti ti-trending-up" style="font-size: 11px;"></i> {{ __('Revenue earned') }}
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
 
                 {{-- Total Expense --}}
-                <div class="dd-stat-card">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                        <div class="dd-stat-icon">
-                            <i class="ti ti-credit-card"></i>
+                <a href="{{ route('expense.data') }}" class="text-decoration-none">
+                    <div class="dd-stat-card">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="dd-stat-icon">
+                                <i class="ti ti-credit-card"></i>
+                            </div>
+                            <i class="ti ti-arrow-up-right" style="color: var(--dd-teal); font-size: 18px;"></i>
                         </div>
-                        <i class="ti ti-dots-vertical" style="color: #CBD5E1; font-size: 18px;"></i>
-                    </div>
-                    <div>
-                        <div class="dd-stat-value">{{ getSettingsValByName('CURRENCY_SYMBOL') . number_format($result['totalExpense'], 2) }}</div>
-                        <div class="dd-stat-label">{{ __('Total Expense') }}</div>
-                        <div class="dd-stat-subtext">
-                            <i class="ti ti-arrow-down-right" style="font-size: 11px;"></i> {{ __('Costs incurred') }}
+                        <div>
+                            <div class="dd-stat-value">{{ getSettingsValByName('CURRENCY_SYMBOL') . number_format($result['totalExpense'], 2) }}</div>
+                            <div class="dd-stat-label">{{ __('Total Expense') }}</div>
+                            <div class="dd-stat-subtext">
+                                <i class="ti ti-arrow-down-right" style="font-size: 11px;"></i> {{ __('Costs incurred') }}
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
 
             {{-- Analytics Charts Section --}}
@@ -708,13 +815,50 @@
                 </div>
                 <div class="col-lg-4">
                     <div class="dd-chart-card h-100 mb-0">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
                             <div>
                                 <h5 class="dd-chart-title">{{ __('Order Status Breakdown') }}</h5>
                                 <p class="dd-stat-label mb-0 mt-1">{{ __('Real-time status distribution') }}</p>
                             </div>
                         </div>
-                        <div id="orderStatusDonut" style="min-height: 280px;"></div>
+                        <div id="orderStatusDonut" style="min-height: 240px;"></div>
+
+                        {{-- Breakdown Status Grid --}}
+                        <div class="dd-status-breakdown-grid mt-2 pt-2 border-top">
+                            @php
+                                $statusColors = [
+                                    'pending' => ['bg' => '#FFFBEB', 'text' => '#D97706', 'dot' => '#F59E0B'],
+                                    'in_progress' => ['bg' => '#EFF6FF', 'text' => '#2563EB', 'dot' => '#3B82F6'],
+                                    'completed' => ['bg' => '#ECFDF5', 'text' => '#059669', 'dot' => '#10B981'],
+                                    'ready_for_delivery' => ['bg' => '#ECFEFF', 'text' => '#0891B2', 'dot' => '#06B6D4'],
+                                    'delivered' => ['bg' => '#E6F4F1', 'text' => '#00796B', 'dot' => '#00796B'],
+                                    'on_hold' => ['bg' => '#F5F3FF', 'text' => '#7C3AED', 'dot' => '#8B5CF6'],
+                                    'cancelled' => ['bg' => '#FEF2F2', 'text' => '#DC2626', 'dot' => '#EF4444'],
+                                ];
+                                $labels = $result['orderStatusDistribution']['labels'] ?? [];
+                                $counts = $result['orderStatusDistribution']['counts'] ?? [];
+                                $statusKeys = array_keys(\App\Models\Order::$status);
+                            @endphp
+
+                            <div class="row g-2">
+                                @foreach ($statusKeys as $idx => $sKey)
+                                    @php
+                                        $sLabel = $labels[$idx] ?? ucwords(str_replace('_', ' ', $sKey));
+                                        $sCount = $counts[$idx] ?? 0;
+                                        $sStyle = $statusColors[$sKey] ?? ['bg' => '#F8FAFC', 'text' => '#475569', 'dot' => '#94A3B8'];
+                                    @endphp
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center justify-content-between p-2 rounded-3" style="background: {{ $sStyle['bg'] }}; border: 1px solid rgba(0,0,0,0.03);">
+                                            <div class="d-flex align-items-center gap-2 overflow-hidden me-1">
+                                                <span style="width: 8px; height: 8px; border-radius: 50%; background: {{ $sStyle['dot'] }}; display: inline-block; flex-shrink: 0;"></span>
+                                                <span class="text-truncate" style="font-size: 11px; font-weight: 600; color: {{ $sStyle['text'] }};">{{ $sLabel }}</span>
+                                            </div>
+                                            <span class="badge rounded-pill fw-bold flex-shrink-0" style="background: rgba(0,0,0,0.06); color: {{ $sStyle['text'] }}; font-size: 11px;">{{ $sCount }}</span>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1020,6 +1164,22 @@
                             {{ $greeting }}, {{ Auth::user()->name }}!
                         </h3>
                         <p class="dd-welcome-subtitle">{{ __('Track your orders, measurements and invoices') }}</p>
+                        
+                        {{-- Quick Actions Bar --}}
+                        <div class="dd-quick-actions">
+                            <a href="{{ route('customer.orders') }}" class="dd-btn-primary">
+                                <i class="ti ti-shopping-cart"></i> {{ __('View My Orders') }}
+                            </a>
+                            <a href="{{ route('customer.measurements') }}" class="dd-btn-outline">
+                                <i class="ti ti-ruler"></i> {{ __('My Measurements') }}
+                            </a>
+                            <a href="{{ route('customer.invoices') }}" class="dd-btn-outline">
+                                <i class="ti ti-receipt"></i> {{ __('My Invoices') }}
+                            </a>
+                            <a href="{{ route('track.order') }}" class="dd-btn-outline">
+                                <i class="ti ti-search"></i> {{ __('Track Order') }}
+                            </a>
+                        </div>
                     </div>
                     <div class="dd-welcome-avatar d-none d-sm-flex">
                         <i class="ti ti-user"></i>
@@ -1034,84 +1194,148 @@
             <div class="row g-3 mb-4">
                 {{-- Total Measurement --}}
                 <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
-                    <div class="dd-stat-card">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div class="dd-stat-icon">
-                                <i class="ti ti-ruler"></i>
+                    <a href="{{ route('customer.measurements') }}" class="text-decoration-none">
+                        <div class="dd-stat-card">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="dd-stat-icon">
+                                    <i class="ti ti-ruler"></i>
+                                </div>
+                                <i class="ti ti-arrow-up-right" style="color: var(--dd-teal); font-size: 18px;"></i>
                             </div>
-                            <i class="ti ti-dots-vertical" style="color: #CBD5E1; font-size: 18px;"></i>
-                        </div>
-                        <div>
-                            <div class="dd-stat-value">{{ $result['totalMeasurement'] }}</div>
-                            <div class="dd-stat-label">{{ __('Total Measurements') }}</div>
-                            <div class="dd-stat-subtext">
-                                <i class="ti ti-ruler-2" style="font-size: 11px;"></i> {{ __('Saved profiles') }}
+                            <div>
+                                <div class="dd-stat-value">{{ $result['totalMeasurement'] }}</div>
+                                <div class="dd-stat-label">{{ __('Total Measurements') }}</div>
+                                <div class="dd-stat-subtext">
+                                    <i class="ti ti-ruler-2" style="font-size: 11px;"></i> {{ __('Saved profiles') }}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
 
                 {{-- Total Order --}}
                 <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
-                    <div class="dd-stat-card">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div class="dd-stat-icon">
-                                <i class="ti ti-shopping-cart"></i>
+                    <a href="{{ route('customer.orders') }}" class="text-decoration-none">
+                        <div class="dd-stat-card">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="dd-stat-icon">
+                                    <i class="ti ti-shopping-cart"></i>
+                                </div>
+                                <i class="ti ti-arrow-up-right" style="color: var(--dd-teal); font-size: 18px;"></i>
                             </div>
-                            <i class="ti ti-dots-vertical" style="color: #CBD5E1; font-size: 18px;"></i>
-                        </div>
-                        <div>
-                            <div class="dd-stat-value">{{ $result['totalOrder'] }}</div>
-                            <div class="dd-stat-label">{{ __('Total Orders') }}</div>
-                            <div class="dd-stat-subtext">
-                                <i class="ti ti-shopping-bag" style="font-size: 11px;"></i> {{ __('All orders') }}
+                            <div>
+                                <div class="dd-stat-value">{{ $result['totalOrder'] }}</div>
+                                <div class="dd-stat-label">{{ __('Total Orders') }}</div>
+                                <div class="dd-stat-subtext">
+                                    <i class="ti ti-shopping-bag" style="font-size: 11px;"></i> {{ __('All orders') }}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
 
                 {{-- Total Paid --}}
                 <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
-                    <div class="dd-stat-card">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div class="dd-stat-icon">
-                                <i class="ti ti-cash"></i>
+                    <a href="{{ route('customer.invoices') }}" class="text-decoration-none">
+                        <div class="dd-stat-card">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="dd-stat-icon">
+                                    <i class="ti ti-cash"></i>
+                                </div>
+                                <i class="ti ti-arrow-up-right" style="color: var(--dd-teal); font-size: 18px;"></i>
                             </div>
-                            <i class="ti ti-dots-vertical" style="color: #CBD5E1; font-size: 18px;"></i>
-                        </div>
-                        <div>
-                            <div class="dd-stat-value">{{ priceFormat($result['totalPaidAmount'] ?? 0) }}</div>
-                            <div class="dd-stat-label">{{ __('Total Paid') }}</div>
-                            <div class="dd-stat-subtext">
-                                <i class="ti ti-check" style="font-size: 11px;"></i> {{ __('Settled') }}
+                            <div>
+                                <div class="dd-stat-value">{{ priceFormat($result['totalPaidAmount'] ?? 0) }}</div>
+                                <div class="dd-stat-label">{{ __('Total Paid') }}</div>
+                                <div class="dd-stat-subtext">
+                                    <i class="ti ti-check" style="font-size: 11px;"></i> {{ __('Settled') }}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
 
                 {{-- Total Unpaid --}}
                 <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
-                    <div class="dd-stat-card">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div class="dd-stat-icon">
-                                <i class="ti ti-alert-circle"></i>
+                    <a href="{{ route('customer.invoices') }}" class="text-decoration-none">
+                        <div class="dd-stat-card">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="dd-stat-icon">
+                                    <i class="ti ti-alert-circle"></i>
+                                </div>
+                                <i class="ti ti-arrow-up-right" style="color: var(--dd-teal); font-size: 18px;"></i>
                             </div>
-                            <i class="ti ti-dots-vertical" style="color: #CBD5E1; font-size: 18px;"></i>
-                        </div>
-                        <div>
-                            <div class="dd-stat-value">{{ priceFormat($result['totalUnpaidAmount'] ?? 0) }}</div>
-                            <div class="dd-stat-label">{{ __('Unpaid Amount') }}</div>
-                            <div class="dd-stat-subtext">
-                                <i class="ti ti-clock" style="font-size: 11px;"></i> {{ __('Outstanding') }}
+                            <div>
+                                <div class="dd-stat-value">{{ priceFormat($result['totalUnpaidAmount'] ?? 0) }}</div>
+                                <div class="dd-stat-label">{{ __('Unpaid Amount') }}</div>
+                                <div class="dd-stat-subtext">
+                                    <i class="ti ti-clock" style="font-size: 11px;"></i> {{ __('Outstanding') }}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
 
+            {{-- Recent Orders Table Section --}}
+            @if(isset($result['recentOrders']) && count($result['recentOrders']) > 0)
+                <div class="dd-section-label mt-4">{{ __('RECENT TAILORING ORDERS') }}</div>
+                <div class="dd-chart-card mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="dd-chart-title">{{ __('My Recent Orders') }}</h5>
+                        <a href="{{ route('customer.orders') }}" class="dd-btn-outline py-1 px-3" style="font-size: 12px;">
+                            {{ __('View All') }} <i class="ti ti-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table dd-table w-100">
+                            <thead>
+                                <tr>
+                                    <th>{{ __('Order #') }}</th>
+                                    <th>{{ __('Cloth Type') }}</th>
+                                    <th>{{ __('Order Date') }}</th>
+                                    <th>{{ __('Delivery Date') }}</th>
+                                    <th>{{ __('Status') }}</th>
+                                    <th class="text-end">{{ __('Action') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($result['recentOrders'] as $rOrder)
+                                    <tr>
+                                        <td class="fw-bold text-dark">{{ orderPrefix() . $rOrder->id }}</td>
+                                        <td>{{ $rOrder->clothTypes->title ?? $rOrder->clothTypes->name ?? '-' }}</td>
+                                        <td>{{ $rOrder->order_date ? \Carbon\Carbon::parse($rOrder->order_date)->format('d M Y') : '-' }}</td>
+                                        <td>{{ $rOrder->deadline_date ? \Carbon\Carbon::parse($rOrder->deadline_date)->format('d M Y') : '-' }}</td>
+                                        <td>
+                                            @php
+                                                $bColors = [
+                                                    'pending' => 'dd-badge-pending',
+                                                    'in_progress' => 'dd-badge-in-progress',
+                                                    'completed' => 'dd-badge-completed',
+                                                    'ready_for_delivery' => 'dd-badge-completed',
+                                                    'delivered' => 'dd-badge-completed',
+                                                ];
+                                            @endphp
+                                            <span class="dd-badge {{ $bColors[$rOrder->status] ?? 'dd-badge-in-progress' }}">
+                                                {{ ucwords(str_replace('_', ' ', $rOrder->status)) }}
+                                            </span>
+                                        </td>
+                                        <td class="text-end">
+                                            <a href="{{ route('customer.orders.show', $rOrder->id) }}" class="btn btn-sm btn-light-primary">
+                                                <i class="ti ti-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
+
             {{-- Order Notifications --}}
             @if (count($result['notifyOrder']) > 0)
-                <div class="dd-section-header">
+                <div class="dd-section-header mt-4">
                     <span class="dd-section-label mb-0">{{ __('ORDER NOTIFICATIONS') }}</span>
                 </div>
 
@@ -1148,7 +1372,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="{{ route('order.show', encrypt($order->id)) }}" class="dd-view-btn">
+                            <a href="{{ route('customer.orders.show', $order->id) }}" class="dd-view-btn">
                                 <i class="ti ti-eye" style="font-size: 14px;"></i> {{ __('View Order') }}
                             </a>
                         </div>
@@ -1158,3 +1382,16 @@
         @endif
     </div>
 @endsection
+
+@push('script-page')
+<script>
+    window.fetchDashboardStats = function() {
+        $.get("{{ route('dashboard') }}", function(html) {
+            var $newContent = $(html).find('.dd-dashboard');
+            if ($newContent.length) {
+                $('.dd-dashboard').html($newContent.html());
+            }
+        });
+    };
+</script>
+@endpush

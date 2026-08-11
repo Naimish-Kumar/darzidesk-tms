@@ -231,7 +231,11 @@ class CustomerController extends Controller
 
     public function edit($id)
     {
-        $id = decrypt($id);
+        try {
+            $id = decrypt($id);
+        } catch (\Exception $e) {
+            // ID was already unencrypted
+        }
         $user = User::find($id);
         return view('customer.edit', compact('user'));
     }
@@ -239,7 +243,11 @@ class CustomerController extends Controller
 
     public function update(Request $request, $id)
     {
-        $id = decrypt($id);
+        try {
+            $id = decrypt($id);
+        } catch (\Exception $e) {
+            // ID was already unencrypted
+        }
         if (\Auth::user()->can('edit customer')) {
             $validator = \Validator::make(
                 $request->all(),
@@ -262,7 +270,10 @@ class CustomerController extends Controller
             $user->phone_number = $request->phone_number;
             $user->save();
             if (!empty($user)) {
-                $customer = Customer::where('user_id', $id)->first();
+                $customer = Customer::firstOrCreate(
+                    ['user_id' => $id],
+                    ['customer_id' => $this->customerNumber(), 'parent_id' => parentId()]
+                );
                 $customer->city = $request->city;
                 $customer->address = $request->address;
                 $customer->notes = $request->notes;

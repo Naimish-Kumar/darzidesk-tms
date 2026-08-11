@@ -415,6 +415,45 @@
 </script>
 <script src="{{ asset('js/custom.js') }}"></script>
 <script src="{{ asset('js/theme-color.js') }}"></script>
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var pusherAppKey = "{{ config('broadcasting.connections.pusher.key', env('PUSHER_APP_KEY', '')) }}";
+        var pusherCluster = "{{ config('broadcasting.connections.pusher.options.cluster', env('PUSHER_APP_CLUSTER', 'mt1')) }}";
+        var tenantId = "{{ auth()->user()?->parent_id ?? 1 }}";
+
+        if (pusherAppKey && typeof Pusher !== 'undefined') {
+            try {
+                var pusher = new Pusher(pusherAppKey, {
+                    cluster: pusherCluster,
+                    encrypted: true
+                });
+
+                var channel = pusher.subscribe('tenant.' + tenantId);
+
+                channel.bind('notification.live', function(data) {
+                    if (typeof notifier !== 'undefined') {
+                        notifier.show(data.title || 'Notification', data.message || '', 'info', successImg, 5000);
+                    }
+                });
+
+                channel.bind('order.status.updated', function(data) {
+                    if (typeof notifier !== 'undefined') {
+                        var msg = 'Order #' + (data.order_number || data.order_id) + ' status updated to ' + data.status;
+                        notifier.show('Order Update', msg, 'success', successImg, 6000);
+                    }
+
+                    // Dynamically refresh order cards or table rows if present on screen
+                    if (typeof window.fetchDashboardStats === 'function') {
+                        window.fetchDashboardStats();
+                    }
+                });
+            } catch (err) {
+                console.log('Pusher client setup fallback:', err);
+            }
+        }
+    });
+</script>
 @if ($statusMessage = Session::get('success'))
     <script>
         notifier.show('Success!', '{!! $statusMessage !!}', 'success',

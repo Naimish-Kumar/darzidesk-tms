@@ -213,4 +213,41 @@ class ReportController extends Controller
             'currency_symbol' => $currency_symbol,
         ]);
     }
+
+    public function exportPdf(Request $request)
+    {
+        $year = $request->input('year', now()->year);
+        $type = $request->input('type', 'yearly');
+
+        $html = "<h2>DarziDesk Financial Report ({$year})</h2><p>Export Type: " . strtoupper($type) . "</p>";
+        $html .= "<table border='1' cellpadding='8' cellspacing='0' style='width:100%; border-collapse:collapse;'>";
+        $html .= "<tr style='background:#00796B; color:#fff;'><th>Period</th><th>Income</th><th>Expense</th><th>Net Profit</th></tr>";
+
+        $reportData = $this->getYearlyProfitLoss($request)->getData(true)['data'] ?? [];
+        foreach ($reportData['report'] ?? [] as $row) {
+            $html .= "<tr><td>{$row['month']}</td><td>₹{$row['income']}</td><td>₹{$row['expense']}</td><td>₹{$row['profit']}</td></tr>";
+        }
+        $html .= "</table>";
+
+        return response($html, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="financial_report_' . $year . '.pdf"',
+        ]);
+    }
+
+    public function exportCsv(Request $request)
+    {
+        $year = $request->input('year', now()->year);
+        $reportData = $this->getYearlyProfitLoss($request)->getData(true)['data'] ?? [];
+
+        $csv = "Month,Income,Expense,Profit\n";
+        foreach ($reportData['report'] ?? [] as $row) {
+            $csv .= "{$row['month']},{$row['income']},{$row['expense']},{$row['profit']}\n";
+        }
+
+        return response($csv, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="financial_report_' . $year . '.csv"',
+        ]);
+    }
 }

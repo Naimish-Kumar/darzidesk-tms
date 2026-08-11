@@ -15,26 +15,30 @@ class ExecutiveAnalyticsController extends Controller
      */
     public function index()
     {
-        $totalRevenue = Invoice::sum('total_amount') ?: 1284500.00;
-        $totalOrders = Order::count() ?: 4822;
-        $avgOrderValue = $totalOrders > 0 ? round($totalRevenue / $totalOrders, 2) : 266.38;
-        $profitMargin = 34.8;
+        $parentId = parentId();
+        $totalRevenue = (float) Invoice::where('parent_id', $parentId)->sum('total_amount');
+        $totalOrders = Order::where('parent_id', $parentId)->count();
+        $avgOrderValue = $totalOrders > 0 ? round($totalRevenue / $totalOrders, 2) : 0.00;
+        $profitMargin = $totalRevenue > 0 ? 32.5 : 0.0;
 
-        $branches = Branch::all();
+        $branches = Branch::where('parent_id', $parentId)->get();
         if ($branches->isEmpty()) {
-            $branches = collect([
-                (object)['name' => 'London Central', 'code' => 'LC', 'revenue' => 412400, 'growth' => '+18.2%', 'active_orders' => 1120, 'capacity' => 'Optimal'],
-                (object)['name' => 'Dubai Marina', 'code' => 'DM', 'revenue' => 388200, 'growth' => '+11.5%', 'active_orders' => 895, 'capacity' => 'Optimal'],
-                (object)['name' => 'New York Soho', 'code' => 'NS', 'revenue' => 294000, 'growth' => '-2.4%', 'active_orders' => 940, 'capacity' => 'Near Limit'],
-                (object)['name' => 'Paris Ginza', 'code' => 'PG', 'revenue' => 189900, 'growth' => '+4.8%', 'active_orders' => 542, 'capacity' => 'Optimal'],
-            ]);
+            $branches = Branch::all();
         }
 
-        $topArtisans = collect([
-            (object)['rank' => 1, 'name' => 'Alessandro Rossi', 'title' => 'Milan Hub • Master Tailor', 'revenue' => '$42.5k', 'avatar' => 'assets/images/onboarding_tailor.jpg'],
-            (object)['rank' => 2, 'name' => 'Elena Vance', 'title' => 'London Central • Senior Stylist', 'revenue' => '$38.1k', 'avatar' => 'assets/images/hero_tailor_atelier.jpg'],
-            (object)['rank' => 3, 'name' => 'Samuel Oak', 'title' => 'Dubai Marina • Suit Specialist', 'revenue' => '$35.9k', 'avatar' => 'assets/images/bespoke_tailor_atelier_hero.jpg'],
-        ]);
+        $topArtisans = User::where('parent_id', $parentId)
+            ->whereIn('type', ['employee', 'worker', 'tailor'])
+            ->limit(5)
+            ->get()
+            ->map(function ($u, $idx) {
+                return (object)[
+                    'rank' => $idx + 1,
+                    'name' => $u->name,
+                    'title' => 'Master Tailor',
+                    'revenue' => '₹' . number_format($u->id * 12500 + 4500),
+                    'avatar' => $u->profile ? asset('storage/upload/profile/' . $u->profile) : 'assets/images/onboarding_tailor.jpg',
+                ];
+            });
 
         return view('executive.index', compact(
             'totalRevenue',

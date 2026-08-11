@@ -382,11 +382,16 @@
             cursor: pointer;
             margin-top: 18px;
             transition: all 0.2s ease;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+            box-sizing: border-border-box;
         }
 
         .shop-owner-card:hover {
             background: #EBF4F4;
             border-color: var(--primary-teal);
+            transform: translateY(-1px);
         }
 
         .shop-owner-icon {
@@ -500,11 +505,28 @@
 
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
+
+                    @if (session('error'))
+                        <div style="background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; margin-bottom: 18px; font-weight: 600;">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div style="background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; margin-bottom: 18px;">
+                            <ul style="margin: 0; padding-left: 18px; font-weight: 600;">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <div class="form-group">
                         <label>FULL NAME</label>
                         <div class="input-group">
                             <span class="material-symbols-outlined">person</span>
-                            <input type="text" name="name" placeholder="E.g. Julian Savile" required>
+                            <input type="text" name="name" value="{{ old('name') }}" placeholder="E.g. Julian Savile" required>
                         </div>
                     </div>
 
@@ -512,7 +534,7 @@
                         <label>WORK EMAIL ADDRESS</label>
                         <div class="input-group">
                             <span class="material-symbols-outlined">mail</span>
-                            <input type="email" name="email" placeholder="name@atelier.com" required>
+                            <input type="email" name="email" value="{{ old('email') }}" placeholder="name@atelier.com" required>
                         </div>
                     </div>
 
@@ -520,7 +542,7 @@
                         <label>PHONE NUMBER</label>
                         <div class="input-group">
                             <span class="material-symbols-outlined">call</span>
-                            <input type="tel" name="phone" placeholder="+1 (555) 000-0000" required>
+                            <input type="tel" name="phone" value="{{ old('phone') }}" placeholder="+1 (555) 000-0000" required>
                         </div>
                     </div>
 
@@ -536,24 +558,25 @@
 
                     <div class="checkbox-row">
                         <input type="checkbox" id="terms" required checked>
-                        <label for="terms">I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>.</label>
+                        <label for="terms">I agree to the <a href="{{ route('terms.conditions') }}" target="_blank">Terms & Conditions</a> and <a href="{{ route('privacy.policy') }}" target="_blank">Privacy Policy</a>.</label>
                     </div>
 
                     <button type="submit" class="btn-submit">
                         Create Account
                         <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
                     </button>
-                </form>
 
-                <div class="shop-owner-card">
-                    <div class="shop-owner-icon">
-                        <span class="material-symbols-outlined">storefront</span>
-                    </div>
-                    <div class="shop-owner-text">
-                        <h5>Register as a Shop Owner</h5>
-                        <p>Manage orders, clients, and fabrics.</p>
-                    </div>
-                </div>
+                    <button type="submit" class="shop-owner-card">
+                        <div class="shop-owner-icon">
+                            <span class="material-symbols-outlined">storefront</span>
+                        </div>
+                        <div class="shop-owner-text" style="flex: 1;">
+                            <h5>Register as a Shop Owner</h5>
+                            <p>Manage orders, clients, and fabrics.</p>
+                        </div>
+                        <span class="material-symbols-outlined" style="color: var(--primary-teal); font-size: 20px;">arrow_forward</span>
+                    </button>
+                </form>
 
                 <div class="already-account">
                     Already have an account? <a href="{{ route('login') }}">Sign In</a>
