@@ -101,7 +101,7 @@
                 </a>
             </div>
         </div>
-        <ul class="nav nav-tabs nav-fill pct-tabs" id="myTab" role="tablist">
+        <ul class="nav nav-tabs nav-fill pct-tabs" id="pctThemeTab" role="tablist">
             <li class="nav-item" role="presentation" data-bs-toggle="tooltip" title="Layout Settings">
                 <button class="nav-link active" id="pct-1-tab" data-bs-toggle="tab" data-bs-target="#pct-1-tab-pane"
                     type="button" role="tab" aria-controls="pct-1-tab-pane" aria-selected="true">
@@ -117,7 +117,7 @@
         </ul>
         <div class="pct-body customizer-body">
             <div class="offcanvas-body p-0">
-                <div class="tab-content" id="myTabContent">
+                <div class="tab-content" id="pctThemeTabContent">
                     <div class="tab-pane fade show active" id="pct-1-tab-pane" role="tabpanel"
                         aria-labelledby="pct-1-tab" tabindex="0">
                         <ul class="list-group list-group-flush">

@@ -27,7 +27,7 @@
 
     .pos-grid-layout {
         display: grid;
-        grid-template-columns: 1fr 400px;
+        grid-template-columns: 1fr 420px;
         gap: 24px;
     }
 
@@ -35,32 +35,41 @@
         background: #FFFFFF;
         border: 1px solid var(--card-border);
         border-radius: 14px;
-        padding: 12px 18px;
+        padding: 14px 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
     }
 
     .filter-pills {
         display: flex;
-        gap: 10px;
-        font-size: 12.5px;
+        gap: 8px;
+        font-size: 13px;
         font-weight: 700;
     }
 
     .filter-pill {
-        padding: 6px 16px;
-        border-radius: 8px;
+        padding: 8px 18px;
+        border-radius: 10px;
         color: var(--text-muted);
+        background: #F8FAFC;
         cursor: pointer;
         transition: all 0.2s ease;
         user-select: none;
+        border: 1px solid transparent;
+    }
+
+    .filter-pill:hover {
+        background: #F1F5F9;
+        color: var(--dark-navy);
     }
 
     .filter-pill.active {
         background: #E6FFFA;
         color: var(--primary-teal);
+        border-color: #B2DFDB;
         font-weight: 800;
     }
 
@@ -77,22 +86,23 @@
         border-radius: 16px;
         overflow: hidden;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
     }
 
     .product-card:hover {
         border-color: var(--primary-teal);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0, 106, 103, 0.08);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 24px rgba(0, 106, 103, 0.1);
     }
 
     .product-img {
         width: 100%;
-        height: 140px;
+        height: 135px;
         object-fit: cover;
         background: #F8FAFC;
     }
@@ -109,14 +119,14 @@
         font-size: 14px;
         font-weight: 800;
         color: var(--dark-navy);
-        margin-bottom: 2px;
+        margin-bottom: 3px;
     }
 
     .prod-desc {
         font-size: 11px;
         color: var(--text-muted);
         margin-bottom: 12px;
-        line-height: 1.3;
+        line-height: 1.35;
     }
 
     .prod-price-row {
@@ -134,8 +144,8 @@
     }
 
     .btn-add-cart-icon {
-        width: 36px;
-        height: 36px;
+        width: 38px;
+        height: 38px;
         border-radius: 50%;
         background: #E6FFFA;
         color: var(--primary-teal);
@@ -150,16 +160,18 @@
     .btn-add-cart-icon:hover {
         background: var(--primary-teal);
         color: #FFFFFF;
+        transform: scale(1.08);
     }
 
     .cart-card {
         background: #FFFFFF;
         border: 1px solid var(--card-border);
         border-radius: 18px;
-        padding: 20px;
+        padding: 22px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
     }
 
     .customer-info-box {
@@ -167,16 +179,16 @@
         border: 1px solid var(--card-border);
         border-radius: 14px;
         padding: 14px;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
     }
 
     .cust-avatar-circle {
-        width: 38px;
-        height: 38px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         background: #E6FFFA;
         color: var(--primary-teal);
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 800;
         display: flex;
         align-items: center;
@@ -187,12 +199,12 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 0;
+        padding: 12px 0;
         border-bottom: 1px dashed var(--card-border);
     }
 
     .cart-item-name {
-        font-size: 13px;
+        font-size: 13.5px;
         font-weight: 800;
         color: var(--dark-navy);
     }
@@ -209,8 +221,8 @@
         align-items: center;
         gap: 8px;
         background: #F1F5F9;
-        padding: 3px 10px;
-        border-radius: 6px;
+        padding: 4px 10px;
+        border-radius: 8px;
         font-size: 12px;
         font-weight: 800;
     }
@@ -219,23 +231,60 @@
         cursor: pointer;
         user-select: none;
         color: var(--text-muted);
+        font-size: 14px;
+        line-height: 1;
+        width: 18px;
+        text-align: center;
     }
 
     .qty-btn:hover {
         color: var(--primary-teal);
     }
 
+    .payment-method-pills {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .pm-pill {
+        border: 1px solid var(--card-border);
+        background: #F8FAFC;
+        border-radius: 10px;
+        padding: 8px 4px;
+        text-align: center;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--text-muted);
+        transition: all 0.2s ease;
+        user-select: none;
+    }
+
+    .pm-pill:hover {
+        border-color: var(--primary-teal);
+    }
+
+    .pm-pill.active {
+        background: #E6FFFA;
+        color: var(--primary-teal);
+        border-color: var(--primary-teal);
+        font-weight: 800;
+    }
+
     .financial-summary-stack {
         border-top: 1px solid var(--card-border);
         padding-top: 16px;
-        margin-bottom: 20px;
+        margin-bottom: 16px;
     }
 
     .summary-line {
         display: flex;
         justify-content: space-between;
-        font-size: 12.5px;
+        font-size: 13px;
         margin-bottom: 8px;
+        color: #475569;
     }
 
     .total-line {
@@ -244,7 +293,7 @@
         align-items: flex-end;
         margin-top: 12px;
         padding-top: 12px;
-        border-top: 1px solid var(--card-border);
+        border-top: 2px solid #E2E8F0;
     }
 
     .total-val {
@@ -269,10 +318,13 @@
         width: 100%;
         cursor: pointer;
         transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(0, 106, 103, 0.25);
     }
 
     .btn-proceed-pay:hover {
         background: #004D40;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(0, 106, 103, 0.35);
     }
 
     @media (max-width: 1100px) {
@@ -294,7 +346,7 @@
 
             <div class="d-flex align-items-center gap-2">
                 <i class="ti ti-search text-muted"></i>
-                <input type="text" id="posSearchInput" placeholder="{{ __('Search garments...') }}" onkeyup="searchCatalog()" class="form-control form-control-sm border-0 bg-light" style="width: 180px; font-weight:600;">
+                <input type="text" id="posSearchInput" placeholder="{{ __('Search garments...') }}" onkeyup="searchCatalog()" class="form-control form-control-sm border-0 bg-light" style="width: 200px; font-weight:600;">
             </div>
         </div>
 
@@ -313,7 +365,7 @@
                     <img src="{{ $clothImg }}" class="product-img" alt="{{ $cloth->title }}">
                     <div class="product-body">
                         <div>
-                            <div class="d-flex justify-content-between align-items-start">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
                                 <h6 class="prod-title">{{ $cloth->title }}</h6>
                                 <span class="badge bg-light-primary text-primary px-2 py-1 fs-8 rounded-pill">{{ $cloth->gender ?: 'Unisex' }}</span>
                             </div>
@@ -375,7 +427,7 @@
                 <button type="button" class="btn btn-sm text-danger p-0 fw-bold border-0 bg-transparent fs-8" onclick="clearCart()">{{ __('Clear All') }}</button>
             </div>
 
-            <div class="cart-items-stack" id="cartItemsStack" style="max-height: 280px; overflow-y: auto;">
+            <div class="cart-items-stack" id="cartItemsStack" style="max-height: 240px; overflow-y: auto;">
                 <div class="text-center py-4 text-muted fs-7">
                     <i class="ti ti-shopping-cart-x fs-2 d-block mb-1 text-muted"></i>
                     {{ __('Cart is empty. Click garment + button to add.') }}
@@ -385,14 +437,36 @@
 
         <!-- Financial Calculation & Submit -->
         <div>
+            <!-- Payment Method Selection Pills -->
+            <div class="mb-2">
+                <label class="form-label text-muted fs-8 fw-bold text-uppercase mb-1">{{ __('Payment Method') }}</label>
+                <div class="payment-method-pills" id="pmPills">
+                    <div class="pm-pill active" onclick="setPaymentMethod('Cash', this)">
+                        <i class="ti ti-cash d-block fs-6 mb-1"></i> Cash
+                    </div>
+                    <div class="pm-pill" onclick="setPaymentMethod('UPI', this)">
+                        <i class="ti ti-qrcode d-block fs-6 mb-1"></i> UPI / QR
+                    </div>
+                    <div class="pm-pill" onclick="setPaymentMethod('Card', this)">
+                        <i class="ti ti-credit-card d-block fs-6 mb-1"></i> Card
+                    </div>
+                    <div class="pm-pill" onclick="setPaymentMethod('Bank Transfer', this)">
+                        <i class="ti ti-building-bank d-block fs-6 mb-1"></i> Bank
+                    </div>
+                </div>
+            </div>
+
             <div class="financial-summary-stack">
                 <div class="summary-line">
                     <span class="text-muted">{{ __('Subtotal') }}</span>
                     <span id="summarySubtotal" class="fw-bold">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}0.00</span>
                 </div>
-                <div class="summary-line">
-                    <span class="text-muted">{{ __('Tax') }}</span>
-                    <span id="summaryTax" class="fw-bold">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}0.00</span>
+                <div class="summary-line d-flex align-items-center justify-content-between">
+                    <span class="text-muted">{{ __('Discount / Adjustment') }}</span>
+                    <div class="input-group input-group-sm" style="width: 110px;">
+                        <span class="input-group-text bg-light border-0 py-0">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}</span>
+                        <input type="number" step="0.01" min="0" class="form-control form-control-sm border-0 bg-light fw-bold text-end" id="posDiscountInput" placeholder="0.00" onkeyup="calculateTotals()" onchange="calculateTotals()">
+                    </div>
                 </div>
                 <div class="total-line">
                     <span class="fw-bold text-dark fs-7">{{ __('TOTAL AMOUNT') }}</span>
@@ -415,14 +489,64 @@
     </div>
 </div>
 
+<!-- Interactive Success Receipt Modal -->
+<div class="modal fade" id="posSuccessModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+            <div class="modal-body text-center p-4">
+                <div class="avtar avtar-xl bg-light-success text-success rounded-circle mx-auto mb-3" style="width: 70px; height: 70px;">
+                    <i class="ti ti-circle-check fs-1"></i>
+                </div>
+                <h4 class="font-weight-bold text-dark mb-1">{{ __('POS Checkout Complete!') }}</h4>
+                <p class="text-muted fs-7 mb-3">{{ __('Invoice has been successfully generated and recorded.') }}</p>
+
+                <div class="bg-light p-3 rounded-3 mb-4 text-start">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted fs-7">{{ __('Invoice Number') }}:</span>
+                        <strong class="text-dark font-monospace" id="modalInvoiceNum">#INV-1001</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted fs-7">{{ __('Customer') }}:</span>
+                        <strong class="text-dark" id="modalCustName">Walk-in Client</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted fs-7">{{ __('Total Paid / Invoiced') }}:</span>
+                        <strong class="text-teal font-monospace fs-6" id="modalTotalAmt">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}0.00</strong>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <a id="btnPrintReceipt" href="#" target="_blank" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 rounded-3 py-2 fw-bold">
+                        <i class="ti ti-printer fs-5"></i> {{ __('View & Print Receipt') }}
+                    </a>
+                    <a id="btnWhatsappShare" href="#" target="_blank" class="btn btn-success d-flex align-items-center justify-content-center gap-2 rounded-3 py-2 fw-bold d-none">
+                        <i class="ti ti-brand-whatsapp fs-5"></i> {{ __('Send WhatsApp Invoice') }}
+                    </a>
+                    <button type="button" class="btn btn-light-secondary rounded-3 py-2 fw-bold" onclick="resetPosConsole()">
+                        <i class="ti ti-plus fs-5"></i> {{ __('Start Next Sale') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('script-page')
 <script>
     let cart = [];
+    let selectedPaymentMethod = 'Cash';
     const currencySymbol = "{!! subscriptionPaymentSettings()['CURRENCY_SYMBOL'] !!}";
+    let createdInvoiceEncryptedId = '';
 
     $(document).ready(function() {
         updateSelectedCustomer();
     });
+
+    function setPaymentMethod(method, el) {
+        selectedPaymentMethod = method;
+        document.querySelectorAll('#pmPills .pm-pill').forEach(p => p.classList.remove('active'));
+        el.classList.add('active');
+    }
 
     function updateSelectedCustomer() {
         const select = document.getElementById('posCustomerSelect');
@@ -513,6 +637,7 @@
             cart.push({ id, name, price: parseFloat(price), qty: 1, img, gender });
         }
         renderCart();
+        toastrs('Added', `${name} added to cart`, 'success');
     }
 
     function updateQty(id, delta) {
@@ -536,10 +661,11 @@
     }
 
     function calculateTotals() {
-        const subtotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
-        const total = subtotal;
+        const rawSubtotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+        const discount = parseFloat(document.getElementById('posDiscountInput').value) || 0;
+        const total = Math.max(0, rawSubtotal - discount);
 
-        document.getElementById('summarySubtotal').textContent = currencySymbol + subtotal.toFixed(2);
+        document.getElementById('summarySubtotal').textContent = currencySymbol + rawSubtotal.toFixed(2);
         document.getElementById('summaryTotal').textContent = currencySymbol + total.toFixed(2);
     }
 
@@ -552,18 +678,21 @@
         }
 
         const advance = $('#posAdvanceInput').val() || 0;
+        const discount = $('#posDiscountInput').val() || 0;
+
         const payload = {
             customer_id: customerId,
             advance_payment: advance,
-            payment_method: 'Cash',
+            payment_method: selectedPaymentMethod,
+            payment_notes: `POS Checkout (${selectedPaymentMethod})`,
             items: cart.map(item => ({
                 cloth_type_id: item.id,
                 quantity: item.qty,
-                amount: item.price
+                amount: Math.max(0, item.price - (discount / cart.length))
             }))
         };
 
-        $('#btnSubmitPos').prop('disabled', true).html('<i class="ti ti-spin ti-spinner me-1"></i> Processing...');
+        $('#btnSubmitPos').prop('disabled', true).html('<i class="ti ti-spin ti-spinner me-1"></i> Processing POS Checkout...');
 
         fetch("{{ route('pos.store') }}", {
             method: "POST",
@@ -577,10 +706,25 @@
         .then(data => {
             $('#btnSubmitPos').prop('disabled', false).html('<i class="ti ti-check fs-5"></i> {{ __("Complete & Generate POS Invoice") }}');
             if (data.success) {
-                show_toastr('Success', data.message, 'success');
-                clearCart();
-                $('#posAdvanceInput').val('');
-                setTimeout(() => window.location.href = "{{ route('invoice.index') }}", 1200);
+                // Populate Success Modal
+                document.getElementById('modalInvoiceNum').textContent = data.invoice_number || '#INV';
+                document.getElementById('modalCustName').textContent = data.customer_name || 'Walk-in Client';
+                document.getElementById('modalTotalAmt').textContent = currencySymbol + data.total_amount;
+
+                const printUrl = "{{ url('/invoice') }}/" + data.encrypted_id;
+                document.getElementById('btnPrintReceipt').setAttribute('href', printUrl);
+
+                if (data.customer_phone) {
+                    const waMsg = encodeURIComponent(`Hello ${data.customer_name}, thank you for your order with DarziDesk! Your invoice ${data.invoice_number} of ${currencySymbol}${data.total_amount} has been generated. View details: ${printUrl}`);
+                    const waUrl = `https://api.whatsapp.com/send?phone=${data.customer_phone}&text=${waMsg}`;
+                    const waBtn = document.getElementById('btnWhatsappShare');
+                    waBtn.setAttribute('href', waUrl);
+                    waBtn.classList.remove('d-none');
+                }
+
+                // Show Success Modal
+                const modal = new bootstrap.Modal(document.getElementById('posSuccessModal'));
+                modal.show();
             } else {
                 show_toastr('Error', data.message || 'Payment failed', 'error');
             }
@@ -590,6 +734,18 @@
             show_toastr('Error', 'An unexpected error occurred.', 'error');
             console.error(err);
         });
+    }
+
+    function resetPosConsole() {
+        const modalEl = document.getElementById('posSuccessModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+
+        clearCart();
+        $('#posAdvanceInput').val('');
+        $('#posDiscountInput').val('');
+        $('#posCustomerSelect').val('');
+        updateSelectedCustomer();
     }
 </script>
 @endpush

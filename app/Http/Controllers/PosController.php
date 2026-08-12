@@ -39,9 +39,10 @@ class PosController extends Controller
         $customerId = $request->customer_id;
         if (empty($customerId)) {
             $walkIn = User::firstOrCreate(
-                ['email' => 'walkin@darzidesk.local', 'parent_id' => parentId()],
+                ['email' => 'walkin@darzidesk.local'],
                 [
                     'name' => 'Walk-in Client',
+                    'parent_id' => parentId(),
                     'password' => \Hash::make('password'),
                     'type' => 'customer',
                     'phone_number' => '0000000000',
@@ -50,7 +51,7 @@ class PosController extends Controller
             $customerId = $walkIn->id;
         }
 
-        \DB::transaction(function () use ($request, $customerId) {
+        $createdInvoice = \DB::transaction(function () use ($request, $customerId) {
             $invoice = Invoice::create([
                 'invoice_id' => $this->invoiceNumber(),
                 'customer_id' => $customerId,
@@ -96,11 +97,21 @@ class PosController extends Controller
                 $invoice->status = $advance >= $totalAmount ? 'paid' : 'partial_paid';
                 $invoice->save();
             }
+
+            return $invoice;
         });
+
+        $customer = User::find($customerId);
 
         return response()->json([
             'success' => true,
-            'message' => __('POS Invoiced created and completed successfully.'),
+            'message' => __('POS Invoice created and completed successfully.'),
+            'invoice_id' => $createdInvoice->id,
+            'invoice_number' => invoicePrefix() . $createdInvoice->invoice_id,
+            'encrypted_id' => encrypt($createdInvoice->id),
+            'customer_name' => $customer ? $customer->name : 'Walk-in Client',
+            'customer_phone' => $customer ? $customer->phone_number : '',
+            'total_amount' => number_format($createdInvoice->getTotal(), 2),
         ]);
     }
 

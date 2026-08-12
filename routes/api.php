@@ -29,11 +29,12 @@ Route::post('/social-login', function (Request $request) {
 
     if (!$user) {
         $nameParts = explode('@', $request->email);
+        $userType = in_array($request->type, ['owner', 'customer']) ? $request->type : 'owner';
         $user = User::create([
             'name' => !empty($request->name) ? $request->name : ucfirst($nameParts[0]),
             'email' => $request->email,
             'password' => Hash::make(Str::random(16)),
-            'type' => 'owner',
+            'type' => $userType,
             'lang' => 'en',
             'parent_id' => 1,
         ]);
@@ -195,6 +196,95 @@ Route::post('/forgot-password', function (Request $request) {
         'message' => 'Password reset OTP code sent to ' . $user->email,
         'otp' => $token, // Provided for easy development & mobile testing
         'email_sent' => $emailSent,
+    ]);
+});
+
+Route::post('/send-otp', function (Request $request) {
+    $request->validate([
+        'email' => 'required|email',
+        'purpose' => 'nullable|string'
+    ]);
+
+    $purpose = $request->purpose ?? 'registration';
+
+    if ($purpose === 'forgot_password') {
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No account found with this email address.'
+            ], 404);
+        }
+    }
+
+    $otp = sprintf("%06d", mt_rand(100000, 999999));
+    $cacheKey = 'otp_' . $purpose . '_' . $request->email;
+
+    \Illuminate\Support\Facades\Cache::put($cacheKey, $otp, now()->addMinutes(10));
+
+    if ($purpose === 'forgot_password') {
+        try {
+            DB::table('password_resets')->updateOrInsert(
+                ['email' => $request->email],
+                ['token' => Hash::make($otp), 'created_at' => now()]
+            );
+        } catch (\Throwable $e) {
+            try {
+                DB::table('password_reset_tokens')->updateOrInsert(
+                    ['email' => $request->email],
+                    ['token' => Hash::make($otp), 'created_at' => now()]
+                );
+            } catch (\Throwable $e2) {}
+        }
+    }
+
+    $emailSent = false;
+    try {
+        Mail::send('email.otp_verification', [
+            'otp_code' => $otp,
+            'email' => $request->email,
+            'purpose' => $purpose,
+        ], function ($message) use ($request, $otp) {
+            $fromAddress = env('MAIL_FROM_ADDRESS', 'info@darzidesk.shop');
+            $fromName = env('MAIL_FROM_NAME', 'DarziDesk');
+            $message->from($fromAddress, $fromName)
+                    ->to($request->email)
+                    ->subject('Your DarziDesk Verification Code: ' . $otp);
+        });
+        $emailSent = true;
+    } catch (\Throwable $e) {
+        \Log::error('SMTP OTP Mail send failed for ' . $request->email . ': ' . $e->getMessage());
+    }
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Verification code sent to ' . $request->email,
+        'otp' => $otp,
+        'email_sent' => $emailSent,
+    ]);
+});
+
+Route::post('/verify-otp', function (Request $request) {
+    $request->validate([
+        'email' => 'required|email',
+        'otp' => 'required|string',
+        'purpose' => 'nullable|string'
+    ]);
+
+    $purpose = $request->purpose ?? 'registration';
+    $cacheKey = 'otp_' . $purpose . '_' . $request->email;
+    $cachedOtp = \Illuminate\Support\Facades\Cache::get($cacheKey);
+
+    if (!$cachedOtp || (string)$cachedOtp !== (string)$request->otp) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Invalid or expired OTP code.'
+        ], 422);
+    }
+
+    return response()->json([
+        'success' => true,
+        'message' => 'OTP verified successfully.'
     ]);
 });
 
