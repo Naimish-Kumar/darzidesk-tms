@@ -276,6 +276,22 @@ class PosController extends Controller
                 ]);
             }
 
+            // Dispatch FCM Push Notification to Customer
+            try {
+                if (!empty($request->customer_id) && $request->customer_id > 1) {
+                    $pm = $request->payment_method ?? 'Cash';
+                    NotificationController::createNotification(
+                        $request->customer_id,
+                        'invoice',
+                        '💰 Payment Received',
+                        "Payment of ₹{$paidAmount} received for Invoice #{$invoice->invoice_id} via {$pm}.",
+                        parentId()
+                    );
+                }
+            } catch (\Throwable $e) {
+                \Log::warning('FCM POS sale push error: ' . $e->getMessage());
+            }
+
             DB::commit();
 
             return response()->json([

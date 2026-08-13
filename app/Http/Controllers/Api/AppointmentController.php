@@ -59,6 +59,19 @@ class AppointmentController extends Controller
             'parent_id' => parentId(),
         ]);
 
+        // Dispatch FCM Push Notification to Customer
+        try {
+            NotificationController::createNotification(
+                $request->customer_id,
+                'appointment',
+                '📅 Appointment Scheduled',
+                "Your fitting appointment has been scheduled for {$request->appointment_date} at " . ($request->appointment_time ?? '11:00 AM') . ".",
+                parentId()
+            );
+        } catch (\Throwable $e) {
+            \Log::warning('FCM appointment push error: ' . $e->getMessage());
+        }
+
         return response()->json(['success' => true, 'message' => 'Appointment scheduled successfully', 'appointment' => $appointment]);
     }
 
@@ -69,6 +82,22 @@ class AppointmentController extends Controller
         $appointment = Appointment::where('parent_id', parentId())->findOrFail($id);
         $appointment->status = $request->status;
         $appointment->save();
+
+        // Dispatch FCM Push Notification to Customer on status change
+        try {
+            if ($appointment->customer_id) {
+                $statusTitle = ucfirst($request->status);
+                NotificationController::createNotification(
+                    $appointment->customer_id,
+                    'appointment',
+                    "📅 Appointment {$statusTitle}",
+                    "Your fitting appointment status is now: {$statusTitle}.",
+                    parentId()
+                );
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('FCM appointment status update error: ' . $e->getMessage());
+        }
 
         return response()->json(['success' => true, 'message' => 'Appointment status updated', 'appointment' => $appointment]);
     }

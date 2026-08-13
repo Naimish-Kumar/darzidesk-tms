@@ -11,35 +11,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --dd-teal: #00796B;
-            --dd-teal-light: #E0F2F1;
-            --dd-teal-dark: #004D40;
-            --dd-navy: #002366;
-            --dd-card: #FFFFFF;
-            --dd-border: #EDEEEF;
-            --dd-text: #333333;
-            --dd-text-muted: #757682;
-            --dd-green: #2E7D32;
-            --dd-green-bg: #E8F5E9;
-            --dd-orange: #E65100;
-            --dd-orange-bg: #FFF3E0;
-            --dd-blue: #1976D2;
-            --dd-blue-bg: #E3F2FD;
-            --dd-red: #C62828;
-            --dd-red-bg: #FFEBEE;
+            --dd-teal: #D9A441;
+            --dd-teal-light: #102B45;
+            --dd-teal-dark: #F4C861;
+            --dd-navy: #0B2239;
+            --dd-card: #0B2239;
+            --dd-border: #29435D;
+            --dd-text: #FFFFFF;
+            --dd-text-muted: #8FA1B5;
+            --dd-green: #D9A441;
+            --dd-green-bg: rgba(217, 164, 65, 0.15);
+            --dd-orange: #F4C861;
+            --dd-orange-bg: rgba(244, 200, 97, 0.15);
+            --dd-blue: #3B82F6;
+            --dd-blue-bg: rgba(59, 130, 246, 0.15);
+            --dd-red: #EF4444;
+            --dd-red-bg: rgba(239, 68, 68, 0.15);
         }
 
         .dd-dashboard {
             font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #D8E0E8;
         }
 
         .dd-welcome-banner {
-            background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+            background: linear-gradient(135deg, #0B2239 0%, #102B45 100%);
             border: 1px solid var(--dd-border);
             border-left: 5px solid var(--dd-teal);
             border-radius: 16px;
             padding: 24px 28px;
-            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
             margin-bottom: 28px;
         }
         .dd-welcome-label {
@@ -72,8 +73,8 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            border: 1px solid rgba(0, 121, 107, 0.15);
-            box-shadow: 0 2px 8px rgba(0, 121, 107, 0.1);
+            border: 1px solid var(--dd-border);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
         .dd-welcome-avatar i {
             font-size: 24px;
@@ -87,8 +88,8 @@
             margin-top: 18px;
         }
         .dd-btn-primary {
-            background: var(--dd-teal);
-            color: #fff;
+            background: linear-gradient(135deg, #D9A441 0%, #C38E45 100%);
+            color: #03111F;
             border: none;
             border-radius: 10px;
             padding: 8px 18px;
@@ -99,16 +100,17 @@
             gap: 6px;
             transition: all 0.2s ease;
             text-decoration: none;
+            box-shadow: 0 4px 12px rgba(217, 164, 65, 0.3);
         }
         .dd-btn-primary:hover {
-            background: var(--dd-teal-dark);
-            color: #fff;
+            background: linear-gradient(135deg, #F4C861 0%, #D9A441 100%);
+            color: #03111F;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,121,107,0.25);
+            box-shadow: 0 6px 18px rgba(244, 200, 97, 0.4);
         }
         .dd-btn-outline {
-            background: transparent;
-            color: var(--dd-teal);
+            background: #102B45;
+            color: #D9A441;
             border: 1.5px solid var(--dd-teal);
             border-radius: 10px;
             padding: 8px 18px;
@@ -121,8 +123,8 @@
             text-decoration: none;
         }
         .dd-btn-outline:hover {
-            background: var(--dd-teal-light);
-            color: var(--dd-teal-dark);
+            background: var(--dd-teal);
+            color: #03111F;
         }
 
         .dd-section-label {
@@ -140,7 +142,7 @@
             border: 1px solid var(--dd-border);
             border-radius: 14px;
             padding: 18px 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             height: 100%;
             display: flex;
@@ -149,7 +151,8 @@
             min-height: 140px;
         }
         .dd-stat-card:hover {
-            box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+            border-color: var(--dd-teal);
+            box-shadow: 0 6px 24px rgba(217, 164, 65, 0.25);
             transform: translateY(-3px);
         }
         .dd-stat-icon {
@@ -160,6 +163,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            border: 1px solid var(--dd-border);
         }
         .dd-stat-icon i {
             font-size: 20px;
@@ -188,7 +192,7 @@
             border: 1px solid var(--dd-border);
             border-radius: 18px;
             padding: 22px 24px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
             margin-bottom: 28px;
         }
         .dd-chart-title {
@@ -201,10 +205,11 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 10px;
             font-weight: 700;
-            background: #F0F2F4;
+            background: #102B45;
             color: var(--dd-teal);
             padding: 4px 10px;
             border-radius: 8px;
+            border: 1px solid var(--dd-border);
         }
 
         @keyframes dd-pulse {
@@ -224,8 +229,8 @@
         [data-pc-theme="dark"] .dd-welcome-banner,
         [data-pc-theme="dark"] .dd-stat-card,
         [data-pc-theme="dark"] .dd-chart-card {
-            background: #1a2332;
-            border-color: rgba(255,255,255,0.08);
+            background: #0B2239;
+            border-color: var(--dd-border);
         }
         [data-pc-theme="dark"] .dd-welcome-title,
         [data-pc-theme="dark"] .dd-stat-value,
@@ -251,7 +256,7 @@
                     legend: { position: 'bottom' }
                 }
             }],
-            colors: ['#00796B', '#002366'],
+            colors: ['#D9A441', '#F4C861'],
             dataLabels: { enabled: false },
             legend: {
                 show: true,
@@ -260,13 +265,13 @@
                 fontFamily: 'JetBrains Mono',
                 fontSize: '10px',
                 fontWeight: 700,
-                labels: { colors: '#757682' },
+                labels: { colors: '#8FA1B5' },
                 markers: { radius: 3 }
             },
             markers: {
                 size: 3,
-                colors: ['#fff'],
-                strokeColors: ['#00796B', '#002366'],
+                colors: ['#FFFFFF'],
+                strokeColors: ['#D9A441', '#F4C861'],
                 strokeWidth: 2,
                 shape: 'circle',
                 hover: { size: 5 }
@@ -287,7 +292,7 @@
             },
             grid: {
                 show: true,
-                borderColor: '#EDEEEF',
+                borderColor: '#29435D',
                 strokeDashArray: 4,
                 xaxis: { lines: { show: false } },
                 yaxis: { lines: { show: true } },
@@ -309,7 +314,7 @@
                         fontFamily: 'JetBrains Mono',
                         fontSize: '10px',
                         fontWeight: 600,
-                        colors: '#757682'
+                        colors: '#8FA1B5'
                     }
                 },
                 axisBorder: { show: false },
@@ -320,7 +325,7 @@
                     style: {
                         fontFamily: 'JetBrains Mono',
                         fontSize: '10px',
-                        colors: '#757682'
+                        colors: '#8FA1B5'
                     }
                 }
             },

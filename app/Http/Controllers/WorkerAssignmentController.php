@@ -64,7 +64,7 @@ class WorkerAssignmentController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        ProductionAssignment::create([
+        $assignment = ProductionAssignment::create([
             'order_id' => $request->order_id,
             'worker_id' => $request->worker_id,
             'stage_id' => $request->stage_id,
@@ -73,6 +73,21 @@ class WorkerAssignmentController extends Controller
             'notes' => $request->notes,
             'assigned_at' => now(),
         ]);
+
+        // Dispatch FCM Push & In-App Notification to assigned Tailor Worker
+        try {
+            $order = \App\Models\Order::find($request->order_id);
+            $orderCode = $order ? $order->order_id : '#' . $request->order_id;
+            \App\Http\Controllers\Api\NotificationController::createNotification(
+                $request->worker_id,
+                'order_stage_update',
+                '✂️ New Tailor Task Assigned',
+                "You have been assigned a new tailoring task for Order {$orderCode}.",
+                $order->parent_id ?? 0
+            );
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('FCM tailor assignment push error: ' . $e->getMessage());
+        }
 
         return redirect()->back()->with('success', __('Task assigned to tailor successfully.'));
     }

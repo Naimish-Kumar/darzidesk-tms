@@ -63,6 +63,22 @@ class ProductionController extends Controller
         $stage = ProductionStage::find($request->stage_id);
         if ($stage) {
             WhatsAppWebhookController::dispatchStageNotification($order->id, $stage->name);
+            
+            try {
+                $title = "Order #{$order->order_id} Stage Update";
+                $body = "Your order status is now: {$stage->name}";
+                if ($order->customer_id) {
+                    NotificationController::createNotification(
+                        $order->customer_id,
+                        'order_stage_update',
+                        $title,
+                        $body,
+                        $order->parent_id ?? 0
+                    );
+                }
+            } catch (\Throwable $e) {
+                \Log::warning('FCM update error: ' . $e->getMessage());
+            }
         }
 
         return response()->json(['success' => true, 'message' => 'Stage updated']);

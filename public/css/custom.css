@@ -638,7 +638,7 @@ form label {
 /* ── Hover State ── */
 .pc-sidebar .pc-navbar > .pc-item > .pc-link:hover .pc-micon i,
 .pc-sidebar .pc-navbar > .pc-item > .pc-link:hover .pc-micon svg {
-    color: #00796B !important;
+    color: #D9A441 !important;
 }
 
 /* ── Submenu Arrow ── */
@@ -650,14 +650,14 @@ form label {
 .pc-sidebar .pc-navbar .pc-arrow svg {
     width: 16px !important;
     height: 16px !important;
-    color: #AAAAAA !important;
+    color: #8FA1B5 !important;
     transition: transform 0.25s ease, color 0.15s ease !important;
 }
 
 .pc-sidebar .pc-navbar > .pc-item.pc-trigger > .pc-link .pc-arrow i,
 .pc-sidebar .pc-navbar > .pc-item.pc-trigger > .pc-link .pc-arrow svg {
     transform: rotate(90deg) !important;
-    color: #00796B !important;
+    color: #D9A441 !important;
 }
 
 /* ── Submenu Styling ── */
@@ -676,7 +676,7 @@ form label {
     font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif !important;
     font-size: 13.5px !important;
     font-weight: 500 !important;
-    color: #666666 !important;
+    color: #D8E0E8 !important;
     padding: 10px 24px 10px 62px !important;
     border-radius: 0 !important;
     transition: all 0.15s ease !important;
@@ -688,7 +688,7 @@ form label {
     width: 5px !important;
     height: 5px !important;
     border-radius: 50% !important;
-    background: #CCCCCC !important;
+    background: #8FA1B5 !important;
     position: absolute !important;
     left: 44px !important;
     top: 50% !important;
@@ -697,22 +697,22 @@ form label {
 }
 
 .pc-sidebar .pc-submenu .pc-link:hover {
-    color: #00796B !important;
-    background: #F5FAFA !important;
+    color: #D9A441 !important;
+    background: #102B45 !important;
 }
 
 .pc-sidebar .pc-submenu .pc-link:hover::before {
-    background: #00796B !important;
+    background: #D9A441 !important;
 }
 
 .pc-sidebar .pc-submenu .pc-item.active .pc-link {
-    color: #00796B !important;
+    color: #D9A441 !important;
     font-weight: 600 !important;
-    background: #E8F5F3 !important;
+    background: #102B45 !important;
 }
 
 .pc-sidebar .pc-submenu .pc-item.active .pc-link::before {
-    background: #00796B !important;
+    background: #D9A441 !important;
     width: 6px !important;
     height: 6px !important;
 }
@@ -877,7 +877,7 @@ form label {
     .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.active .pc-micon svg,
     body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item.active .pc-micon i,
     body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item.active .pc-micon svg {
-        color: #00796B !important;
+        color: #D9A441 !important;
     }
 
     /* Hide version badge */
@@ -899,8 +899,9 @@ form label {
         left: 100%;
         top: 50%;
         transform: translateY(-50%);
-        background: #333333;
-        color: #fff;
+        background: #0B2239;
+        color: #D9A441;
+        border: 1px solid #29435D;
         padding: 6px 12px;
         border-radius: 6px;
         font-size: 12px;
@@ -912,7 +913,7 @@ form label {
         transition: opacity 0.15s ease;
         z-index: 1050;
         margin-left: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
 
     .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item > .pc-link:hover::after,
@@ -928,10 +929,10 @@ form label {
         left: 70px !important;
         top: 0 !important;
         min-width: 200px !important;
-        background: #FFFFFF !important;
-        border: 1px solid #F0F1F3 !important;
+        background: #0B2239 !important;
+        border: 1px solid #29435D !important;
         border-radius: 10px !important;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.4) !important;
         padding: 8px 0 !important;
         z-index: 1050 !important;
     }
@@ -939,6 +940,7 @@ form label {
     .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.pc-hasmenu:hover > .pc-submenu .pc-link,
     body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item.pc-hasmenu:hover > .pc-submenu .pc-link {
         padding: 10px 20px 10px 32px !important;
+        color: #D8E0E8 !important;
     }
 
     .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.pc-hasmenu:hover > .pc-submenu .pc-link::before,
@@ -948,74 +950,67 @@ form label {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════
-   Dark Mode Sidebar
+   Dark Mode Sidebar & Profile Pill
    ═══════════════════════════════════════════════════════════════════════════════ */
 
-[data-pc-theme="dark"] .pc-sidebar,
-[data-pc-theme="dark"] .pc-sidebar .navbar-wrapper,
-[data-pc-theme="dark"] .pc-sidebar .navbar-content {
-    background: #0B284A !important;
-    border-color: rgba(255,255,255,0.06) !important;
+.pc-sidebar,
+.pc-sidebar .navbar-wrapper,
+.pc-sidebar .navbar-content {
+    background: #0B2239 !important;
+    border-color: #29435D !important;
 }
 
-[data-pc-theme="dark"] .pc-sidebar .m-header {
-    background: #0B284A !important;
-    border-color: rgba(255,255,255,0.06) !important;
+.pc-sidebar .m-header {
+    background: #0B2239 !important;
+    border-color: #29435D !important;
 }
 
-[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item > .pc-link {
-    color: rgba(255,255,255,0.75) !important;
+.pc-sidebar .pc-navbar > .pc-item > .pc-link {
+    color: #D8E0E8 !important;
 }
 
-[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item > .pc-link:hover {
-    background: rgba(0,121,107,0.12) !important;
-    color: #4DB6AC !important;
+.pc-sidebar .pc-navbar > .pc-item > .pc-link:hover {
+    background: #102B45 !important;
+    color: #D9A441 !important;
 }
 
-[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.active > .pc-link,
-[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link {
-    background: rgba(0,121,107,0.18) !important;
-    color: #4DB6AC !important;
+.pc-sidebar .pc-navbar > .pc-item.active > .pc-link,
+.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link {
+    background: #102B45 !important;
+    color: #D9A441 !important;
 }
 
-[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.active::after,
-[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.pc-trigger.active::after {
-    background: #4DB6AC !important;
+.pc-sidebar .pc-navbar > .pc-item.active::after,
+.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active::after {
+    background: #D9A441 !important;
 }
 
-[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-micon i,
-[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-micon svg,
-[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-mtext,
-[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-micon i,
-[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-micon svg,
-[data-pc-theme="dark"] .pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-mtext {
-    color: #4DB6AC !important;
+.pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-micon i,
+.pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-micon svg,
+.pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-mtext,
+.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-micon i,
+.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-micon svg,
+.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-mtext {
+    color: #D9A441 !important;
 }
 
-[data-pc-theme="dark"] .pc-sidebar .pc-navbar .pc-micon i,
-[data-pc-theme="dark"] .pc-sidebar .pc-navbar .pc-micon svg {
-    color: rgba(255,255,255,0.5) !important;
+.pc-sidebar .pc-navbar .pc-micon i,
+.pc-sidebar .pc-navbar .pc-micon svg {
+    color: #8FA1B5 !important;
 }
 
-[data-pc-theme="dark"] .pc-sidebar .pc-submenu .pc-link {
-    color: rgba(255,255,255,0.55) !important;
+.pc-sidebar .pc-submenu .pc-link {
+    color: #D8E0E8 !important;
 }
 
-[data-pc-theme="dark"] .pc-sidebar .pc-submenu .pc-link:hover {
-    color: #4DB6AC !important;
-    background: rgba(0,121,107,0.1) !important;
+.pc-sidebar .pc-submenu .pc-link:hover {
+    color: #D9A441 !important;
+    background: #102B45 !important;
 }
 
-[data-pc-theme="dark"] .pc-sidebar .pc-submenu .pc-item.active .pc-link {
-    color: #4DB6AC !important;
-    background: rgba(0,121,107,0.15) !important;
-}
-
-@media (min-width: 1025px) {
-    [data-pc-theme="dark"] .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.pc-hasmenu:hover > .pc-submenu {
-        background: #12345C !important;
-        border-color: rgba(255,255,255,0.08) !important;
-    }
+.pc-sidebar .pc-submenu .pc-item.active .pc-link {
+    color: #D9A441 !important;
+    background: #102B45 !important;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════
@@ -1028,8 +1023,8 @@ form label {
     height: 42px !important;
     padding: 4px 14px 4px 6px !important;
     border-radius: 30px !important;
-    background: #EDEEEF !important;
-    border: 1px solid #E0E0E0 !important;
+    background: #102B45 !important;
+    border: 1px solid #29435D !important;
     display: inline-flex !important;
     align-items: center !important;
     gap: 8px !important;
@@ -1038,8 +1033,8 @@ form label {
 }
 
 .pc-header .header-user-profile .pc-head-link:hover {
-    background: #E0F2F1 !important;
-    border-color: #00796B !important;
+    background: #0B2239 !important;
+    border-color: #D9A441 !important;
 }
 
 .pc-header .header-user-profile .pc-head-link .user-avtar {
@@ -1049,14 +1044,14 @@ form label {
     border-radius: 50% !important;
     object-fit: cover !important;
     margin-right: 0 !important;
-    border: 1.5px solid #00796B !important;
+    border: 1.5px solid #D9A441 !important;
 }
 
 .pc-header .header-user-profile .pc-head-link .user-name {
     font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif !important;
     font-size: 13.5px !important;
     font-weight: 600 !important;
-    color: #333333 !important;
+    color: #FFFFFF !important;
     max-width: 140px !important;
     white-space: nowrap !important;
     overflow: hidden !important;
@@ -1270,368 +1265,455 @@ form + form {
 
 
 /* ==========================================================================
-   MODERN & PROFESSIONAL DATATABLES & TABLE DESIGN SYSTEM (DarziDesk)
+   DARZIDESK LUXURY NAVY & ATELIER GOLD APP THEME OVERRIDE
+   Synchronized 1:1 with Flutter App Theme (darzidesk_app/lib/config/theme.dart)
    ========================================================================== */
 
-/* ─── 1. Card & Table Container ─── */
-.card {
-    border-radius: 14px !important;
-    border: 1px solid #E2E8F0 !important;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 1px 2px rgba(15, 23, 42, 0.02) !important;
-    background: #FFFFFF !important;
-    transition: all 0.2s ease !important;
+/* ─── 1. Core Color Tokens & CSS Variables ─── */
+:root,
+[data-pc-preset],
+[data-pc-theme],
+body {
+    --app-bg: #03111F;
+    --card-bg: #0B2239;
+    --input-bg: #102B45;
+    --primary-gold: #D9A441;
+    --primary-gold-rgb: 217, 164, 65;
+    --primary-light-gold: #F4C861;
+    --primary-light-gold-rgb: 244, 200, 97;
+    --text-white: #FFFFFF;
+    --secondary-text: #D8E0E8;
+    --muted-text: #8FA1B5;
+    --border-navy: #29435D;
+    --status-error: #EF4444;
+
+    /* Bootstrap System Overrides */
+    --bs-primary: #D9A441 !important;
+    --bs-primary-rgb: 217, 164, 65 !important;
+    --bs-secondary: #F4C861 !important;
+    --bs-secondary-rgb: 244, 200, 97 !important;
+    --bs-body-bg: #03111F !important;
+    --bs-body-color: #D8E0E8 !important;
+    --bs-heading-color: #FFFFFF !important;
+    --bs-card-bg: #0B2239 !important;
+    --bs-border-color: #29435D !important;
+    --bs-link-color: #D9A441 !important;
+    --bs-link-hover-color: #F4C861 !important;
+
+    /* Preset & Framework Theme Variables */
+    --pc-sidebar-background: #0B2239 !important;
+    --pc-sidebar-color: #D8E0E8 !important;
+    --pc-sidebar-active-color: #D9A441 !important;
+    --pc-header-background: #03111F !important;
+    --pc-header-color: #FFFFFF !important;
+    --pc-active-background: #102B45 !important;
 }
 
+/* ─── 2. Global Layout, Backgrounds & Typography ─── */
+body,
+html,
+.main-content,
+.pc-container,
+.pc-content,
+.auth-main,
+.landing-page,
+.bg-body,
+.bg-light,
+.bg-white,
+.bg-gray-100,
+.page-header {
+    background-color: #03111F !important;
+    color: #D8E0E8 !important;
+    font-family: 'Hanken Grotesk', 'Roboto', system-ui, -apple-system, sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6,
+.page-header-title h5,
+.card-title,
+.modal-title {
+    color: #FFFFFF !important;
+    font-family: 'Hanken Grotesk', sans-serif !important;
+    font-weight: 700 !important;
+}
+
+p, span, label, div {
+    color: inherit;
+}
+
+.text-muted,
+.text-black-50,
+.text-white-50 {
+    color: #8FA1B5 !important;
+}
+
+.text-primary,
+.text-gold {
+    color: #D9A441 !important;
+}
+
+.text-secondary {
+    color: #F4C861 !important;
+}
+
+a {
+    color: #D9A441;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: #F4C861;
+}
+
+/* ─── 3. Header Topbar & Sidebar Navigation ─── */
+.pc-header,
+.navbar,
+.navbar.default {
+    background-color: #03111F !important;
+    border-bottom: 1px solid #29435D !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+.navbar-light .navbar-nav .nav-link,
+.pc-header .pc-head-link {
+    color: #D8E0E8 !important;
+}
+
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link.active,
+.pc-header .pc-head-link:hover {
+    color: #D9A441 !important;
+}
+
+.pc-sidebar {
+    background-color: #0B2239 !important;
+    border-right: 1px solid #29435D !important;
+}
+
+.pc-sidebar .pc-link {
+    color: #D8E0E8 !important;
+}
+
+.pc-sidebar .pc-item.active > .pc-link,
+.pc-sidebar .pc-item:hover > .pc-link {
+    background-color: #102B45 !important;
+    color: #D9A441 !important;
+}
+
+.pc-sidebar .pc-micon,
+.pc-sidebar .pc-item.active > .pc-link .pc-micon,
+.pc-sidebar .pc-item:hover > .pc-link .pc-micon {
+    color: #D9A441 !important;
+}
+
+/* ─── 4. Cards, Containers, Modals & Panels ─── */
+.card,
+.custom-card,
+.modal-content,
+.dropdown-menu,
+.offcanvas,
+.popover,
+.swal2-popup,
+.box,
+.bg-white.shadow,
+.bg-white.rounded {
+    background-color: #0B2239 !important;
+    border: 1px solid #29435D !important;
+    color: #D8E0E8 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+}
+
+.card-header,
+.modal-header,
+.card-footer,
+.modal-footer {
+    background-color: #03111F !important;
+    border-color: #29435D !important;
+}
+
+.modal-header .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.dropdown-item {
+    color: #D8E0E8 !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background-color: #102B45 !important;
+    color: #D9A441 !important;
+}
+
+/* ─── 5. Buttons & Primary Actions ─── */
+.btn-primary,
+button.btn-primary,
+a.btn-primary,
+.bg-primary {
+    background: linear-gradient(135deg, #D9A441 0%, #C38E45 100%) !important;
+    border: none !important;
+    color: #03111F !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 14px rgba(217, 164, 65, 0.3) !important;
+    transition: all 0.25s ease !important;
+    border-radius: 10px !important;
+}
+
+.btn-primary:hover,
+button.btn-primary:hover,
+a.btn-primary:hover {
+    background: linear-gradient(135deg, #F4C861 0%, #D9A441 100%) !important;
+    color: #03111F !important;
+    box-shadow: 0 6px 20px rgba(244, 200, 97, 0.4) !important;
+    transform: translateY(-1px) !important;
+}
+
+.btn-secondary,
+.btn-outline-primary,
+.btn-light-primary {
+    background-color: #102B45 !important;
+    border: 1.5px solid #D9A441 !important;
+    color: #D9A441 !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+    border-radius: 10px !important;
+}
+
+.btn-secondary:hover,
+.btn-outline-primary:hover,
+.btn-light-primary:hover {
+    background-color: #D9A441 !important;
+    color: #03111F !important;
+    box-shadow: 0 4px 12px rgba(217, 164, 65, 0.3) !important;
+}
+
+.btn-light-info,
+.btn-outline-info {
+    background-color: #102B45 !important;
+    border: 1px solid #F4C861 !important;
+    color: #F4C861 !important;
+    border-radius: 8px !important;
+}
+
+.btn-light-info:hover,
+.btn-outline-info:hover {
+    background-color: #F4C861 !important;
+    color: #03111F !important;
+}
+
+.btn-light-danger,
+.btn-outline-danger {
+    background-color: #102B45 !important;
+    border: 1px solid #EF4444 !important;
+    color: #EF4444 !important;
+    border-radius: 8px !important;
+}
+
+.btn-light-danger:hover,
+.btn-outline-danger:hover {
+    background-color: #EF4444 !important;
+    color: #FFFFFF !important;
+}
+
+/* ─── 6. Inputs & Form Controls ─── */
+.form-control,
+.form-select,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="date"],
+textarea,
+select,
+.select2-container--default .select2-selection--single,
+.select2-container--default .select2-selection--multiple {
+    background-color: #102B45 !important;
+    border: 1px solid #29435D !important;
+    color: #FFFFFF !important;
+    border-radius: 10px !important;
+}
+
+.form-control::placeholder,
+textarea::placeholder,
+input::placeholder {
+    color: #8FA1B5 !important;
+    opacity: 0.8 !important;
+}
+
+.form-control:focus,
+.form-select:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #D9A441 !important;
+    box-shadow: 0 0 0 3px rgba(217, 164, 65, 0.25) !important;
+    background-color: #102B45 !important;
+    color: #FFFFFF !important;
+}
+
+.select2-dropdown {
+    background-color: #0B2239 !important;
+    border: 1px solid #29435D !important;
+    color: #D8E0E8 !important;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #102B45 !important;
+    color: #D9A441 !important;
+}
+
+/* ─── 7. Tables & DataTables Styling ─── */
 .table-responsive {
     border-radius: 12px !important;
     overflow: hidden !important;
 }
 
-/* ─── 2. DataTables Controls Wrapper ─── */
-.dataTables_wrapper {
-    padding: 16px 20px !important;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
-}
-
-/* Top bar flex layout for dt-buttons & search */
-.dataTables_wrapper .dataTables_length,
-.dataTables_wrapper .dataTables_filter,
-.dataTables_wrapper .dt-buttons {
-    margin-bottom: 16px !important;
-}
-
-.dataTables_wrapper .dataTables_filter {
-    float: right !important;
-    text-align: right !important;
-}
-
-.dataTables_wrapper .dataTables_filter label {
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    color: #475569 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    margin-bottom: 0 !important;
-}
-
-.dataTables_wrapper .dataTables_filter input {
-    border: 1px solid #CBD5E1 !important;
-    border-radius: 8px !important;
-    padding: 7px 14px !important;
-    font-size: 13px !important;
-    color: #0F172A !important;
-    background: #FFFFFF !important;
-    outline: none !important;
-    transition: all 0.2s ease !important;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
-    min-width: 220px !important;
-}
-
-.dataTables_wrapper .dataTables_filter input:focus {
-    border-color: #00796B !important;
-    box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.12) !important;
-    background: #FFFFFF !important;
-}
-
-/* DataTables Export Buttons (Excel, PDF, Copy, ColVis) */
-div.dt-buttons,
-.dt-buttons.btn-group {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    flex-wrap: wrap !important;
-    margin-bottom: 16px !important;
-}
-
-div.dt-buttons .btn,
-div.dt-buttons .dt-button,
-.dt-buttons.btn-group .btn,
-.dt-buttons .btn-secondary,
-.dt-button.buttons-excel,
-.dt-button.buttons-pdf,
-.dt-button.buttons-copy,
-.dt-button.buttons-collection {
-    background: #FFFFFF !important;
-    color: #0F172A !important;
-    border: 1px solid #CBD5E1 !important;
-    border-radius: 8px !important;
-    padding: 7px 14px !important;
-    font-size: 12.5px !important;
-    font-weight: 600 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
-    transition: all 0.2s ease !important;
-    cursor: pointer !important;
-    margin: 0 !important;
-}
-
-div.dt-buttons .btn:hover,
-div.dt-buttons .dt-button:hover,
-.dt-buttons.btn-group .btn:hover,
-.dt-button.buttons-excel:hover,
-.dt-button.buttons-pdf:hover,
-.dt-button.buttons-copy:hover,
-.dt-button.buttons-collection:hover {
-    background: #E6F4F1 !important;
-    border-color: #00796B !important;
-    color: #00796B !important;
-    box-shadow: 0 2px 6px rgba(0, 121, 107, 0.1) !important;
-}
-
-/* ColVis Dropdown menu styling */
-div.dt-button-collection {
-    border-radius: 12px !important;
-    border: 1px solid #E2E8F0 !important;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
-    padding: 8px !important;
-    background: #FFFFFF !important;
-}
-
-div.dt-button-collection .dt-button {
-    border: none !important;
-    border-radius: 6px !important;
-    padding: 8px 12px !important;
-    font-size: 13px !important;
-    width: 100% !important;
-    text-align: left !important;
-}
-
-div.dt-button-collection .dt-button.active {
-    background: #E6F4F1 !important;
-    color: #00796B !important;
-    font-weight: 700 !important;
-}
-
-/* ─── 3. Modern Table Styling ─── */
 table.dataTable,
 table.table {
-    width: 100% !important;
-    border-collapse: separate !important;
-    border-spacing: 0 !important;
-    margin-top: 8px !important;
-    margin-bottom: 16px !important;
-    border: 1px solid #E2E8F0 !important;
+    background-color: #0B2239 !important;
+    border: 1px solid #29435D !important;
+    color: #D8E0E8 !important;
     border-radius: 12px !important;
     overflow: hidden !important;
 }
 
-/* Table Headers */
 table.dataTable thead th,
 table.table thead th {
-    background: #F8FAFC !important;
-    color: #475569 !important;
-    font-family: 'JetBrains Mono', 'Inter', monospace !important;
-    font-size: 11px !important;
+    background-color: #102B45 !important;
+    color: #F4C861 !important;
+    border-bottom: 1px solid #29435D !important;
     font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.8px !important;
-    padding: 14px 16px !important;
-    border-bottom: 1px solid #E2E8F0 !important;
-    border-top: none !important;
-    vertical-align: middle !important;
-    white-space: nowrap !important;
 }
 
-/* Table Rows & Cells */
 table.dataTable tbody tr,
 table.table tbody tr {
-    background-color: #FFFFFF !important;
-    transition: background-color 0.15s ease !important;
+    background-color: #0B2239 !important;
 }
 
 table.dataTable tbody tr:nth-child(even),
 table.table tbody tr:nth-child(even) {
-    background-color: #FAFAFA !important;
+    background-color: #07192A !important;
 }
 
 table.dataTable tbody tr:hover,
-table.table tbody tr:hover,
-table.table-hover tbody tr:hover {
-    background-color: #F1F9F8 !important;
+table.table tbody tr:hover {
+    background-color: #102B45 !important;
 }
 
 table.dataTable tbody td,
 table.table tbody td {
-    padding: 14px 16px !important;
-    font-size: 13.5px !important;
-    color: #0F172A !important;
-    font-weight: 500 !important;
-    border-bottom: 1px solid #F1F5F9 !important;
-    vertical-align: middle !important;
-    line-height: 1.5 !important;
+    color: #D8E0E8 !important;
+    border-bottom: 1px solid #29435D !important;
 }
 
-table.dataTable tbody tr:last-child td,
-table.table tbody tr:last-child td {
-    border-bottom: none !important;
-}
-
-/* Empty State */
-table.dataTable td.dataTables_empty {
-    padding: 40px 16px !important;
-    text-align: center !important;
-    color: #64748B !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    background: #FFFFFF !important;
-}
-
-/* ─── 4. Table Action Buttons ─── */
-.table td .btn,
-.table td .btn-sm,
-table.dataTable td .btn,
-table.dataTable td .btn-sm {
-    border-radius: 8px !important;
-    padding: 6px 10px !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 4px !important;
-    transition: all 0.2s ease !important;
-    border: none !important;
-}
-
-/* Edit / Primary Action Buttons */
-.btn-light-primary,
-.btn-outline-primary {
-    background: #E6F4F1 !important;
-    color: #00796B !important;
-}
-
-.btn-light-primary:hover,
-.btn-outline-primary:hover {
-    background: #00796B !important;
-    color: #FFFFFF !important;
-    box-shadow: 0 2px 8px rgba(0, 121, 107, 0.25) !important;
-}
-
-/* View / Info Action Buttons */
-.btn-light-info,
-.btn-outline-info {
-    background: #E0F2FE !important;
-    color: #0284C7 !important;
-}
-
-.btn-light-info:hover,
-.btn-outline-info:hover {
-    background: #0284C7 !important;
-    color: #FFFFFF !important;
-    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25) !important;
-}
-
-/* Delete / Danger Action Buttons */
-.btn-light-danger,
-.btn-outline-danger {
-    background: #FEE2E2 !important;
-    color: #DC2626 !important;
-}
-
-.btn-light-danger:hover,
-.btn-outline-danger:hover {
-    background: #DC2626 !important;
-    color: #FFFFFF !important;
-    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25) !important;
-}
-
-/* Primary Create Header Button */
-.btn-primary {
-    background: #00796B !important;
-    border-color: #00796B !important;
-    color: #FFFFFF !important;
-    border-radius: 9999px !important;
-    padding: 8px 18px !important;
-    font-size: 13.5px !important;
-    font-weight: 600 !important;
-    box-shadow: 0 2px 6px rgba(0, 121, 107, 0.2) !important;
-    transition: all 0.2s ease !important;
-}
-
-.btn-primary:hover {
-    background: #005A50 !important;
-    border-color: #005A50 !important;
-    color: #FFFFFF !important;
-    box-shadow: 0 4px 12px rgba(0, 121, 107, 0.3) !important;
-}
-
-/* ─── 5. DataTables Pagination & Info ─── */
 .dataTables_wrapper .dataTables_info {
-    font-size: 12.5px !important;
-    color: #64748B !important;
-    font-weight: 500 !important;
-    padding-top: 12px !important;
-    float: left !important;
+    color: #8FA1B5 !important;
 }
 
-.dataTables_wrapper .dataTables_paginate {
-    padding-top: 8px !important;
-    float: right !important;
-    text-align: right !important;
+.dataTables_wrapper .dataTables_filter label {
+    color: #D8E0E8 !important;
 }
 
-.dataTables_wrapper .dataTables_paginate .paginate_button {
+.dataTables_wrapper .dataTables_filter input {
+    background-color: #102B45 !important;
+    border: 1px solid #29435D !important;
+    color: #FFFFFF !important;
+}
+
+.dataTables_wrapper .dataTables_filter input:focus {
+    border-color: #D9A441 !important;
+    box-shadow: 0 0 0 3px rgba(217, 164, 65, 0.2) !important;
+}
+
+div.dt-buttons .btn,
+div.dt-buttons .dt-button,
+.dt-buttons.btn-group .btn {
+    background-color: #102B45 !important;
+    border: 1px solid #29435D !important;
+    color: #D8E0E8 !important;
+}
+
+div.dt-buttons .btn:hover,
+div.dt-buttons .dt-button:hover {
+    background-color: #D9A441 !important;
+    color: #03111F !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button,
+.pagination .page-item .page-link {
+    background-color: #102B45 !important;
+    border: 1px solid #29435D !important;
+    color: #D8E0E8 !important;
     border-radius: 8px !important;
-    border: 1px solid #E2E8F0 !important;
-    background: #FFFFFF !important;
-    color: #475569 !important;
-    font-size: 12.5px !important;
-    font-weight: 600 !important;
-    padding: 6px 12px !important;
-    margin-left: 4px !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
 }
 
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover:not(.disabled) {
-    background: #E6F4F1 !important;
-    border-color: #00796B !important;
-    color: #00796B !important;
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover:not(.disabled),
+.pagination .page-item .page-link:hover {
+    background-color: #1E3A5A !important;
+    color: #D9A441 !important;
+    border-color: #D9A441 !important;
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button.current,
-.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-    background: #00796B !important;
-    border-color: #00796B !important;
-    color: #FFFFFF !important;
-    box-shadow: 0 2px 6px rgba(0, 121, 107, 0.25) !important;
-}
-
-.dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
-.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
-    background: #F8FAFC !important;
-    border-color: #F1F5F9 !important;
-    color: #CBD5E1 !important;
-    cursor: not-allowed !important;
-    opacity: 0.6 !important;
-}
-
-/* Bootstrap Pagination Support */
-.pagination .page-item .page-link {
-    border-radius: 8px !important;
-    margin: 0 2px !important;
-    border: 1px solid #E2E8F0 !important;
-    color: #475569 !important;
-    font-weight: 600 !important;
-    font-size: 13px !important;
-    padding: 6px 12px !important;
-}
-
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover,
 .pagination .page-item.active .page-link {
-    background: #00796B !important;
-    border-color: #00796B !important;
-    color: #FFFFFF !important;
-    box-shadow: 0 2px 6px rgba(0, 121, 107, 0.25) !important;
+    background-color: #D9A441 !important;
+    border-color: #D9A441 !important;
+    color: #03111F !important;
+    font-weight: 700 !important;
 }
 
-.pagination .page-item .page-link:hover {
-    background: #E6F4F1 !important;
-    border-color: #00796B !important;
-    color: #00796B !important;
+/* ─── 8. Badges, Chips & Status Indicators ─── */
+.badge {
+    border-radius: 20px !important;
+    padding: 6px 12px !important;
+    font-weight: 600 !important;
 }
+
+.badge-primary,
+.bg-primary.badge {
+    background-color: #D9A441 !important;
+    color: #03111F !important;
+}
+
+.badge-secondary,
+.bg-secondary.badge {
+    background-color: #102B45 !important;
+    color: #F4C861 !important;
+    border: 1px solid #29435D !important;
+}
+
+.badge-success {
+    background-color: rgba(217, 164, 65, 0.15) !important;
+    color: #D9A441 !important;
+    border: 1px solid #D9A441 !important;
+}
+
+.badge-danger {
+    background-color: rgba(239, 68, 68, 0.15) !important;
+    color: #EF4444 !important;
+    border: 1px solid #EF4444 !important;
+}
+
+/* ─── 9. Footer & Miscellaneous ─── */
+footer.footer,
+.lan-footer {
+    background-color: #03111F !important;
+    border-top: 1px solid #29435D !important;
+    color: #8FA1B5 !important;
+}
+
+footer.footer a {
+    color: #8FA1B5 !important;
+}
+
+footer.footer a:hover {
+    color: #D9A441 !important;
+}
+
+.hr, hr, divider {
+    border-color: #29435D !important;
+}
+

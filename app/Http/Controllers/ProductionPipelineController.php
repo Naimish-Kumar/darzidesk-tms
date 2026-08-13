@@ -42,6 +42,23 @@ class ProductionPipelineController extends Controller
         }
         $order->save();
 
+        // Dispatch FCM Push Notification & In-App Notification
+        try {
+            $title = "Order #{$order->order_id} Updated";
+            $body = "Your order status has been updated to stage: {$stage->name}";
+            if ($order->customer_id) {
+                \App\Http\Controllers\Api\NotificationController::createNotification(
+                    $order->customer_id,
+                    'order_stage_update',
+                    $title,
+                    $body,
+                    $order->parent_id ?? 0
+                );
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('FCM stage update error: ' . $e->getMessage());
+        }
+
         return response()->json([
             'success' => true,
             'message' => __('Order moved to ') . $stage->name,

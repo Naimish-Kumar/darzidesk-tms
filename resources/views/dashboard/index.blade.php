@@ -11,14 +11,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --dd-teal: #00796B;
-            --dd-teal-light: #E6F4F1;
-            --dd-teal-dark: #004D40;
-            --dd-bg: #F8FAFC;
-            --dd-card: #FFFFFF;
-            --dd-border: #E2E8F0;
-            --dd-text: #0F172A;
-            --dd-text-muted: #64748B;
+            --dd-teal: #D9A441;
+            --dd-teal-light: #102B45;
+            --dd-teal-dark: #F4C861;
+            --dd-bg: #03111F;
+            --dd-card: #0B2239;
+            --dd-border: #29435D;
+            --dd-text: #FFFFFF;
+            --dd-text-muted: #8FA1B5;
+            --dd-secondary-text: #D8E0E8;
         }
 
         .dd-dashboard {
@@ -32,12 +33,12 @@
 
         /* Clean Modern Header Banner */
         .dd-welcome-banner {
-            background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+            background: linear-gradient(135deg, #0B2239 0%, #102B45 100%);
             border: 1px solid var(--dd-border);
             border-left: 5px solid var(--dd-teal);
             border-radius: 16px;
             padding: 24px 28px;
-            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
             margin-bottom: 24px;
         }
         .dd-welcome-label {
@@ -71,8 +72,8 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            border: 1px solid rgba(0, 121, 107, 0.15);
-            box-shadow: 0 2px 8px rgba(0, 121, 107, 0.1);
+            border: 1px solid var(--dd-border);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
         .dd-welcome-avatar i {
             font-size: 24px;
@@ -87,8 +88,8 @@
             margin-top: 18px;
         }
         .dd-btn-primary {
-            background: var(--dd-teal);
-            color: #FFFFFF;
+            background: linear-gradient(135deg, #D9A441 0%, #C38E45 100%);
+            color: #03111F;
             border: none;
             border-radius: 10px;
             padding: 9px 20px;
@@ -101,15 +102,17 @@
             transition: all 0.2s ease;
             text-decoration: none;
             cursor: pointer;
+            box-shadow: 0 4px 12px rgba(217, 164, 65, 0.3);
         }
         .dd-btn-primary:hover {
-            background: var(--dd-teal-dark);
-            color: #FFFFFF;
+            background: linear-gradient(135deg, #F4C861 0%, #D9A441 100%);
+            color: #03111F;
             text-decoration: none;
+            box-shadow: 0 6px 18px rgba(244, 200, 97, 0.4);
         }
         .dd-btn-outline {
-            background: #FFFFFF;
-            color: var(--dd-text);
+            background: #102B45;
+            color: #D8E0E8;
             border: 1px solid var(--dd-border);
             border-radius: 10px;
             padding: 9px 20px;
@@ -124,8 +127,9 @@
             cursor: pointer;
         }
         .dd-btn-outline:hover {
-            background: #F1F5F9;
-            color: var(--dd-text);
+            background: #D9A441;
+            color: #03111F;
+            border-color: #D9A441;
             text-decoration: none;
         }
 
@@ -163,7 +167,7 @@
             border: 1px solid var(--dd-border);
             border-radius: 14px;
             padding: 18px 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
             transition: all 0.2s ease;
             height: 100%;
             display: flex;
@@ -173,7 +177,7 @@
         }
         .dd-stat-card:hover {
             border-color: var(--dd-teal);
-            box-shadow: 0 4px 14px rgba(0, 121, 107, 0.08);
+            box-shadow: 0 6px 20px rgba(217, 164, 65, 0.25);
         }
 
         .dd-stat-icon {
@@ -185,6 +189,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            border: 1px solid var(--dd-border);
         }
         .dd-stat-icon i {
             font-size: 20px;
@@ -212,7 +217,8 @@
 
         /* Subscription Card */
         .dd-sub-card {
-            background: var(--dd-teal);
+            background: linear-gradient(135deg, #0B2239 0%, #102B45 100%);
+            border: 1px solid var(--dd-teal);
             border-radius: 14px;
             padding: 18px 20px;
             color: #FFFFFF;
@@ -224,12 +230,13 @@
             transition: all 0.2s ease;
         }
         .dd-sub-card:hover {
-            background: var(--dd-teal-dark);
+            border-color: var(--dd-teal-dark);
+            box-shadow: 0 6px 20px rgba(217, 164, 65, 0.3);
         }
         .dd-sub-label {
             font-size: 12px;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--dd-teal);
         }
         .dd-sub-title {
             font-size: 20px;
@@ -238,9 +245,9 @@
             margin: 4px 0;
         }
         .dd-btn-upgrade {
-            background: rgba(255, 255, 255, 0.2);
-            color: #FFFFFF;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(217, 164, 65, 0.2);
+            color: #D9A441;
+            border: 1px solid rgba(217, 164, 65, 0.4);
             border-radius: 8px;
             padding: 5px 12px;
             font-size: 11px;
@@ -252,8 +259,8 @@
             transition: all 0.2s ease;
         }
         .dd-btn-upgrade:hover {
-            background: rgba(255, 255, 255, 0.35);
-            color: #FFFFFF;
+            background: #D9A441;
+            color: #03111F;
             text-decoration: none;
         }
 
@@ -263,7 +270,7 @@
             border: 1px solid var(--dd-border);
             border-radius: 16px;
             padding: 22px 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
             margin-bottom: 24px;
         }
         .dd-chart-title {
@@ -291,18 +298,19 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 10px;
             font-weight: 700;
-            color: var(--dd-text-muted);
+            color: #F4C861;
             text-transform: uppercase;
             letter-spacing: 0.8px;
             border-bottom: 1px solid var(--dd-border);
             padding: 12px 18px;
-            background: #F8FAFC;
+            background: #102B45;
         }
         .dd-table tbody td {
             font-size: 13.5px;
             padding: 14px 18px;
             border-bottom: 1px solid var(--dd-border);
             vertical-align: middle;
+            color: #D8E0E8;
         }
         .dd-table tbody tr:hover {
             background: var(--dd-teal-light);
@@ -335,15 +343,15 @@
             border-radius: 20px;
             text-transform: uppercase;
         }
-        .dd-badge-pending { background: #FEF3C7; color: #92400E; }
-        .dd-badge-in-progress { background: #E0F2FE; color: #0369A1; }
-        .dd-badge-completed { background: #DCFCE7; color: #166534; }
-        .dd-badge-delivered { background: #F3E8FF; color: #6B21A8; }
+        .dd-badge-pending { background: rgba(217, 164, 65, 0.2); color: #F4C861; border: 1px solid #D9A441; }
+        .dd-badge-in-progress { background: rgba(59, 130, 246, 0.2); color: #60A5FA; border: 1px solid #3B82F6; }
+        .dd-badge-completed { background: rgba(34, 197, 94, 0.2); color: #4ADE80; border: 1px solid #22C55E; }
+        .dd-badge-delivered { background: rgba(168, 85, 247, 0.2); color: #C084FC; border: 1px solid #A855F7; }
 
         .dd-view-btn {
             background: var(--dd-teal-light);
             color: var(--dd-teal);
-            border: none;
+            border: 1px solid var(--dd-border);
             border-radius: 8px;
             padding: 5px 12px;
             font-size: 12px;
@@ -352,10 +360,11 @@
             align-items: center;
             gap: 4px;
             text-decoration: none;
+            transition: all 0.2s ease;
         }
         .dd-view-btn:hover {
             background: var(--dd-teal);
-            color: #FFFFFF;
+            color: #03111F;
             text-decoration: none;
         }
 
@@ -406,7 +415,7 @@
                         legend: { position: 'bottom' }
                     }
                 }],
-                colors: ['#00796B', '#64748B'],
+                colors: ['#D9A441', '#8FA1B5'],
                 dataLabels: { enabled: false },
                 legend: {
                     show: true,
@@ -415,7 +424,7 @@
                     fontFamily: 'JetBrains Mono',
                     fontSize: '10px',
                     fontWeight: 700,
-                    labels: { colors: '#64748B' },
+                    labels: { colors: '#8FA1B5' },
                     markers: { radius: 3 }
                 },
                 stroke: {
@@ -434,7 +443,7 @@
                 },
                 grid: {
                     show: true,
-                    borderColor: '#E2E8F0',
+                    borderColor: '#29435D',
                     strokeDashArray: 4,
                     xaxis: { lines: { show: false } },
                     yaxis: { lines: { show: true } }
@@ -454,7 +463,7 @@
                             fontFamily: 'JetBrains Mono',
                             fontSize: '10px',
                             fontWeight: 600,
-                            colors: '#64748B'
+                            colors: '#8FA1B5'
                         }
                     },
                     axisBorder: { show: false },
@@ -465,7 +474,7 @@
                         style: {
                             fontFamily: 'JetBrains Mono',
                             fontSize: '10px',
-                            colors: '#64748B'
+                            colors: '#8FA1B5'
                         }
                     }
                 },
@@ -489,10 +498,10 @@
                         height: 250,
                         fontFamily: 'Inter, sans-serif'
                     },
-                    colors: ['#F59E0B', '#3B82F6', '#10B981', '#06B6D4', '#00796B', '#8B5CF6', '#EF4444'],
+                    colors: ['#D9A441', '#F4C861', '#3B82F6', '#10B981', '#A855F7', '#EC4899', '#EF4444'],
                     series: rawCounts,
                     labels: rawLabels,
-                    stroke: { width: 2, colors: ['#ffffff'] },
+                    stroke: { width: 2, colors: ['#0B2239'] },
                     plotOptions: {
                         pie: {
                             donut: {
@@ -503,7 +512,7 @@
                                         show: true,
                                         fontSize: '12px',
                                         fontFamily: 'Inter, sans-serif',
-                                        color: '#64748B',
+                                        color: '#8FA1B5',
                                         offsetY: -4
                                     },
                                     value: {
@@ -511,7 +520,7 @@
                                         fontSize: '22px',
                                         fontFamily: 'Inter, sans-serif',
                                         fontWeight: '800',
-                                        color: '#0F172A',
+                                        color: '#FFFFFF',
                                         offsetY: 6
                                     },
                                     total: {
@@ -519,7 +528,7 @@
                                         label: 'Total Orders',
                                         fontSize: '11px',
                                         fontFamily: 'Inter, sans-serif',
-                                        color: '#64748B',
+                                        color: '#8FA1B5',
                                         formatter: function (w) {
                                             return w.globals.seriesTotals.reduce(function(a, b) { return a + b; }, 0);
                                         }
@@ -542,10 +551,10 @@
                         height: 250,
                         fontFamily: 'Inter, sans-serif'
                     },
-                    colors: ['#E2E8F0'],
+                    colors: ['#29435D'],
                     series: [1],
                     labels: ['No Orders Yet'],
-                    stroke: { width: 2, colors: ['#ffffff'] },
+                    stroke: { width: 2, colors: ['#0B2239'] },
                     plotOptions: {
                         pie: {
                             donut: {
@@ -556,7 +565,7 @@
                                         show: true,
                                         fontSize: '11px',
                                         fontFamily: 'Inter, sans-serif',
-                                        color: '#94A3B8',
+                                        color: '#8FA1B5',
                                         offsetY: -4
                                     },
                                     value: {
@@ -564,7 +573,7 @@
                                         fontSize: '22px',
                                         fontFamily: 'Inter, sans-serif',
                                         fontWeight: '800',
-                                        color: '#64748B',
+                                        color: '#8FA1B5',
                                         offsetY: 6,
                                         formatter: function() { return '0'; }
                                     },
@@ -573,7 +582,7 @@
                                         label: 'Total Orders',
                                         fontSize: '11px',
                                         fontFamily: 'Inter, sans-serif',
-                                        color: '#94A3B8',
+                                        color: '#8FA1B5',
                                         formatter: function() { return '0'; }
                                     }
                                 }
@@ -600,7 +609,7 @@
                     fontFamily: 'Hanken Grotesk, sans-serif',
                     toolbar: { show: false }
                 },
-                colors: ['#00796B', '#64748B'],
+                colors: ['#D9A441', '#8FA1B5'],
                 plotOptions: {
                     bar: {
                         borderRadius: 6,
@@ -615,11 +624,11 @@
                     fontFamily: 'JetBrains Mono',
                     fontSize: '10px',
                     fontWeight: 700,
-                    labels: { colors: '#64748B' }
+                    labels: { colors: '#8FA1B5' }
                 },
                 grid: {
                     show: true,
-                    borderColor: '#E2E8F0',
+                    borderColor: '#29435D',
                     strokeDashArray: 4
                 },
                 series: [{
@@ -632,12 +641,12 @@
                 xaxis: {
                     categories: {!! json_encode(@$result['totalOrderStatus']['label']) !!},
                     labels: {
-                        style: { fontFamily: 'JetBrains Mono', fontSize: '10px', colors: '#64748B' }
+                        style: { fontFamily: 'JetBrains Mono', fontSize: '10px', colors: '#8FA1B5' }
                     }
                 },
                 yaxis: {
                     labels: {
-                        style: { fontFamily: 'JetBrains Mono', fontSize: '10px', colors: '#64748B' }
+                        style: { fontFamily: 'JetBrains Mono', fontSize: '10px', colors: '#8FA1B5' }
                     }
                 },
                 tooltip: { theme: 'dark' }
@@ -827,13 +836,13 @@
                         <div class="dd-status-breakdown-grid mt-2 pt-2 border-top">
                             @php
                                 $statusColors = [
-                                    'pending' => ['bg' => '#FFFBEB', 'text' => '#D97706', 'dot' => '#F59E0B'],
-                                    'in_progress' => ['bg' => '#EFF6FF', 'text' => '#2563EB', 'dot' => '#3B82F6'],
-                                    'completed' => ['bg' => '#ECFDF5', 'text' => '#059669', 'dot' => '#10B981'],
-                                    'ready_for_delivery' => ['bg' => '#ECFEFF', 'text' => '#0891B2', 'dot' => '#06B6D4'],
-                                    'delivered' => ['bg' => '#E6F4F1', 'text' => '#00796B', 'dot' => '#00796B'],
-                                    'on_hold' => ['bg' => '#F5F3FF', 'text' => '#7C3AED', 'dot' => '#8B5CF6'],
-                                    'cancelled' => ['bg' => '#FEF2F2', 'text' => '#DC2626', 'dot' => '#EF4444'],
+                                    'pending' => ['bg' => 'rgba(244, 200, 97, 0.15)', 'text' => '#F4C861', 'dot' => '#F4C861'],
+                                    'in_progress' => ['bg' => 'rgba(59, 130, 246, 0.15)', 'text' => '#60A5FA', 'dot' => '#3B82F6'],
+                                    'completed' => ['bg' => 'rgba(34, 197, 94, 0.15)', 'text' => '#4ADE80', 'dot' => '#22C55E'],
+                                    'ready_for_delivery' => ['bg' => 'rgba(6, 182, 212, 0.15)', 'text' => '#22D3EE', 'dot' => '#06B6D4'],
+                                    'delivered' => ['bg' => 'rgba(217, 164, 65, 0.15)', 'text' => '#D9A441', 'dot' => '#D9A441'],
+                                    'on_hold' => ['bg' => 'rgba(168, 85, 247, 0.15)', 'text' => '#C084FC', 'dot' => '#A855F7'],
+                                    'cancelled' => ['bg' => 'rgba(239, 68, 68, 0.15)', 'text' => '#F87171', 'dot' => '#EF4444'],
                                 ];
                                 $labels = $result['orderStatusDistribution']['labels'] ?? [];
                                 $counts = $result['orderStatusDistribution']['counts'] ?? [];
