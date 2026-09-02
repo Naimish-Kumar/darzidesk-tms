@@ -15,69 +15,77 @@
     <meta name="description" content="{{ $tailor['shop_name'] }} - Master bespoke tailoring atelier in {{ $tailor['location'] }}. Book fitting consultations, suit alterations, and custom handcrafted menswear.">
 
     <link rel="icon" href="{{ asset(Storage::url('upload/logo')) . '/' . ($settings['company_favicon'] ?? '') }}" type="image/x-icon" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700;800&display=swap" />
     <link rel="stylesheet" href="{{ asset('assets/fonts/tabler-icons.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/fonts/feather.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/fonts/fontawesome.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" id="main-style-link" />
     <link rel="stylesheet" href="{{ asset('assets/css/landing.css') }}" />
-    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/custom.css') }}?v={{ file_exists(public_path('css/custom.css')) ? filemtime(public_path('css/custom.css')) : time() }}" rel="stylesheet">
 
     <style>
         :root {
-            --brand-primary: #006A67;
-            --brand-primary-dark: #004D4B;
-            --brand-primary-light: #E6F4F3;
-            --brand-navy: #0B1C30;
-            --text-main: #0B1C30;
-            --text-muted: #6D7978;
-            --bg-canvas: #F8F9FF;
-            --card-bg: #FFFFFF;
-            --border-color: #BCC9C8;
-            --accent-gold: #f59e0b;
+            --app-bg: #03111F;
+            --card-bg: #0B2239;
+            --card-border: #29435D;
+            --inner-bg: #102B45;
+            --primary-gold: #D9A441;
+            --primary-light-gold: #F4C861;
+            --gold-light-bg: rgba(217, 164, 65, 0.15);
+            --gold-border: rgba(217, 164, 65, 0.35);
+            --text-white: #FFFFFF;
+            --text-body: #D8E0E8;
+            --text-muted: #8FA1B5;
+            --font-main: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
         }
 
         body.tailor-detail-page {
-            font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-canvas);
-            color: var(--text-main);
+            font-family: var(--font-main);
+            background: var(--app-bg);
+            color: var(--text-body);
             margin: 0;
             padding: 0;
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
+        /* ── Top Header Navbar ── */
         .policy-navbar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(14px);
-            border-bottom: 1px solid rgba(188, 201, 200, 0.4);
+            background: rgba(3, 17, 31, 0.92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--card-border);
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
         }
         .policy-navbar .navbar-inner {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 16px 24px;
+            padding: 14px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
         .policy-navbar .brand-logo img {
-            height: 36px;
+            height: 40px;
             width: auto;
+            max-width: 220px;
+            object-fit: contain;
         }
         .policy-navbar .nav-links {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             list-style: none;
             margin: 0;
             padding: 0;
         }
         .policy-navbar .nav-links a {
-            color: var(--text-main);
+            color: var(--text-body);
             text-decoration: none;
             font-size: 14px;
             font-weight: 600;
@@ -86,56 +94,92 @@
             transition: all 0.2s ease;
         }
         .policy-navbar .nav-links a:hover {
-            background: var(--brand-primary-light);
-            color: var(--brand-primary);
+            color: var(--primary-light-gold);
+            background: rgba(217, 164, 65, 0.08);
+        }
+        .policy-navbar .nav-links .btn-login-outline {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            padding: 0 20px;
+            background: rgba(11, 34, 57, 0.6);
+            color: var(--primary-light-gold) !important;
+            font-weight: 700;
+            font-size: 13.5px;
+            border-radius: 9999px;
+            border: 1.5px solid var(--primary-gold);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .policy-navbar .nav-links .btn-login-outline:hover {
+            background: var(--gold-light-bg);
+            color: var(--text-white) !important;
+            border-color: var(--primary-light-gold);
+            box-shadow: 0 4px 14px rgba(217, 164, 65, 0.25);
+            transform: translateY(-1px);
         }
         .policy-navbar .nav-links .btn-cta {
-            background: var(--brand-primary);
-            color: #ffffff !important;
-            font-weight: 600;
-            border-radius: 50px;
-            padding: 9px 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            padding: 0 22px;
+            background: linear-gradient(135deg, #D9A441 0%, #F4C861 100%);
+            color: #03111F !important;
+            font-weight: 700;
+            font-size: 13.5px;
+            border-radius: 9999px;
+            border: none;
+            box-shadow: 0 4px 14px rgba(217, 164, 65, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .policy-navbar .nav-links .btn-cta:hover {
+            background: linear-gradient(135deg, #F4C861 0%, #FFE596 100%);
+            box-shadow: 0 6px 20px rgba(217, 164, 65, 0.45);
+            transform: translateY(-1px);
         }
 
-        /* Hero Banner Section */
+        /* ── Hero Banner Section ── */
         .tailor-hero {
             position: relative;
-            padding: 130px 24px 80px;
+            padding: 140px 24px 75px;
             background-size: cover;
             background-position: center;
             color: #ffffff;
             text-align: center;
             overflow: hidden;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            border-bottom: 1px solid var(--card-border);
         }
         .tailor-hero .hero-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(138, 244, 239, 0.18);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(138, 244, 239, 0.35);
-            color: #8AF4EF;
+            background: var(--gold-light-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--gold-border);
+            color: var(--primary-light-gold);
             padding: 6px 18px;
             border-radius: 50px;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
+            font-size: 12.5px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             margin-bottom: 16px;
         }
 
-        /* Hero Partner Companies Banner */
+        /* ── Hero Partner Companies Banner ── */
         .hero-partner-banner {
             max-width: 1050px;
             margin: 28px auto 0;
             padding: 20px 24px;
-            background: rgba(11, 28, 48, 0.65);
-            backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(11, 34, 57, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
         }
         .hero-partner-banner .partner-title {
             display: inline-block;
@@ -143,69 +187,74 @@
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.12em;
-            color: #8AF4EF;
+            color: var(--primary-light-gold);
             margin-bottom: 14px;
         }
         .partner-logos-row {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 14px;
+            gap: 12px;
             flex-wrap: wrap;
         }
         .partner-brand-pill {
             display: flex;
             align-items: center;
             gap: 10px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(138, 244, 239, 0.25);
+            background: var(--inner-bg);
+            border: 1px solid var(--card-border);
             padding: 8px 16px;
             border-radius: 50px;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
         }
         .partner-brand-pill:hover {
-            background: rgba(0, 106, 103, 0.85);
-            border-color: #8AF4EF;
+            background: var(--card-bg);
+            border-color: var(--primary-gold);
             transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(217, 164, 65, 0.2);
         }
         .partner-brand-pill .partner-icon {
-            font-size: 20px;
-            color: #8AF4EF;
+            font-size: 18px;
+            color: var(--primary-light-gold);
         }
         .partner-brand-pill .partner-text {
             text-align: left;
         }
         .partner-brand-pill .p-name {
             display: block;
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-white);
             line-height: 1.2;
         }
         .partner-brand-pill .p-tag {
             display: block;
             font-size: 10.5px;
-            color: rgba(255, 255, 255, 0.75);
+            color: var(--text-muted);
         }
 
-        /* Centered Overlap Card */
+        /* ── Centered Overlap Card ── */
         .profile-overlap-card {
             max-width: 1100px;
-            margin: -40px auto 40px;
+            margin: -45px auto 40px;
             padding: 0 24px;
             position: relative;
             z-index: 10;
             text-align: center;
         }
         .avatar-circle {
-            width: 96px;
-            height: 96px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
-            background: #ffffff;
+            background: var(--card-bg);
             margin: 0 auto 16px;
             padding: 4px;
-            box-shadow: 0 10px 30px rgba(11, 28, 48, 0.15);
-            border: 3px solid #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 3px solid var(--primary-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
         .avatar-circle img {
             width: 100%;
@@ -217,7 +266,7 @@
         .shop-title {
             font-size: clamp(26px, 3.5vw, 40px);
             font-weight: 800;
-            color: var(--brand-navy);
+            color: var(--text-white);
             margin: 0 0 6px;
             letter-spacing: -0.02em;
         }
@@ -236,18 +285,19 @@
             flex-wrap: wrap;
         }
         .verified-badge {
-            background: #e0f2fe;
-            color: #0284c7;
+            background: var(--gold-light-bg);
+            color: var(--primary-light-gold);
+            border: 1px solid var(--gold-border);
             padding: 5px 14px;
             border-radius: 50px;
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 700;
             display: inline-flex;
             align-items: center;
             gap: 6px;
         }
         .star-rating {
-            color: var(--accent-gold);
+            color: var(--primary-light-gold);
             font-weight: 700;
             font-size: 14.5px;
             display: inline-flex;
@@ -255,7 +305,7 @@
             gap: 4px;
         }
 
-        /* Stat Pills Grid */
+        /* ── Stat Pills Grid ── */
         .stat-pills-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -264,12 +314,17 @@
             margin: 0 auto 32px;
         }
         .stat-pill {
-            background: #ffffff;
+            background: var(--card-bg);
             border-radius: 18px;
             padding: 20px 16px;
-            border: 1px solid rgba(188, 201, 200, 0.5);
-            box-shadow: 0 4px 15px rgba(11, 28, 48, 0.03);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
             text-align: center;
+            transition: all 0.25s ease;
+        }
+        .stat-pill:hover {
+            border-color: var(--primary-gold);
+            transform: translateY(-2px);
         }
         .stat-pill .label {
             font-size: 11px;
@@ -280,13 +335,13 @@
             margin-bottom: 4px;
         }
         .stat-pill .value {
-            font-size: 19px;
+            font-size: 20px;
             font-weight: 800;
-            color: var(--brand-primary);
-            font-family: 'JetBrains Mono', monospace;
+            color: var(--primary-light-gold);
+            font-family: var(--font-code);
         }
 
-        /* Primary Action Buttons */
+        /* ── Primary Action Buttons ── */
         .action-buttons-row {
             display: flex;
             align-items: center;
@@ -297,63 +352,75 @@
             flex-wrap: wrap;
         }
         .btn-book-now {
-            background: var(--brand-primary);
-            color: #ffffff !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 48px;
+            padding: 0 32px;
+            background: linear-gradient(135deg, #D9A441 0%, #F4C861 100%);
+            color: #03111F !important;
             font-weight: 800;
             font-size: 15px;
-            padding: 14px 32px;
-            border-radius: 50px;
+            border-radius: 9999px;
             border: none;
             cursor: pointer;
             text-decoration: none;
-            box-shadow: 0 6px 20px rgba(0, 106, 103, 0.25);
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            box-shadow: 0 6px 20px rgba(217, 164, 65, 0.3);
+            transition: all 0.3s ease;
         }
         .btn-book-now:hover {
-            background: var(--brand-primary-dark);
+            background: linear-gradient(135deg, #F4C861 0%, #FFE596 100%);
+            box-shadow: 0 10px 28px rgba(217, 164, 65, 0.45);
             transform: translateY(-2px);
         }
         .btn-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 48px;
+            padding: 0 28px;
             background: #25D366;
             color: #ffffff !important;
             font-weight: 700;
             font-size: 15px;
-            padding: 14px 28px;
-            border-radius: 50px;
+            border-radius: 9999px;
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.25);
-            transition: all 0.2s ease;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+            transition: all 0.25s ease;
+            border: none;
         }
         .btn-whatsapp:hover {
             background: #1da851;
             transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(37, 211, 102, 0.45);
         }
         .btn-call {
-            background: #ffffff;
-            color: var(--brand-navy) !important;
-            border: 1px solid var(--border-color);
-            font-weight: 700;
-            font-size: 15px;
-            padding: 14px 24px;
-            border-radius: 50px;
-            text-decoration: none;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            transition: all 0.2s ease;
+            height: 48px;
+            padding: 0 26px;
+            background: rgba(11, 34, 57, 0.6);
+            color: var(--primary-light-gold) !important;
+            border: 1.5px solid var(--primary-gold);
+            font-weight: 700;
+            font-size: 15px;
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: all 0.25s ease;
         }
         .btn-call:hover {
-            background: var(--brand-primary-light);
-            color: var(--brand-primary) !important;
+            background: var(--gold-light-bg);
+            color: var(--text-white) !important;
+            border-color: var(--primary-light-gold);
+            box-shadow: 0 6px 20px rgba(217, 164, 65, 0.2);
+            transform: translateY(-2px);
         }
 
-        /* Main Details Layout Grid */
+        /* ── Main Details Layout Grid ── */
         .details-layout {
             max-width: 1150px;
             margin: 0 auto 80px;
@@ -364,108 +431,126 @@
         }
 
         .content-card {
-            background: #ffffff;
+            background: var(--card-bg);
             border-radius: 24px;
-            padding: 36px;
-            border: 1px solid rgba(188, 201, 200, 0.5);
-            box-shadow: 0 10px 30px rgba(11, 28, 48, 0.03);
-            margin-bottom: 32px;
+            padding: 32px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            margin-bottom: 28px;
         }
         .content-card h3 {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
-            color: var(--brand-navy);
-            margin: 0 0 18px;
+            color: var(--text-white);
+            margin: 0 0 20px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
         .content-card h3 i {
-            color: var(--brand-primary);
-            background: var(--brand-primary-light);
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
+            color: var(--primary-light-gold);
+            background: var(--inner-bg);
+            border: 1px solid var(--card-border);
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 18px;
+            flex-shrink: 0;
         }
 
+        /* ── Service List Items ── */
         .service-list {
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 16px;
         }
         .service-item {
-            background: var(--bg-canvas);
+            background: var(--inner-bg);
             border-radius: 16px;
             padding: 20px 24px;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--card-border);
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 16px;
+            transition: all 0.25s ease;
+        }
+        .service-item:hover {
+            border-color: var(--primary-gold);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
         }
         .service-info h5 {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 700;
-            color: var(--brand-navy);
+            color: var(--text-white);
             margin: 0 0 4px;
         }
         .service-info p {
             font-size: 13.5px;
             color: var(--text-muted);
-            margin: 0 0 6px;
+            margin: 0 0 8px;
+            line-height: 1.45;
         }
         .service-meta {
             font-size: 12px;
             font-weight: 700;
-            color: var(--brand-primary);
+            color: var(--primary-light-gold);
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            display: inline-flex;
+            align-items: center;
         }
         .service-price-box {
             text-align: right;
             flex-shrink: 0;
         }
         .service-price {
-            font-size: 19px;
+            font-size: 20px;
             font-weight: 800;
-            color: var(--brand-navy);
-            font-family: 'JetBrains Mono', monospace;
+            color: var(--primary-light-gold);
+            font-family: var(--font-code);
             display: block;
             margin-bottom: 8px;
         }
 
+        /* ── Fabric Grid ── */
         .fabric-badge-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 14px;
         }
         .fabric-card {
-            background: var(--brand-primary-light);
+            background: var(--inner-bg);
             border-radius: 14px;
             padding: 16px;
-            border: 1px solid rgba(0, 106, 103, 0.15);
+            border: 1px solid var(--card-border);
+            transition: all 0.2s ease;
+        }
+        .fabric-card:hover {
+            border-color: var(--primary-gold);
         }
         .fabric-card strong {
             display: block;
-            font-size: 15px;
-            color: var(--brand-navy);
+            font-size: 14px;
+            color: var(--text-white);
             margin-bottom: 2px;
+            font-weight: 700;
         }
         .fabric-card span {
             font-size: 12px;
             color: var(--text-muted);
         }
 
+        /* ── Reviews ── */
         .review-card {
-            background: var(--bg-canvas);
+            background: var(--inner-bg);
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 16px;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--card-border);
         }
         .review-card:last-child {
             margin-bottom: 0;
@@ -474,12 +559,12 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
         .reviewer-name {
             font-weight: 700;
             font-size: 15px;
-            color: var(--brand-navy);
+            color: var(--text-white);
         }
         .reviewer-role {
             font-size: 12px;
@@ -487,14 +572,14 @@
             display: block;
         }
 
-        /* Custom Modal Backdrop */
+        /* ── Custom Modal ── */
         .modal-custom {
             display: none;
             position: fixed;
             inset: 0;
             z-index: 2000;
-            background: rgba(11, 28, 48, 0.75);
-            backdrop-filter: blur(8px);
+            background: rgba(3, 17, 31, 0.85);
+            backdrop-filter: blur(12px);
             align-items: center;
             justify-content: center;
             padding: 24px;
@@ -503,31 +588,38 @@
             display: flex;
         }
         .modal-content-box {
-            background: #ffffff;
+            background: var(--card-bg);
             border-radius: 24px;
+            border: 1px solid var(--card-border);
             max-width: 520px;
             width: 100%;
             padding: 36px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
             position: relative;
             max-height: 90vh;
             overflow-y: auto;
+            color: var(--text-body);
         }
         .modal-close {
             position: absolute;
             top: 20px;
             right: 20px;
-            background: var(--bg-canvas);
-            border: none;
+            background: var(--inner-bg);
+            border: 1px solid var(--card-border);
             width: 36px;
             height: 36px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+        .modal-close:hover {
+            color: var(--text-white);
+            border-color: var(--primary-gold);
         }
 
         .form-group {
@@ -537,7 +629,7 @@
             display: block;
             font-weight: 700;
             font-size: 13.5px;
-            color: var(--brand-navy);
+            color: var(--text-body);
             margin-bottom: 6px;
         }
         .form-control {
@@ -545,21 +637,26 @@
             padding: 12px 16px;
             font-size: 14.5px;
             border-radius: 10px;
-            border: 1px solid var(--border-color);
-            background: #ffffff;
+            border: 1px solid var(--card-border) !important;
+            background: var(--inner-bg) !important;
+            color: var(--text-white) !important;
             box-sizing: border-box;
             font-family: inherit;
         }
         .form-control:focus {
             outline: none;
-            border-color: var(--brand-primary);
-            box-shadow: 0 0 0 3px rgba(0, 106, 103, 0.15);
+            border-color: var(--primary-gold) !important;
+            box-shadow: 0 0 0 3px rgba(217, 164, 65, 0.25) !important;
+        }
+        .form-control::placeholder {
+            color: var(--text-muted) !important;
+            opacity: 0.8;
         }
 
         .alert-flash-success {
-            background: #ecfdf5;
-            border: 1px solid #a7f3d0;
-            color: #065f46;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #34D399;
             padding: 16px 20px;
             border-radius: 12px;
             margin-bottom: 24px;
@@ -568,16 +665,20 @@
         }
 
         .policy-footer {
-            background: var(--brand-navy);
-            color: #94a3b8;
+            background: var(--app-bg);
+            color: var(--text-muted);
             padding: 45px 24px;
             text-align: center;
             font-size: 14px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid var(--card-border);
         }
         .policy-footer a {
-            color: #6CD7D3;
+            color: var(--primary-light-gold);
             text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .policy-footer a:hover {
+            color: #FFE596;
         }
 
         @media (max-width: 991px) {
@@ -615,22 +716,22 @@
                 <li><a href="{{ route('about.us') }}">{{ __('About Us') }}</a></li>
                 <li><a href="{{ route('privacy.policy') }}">{{ __('Privacy Policy') }}</a></li>
                 <li><a href="{{ route('terms.conditions') }}">{{ __('Terms & Services') }}</a></li>
-                <li><a href="{{ route('login') }}">{{ __('Login') }}</a></li>
+                <li><a class="btn-login-outline" href="{{ route('login') }}">{{ __('Partner Login') }}</a></li>
                 <li><a class="btn-cta" href="{{ route('register') }}">{{ __('Get Started') }}</a></li>
             </ul>
         </div>
     </nav>
 
     <!-- [ Hero Banner ] -->
-    <section class="tailor-hero" style="background: linear-gradient(180deg, rgba(11, 28, 48, 0.88) 0%, rgba(0, 106, 103, 0.94) 100%), url('{{ $tailor['banner_image'] ?? $tailor['cover_image'] }}') center/cover no-repeat;">
+    <section class="tailor-hero" style="background: linear-gradient(180deg, rgba(3, 17, 31, 0.82) 0%, rgba(11, 34, 57, 0.95) 100%), url('{{ $tailor['banner_image'] ?? $tailor['cover_image'] }}') center/cover no-repeat;">
         <div class="hero-badge">
             <i class="ti ti-scissors me-1"></i>
             {{ __('Bespoke Studio & Master Atelier') }}
         </div>
-        <h1 style="font-size: clamp(32px, 4.5vw, 52px); font-weight: 800; margin: 0 0 12px; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.3);">
+        <h1 style="font-size: clamp(32px, 4.5vw, 52px); font-weight: 800; margin: 0 0 12px; color: #ffffff; text-shadow: 0 2px 14px rgba(0,0,0,0.5);">
             {{ $tailor['shop_name'] }}
         </h1>
-        <p style="font-size: 19px; color: rgba(255,255,255,0.9); max-width: 650px; margin: 0 auto; font-weight: 500;">
+        <p style="font-size: 19px; color: var(--text-body); max-width: 650px; margin: 0 auto; font-weight: 500;">
             {{ $tailor['owner_name'] }} &nbsp;·&nbsp; {{ $tailor['location'] }}
         </p>
 
@@ -716,12 +817,12 @@
             <!-- About Studio Bio Card -->
             <div class="content-card">
                 <h3><i class="ti ti-building-store"></i> {{ __('About Atelier & Master Tailor') }}</h3>
-                <p style="font-size: 16px; color: var(--text-main); line-height: 1.75; margin: 0;">
+                <p style="font-size: 16px; color: var(--text-body); line-height: 1.75; margin: 0;">
                     {{ $tailor['bio'] }}
                 </p>
                 <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px;">
                     @foreach($tailor['specialties'] as $spec)
-                        <span style="background: var(--brand-primary-light); color: var(--brand-primary); padding: 6px 14px; border-radius: 50px; font-size: 13px; font-weight: 700;">
+                        <span style="background: var(--gold-light-bg); color: var(--primary-light-gold); border: 1px solid var(--gold-border); padding: 6px 14px; border-radius: 50px; font-size: 13px; font-weight: 700;">
                             #{{ $spec }}
                         </span>
                     @endforeach
@@ -734,9 +835,9 @@
                     <h3><i class="ti ti-shield-check"></i> {{ __('Master Craftsmanship & Guarantees') }}</h3>
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
                         @foreach($tailor['craftsmanship_guarantees'] as $guarantee)
-                            <div style="background: var(--bg-canvas); padding: 18px; border-radius: 16px; border: 1px solid var(--border-color);">
-                                <div style="font-weight: 700; font-size: 15px; color: var(--brand-navy); margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
-                                    <i class="ti ti-check-circle" style="color: var(--brand-primary); font-size: 18px;"></i>
+                            <div style="background: var(--inner-bg); padding: 18px; border-radius: 16px; border: 1px solid var(--card-border);">
+                                <div style="font-weight: 700; font-size: 15px; color: var(--text-white); margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+                                    <i class="ti ti-check-circle" style="color: var(--primary-light-gold); font-size: 18px;"></i>
                                     {{ $guarantee['title'] }}
                                 </div>
                                 <div style="font-size: 13px; color: var(--text-muted); line-height: 1.5;">
@@ -761,7 +862,7 @@
                             </div>
                             <div class="service-price-box">
                                 <span class="service-price">{{ $service['price'] }}</span>
-                                <button class="btn-book-now" style="padding: 8px 18px; font-size: 13px;" onclick="openBookingModal('{{ $service['name'] }}')">
+                                <button class="btn-book-now" style="height: 38px; padding: 0 20px; font-size: 13px; font-weight: 700;" onclick="openBookingModal('{{ $service['name'] }}')">
                                     {{ __('Book Service') }}
                                 </button>
                             </div>
@@ -784,7 +885,7 @@
                                 <i class="ti ti-star-filled"></i> {{ $rev['rating'] }}.0
                             </div>
                         </div>
-                        <p style="font-size: 14.5px; color: var(--text-main); margin: 0; font-style: italic;">
+                        <p style="font-size: 14.5px; color: var(--text-body); margin: 0; font-style: italic;">
                             "{{ $rev['text'] }}"
                         </p>
                     </div>
@@ -816,10 +917,10 @@
             @if(!empty($tailor['amenities']))
                 <div class="content-card">
                     <h3><i class="ti ti-sparkles"></i> {{ __('Studio Amenities') }}</h3>
-                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
+                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
                         @foreach($tailor['amenities'] as $amenity)
-                            <li style="font-size: 14px; font-weight: 600; color: var(--brand-navy); display: flex; align-items: center; gap: 10px;">
-                                <i class="ti ti-circle-check-filled" style="color: var(--brand-primary);"></i> {{ $amenity }}
+                            <li style="font-size: 14px; font-weight: 600; color: var(--text-body); display: flex; align-items: center; gap: 10px;">
+                                <i class="ti ti-circle-check-filled" style="color: var(--primary-light-gold); font-size: 16px;"></i> {{ $amenity }}
                             </li>
                         @endforeach
                     </ul>
@@ -835,7 +936,7 @@
                             <span style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 8px;">{{ __('Languages Spoken') }}</span>
                             <div style="display: flex; flex-wrap: wrap; gap: 6px;">
                                 @foreach($tailor['languages'] as $lang)
-                                    <span style="background: var(--bg-canvas); border: 1px solid var(--border-color); padding: 4px 12px; border-radius: 50px; font-size: 12.5px; font-weight: 600; color: var(--brand-navy);">
+                                    <span style="background: var(--inner-bg); border: 1px solid var(--card-border); padding: 4px 12px; border-radius: 50px; font-size: 12.5px; font-weight: 600; color: var(--text-body);">
                                         {{ $lang }}
                                     </span>
                                 @endforeach
@@ -848,7 +949,7 @@
                             <span style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 8px;">{{ __('Accepted Payment Options') }}</span>
                             <div style="display: flex; flex-wrap: wrap; gap: 6px;">
                                 @foreach($tailor['payment_methods'] as $pm)
-                                    <span style="background: var(--brand-primary-light); color: var(--brand-primary); padding: 4px 12px; border-radius: 50px; font-size: 12.5px; font-weight: 700;">
+                                    <span style="background: var(--gold-light-bg); color: var(--primary-light-gold); border: 1px solid var(--gold-border); padding: 4px 12px; border-radius: 50px; font-size: 12.5px; font-weight: 700;">
                                         <i class="ti ti-credit-card me-1"></i> {{ $pm }}
                                     </span>
                                 @endforeach
@@ -861,14 +962,14 @@
             <!-- Studio Location Card -->
             <div class="content-card">
                 <h3><i class="ti ti-map-pin"></i> {{ __('Studio Location') }}</h3>
-                <p style="font-size: 14.5px; color: var(--text-main); font-weight: 600; margin-bottom: 6px;">
+                <p style="font-size: 14.5px; color: var(--text-white); font-weight: 600; margin-bottom: 6px;">
                     {{ $tailor['address'] }}
                 </p>
                 <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 18px;">
-                    <i class="ti ti-clock me-1"></i> Mon - Sat: 10:00 AM - 8:00 PM<br>
+                    <i class="ti ti-clock me-1" style="color: var(--primary-light-gold);"></i> Mon - Sat: 10:00 AM - 8:00 PM<br>
                     <i class="ti ti-circle-x me-1"></i> Sunday: Closed (Appointment Only)
                 </p>
-                <a href="https://maps.google.com/?q={{ urlencode($tailor['address']) }}" target="_blank" class="btn-call" style="width: 100%; text-align: center; justify-content: center;">
+                <a href="https://maps.google.com/?q={{ urlencode($tailor['address']) }}" target="_blank" class="btn-call" style="width: 100%; text-align: center; justify-content: center; height: 44px;">
                     <i class="ti ti-location"></i> {{ __('Open in Google Maps') }}
                 </a>
             </div>
@@ -880,37 +981,37 @@
     <div class="modal-custom" id="bookingModal">
         <div class="modal-content-box">
             <button class="modal-close" onclick="closeBookingModal()">&times;</button>
-            <h3 style="font-size: 24px; font-weight: 800; color: var(--brand-navy); margin-top: 0; margin-bottom: 6px;">
-                <i class="ti ti-calendar me-1" style="color: var(--brand-primary);"></i> {{ __('Book Fitting Appointment') }}
+            <h3 style="font-size: 22px; font-weight: 800; color: var(--text-white); margin-top: 0; margin-bottom: 6px;">
+                <i class="ti ti-calendar me-1" style="color: var(--primary-light-gold);"></i> {{ __('Book Fitting Appointment') }}
             </h3>
             <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">
-                {{ __('Schedule a bespoke consultation with ') }} <strong>{{ $tailor['owner_name'] }}</strong>
+                {{ __('Schedule a bespoke consultation with ') }} <strong style="color: var(--text-white);">{{ $tailor['owner_name'] }}</strong>
             </p>
 
             <form action="{{ route('tailor.book.appointment', $tailor['id']) }}" method="POST">
                 @csrf
                 <div class="form-group">
-                    <label for="customer_name">{{ __('Your Full Name') }} <span style="color: red;">*</span></label>
+                    <label for="customer_name">{{ __('Your Full Name') }} <span style="color: #EF4444;">*</span></label>
                     <input type="text" name="customer_name" id="customer_name" class="form-control" placeholder="e.g. Jameson Aris" required />
                 </div>
 
                 <div class="form-group">
-                    <label for="email">{{ __('Email Address') }} <span style="color: red;">*</span></label>
+                    <label for="email">{{ __('Email Address') }} <span style="color: #EF4444;">*</span></label>
                     <input type="email" name="email" id="email" class="form-control" placeholder="name@domain.com" required />
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">{{ __('Mobile Phone / WhatsApp') }} <span style="color: red;">*</span></label>
+                    <label for="phone">{{ __('Mobile Phone / WhatsApp') }} <span style="color: #EF4444;">*</span></label>
                     <input type="tel" name="phone" id="phone" class="form-control" placeholder="+44 20 7946 0912" required />
                 </div>
 
                 <div class="form-group">
-                    <label for="appointment_date">{{ __('Preferred Appointment Date') }} <span style="color: red;">*</span></label>
+                    <label for="appointment_date">{{ __('Preferred Appointment Date') }} <span style="color: #EF4444;">*</span></label>
                     <input type="date" name="appointment_date" id="appointment_date" class="form-control" min="{{ date('Y-m-d') }}" required />
                 </div>
 
                 <div class="form-group">
-                    <label for="service_type">{{ __('Select Service') }} <span style="color: red;">*</span></label>
+                    <label for="service_type">{{ __('Select Service') }} <span style="color: #EF4444;">*</span></label>
                     <select name="service_type" id="service_type" class="form-control" required>
                         @foreach($tailor['services'] as $srv)
                             <option value="{{ $srv['name'] }}">{{ $srv['name'] }} ({{ $srv['price'] }})</option>
@@ -918,7 +1019,7 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn-book-now" style="width: 100%; justify-content: center;">
+                <button type="submit" class="btn-book-now" style="width: 100%; justify-content: center; margin-top: 8px;">
                     <i class="ti ti-check me-1"></i> {{ __('Confirm Appointment Booking') }}
                 </button>
             </form>

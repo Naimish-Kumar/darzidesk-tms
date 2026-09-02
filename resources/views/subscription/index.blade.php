@@ -11,33 +11,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --dd-brand-teal: #00796B;
-            --dd-brand-teal-hover: #005A50;
-            --dd-brand-teal-light: #E6F4F1;
-            --dd-brand-teal-border: #B2E0D8;
-            --jasper-bg: #F8FAFC;
-            --jasper-card-bg: #FFFFFF;
-            --jasper-card-subtle: #F8FAFC;
-            --jasper-border: #E2E8F0;
-            --jasper-text-dark: #0F172A;
-            --jasper-text-muted: #64748B;
-            --jasper-green: #00796B;
-            --jasper-green-bg: #E6F4F1;
+            --dd-brand-teal: #D9A441;
+            --dd-brand-teal-hover: #F4C861;
+            --dd-brand-teal-light: rgba(217, 164, 65, 0.15);
+            --dd-brand-teal-border: #29435D;
+            --jasper-bg: #03111F;
+            --jasper-card-bg: #07192A;
+            --jasper-card-subtle: #0B2239;
+            --jasper-border: #29435D;
+            --jasper-text-dark: #FFFFFF;
+            --jasper-text-muted: #D8E0E8;
+            --jasper-green: #10B981;
+            --jasper-green-bg: rgba(16, 185, 129, 0.15);
         }
 
         .dd-pricing-wrapper {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #F3F4F6;
+            background: #03111F;
             padding: 24px;
             border-radius: 16px;
+            color: #FFFFFF;
         }
 
         .dd-pricing-box {
-            background: var(--jasper-card-bg);
-            border: 1px solid var(--jasper-border);
+            background: #07192A;
+            border: 1px solid #29435D;
             border-radius: 16px;
             padding: 32px 36px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
 
         /* ─── Top Header Bar ─── */
@@ -47,29 +48,29 @@
             justify-content: space-between;
             margin-bottom: 24px;
             padding-bottom: 20px;
-            border-bottom: 1px solid var(--jasper-border);
+            border-bottom: 1px solid #29435D;
         }
         .dd-top-header h2 {
             font-size: 22px;
             font-weight: 700;
-            color: var(--jasper-text-dark);
+            color: #F4C861;
             margin: 0;
             letter-spacing: -0.3px;
         }
         .dd-signout-btn {
             font-size: 13px;
             font-weight: 600;
-            color: var(--jasper-text-dark);
-            background: #FFFFFF;
-            border: 1px solid var(--jasper-border);
+            color: #FFFFFF;
+            background: #0B2239;
+            border: 1px solid #29435D;
             padding: 7px 16px;
             border-radius: 8px;
             text-decoration: none;
             transition: all 0.2s ease;
         }
         .dd-signout-btn:hover {
-            background: #F8FAFC;
-            color: var(--jasper-text-dark);
+            background: #102B45;
+            color: #F4C861;
             text-decoration: none;
         }
 
@@ -84,21 +85,21 @@
         .dd-billing-save {
             font-size: 13px;
             font-weight: 600;
-            color: var(--dd-brand-teal);
+            color: #F4C861;
         }
         .dd-billing-select {
             font-size: 13px;
             font-weight: 600;
-            color: var(--jasper-text-dark);
-            background: #FFFFFF;
-            border: 1px solid var(--jasper-border);
+            color: #FFFFFF;
+            background: #0B2239;
+            border: 1px solid #29435D;
             border-radius: 8px;
             padding: 6px 14px;
             cursor: pointer;
             outline: none;
             appearance: none;
             padding-right: 28px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2300796B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F4C861'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 8px center;
             background-size: 14px;
@@ -121,9 +122,9 @@
 
         /* ─── Pricing Card ─── */
         .dd-card-item {
-            background: var(--jasper-card-subtle);
-            border: 1px solid var(--jasper-border);
-            border-radius: 14px;
+            background: #0B2239;
+            border: 1px solid #29435D;
+            border-radius: 16px;
             padding: 28px 24px;
             display: flex;
             flex-direction: column;
@@ -131,12 +132,13 @@
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
         .dd-card-item:hover {
-            border-color: var(--dd-brand-teal-border);
-            box-shadow: 0 4px 16px rgba(0, 121, 107, 0.08);
+            border-color: #D9A441;
+            box-shadow: 0 10px 30px rgba(217, 164, 65, 0.25);
         }
         .dd-card-item.dd-card-featured {
-            border-color: var(--dd-brand-teal);
-            box-shadow: 0 2px 14px rgba(0, 121, 107, 0.12);
+            border-color: #D9A441;
+            background: linear-gradient(145deg, #0B2239 0%, #07192A 100%);
+            box-shadow: 0 10px 35px rgba(217, 164, 65, 0.2);
         }
 
         /* Title & Badge */
@@ -148,16 +150,16 @@
         .dd-card-title {
             font-size: 24px;
             font-weight: 800;
-            color: var(--jasper-text-dark);
+            color: #F4C861;
             margin: 0;
             letter-spacing: -0.3px;
         }
         .dd-badge-recommended {
             font-size: 11px;
             font-weight: 600;
-            background: var(--dd-brand-teal-light);
-            color: var(--dd-brand-teal);
-            border: 1px solid var(--dd-brand-teal-border);
+            background: rgba(217, 164, 65, 0.2);
+            color: #F4C861;
+            border: 1px solid #D9A441;
             padding: 2px 8px;
             border-radius: 6px;
             margin-left: 8px;
@@ -165,9 +167,9 @@
         .dd-badge-current {
             font-size: 11px;
             font-weight: 700;
-            background: #FEF3C7;
-            color: #D97706;
-            border: 1px solid #FDE68A;
+            background: rgba(217, 164, 65, 0.25);
+            color: #F4C861;
+            border: 1px solid #D9A441;
             padding: 2px 8px;
             border-radius: 6px;
             margin-left: 8px;
@@ -175,7 +177,7 @@
 
         .dd-card-desc {
             font-size: 13px;
-            color: var(--jasper-text-muted);
+            color: #D8E0E8;
             line-height: 1.55;
             margin-bottom: 20px;
             min-height: 40px;
@@ -191,28 +193,28 @@
         .dd-price-val {
             font-size: 32px;
             font-weight: 800;
-            color: var(--jasper-text-dark);
+            color: #FFFFFF;
             line-height: 1;
             letter-spacing: -0.8px;
         }
         .dd-price-unit {
             font-size: 13.5px;
-            color: var(--jasper-text-muted);
+            color: #D8E0E8;
             font-weight: 500;
         }
         .dd-badge-save {
             font-size: 11px;
             font-weight: 700;
-            background: var(--dd-brand-teal-light);
-            color: var(--dd-brand-teal);
-            border: 1px solid var(--dd-brand-teal-border);
+            background: rgba(16, 185, 129, 0.2);
+            color: #34D399;
+            border: 1px solid rgba(16, 185, 129, 0.4);
             padding: 2px 7px;
             border-radius: 4px;
             margin-left: 6px;
         }
         .dd-price-subtext {
             font-size: 12px;
-            color: var(--jasper-text-muted);
+            color: #D8E0E8;
             margin-bottom: 24px;
         }
 
@@ -223,9 +225,9 @@
             justify-content: center;
             width: 100%;
             padding: 11px 16px;
-            border-radius: 8px;
+            border-radius: 9999px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
             text-decoration: none;
             text-align: center;
             transition: all 0.2s ease;
@@ -233,30 +235,30 @@
             border: 1px solid transparent;
         }
         .dd-cta-btn-outline {
-            background: #FFFFFF;
-            color: var(--jasper-text-dark);
-            border-color: #D1D5DB;
+            background: #03111F;
+            color: #F4C861;
+            border-color: #D9A441;
         }
         .dd-cta-btn-outline:hover {
-            background: var(--dd-brand-teal-light);
-            border-color: var(--dd-brand-teal);
-            color: var(--dd-brand-teal);
+            background: rgba(217, 164, 65, 0.2);
+            border-color: #F4C861;
+            color: #FFFFFF;
             text-decoration: none;
         }
         .dd-cta-btn-solid {
-            background: var(--dd-brand-teal);
-            color: #FFFFFF;
-            border-color: var(--dd-brand-teal);
+            background: linear-gradient(135deg, #D9A441 0%, #F4C861 100%);
+            color: #03111F;
+            border-color: transparent;
         }
         .dd-cta-btn-solid:hover {
-            background: var(--dd-brand-teal-hover);
-            color: #FFFFFF;
+            background: linear-gradient(135deg, #F4C861 0%, #FFE596 100%);
+            color: #03111F;
             text-decoration: none;
-            box-shadow: 0 4px 12px rgba(0, 121, 107, 0.25);
+            box-shadow: 0 6px 20px rgba(217, 164, 65, 0.4);
         }
         .dd-cta-btn-active {
-            background: #E2E8F0;
-            color: #475569;
+            background: #29435D;
+            color: #D8E0E8;
             cursor: default;
         }
 
@@ -264,7 +266,7 @@
         .dd-features-header {
             font-size: 13px;
             font-weight: 700;
-            color: var(--jasper-text-dark);
+            color: #F4C861;
             margin-bottom: 14px;
         }
         .dd-features-list {
@@ -279,18 +281,18 @@
             gap: 10px;
             padding: 6px 0;
             font-size: 13px;
-            color: var(--jasper-text-dark);
+            color: #D8E0E8;
             line-height: 1.5;
         }
         .dd-check-icon {
-            color: var(--dd-brand-teal);
+            color: #10B981;
             font-size: 14px;
             font-weight: 700;
             flex-shrink: 0;
             margin-top: 1px;
         }
         .dd-cross-icon {
-            color: #94A3B8;
+            color: #64748B;
             font-size: 14px;
             font-weight: 700;
             flex-shrink: 0;

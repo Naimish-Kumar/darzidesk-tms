@@ -316,6 +316,7 @@ form label {
     right: 10px;
     line-height: 0;
 }
+
 .select2-container .select2-selection--single {
     height: 43px !important;
     border-color: #e5e5e5;
@@ -379,7 +380,7 @@ form label {
 }
 
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
- background-color: rgba(var(--bs-secondary-rgb), 1);
+    background-color: rgba(var(--bs-secondary-rgb), 1);
     color: #fff;
 }
 
@@ -400,7 +401,7 @@ form label {
     .pc-container {
         padding: 15px 10px !important;
     }
-    
+
     .pc-content {
         padding: 10px !important;
     }
@@ -444,7 +445,7 @@ form label {
     .alert {
         padding: 10px !important;
     }
-    
+
     .alert .fz-md {
         font-size: 0.8rem !important;
     }
@@ -462,7 +463,7 @@ form label {
         padding-left: 5px !important;
         padding-right: 5px !important;
     }
-    
+
     .card {
         margin-bottom: 10px !important;
     }
@@ -515,7 +516,7 @@ form label {
 }
 
 /* ── Hide Section Caption Headers ── */
-.pc-sidebar .pc-navbar > .pc-item.pc-caption {
+.pc-sidebar .pc-navbar>.pc-item.pc-caption {
     display: none !important;
 }
 
@@ -527,7 +528,7 @@ form label {
     padding: 10px 0 !important;
 }
 
-.pc-sidebar .pc-navbar > .pc-item {
+.pc-sidebar .pc-navbar>.pc-item {
     margin: 3px 12px !important;
     padding: 0 !important;
     border-radius: 12px !important;
@@ -535,7 +536,7 @@ form label {
     overflow: hidden !important;
 }
 
-.pc-sidebar .pc-navbar > .pc-item > .pc-link {
+.pc-sidebar .pc-navbar>.pc-item>.pc-link {
     font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif !important;
     font-size: 14.5px !important;
     font-weight: 500 !important;
@@ -553,7 +554,7 @@ form label {
     line-height: 1.2 !important;
 }
 
-.pc-sidebar .pc-navbar > .pc-item > .pc-link:hover {
+.pc-sidebar .pc-navbar>.pc-item>.pc-link:hover {
     background: #F0F9F8 !important;
     color: #00695C !important;
 }
@@ -590,14 +591,14 @@ form label {
 }
 
 /* ── Active State (Exact match to reference image) ── */
-.pc-sidebar .pc-navbar > .pc-item.active,
-.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active {
+.pc-sidebar .pc-navbar>.pc-item.active,
+.pc-sidebar .pc-navbar>.pc-item.pc-trigger.active {
     border-radius: 12px !important;
     overflow: hidden !important;
 }
 
-.pc-sidebar .pc-navbar > .pc-item.active > .pc-link,
-.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link {
+.pc-sidebar .pc-navbar>.pc-item.active>.pc-link,
+.pc-sidebar .pc-navbar>.pc-item.pc-trigger.active>.pc-link {
     background: #E6F8F5 !important;
     color: #00695C !important;
     font-weight: 700 !important;
@@ -606,8 +607,8 @@ form label {
 }
 
 /* Dark Teal Left Pill Bar Indicator */
-.pc-sidebar .pc-navbar > .pc-item.active::before,
-.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active::before {
+.pc-sidebar .pc-navbar>.pc-item.active::before,
+.pc-sidebar .pc-navbar>.pc-item.pc-trigger.active::before {
     content: '' !important;
     position: absolute !important;
     left: 0 !important;
@@ -621,23 +622,23 @@ form label {
     display: block !important;
 }
 
-.pc-sidebar .pc-navbar > .pc-item.active::after,
-.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active::after {
+.pc-sidebar .pc-navbar>.pc-item.active::after,
+.pc-sidebar .pc-navbar>.pc-item.pc-trigger.active::after {
     display: none !important;
 }
 
-.pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-micon i,
-.pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-micon svg,
-.pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-mtext,
-.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-micon i,
-.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-micon svg,
-.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-mtext {
+.pc-sidebar .pc-navbar>.pc-item.active>.pc-link .pc-micon i,
+.pc-sidebar .pc-navbar>.pc-item.active>.pc-link .pc-micon svg,
+.pc-sidebar .pc-navbar>.pc-item.active>.pc-link .pc-mtext,
+.pc-sidebar .pc-navbar>.pc-item.pc-trigger.active>.pc-link .pc-micon i,
+.pc-sidebar .pc-navbar>.pc-item.pc-trigger.active>.pc-link .pc-micon svg,
+.pc-sidebar .pc-navbar>.pc-item.pc-trigger.active>.pc-link .pc-mtext {
     color: #00695C !important;
 }
 
 /* ── Hover State ── */
-.pc-sidebar .pc-navbar > .pc-item > .pc-link:hover .pc-micon i,
-.pc-sidebar .pc-navbar > .pc-item > .pc-link:hover .pc-micon svg {
+.pc-sidebar .pc-navbar>.pc-item>.pc-link:hover .pc-micon i,
+.pc-sidebar .pc-navbar>.pc-item>.pc-link:hover .pc-micon svg {
     color: #D9A441 !important;
 }
 
@@ -654,8 +655,8 @@ form label {
     transition: transform 0.25s ease, color 0.15s ease !important;
 }
 
-.pc-sidebar .pc-navbar > .pc-item.pc-trigger > .pc-link .pc-arrow i,
-.pc-sidebar .pc-navbar > .pc-item.pc-trigger > .pc-link .pc-arrow svg {
+.pc-sidebar .pc-navbar>.pc-item.pc-trigger>.pc-link .pc-arrow i,
+.pc-sidebar .pc-navbar>.pc-item.pc-trigger>.pc-link .pc-arrow svg {
     transform: rotate(90deg) !important;
     color: #D9A441 !important;
 }
@@ -730,13 +731,16 @@ form label {
 .pc-sidebar .navbar-content::-webkit-scrollbar {
     width: 3px;
 }
+
 .pc-sidebar .navbar-content::-webkit-scrollbar-track {
     background: transparent;
 }
+
 .pc-sidebar .navbar-content::-webkit-scrollbar-thumb {
     background: #E0E0E0;
     border-radius: 3px;
 }
+
 .pc-sidebar .navbar-content::-webkit-scrollbar-thumb:hover {
     background: #BDBDBD;
 }
@@ -747,6 +751,7 @@ form label {
    ═══════════════════════════════════════════════════════════════════════════════ */
 
 @media (min-width: 1025px) {
+
     /* Override: don't set width to 0, use icon-only width instead */
     .pc-sidebar.pc-sidebar-hide,
     body.pc-sidebar-hide .pc-sidebar {
@@ -773,13 +778,13 @@ form label {
     }
 
     /* Shift header and content for icon-only sidebar */
-    .pc-sidebar.pc-sidebar-hide ~ .pc-header,
+    .pc-sidebar.pc-sidebar-hide~.pc-header,
     body.pc-sidebar-hide .pc-header {
         left: 70px !important;
     }
 
-    .pc-sidebar.pc-sidebar-hide ~ .pc-footer,
-    .pc-sidebar.pc-sidebar-hide ~ .pc-container,
+    .pc-sidebar.pc-sidebar-hide~.pc-footer,
+    .pc-sidebar.pc-sidebar-hide~.pc-container,
     body.pc-sidebar-hide .pc-footer,
     body.pc-sidebar-hide .pc-container {
         margin-left: 70px !important;
@@ -807,14 +812,14 @@ form label {
         padding: 0 !important;
     }
 
-    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item,
-    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item {
+    .pc-sidebar.pc-sidebar-hide .pc-navbar>.pc-item,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar>.pc-item {
         width: 70px !important;
         margin: 0 !important;
     }
 
-    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item > .pc-link,
-    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item > .pc-link {
+    .pc-sidebar.pc-sidebar-hide .pc-navbar>.pc-item>.pc-link,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar>.pc-item>.pc-link {
         width: 70px !important;
         justify-content: center !important;
         align-items: center !important;
@@ -863,20 +868,20 @@ form label {
     }
 
     /* Active indicator still visible */
-    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.active::after,
-    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.pc-trigger.active::after,
-    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item.active::after,
-    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item.pc-trigger.active::after {
+    .pc-sidebar.pc-sidebar-hide .pc-navbar>.pc-item.active::after,
+    .pc-sidebar.pc-sidebar-hide .pc-navbar>.pc-item.pc-trigger.active::after,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar>.pc-item.active::after,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar>.pc-item.pc-trigger.active::after {
         top: 6px !important;
         bottom: 6px !important;
         right: 0 !important;
     }
 
     /* Active icon color in collapsed state */
-    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.active .pc-micon i,
-    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.active .pc-micon svg,
-    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item.active .pc-micon i,
-    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item.active .pc-micon svg {
+    .pc-sidebar.pc-sidebar-hide .pc-navbar>.pc-item.active .pc-micon i,
+    .pc-sidebar.pc-sidebar-hide .pc-navbar>.pc-item.active .pc-micon svg,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar>.pc-item.active .pc-micon i,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar>.pc-item.active .pc-micon svg {
         color: #D9A441 !important;
     }
 
@@ -887,13 +892,13 @@ form label {
     }
 
     /* Tooltip on hover for collapsed items */
-    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item,
-    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item {
+    .pc-sidebar.pc-sidebar-hide .pc-navbar>.pc-item,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar>.pc-item {
         position: relative !important;
     }
 
-    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item > .pc-link::after,
-    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item > .pc-link::after {
+    .pc-sidebar.pc-sidebar-hide .pc-navbar>.pc-item>.pc-link::after,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar>.pc-item>.pc-link::after {
         content: attr(data-dd-tooltip);
         position: absolute;
         left: 100%;
@@ -913,17 +918,17 @@ form label {
         transition: opacity 0.15s ease;
         z-index: 1050;
         margin-left: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
-    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item > .pc-link:hover::after,
-    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item > .pc-link:hover::after {
+    .pc-sidebar.pc-sidebar-hide .pc-navbar>.pc-item>.pc-link:hover::after,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar>.pc-item>.pc-link:hover::after {
         opacity: 1;
     }
 
     /* Show submenus as flyout on hover in collapsed mode */
-    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.pc-hasmenu:hover > .pc-submenu,
-    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item.pc-hasmenu:hover > .pc-submenu {
+    .pc-sidebar.pc-sidebar-hide .pc-navbar>.pc-item.pc-hasmenu:hover>.pc-submenu,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar>.pc-item.pc-hasmenu:hover>.pc-submenu {
         display: block !important;
         position: absolute !important;
         left: 70px !important;
@@ -932,19 +937,19 @@ form label {
         background: #0B2239 !important;
         border: 1px solid #29435D !important;
         border-radius: 10px !important;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.4) !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
         padding: 8px 0 !important;
         z-index: 1050 !important;
     }
 
-    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.pc-hasmenu:hover > .pc-submenu .pc-link,
-    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item.pc-hasmenu:hover > .pc-submenu .pc-link {
+    .pc-sidebar.pc-sidebar-hide .pc-navbar>.pc-item.pc-hasmenu:hover>.pc-submenu .pc-link,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar>.pc-item.pc-hasmenu:hover>.pc-submenu .pc-link {
         padding: 10px 20px 10px 32px !important;
         color: #D8E0E8 !important;
     }
 
-    .pc-sidebar.pc-sidebar-hide .pc-navbar > .pc-item.pc-hasmenu:hover > .pc-submenu .pc-link::before,
-    body.pc-sidebar-hide .pc-sidebar .pc-navbar > .pc-item.pc-hasmenu:hover > .pc-submenu .pc-link::before {
+    .pc-sidebar.pc-sidebar-hide .pc-navbar>.pc-item.pc-hasmenu:hover>.pc-submenu .pc-link::before,
+    body.pc-sidebar-hide .pc-sidebar .pc-navbar>.pc-item.pc-hasmenu:hover>.pc-submenu .pc-link::before {
         left: 16px !important;
     }
 }
@@ -965,32 +970,32 @@ form label {
     border-color: #29435D !important;
 }
 
-.pc-sidebar .pc-navbar > .pc-item > .pc-link {
+.pc-sidebar .pc-navbar>.pc-item>.pc-link {
     color: #D8E0E8 !important;
 }
 
-.pc-sidebar .pc-navbar > .pc-item > .pc-link:hover {
+.pc-sidebar .pc-navbar>.pc-item>.pc-link:hover {
     background: #102B45 !important;
     color: #D9A441 !important;
 }
 
-.pc-sidebar .pc-navbar > .pc-item.active > .pc-link,
-.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link {
+.pc-sidebar .pc-navbar>.pc-item.active>.pc-link,
+.pc-sidebar .pc-navbar>.pc-item.pc-trigger.active>.pc-link {
     background: #102B45 !important;
     color: #D9A441 !important;
 }
 
-.pc-sidebar .pc-navbar > .pc-item.active::after,
-.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active::after {
+.pc-sidebar .pc-navbar>.pc-item.active::after,
+.pc-sidebar .pc-navbar>.pc-item.pc-trigger.active::after {
     background: #D9A441 !important;
 }
 
-.pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-micon i,
-.pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-micon svg,
-.pc-sidebar .pc-navbar > .pc-item.active > .pc-link .pc-mtext,
-.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-micon i,
-.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-micon svg,
-.pc-sidebar .pc-navbar > .pc-item.pc-trigger.active > .pc-link .pc-mtext {
+.pc-sidebar .pc-navbar>.pc-item.active>.pc-link .pc-micon i,
+.pc-sidebar .pc-navbar>.pc-item.active>.pc-link .pc-micon svg,
+.pc-sidebar .pc-navbar>.pc-item.active>.pc-link .pc-mtext,
+.pc-sidebar .pc-navbar>.pc-item.pc-trigger.active>.pc-link .pc-micon i,
+.pc-sidebar .pc-navbar>.pc-item.pc-trigger.active>.pc-link .pc-micon svg,
+.pc-sidebar .pc-navbar>.pc-item.pc-trigger.active>.pc-link .pc-mtext {
     color: #D9A441 !important;
 }
 
@@ -1060,8 +1065,8 @@ form label {
 }
 
 [data-pc-theme="dark"] .pc-header .header-user-profile .pc-head-link {
-    background: rgba(255,255,255,0.08) !important;
-    border-color: rgba(255,255,255,0.12) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
 [data-pc-theme="dark"] .pc-header .header-user-profile .pc-head-link .user-name {
@@ -1072,22 +1077,28 @@ form label {
    Global Standardized Typography System (Hanken Grotesk Everywhere)
    ═══════════════════════════════════════════════════════════════════════════════ */
 
-body, html, 
-.pc-container, 
-.pc-sidebar, 
-.pc-header, 
-.card, 
-.table, 
-.form-control, 
-.form-select, 
-.form-label, 
-.btn, 
-.modal, 
-.dropdown-menu, 
-.popover, 
-.tooltip, 
-.badge, 
-th, td, label, input, select, textarea {
+body,
+html,
+.pc-container,
+.pc-sidebar,
+.pc-header,
+.card,
+.table,
+.form-control,
+.form-select,
+.form-label,
+.btn,
+.modal,
+.dropdown-menu,
+.popover,
+.tooltip,
+.badge,
+th,
+td,
+label,
+input,
+select,
+textarea {
     font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
@@ -1105,13 +1116,13 @@ body {
 }
 
 /* Tables & DataTables Font Standardizing */
-.table, 
+.table,
 table.dataTable {
     font-size: 13.5px !important;
 }
 
-.table thead th, 
-table.dataTable thead th, 
+.table thead th,
+table.dataTable thead th,
 .table th {
     font-size: 12px !important;
     font-weight: 700 !important;
@@ -1121,8 +1132,8 @@ table.dataTable thead th,
     padding: 12px 16px !important;
 }
 
-.table tbody td, 
-table.dataTable tbody td, 
+.table tbody td,
+table.dataTable tbody td,
 .table td {
     font-size: 13.5px !important;
     padding: 12px 16px !important;
@@ -1131,13 +1142,13 @@ table.dataTable tbody td,
 }
 
 /* Badges & Status Pills */
-.badge, 
-.dd-badge, 
-.bg-primary, 
-.bg-secondary, 
-.bg-success, 
-.bg-danger, 
-.bg-warning, 
+.badge,
+.dd-badge,
+.bg-primary,
+.bg-secondary,
+.bg-success,
+.bg-danger,
+.bg-warning,
 .bg-info {
     font-size: 11.5px !important;
     font-weight: 700 !important;
@@ -1147,7 +1158,7 @@ table.dataTable tbody td,
 }
 
 /* Form Controls & Inputs */
-.form-label, 
+.form-label,
 label {
     font-size: 13.5px !important;
     font-weight: 600 !important;
@@ -1155,8 +1166,8 @@ label {
     margin-bottom: 6px !important;
 }
 
-.form-control, 
-.form-select, 
+.form-control,
+.form-select,
 .select2-container .select2-selection--single {
     font-size: 14px !important;
     font-weight: 400 !important;
@@ -1177,15 +1188,46 @@ label {
 }
 
 /* Headings */
-h1, .h1 { font-size: 24px !important; font-weight: 800 !important; }
-h2, .h2 { font-size: 22px !important; font-weight: 800 !important; }
-h3, .h3 { font-size: 20px !important; font-weight: 700 !important; }
-h4, .h4 { font-size: 18px !important; font-weight: 700 !important; }
-h5, .h5 { font-size: 16px !important; font-weight: 700 !important; }
-h6, .h6 { font-size: 14px !important; font-weight: 600 !important; }
+h1,
+.h1 {
+    font-size: 24px !important;
+    font-weight: 800 !important;
+}
+
+h2,
+.h2 {
+    font-size: 22px !important;
+    font-weight: 800 !important;
+}
+
+h3,
+.h3 {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+}
+
+h4,
+.h4 {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+}
+
+h5,
+.h5 {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+}
+
+h6,
+.h6 {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
 
 /* Small text fallback - minimum 12.5px */
-small, .text-sm, .text-muted {
+small,
+.text-sm,
+.text-muted {
     font-size: 12.5px !important;
 }
 
@@ -1210,7 +1252,7 @@ div.dt-buttons .dt-button,
     border-radius: 8px !important;
     margin-right: 8px !important;
     margin-bottom: 4px !important;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
 div.dt-buttons .btn:last-child,
@@ -1220,14 +1262,14 @@ div.dt-buttons .dt-button:last-child,
 }
 
 /* Prevent Bootstrap btn-group from stripping border-radius and jamming buttons */
-.dt-buttons.btn-group > .btn:not(:first-child),
-.dt-buttons.btn-group > .btn-group:not(:first-child) > .btn {
+.dt-buttons.btn-group>.btn:not(:first-child),
+.dt-buttons.btn-group>.btn-group:not(:first-child)>.btn {
     border-top-left-radius: 8px !important;
     border-bottom-left-radius: 8px !important;
 }
 
-.dt-buttons.btn-group > .btn:not(:last-child):not(.dropdown-toggle),
-.dt-buttons.btn-group > .btn-group:not(:last-child) > .btn {
+.dt-buttons.btn-group>.btn:not(:last-child):not(.dropdown-toggle),
+.dt-buttons.btn-group>.btn-group:not(:last-child)>.btn {
     border-top-right-radius: 8px !important;
     border-bottom-right-radius: 8px !important;
 }
@@ -1252,14 +1294,14 @@ table td form,
 }
 
 /* General Spacing between adjacent buttons */
-.btn + .btn,
-.btn + a.btn,
-a.btn + .btn,
-a.btn + a.btn,
-button + button,
-.btn + form,
-form + .btn,
-form + form {
+.btn+.btn,
+.btn+a.btn,
+a.btn+.btn,
+a.btn+a.btn,
+button+button,
+.btn+form,
+form+.btn,
+form+form {
     margin-left: 8px !important;
 }
 
@@ -1327,8 +1369,18 @@ html,
     font-family: 'Hanken Grotesk', 'Roboto', system-ui, -apple-system, sans-serif !important;
 }
 
-h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
 .page-header-title h5,
 .card-title,
 .modal-title {
@@ -1337,7 +1389,10 @@ h1, h2, h3, h4, h5, h6,
     font-weight: 700 !important;
 }
 
-p, span, label, div {
+p,
+span,
+label,
+div {
     color: inherit;
 }
 
@@ -1394,15 +1449,15 @@ a:hover {
     color: #D8E0E8 !important;
 }
 
-.pc-sidebar .pc-item.active > .pc-link,
-.pc-sidebar .pc-item:hover > .pc-link {
+.pc-sidebar .pc-item.active>.pc-link,
+.pc-sidebar .pc-item:hover>.pc-link {
     background-color: #102B45 !important;
     color: #D9A441 !important;
 }
 
 .pc-sidebar .pc-micon,
-.pc-sidebar .pc-item.active > .pc-link .pc-micon,
-.pc-sidebar .pc-item:hover > .pc-link .pc-micon {
+.pc-sidebar .pc-item.active>.pc-link .pc-micon,
+.pc-sidebar .pc-item:hover>.pc-link .pc-micon {
     color: #D9A441 !important;
 }
 
@@ -1713,7 +1768,1418 @@ footer.footer a:hover {
     color: #D9A441 !important;
 }
 
-.hr, hr, divider {
+.hr,
+hr,
+divider {
     border-color: #29435D !important;
 }
 
+/* ─── 9b. DarziDesk dd- Prefixed Components (catch-all) ─── */
+
+/* All dd- banners, stat cards, containers, tables */
+.dd-mat-banner,
+.dd-measure-banner,
+.dd-stat-card,
+.dd-card,
+.dd-spec-card,
+.dd-converter-bar,
+.dd-table-container,
+.dd-welcome-banner,
+.dd-comm-banner,
+.dd-staff-banner,
+.dd-exec-banner,
+.dd-rec-banner,
+.dd-invoice-banner,
+.dd-branch-banner,
+.dd-expense-banner,
+.dd-report-banner,
+.dd-checkout-banner,
+.dd-profile-banner,
+.dd-order-banner,
+.dd-prod-banner,
+.dd-notice-banner,
+.dd-contact-banner,
+.dd-diary-banner,
+.dd-billing-banner {
+    background: #0B2239 !important;
+    background-color: #0B2239 !important;
+    border-color: #29435D !important;
+    color: #D8E0E8 !important;
+}
+
+/* All dd- titles */
+.dd-mat-title,
+.dd-measure-title,
+.dd-comm-title,
+.dd-staff-title,
+.dd-exec-title,
+.dd-welcome-title,
+.dd-rec-title,
+.dd-notice-title,
+.dd-contact-title,
+.dd-billing-title,
+.dd-report-title,
+.dd-invoice-title,
+.dd-order-title,
+.dd-branch-title,
+.dd-profile-title,
+.dd-expense-title,
+.dd-checkout-title,
+.dd-prod-title {
+    color: #FFFFFF !important;
+}
+
+/* All dd- subtitles, labels, helper texts */
+.dd-mat-subtitle,
+.dd-measure-subtitle,
+.dd-comm-subtitle,
+.dd-staff-subtitle,
+.dd-exec-subtitle,
+.dd-welcome-subtitle,
+.dd-rec-subtitle,
+.dd-notice-subtitle,
+.dd-contact-subtitle,
+.dd-billing-subtitle,
+.dd-report-subtitle,
+.dd-invoice-subtitle,
+.dd-order-subtitle,
+.dd-branch-subtitle,
+.dd-profile-subtitle,
+.dd-expense-subtitle,
+.dd-checkout-subtitle,
+.dd-stat-label,
+.dd-stat-subtext,
+.dd-convert-hint,
+.dd-prod-subtitle,
+.dd-section-label {
+    color: #8FA1B5 !important;
+}
+
+/* dd- stat values */
+.dd-stat-value {
+    color: #FFFFFF !important;
+}
+
+/* dd- icons */
+.dd-mat-icon,
+.dd-measure-icon,
+.dd-stat-icon,
+.dd-comm-icon,
+.dd-staff-icon,
+.dd-exec-icon,
+.dd-notice-icon,
+.dd-contact-icon,
+.dd-order-icon,
+.dd-prod-icon,
+.dd-branch-icon {
+    background: #102B45 !important;
+    background-color: #102B45 !important;
+}
+
+/* dd- spec cards (measurement quick-add buttons) */
+.dd-spec-card {
+    background: #102B45 !important;
+    border-color: #29435D !important;
+}
+
+.dd-spec-card span {
+    color: #D8E0E8 !important;
+}
+
+.dd-spec-card i {
+    color: #D9A441 !important;
+}
+
+.dd-spec-card:hover {
+    border-color: #D9A441 !important;
+    background: #1E3A5A !important;
+}
+
+/* dd- converter bar and pills */
+.dd-converter-bar {
+    background: #102B45 !important;
+    border-color: #29435D !important;
+}
+
+.dd-converter-pill {
+    background: #0B2239 !important;
+    border-color: #29435D !important;
+    color: #8FA1B5 !important;
+}
+
+.dd-converter-pill.active {
+    background: #D9A441 !important;
+    color: #03111F !important;
+    border-color: #D9A441 !important;
+}
+
+/* dd- table styling */
+.dd-table th {
+    background: #102B45 !important;
+    background-color: #102B45 !important;
+    color: #F4C861 !important;
+    border-color: #29435D !important;
+}
+
+.dd-table td {
+    border-color: #29435D !important;
+    color: #D8E0E8 !important;
+}
+
+.dd-table tr:hover td {
+    background: #102B45 !important;
+}
+
+/* dd- code badges */
+.dd-code-badge,
+.dd-converted-badge {
+    background: rgba(217, 164, 65, 0.15) !important;
+    color: #D9A441 !important;
+}
+
+/* dd- live dot pulse */
+.dd-live-dot {
+    background: #10B981 !important;
+}
+
+/* dd- buttons */
+.dd-btn-primary {
+    background: linear-gradient(135deg, #D9A441 0%, #C38E45 100%) !important;
+    color: #03111F !important;
+}
+
+.dd-btn-outline {
+    background: #102B45 !important;
+    border-color: #D9A441 !important;
+    color: #D9A441 !important;
+}
+
+/* ─── 9c. FullCalendar Dark Theme ─── */
+.fc,
+.fc-theme-standard {
+    background-color: transparent !important;
+}
+
+.fc .fc-scrollgrid,
+.fc .fc-scrollgrid-section > td,
+.fc th,
+.fc td {
+    border-color: #29435D !important;
+}
+
+.fc .fc-col-header-cell {
+    background-color: #102B45 !important;
+}
+
+.fc .fc-col-header-cell-cushion {
+    color: #F4C861 !important;
+}
+
+.fc .fc-daygrid-day {
+    background-color: #0B2239 !important;
+}
+
+.fc .fc-daygrid-day:hover {
+    background-color: #102B45 !important;
+}
+
+.fc .fc-daygrid-day-number {
+    color: #D8E0E8 !important;
+}
+
+.fc .fc-day-today {
+    background-color: rgba(217, 164, 65, 0.1) !important;
+}
+
+.fc .fc-day-other .fc-daygrid-day-number {
+    color: #4A6580 !important;
+}
+
+.fc .fc-button {
+    background-color: #102B45 !important;
+    border-color: #29435D !important;
+    color: #D8E0E8 !important;
+}
+
+.fc .fc-button:hover {
+    background-color: #1E3A5A !important;
+    color: #D9A441 !important;
+}
+
+.fc .fc-button-active {
+    background-color: #D9A441 !important;
+    border-color: #D9A441 !important;
+    color: #03111F !important;
+}
+
+.fc .fc-toolbar-title {
+    color: #FFFFFF !important;
+}
+
+.fc .fc-event {
+    background-color: #D9A441 !important;
+    border-color: #D9A441 !important;
+    color: #03111F !important;
+}
+
+/* ===========================================================================
+   DarziDesk Dark Theme and Text Visibility Overrides
+   =========================================================================== */
+
+/* Overrides for customer portal cards (.dd-card) */
+.dd-card {
+    background: #0B2239 !important;
+    border-color: #29435D !important;
+    color: #D8E0E8 !important;
+}
+
+/* Fix text-dark visibility on tables and page elements */
+.text-dark,
+td.text-dark,
+span.text-dark,
+strong.text-dark,
+label.text-dark,
+table .text-dark,
+.table-responsive .text-dark,
+table .text-dark a,
+.table-responsive .text-dark a {
+    color: #D8E0E8 !important;
+}
+
+h1.text-dark,
+h2.text-dark,
+h3.text-dark,
+h4.text-dark,
+h5.text-dark,
+h6.text-dark {
+    color: #FFFFFF !important;
+}
+
+/* Fix form labels, check labels, and small helper texts */
+.form-label,
+.form-check-label,
+.custom-control-label,
+label:not(.badge),
+label:not(.badge) *,
+.text-muted,
+small:not(.badge),
+[style*="color:#64748B"],
+[style*="color: #64748B"],
+[style*="color:#475569"],
+[style*="color: #475569"] {
+    color: #D8E0E8 !important;
+}
+
+
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   11. NUCLEAR THEME OVERRIDE — Catches ALL remaining view-specific
+       inline styles, local CSS variables, and Bootstrap utility classes.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* --- 11a. Override CSS custom properties set in view <style> blocks --- */
+:root,
+.pc-content,
+.pc-container,
+body {
+    --card-border: #29435D !important;
+    --text-dark: #D8E0E8 !important;
+    --text-muted: #8FA1B5 !important;
+    --dark-navy: #03111F !important;
+}
+
+/* --- 11b. Any element with inline style background:#FFFFFF or bg-white --- */
+.pc-content [style*="background:#FFFFFF"],
+.pc-content [style*="background: #FFFFFF"],
+.pc-content [style*="background:#ffffff"],
+.pc-content [style*="background: #ffffff"],
+.pc-content [style*="background:#F8FAFC"],
+.pc-content [style*="background: #F8FAFC"],
+.pc-content [style*="background:#f8fafc"],
+.pc-content [style*="background: #f8fafc"],
+.pc-content [style*="background:#F1F5F9"],
+.pc-content [style*="background: #F1F5F9"],
+.pc-content .bg-white,
+.pc-content .bg-light {
+    background: #0B2239 !important;
+    background-color: #0B2239 !important;
+    border-color: #29435D !important;
+}
+
+/* --- 11c. Inline text color overrides (dark text on dark bg = invisible) --- */
+.pc-content [style*="color:#1E293B"],
+.pc-content [style*="color: #1E293B"],
+.pc-content [style*="color:#0F172A"],
+.pc-content [style*="color: #0F172A"],
+.pc-content [style*="color:#0B1C30"],
+.pc-content [style*="color: #0B1C30"],
+.pc-content [style*="color:#334155"],
+.pc-content [style*="color: #334155"],
+.pc-content [style*="color:#475569"],
+.pc-content [style*="color: #475569"],
+.pc-content [style*="color:#64748B"],
+.pc-content [style*="color: #64748B"] {
+    color: #D8E0E8 !important;
+}
+
+/* --- 11d. Bootstrap utility overrides within main content area --- */
+.pc-content .bg-light,
+.pc-content .bg-white,
+.pc-content .bg-body {
+    background-color: #0B2239 !important;
+}
+
+.pc-content .text-dark {
+    color: #D8E0E8 !important;
+}
+
+.pc-content .border,
+.pc-content .border-top,
+.pc-content .border-bottom,
+.pc-content .border-start,
+.pc-content .border-end {
+    border-color: #29435D !important;
+}
+
+.pc-content .shadow-sm,
+.pc-content .shadow {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* --- 11e. Cards with inline bg overrides (shadow-sm, border-0, rounded-*) --- */
+.pc-content .card.border-0,
+.pc-content .card.shadow-sm,
+.pc-content .card.rounded-4,
+.pc-content .card.rounded-3 {
+    background-color: #0B2239 !important;
+    border: 1px solid #29435D !important;
+}
+
+.pc-content .card-header.bg-white,
+.pc-content .card-header {
+    background-color: #102B45 !important;
+    border-bottom: 1px solid #29435D !important;
+}
+
+/* --- 11f. KPI / Metric / Stats cards (used across analytics, inventory, etc.) --- */
+.fin-header-bar,
+.catalog-filter-bar,
+.kpi-card,
+.metric-card-custom,
+.inv-table-card,
+.chart-card-custom,
+.product-card,
+.cart-card,
+.customer-info-box,
+.inv-table-header,
+.dd-unit-banner {
+    background: #0B2239 !important;
+    background-color: #0B2239 !important;
+    border-color: #29435D !important;
+    color: #D8E0E8 !important;
+}
+
+.inv-table-header *,
+.table-custom-fin th,
+.inv-table th {
+    background: #102B45 !important;
+    background-color: #102B45 !important;
+    color: #F4C861 !important;
+    border-color: #29435D !important;
+}
+
+.prod-title,
+.kpi-val,
+.metric-val,
+.dd-unit-title {
+    color: #FFFFFF !important;
+}
+
+.kpi-lbl,
+.metric-lbl,
+.prod-desc,
+.dd-unit-subtitle {
+    color: #8FA1B5 !important;
+}
+
+/* --- 11g. POS Billing — filter pills, payment pills, summary lines --- */
+.filter-pill,
+.pm-pill {
+    background: #102B45 !important;
+    color: #8FA1B5 !important;
+    border-color: #29435D !important;
+}
+
+.filter-pill:hover,
+.pm-pill:hover {
+    background: #1E3A5A !important;
+    color: #FFFFFF !important;
+    border-color: #D9A441 !important;
+}
+
+.filter-pill.active,
+.pm-pill.active {
+    background: rgba(217, 164, 65, 0.15) !important;
+    color: #D9A441 !important;
+    border-color: #D9A441 !important;
+}
+
+.summary-line {
+    color: #D8E0E8 !important;
+}
+
+.summary-line .text-muted {
+    color: #8FA1B5 !important;
+}
+
+.total-line {
+    border-top-color: #29435D !important;
+}
+
+.price-num,
+.total-val {
+    color: #F4C861 !important;
+}
+
+.cart-item-name {
+    color: #FFFFFF !important;
+}
+
+.cart-item-price {
+    color: #F4C861 !important;
+}
+
+.qty-controls {
+    background: #102B45 !important;
+    color: #D8E0E8 !important;
+}
+
+.qty-btn {
+    color: #8FA1B5 !important;
+}
+
+.qty-btn:hover {
+    color: #D9A441 !important;
+}
+
+.product-body {
+    background: #0B2239 !important;
+}
+
+.product-img {
+    background: #102B45 !important;
+}
+
+.btn-add-cart-icon {
+    background: #102B45 !important;
+    color: #D9A441 !important;
+}
+
+.btn-add-cart-icon:hover {
+    background: #D9A441 !important;
+    color: #03111F !important;
+}
+
+.cust-avatar-circle {
+    background: #102B45 !important;
+    color: #D9A441 !important;
+}
+
+/* --- 11h. Input group addons (₹ symbol prefix boxes) --- */
+.input-group-text {
+    background-color: #102B45 !important;
+    border-color: #29435D !important;
+    color: #D8E0E8 !important;
+}
+
+.input-group-text.bg-light {
+    background-color: #102B45 !important;
+}
+
+/* --- 11i. Tailor performance / worker assignments --- */
+.dd-wa-banner,
+.dd-wa-card {
+    background: #0B2239 !important;
+    border-color: #29435D !important;
+    color: #D8E0E8 !important;
+}
+
+.dd-wa-inner-card {
+    background: #102B45 !important;
+    border-color: #29435D !important;
+    color: #D8E0E8 !important;
+}
+
+.dd-dashboard .bg-white,
+.dd-dashboard .border,
+.dd-dashboard .p-3.border.rounded-3,
+.dd-dashboard [style*="background:#FFFFFF"],
+.dd-dashboard [style*="background: #FFFFFF"],
+.dd-dashboard [style*="border-color:#E2E8F0"] {
+    background-color: #0B2239 !important;
+    border-color: #29435D !important;
+}
+
+.dd-dashboard h6 {
+    color: #FFFFFF !important;
+}
+
+/* Icon circles with teal bg */
+.pc-content [style*="background:#E6F4F1"],
+.pc-content [style*="background: #E6F4F1"],
+.pc-content [style*="background:#E6FFFA"],
+.pc-content [style*="background: #E6FFFA"] {
+    background: #102B45 !important;
+    background-color: #102B45 !important;
+}
+
+/* --- 11j. Kanban boards, production boards, order directory --- */
+.order-header-bar,
+.kanban-dashboard-header,
+.dd-kanban-banner {
+    background: #0B2239 !important;
+    border: 1px solid #29435D !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.order-header-bar h4,
+.kanban-dashboard-header h4,
+.dd-kanban-title {
+    color: #FFFFFF !important;
+}
+
+.pc-kanban-column,
+.dd-kanban-col {
+    background: #0B2239 !important;
+    border: 1px solid #29435D !important;
+}
+
+.pc-kanban-header,
+.dd-col-header {
+    background: #102B45 !important;
+    border-bottom: 1px solid #29435D !important;
+}
+
+.pc-kanban-header *,
+.dd-col-header * {
+    color: #FFFFFF !important;
+}
+
+.dd-col-count,
+.pc-kanban-header .badge {
+    background: #102B45 !important;
+    color: #F4C861 !important;
+    border: 1px solid #29435D !important;
+}
+
+.dd-order-card,
+.kanban-card {
+    background: #102B45 !important;
+    border: 1px solid #29435D !important;
+    color: #D8E0E8 !important;
+}
+
+.dd-order-card:hover,
+.kanban-card:hover {
+    border-color: #D9A441 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dd-card-code {
+    background: rgba(217, 164, 65, 0.15) !important;
+    color: #D9A441 !important;
+}
+
+.dd-flow-pill {
+    background: #102B45 !important;
+    color: #D8E0E8 !important;
+    border: 1px solid #29435D !important;
+}
+
+.dd-flow-arrow {
+    color: #8FA1B5 !important;
+}
+
+/* --- 11k. Modals — ensure content inside modals is readable --- */
+.modal-content .bg-light {
+    background-color: #102B45 !important;
+}
+
+.modal-content .text-dark,
+.modal-content strong.text-dark {
+    color: #D8E0E8 !important;
+}
+
+/* --- 11l. Breadcrumbs --- */
+.breadcrumb {
+    background-color: transparent !important;
+}
+
+.breadcrumb-item,
+.breadcrumb-item a {
+    color: #8FA1B5 !important;
+}
+
+.breadcrumb-item.active {
+    color: #D8E0E8 !important;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+    color: #8FA1B5 !important;
+}
+
+/* --- 11m. Scrollbar styling --- */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #03111F;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #29435D;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3A5A7A;
+}
+
+/* --- 11n. Tab navigation pills/tabs --- */
+.nav-tabs,
+.nav-pills {
+    border-color: #29435D !important;
+}
+
+.nav-tabs .nav-link,
+.nav-pills .nav-link {
+    color: #8FA1B5 !important;
+}
+
+.nav-tabs .nav-link:hover,
+.nav-pills .nav-link:hover {
+    color: #D9A441 !important;
+    border-color: #29435D !important;
+}
+
+.nav-tabs .nav-link.active,
+.nav-pills .nav-link.active {
+    background-color: #102B45 !important;
+    color: #D9A441 !important;
+    border-color: #29435D !important;
+}
+
+/* --- 11o. Accordion / Collapsible panels --- */
+.accordion-item {
+    background-color: #0B2239 !important;
+    border-color: #29435D !important;
+}
+
+.accordion-button {
+    background-color: #0B2239 !important;
+    color: #D8E0E8 !important;
+    border-color: #29435D !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #102B45 !important;
+    color: #D9A441 !important;
+}
+
+.accordion-body {
+    background-color: #0B2239 !important;
+    color: #D8E0E8 !important;
+}
+
+/* --- 11p. Alerts / Notification banners --- */
+.alert {
+    border-color: #29435D !important;
+}
+
+/* --- 11q. List groups --- */
+.list-group-item {
+    background-color: #0B2239 !important;
+    border-color: #29435D !important;
+    color: #D8E0E8 !important;
+}
+
+.list-group-item:hover {
+    background-color: #102B45 !important;
+}
+
+/* --- 11r. Progress bars --- */
+.progress {
+    background-color: #102B45 !important;
+}
+
+/* --- 11s. Tooltip overrides --- */
+.tooltip-inner {
+    background-color: #102B45 !important;
+    color: #D8E0E8 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   12. CKEditor / Rich Text Editor — keep editor content dark-on-white
+   ═══════════════════════════════════════════════════════════════════════════ */
+.ck-editor *,
+.ck-editor__main *,
+.ck-content *,
+.ck-content {
+    color: #1E293B !important;
+}
+
+.ck-editor__main .ck-content {
+    background-color: #FFFFFF !important;
+}
+
+.ck.ck-toolbar {
+    background-color: #F8FAFC !important;
+    border-color: #E2E8F0 !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   14. Header User Profile Dropdown & Roles Visibility Overrides
+   ═══════════════════════════════════════════════════════════════════════════ */
+.text-gold {
+    color: #F4C861 !important;
+}
+
+.header-user-profile .user-name {
+    color: #FFFFFF !important;
+}
+
+.dropdown-user-profile .dropdown-header h4,
+.dropdown-user-profile .dropdown-header h4 * {
+    color: #FFFFFF !important;
+}
+
+.dropdown-user-profile .dropdown-header .text-muted,
+.dropdown-user-profile .dropdown-header p {
+    color: #F4C861 !important;
+    font-weight: 700 !important;
+}
+
+/* Roles & Permissions Management Page Fix */
+.role-card-item,
+.permissions-box {
+    background: #0B2239 !important;
+    border-color: #29435D !important;
+    color: #D8E0E8 !important;
+}
+
+.role-card-item.selected {
+    border-color: #D9A441 !important;
+    box-shadow: 0 4px 14px rgba(217, 164, 65, 0.2) !important;
+}
+
+.role-card-item h6,
+.permissions-box h4,
+.permissions-box h6 {
+    color: #FFFFFF !important;
+}
+
+.role-card-item .text-muted,
+.permissions-box .text-muted {
+    color: #8FA1B5 !important;
+}
+
+/* Role Badges globally */
+.badge.bg-light-primary,
+.badge-light-primary {
+    background: rgba(217, 164, 65, 0.2) !important;
+    color: #F4C861 !important;
+    border: 1px solid #D9A441 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   15. Footer Logo Un-stretch & Full Landing Text Contrast Overrides
+   ═══════════════════════════════════════════════════════════════════════════ */
+footer img,
+.footer-logo img,
+.landing-logo img,
+.brand-logo img {
+    object-fit: contain !important;
+    max-width: 240px !important;
+    height: auto !important;
+    max-height: 48px !important;
+}
+
+footer,
+footer.lan-footer,
+.bg-surface-container-highest {
+    background-color: #03111F !important;
+    border-color: #29435D !important;
+}
+
+footer span.font-bold,
+footer .text-title-md,
+footer h2,
+footer h3,
+footer h4 {
+    color: #F4C861 !important;
+    font-weight: 700 !important;
+}
+
+footer p,
+footer a,
+footer span {
+    color: #D8E0E8 !important;
+}
+
+footer a:hover {
+    color: #F4C861 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   16. Standardized Luxury Button Components
+   ═══════════════════════════════════════════════════════════════════════════ */
+.btn-gold-primary,
+.btn-gold {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 48px !important;
+    padding: 0 28px !important;
+    background: linear-gradient(135deg, #D9A441 0%, #F4C861 100%) !important;
+    color: #03111F !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    border-radius: 9999px !important;
+    border: none !important;
+    box-shadow: 0 6px 20px rgba(217, 164, 65, 0.25) !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+}
+
+.btn-gold-primary:hover,
+.btn-gold:hover {
+    background: linear-gradient(135deg, #F4C861 0%, #FFE596 100%) !important;
+    color: #03111F !important;
+    box-shadow: 0 10px 28px rgba(217, 164, 65, 0.45) !important;
+    transform: translateY(-2px) !important;
+}
+
+.btn-gold-outline,
+.btn-outline-gold {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 48px !important;
+    padding: 0 28px !important;
+    background: rgba(11, 34, 57, 0.6) !important;
+    color: #F4C861 !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    border-radius: 9999px !important;
+    border: 1.5px solid #D9A441 !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+}
+
+.btn-gold-outline:hover,
+.btn-outline-gold:hover {
+    background: rgba(217, 164, 65, 0.18) !important;
+    color: #FFFFFF !important;
+    border-color: #F4C861 !important;
+    box-shadow: 0 6px 20px rgba(217, 164, 65, 0.2) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Large button variant for hero & major banners */
+.btn-lg {
+    height: 54px !important;
+    padding: 0 36px !important;
+    font-size: 1.05rem !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   17. Authentication Screens Dark Navy & Gold Theme Overrides
+   ═══════════════════════════════════════════════════════════════════════════ */
+.auth-main,
+.auth-wrapper,
+.auth-wrapper.v2 {
+    background-color: #03111F !important;
+    color: #FFFFFF !important;
+}
+
+.auth-wrapper.v2 .auth-form,
+.auth-form {
+    background-color: #07192A !important;
+    color: #FFFFFF !important;
+    border-right: 1px solid #29435D !important;
+}
+
+.auth-sidecontent {
+    background-color: #03111F !important;
+    color: #FFFFFF !important;
+    border-left: 1px solid #29435D !important;
+}
+
+.auth-sidecontent h1,
+.auth-sidecontent h2,
+.auth-sidecontent h3,
+.auth-sidecontent p,
+.auth-sidecontent span {
+    color: #FFFFFF !important;
+}
+
+.auth-form .card,
+.auth-wrapper .card {
+    background-color: #0B2239 !important;
+    border: 1px solid #29435D !important;
+    border-radius: 24px !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4) !important;
+    color: #FFFFFF !important;
+}
+
+.auth-form h2,
+.auth-form h3,
+.auth-form h4,
+.auth-form .h2,
+.auth-header h2 {
+    color: #F4C861 !important;
+    font-weight: 700 !important;
+}
+
+.auth-form p,
+.auth-form label,
+.auth-form span,
+.auth-form a {
+    color: #D8E0E8 !important;
+}
+
+.auth-form a:hover {
+    color: #F4C861 !important;
+}
+
+.auth-form input.form-control,
+.auth-form select.form-control,
+.auth-form .form-floating input {
+    background-color: #03111F !important;
+    color: #FFFFFF !important;
+    border: 1px solid #29435D !important;
+    border-radius: 12px !important;
+}
+
+.auth-form input.form-control:focus,
+.auth-form .form-floating input:focus {
+    border-color: #D9A441 !important;
+    box-shadow: 0 0 0 3px rgba(217, 164, 65, 0.25) !important;
+}
+
+.auth-form label,
+.auth-form .form-floating label {
+    color: #D8E0E8 !important;
+}
+
+.auth-form .btn-primary,
+.auth-form .btn-secondary,
+.auth-form button[type="submit"] {
+    background: linear-gradient(135deg, #D9A441 0%, #F4C861 100%) !important;
+    color: #03111F !important;
+    font-weight: 700 !important;
+    border: none !important;
+    border-radius: 9999px !important;
+    padding: 12px 28px !important;
+    box-shadow: 0 6px 20px rgba(217, 164, 65, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+.auth-form .btn-primary:hover,
+.auth-form .btn-secondary:hover,
+.auth-form button[type="submit"]:hover {
+    background: linear-gradient(135deg, #F4C861 0%, #FFE596 100%) !important;
+    color: #03111F !important;
+    box-shadow: 0 10px 28px rgba(217, 164, 65, 0.45) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   18. Toast Notifications & Inline Alert Dark Navy & Gold Theme Overrides
+   ═══════════════════════════════════════════════════════════════════════════ */
+/* 1. Notifier Main Popup Box */
+.notifier {
+    background: #0B2239 !important;
+    border: 1px solid #29435D !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+    padding: 12px 16px !important;
+    color: #FFFFFF !important;
+}
+
+/* Reset inner img container so it doesn't get background or borders */
+.notifier-img {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin-right: 12px !important;
+    border-radius: 0 !important;
+}
+
+.notifier-img img {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 6px !important;
+}
+
+/* Notifier Title */
+.notifier-title {
+    color: #F4C861 !important;
+    font-weight: 700 !important;
+    font-size: 15px !important;
+    margin-bottom: 4px !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* Notifier Body Message */
+.notifier-body {
+    color: #D8E0E8 !important;
+    font-size: 13.5px !important;
+    font-weight: 500 !important;
+    line-height: 1.4 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* Close Button */
+.notifier-close {
+    color: #A0AEC0 !important;
+    background: transparent !important;
+    font-size: 16px !important;
+}
+
+.notifier-close:hover {
+    color: #FFFFFF !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Variant Left Accents */
+.notifier.info {
+    border-left: 4px solid #3B82F6 !important;
+}
+
+.notifier.success {
+    border-left: 4px solid #10B981 !important;
+}
+
+.notifier.warning {
+    border-left: 4px solid #F59E0B !important;
+}
+
+.notifier.danger,
+.notifier.error {
+    border-left: 4px solid #EF4444 !important;
+}
+
+/* 2. Generic Bootstrap Toasts & Alerts */
+.toast,
+.bs-toast {
+    background: #0B2239 !important;
+    border: 1px solid #29435D !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+    color: #FFFFFF !important;
+}
+
+.toast-header {
+    background: transparent !important;
+    color: #F4C861 !important;
+    border-bottom: 1px solid #29435D !important;
+}
+
+.toast-body {
+    background: transparent !important;
+    color: #D8E0E8 !important;
+}
+
+/* 3. Inline Alert Boxes */
+.alert {
+    background-color: #0B2239 !important;
+    border: 1px solid #29435D !important;
+    border-radius: 12px !important;
+    color: #D8E0E8 !important;
+    padding: 12px 16px !important;
+}
+
+.alert-danger,
+.alert-error {
+    background-color: rgba(239, 68, 68, 0.15) !important;
+    border: 1px solid rgba(239, 68, 68, 0.4) !important;
+    color: #F87171 !important;
+}
+
+.alert-success {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+    border: 1px solid rgba(16, 185, 129, 0.4) !important;
+    color: #34D399 !important;
+}
+
+.alert-warning {
+    background-color: rgba(245, 158, 11, 0.15) !important;
+    border: 1px solid rgba(245, 158, 11, 0.4) !important;
+    color: #FBBF24 !important;
+}
+
+.alert-info {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+    border: 1px solid rgba(59, 130, 246, 0.4) !important;
+    color: #60A5FA !important;
+}
+
+.invalid-feedback,
+.invalid-email,
+.invalid-password,
+.text-danger,
+.error-message {
+    color: #F87171 !important;
+    font-size: 0.825rem !important;
+    font-weight: 600 !important;
+    margin-top: 4px !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   19. Global High-Contrast Text Visibility & Component Polish
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* 1. Universal Input & Textarea Placeholder Contrast */
+input::placeholder,
+textarea::placeholder,
+select::placeholder,
+.form-control::placeholder {
+    color: #94A3B8 !important;
+    opacity: 1 !important;
+}
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder,
+select::-webkit-input-placeholder {
+    color: #94A3B8 !important;
+    opacity: 1 !important;
+}
+
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+    color: #94A3B8 !important;
+    opacity: 1 !important;
+}
+
+/* 2. Settings Page (/settings) Tabs, Subtitles & Form Controls */
+.settings-menu .nav-link,
+.nav-pills .nav-link,
+.list-group-item,
+.settings-tab {
+    color: #FFFFFF !important;
+}
+
+.settings-menu .nav-link small,
+.settings-menu .nav-link p,
+.nav-pills .nav-link small,
+.nav-pills .nav-link p,
+.nav-tabs .nav-link small,
+.list-group-item small,
+.list-group-item p,
+.card small.text-muted,
+.settings-tab-desc,
+.settings-tab p {
+    color: #A0AEC0 !important;
+    font-size: 0.8rem !important;
+    font-weight: 500 !important;
+}
+
+.settings-menu .nav-link.active small,
+.nav-pills .nav-link.active small,
+.list-group-item.active small {
+    color: #F4C861 !important;
+}
+
+/* 3. Notifier Toast Popup Strip-Inner-Borders Fix */
+.notifier {
+    background: #0B2239 !important;
+    border: 1px solid #29435D !important;
+    border-radius: 14px !important;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6) !important;
+    padding: 14px 18px !important;
+    color: #FFFFFF !important;
+}
+
+.notifier *,
+.notifier div,
+.notifier p,
+.notifier span,
+.notifier-body,
+.notifier-title,
+.notifier-img {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    outline: none !important;
+}
+
+.notifier-img img,
+.notifier .img {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 8px !important;
+}
+
+.notifier-title {
+    color: #F4C861 !important;
+    font-weight: 800 !important;
+    font-size: 16px !important;
+    margin-bottom: 4px !important;
+}
+
+.notifier-body {
+    color: #E2E8F0 !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 1.45 !important;
+}
+
+.notifier-close {
+    color: #A0AEC0 !important;
+    font-size: 18px !important;
+    opacity: 0.8 !important;
+}
+
+.notifier-close:hover {
+    color: #FFFFFF !important;
+    opacity: 1 !important;
+}
+
+.notifier.danger,
+.notifier.error {
+    border-left: 5px solid #EF4444 !important;
+}
+
+.notifier.success {
+    border-left: 5px solid #10B981 !important;
+}
+
+.notifier.warning {
+    border-left: 5px solid #F59E0B !important;
+}
+
+.notifier.info {
+    border-left: 5px solid #3B82F6 !important;
+}
+
+/* 4. Kanban Cards & Production Board Text Visibility (/order-kanban & /production/kanban) */
+.kanban-card,
+.kanban-item,
+.order-card,
+.production-card {
+    background: #0B2239 !important;
+    border: 1px solid #29435D !important;
+    border-radius: 16px !important;
+    color: #FFFFFF !important;
+    padding: 16px !important;
+}
+
+.kanban-card h5,
+.kanban-card h6,
+.kanban-item h5,
+.kanban-item h6,
+.order-card h5,
+.order-card h6,
+.production-card h5,
+.production-card h6,
+.kanban-card .customer-name,
+.kanban-item .customer-name,
+.kanban-card a,
+.kanban-item a {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+}
+
+.kanban-card p,
+.kanban-card span,
+.kanban-card small,
+.kanban-item p,
+.kanban-item span,
+.kanban-item small,
+.order-card p,
+.order-card span,
+.order-card small,
+.production-card p,
+.production-card span,
+.production-card small,
+.kanban-meta-text {
+    color: #CBD5E1 !important;
+}
+
+.garment-badge,
+.style-badge,
+.kanban-card .badge-secondary,
+.kanban-item .badge-secondary {
+    background: rgba(11, 34, 57, 0.9) !important;
+    border: 1px solid #29435D !important;
+    color: #F4C861 !important;
+    font-weight: 700 !important;
+    border-radius: 9999px !important;
+    padding: 6px 14px !important;
+}
+
+/* Tailor Assign Button inside Kanban Cards */
+.btn-assign,
+.badge-assign,
+.kanban-card .btn-outline-secondary,
+.kanban-item .btn-outline-secondary {
+    background: linear-gradient(135deg, #D9A441 0%, #F4C861 100%) !important;
+    color: #03111F !important;
+    font-weight: 700 !important;
+    border: none !important;
+    border-radius: 9999px !important;
+    padding: 4px 14px !important;
+    font-size: 0.8rem !important;
+}
+
+.btn-assign:hover,
+.badge-assign:hover,
+.kanban-card .btn-outline-secondary:hover {
+    background: linear-gradient(135deg, #F4C861 0%, #FFE596 100%) !important;
+    color: #03111F !important;
+}
+
+/* 5. DataTables Search Input, Controls & Pagination */
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper input[type="search"] {
+    background-color: #0B2239 !important;
+    border: 1.5px solid #29435D !important;
+    color: #FFFFFF !important;
+    border-radius: 8px !important;
+    padding: 6px 12px !important;
+}
+
+.dataTables_wrapper .dataTables_filter label,
+.dataTables_wrapper .dataTables_length label,
+.dataTables_wrapper .dataTables_info {
+    color: #D8E0E8 !important;
+    font-weight: 500 !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    background: #0B2239 !important;
+    border: 1px solid #29435D !important;
+    color: #D8E0E8 !important;
+    border-radius: 6px !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.active {
+    background: linear-gradient(135deg, #D9A441 0%, #F4C861 100%) !important;
+    color: #03111F !important;
+    font-weight: 700 !important;
+    border-color: #D9A441 !important;
+}

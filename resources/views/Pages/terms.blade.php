@@ -15,67 +15,76 @@
     <meta name="description" content="DarziDesk Terms & Services - Terms of Use for our Tailoring Management System platform.">
 
     <link rel="icon" href="{{ asset(Storage::url('upload/logo')) . '/' . ($settings['company_favicon'] ?? '') }}" type="image/x-icon" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700;800&display=swap" />
     <link rel="stylesheet" href="{{ asset('assets/fonts/tabler-icons.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/fonts/feather.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/fonts/fontawesome.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" id="main-style-link" />
     <link rel="stylesheet" href="{{ asset('assets/css/landing.css') }}" />
-    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/custom.css') }}?v={{ file_exists(public_path('css/custom.css')) ? filemtime(public_path('css/custom.css')) : time() }}" rel="stylesheet">
 
     <style>
         :root {
-            --brand-primary: #006A67;
-            --brand-primary-dark: #004D4B;
-            --brand-primary-light: #E6F4F3;
-            --brand-navy: #0B1C30;
-            --text-main: #0B1C30;
-            --text-muted: #6D7978;
-            --bg-canvas: #F8F9FF;
-            --card-bg: #FFFFFF;
-            --border-color: #BCC9C8;
+            --app-bg: #03111F;
+            --card-bg: #0B2239;
+            --card-border: #29435D;
+            --inner-bg: #102B45;
+            --primary-gold: #D9A441;
+            --primary-light-gold: #F4C861;
+            --gold-light-bg: rgba(217, 164, 65, 0.15);
+            --gold-border: rgba(217, 164, 65, 0.35);
+            --text-white: #FFFFFF;
+            --text-body: #D8E0E8;
+            --text-muted: #8FA1B5;
+            --font-main: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
         }
 
         body.policy-page {
-            font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-canvas);
-            color: var(--text-main);
+            font-family: var(--font-main);
+            background: var(--app-bg);
+            color: var(--text-body);
             margin: 0;
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
+        /* ── Top Header Navbar ── */
         .policy-navbar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(255,255,255,0.94);
-            backdrop-filter: blur(14px);
-            border-bottom: 1px solid rgba(188, 201, 200, 0.4);
+            background: rgba(3, 17, 31, 0.92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--card-border);
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
         }
         .policy-navbar .navbar-inner {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 16px 24px;
+            padding: 14px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
         .policy-navbar .brand-logo img {
-            height: 36px;
+            height: 40px;
             width: auto;
+            max-width: 220px;
+            object-fit: contain;
         }
         .policy-navbar .nav-links {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             list-style: none;
             margin: 0;
             padding: 0;
         }
         .policy-navbar .nav-links a {
-            color: var(--text-main);
+            color: var(--text-body);
             text-decoration: none;
             font-size: 14px;
             font-weight: 600;
@@ -84,65 +93,102 @@
             transition: all 0.2s ease;
         }
         .policy-navbar .nav-links a:hover {
-            background: var(--brand-primary-light);
-            color: var(--brand-primary);
+            color: var(--primary-light-gold);
+            background: rgba(217, 164, 65, 0.08);
+        }
+        .policy-navbar .nav-links .btn-login-outline {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            padding: 0 20px;
+            background: rgba(11, 34, 57, 0.6);
+            color: var(--primary-light-gold) !important;
+            font-weight: 700;
+            font-size: 13.5px;
+            border-radius: 9999px;
+            border: 1.5px solid var(--primary-gold);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .policy-navbar .nav-links .btn-login-outline:hover {
+            background: var(--gold-light-bg);
+            color: var(--text-white) !important;
+            border-color: var(--primary-light-gold);
+            box-shadow: 0 4px 14px rgba(217, 164, 65, 0.25);
+            transform: translateY(-1px);
         }
         .policy-navbar .nav-links .btn-cta {
-            background: var(--brand-primary);
-            color: #ffffff !important;
-            font-weight: 600;
-            border-radius: 50px;
-            padding: 9px 24px;
-            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            padding: 0 22px;
+            background: linear-gradient(135deg, #D9A441 0%, #F4C861 100%);
+            color: #03111F !important;
+            font-weight: 700;
+            font-size: 13.5px;
+            border-radius: 9999px;
+            border: none;
+            box-shadow: 0 4px 14px rgba(217, 164, 65, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
         }
         .policy-navbar .nav-links .btn-cta:hover {
-            background: var(--brand-primary-dark);
+            background: linear-gradient(135deg, #F4C861 0%, #FFE596 100%);
+            box-shadow: 0 6px 20px rgba(217, 164, 65, 0.45);
+            transform: translateY(-1px);
         }
 
+        /* ── Hero Section ── */
         .policy-hero {
             position: relative;
-            padding: 150px 24px 85px;
+            padding: 145px 24px 85px;
             text-align: center;
-            background: linear-gradient(135deg, #0B1C30 0%, #006A67 100%);
+            background: linear-gradient(180deg, rgba(3, 17, 31, 0.95) 0%, rgba(11, 34, 57, 0.98) 100%);
             color: #ffffff;
             overflow: hidden;
+            border-bottom: 1px solid var(--card-border);
         }
         .policy-hero .hero-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(138, 244, 239, 0.15);
-            border: 1px solid rgba(138, 244, 239, 0.3);
-            color: #8AF4EF;
+            background: var(--gold-light-bg);
+            border: 1px solid var(--gold-border);
+            color: var(--primary-light-gold);
             padding: 6px 18px;
             border-radius: 50px;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0.05em;
+            font-size: 12.5px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         .policy-hero h1 {
             font-size: clamp(34px, 4.5vw, 54px);
             font-weight: 800;
             margin: 0 0 16px;
-            color: #ffffff;
+            color: var(--text-white);
             letter-spacing: -0.02em;
+            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
         }
         .policy-hero p {
-            color: rgba(255, 255, 255, 0.85);
+            color: var(--text-body);
             font-size: 18px;
             max-width: 680px;
             margin: 0 auto;
+            line-height: 1.6;
         }
 
+        /* ── Layout & Sidebar ── */
         .policy-container {
             max-width: 1200px;
-            margin: -40px auto 80px;
+            margin: -45px auto 80px;
             padding: 0 24px;
             display: grid;
             grid-template-columns: 280px 1fr;
-            gap: 40px;
+            gap: 32px;
             position: relative;
             z-index: 10;
         }
@@ -151,19 +197,19 @@
             position: sticky;
             top: 100px;
             align-self: start;
-            background: #ffffff;
+            background: var(--card-bg);
             border-radius: 20px;
             padding: 24px;
-            border: 1px solid rgba(188, 201, 200, 0.5);
-            box-shadow: 0 10px 30px rgba(11, 28, 48, 0.03);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
         }
         .toc-sidebar h4 {
-            font-size: 13px;
+            font-size: 12.5px;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--brand-navy);
+            letter-spacing: 0.08em;
+            color: var(--primary-light-gold);
             margin: 0 0 16px;
-            font-weight: 700;
+            font-weight: 800;
         }
         .toc-sidebar ul {
             list-style: none;
@@ -171,10 +217,10 @@
             margin: 0;
         }
         .toc-sidebar li {
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .toc-sidebar a {
-            color: var(--text-main);
+            color: var(--text-body);
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
@@ -184,16 +230,17 @@
             transition: all 0.2s ease;
         }
         .toc-sidebar a:hover {
-            background: var(--brand-primary-light);
-            color: var(--brand-primary);
+            background: rgba(217, 164, 65, 0.1);
+            color: var(--primary-light-gold);
         }
 
+        /* ── Content Card ── */
         .policy-content-card {
-            background: #ffffff;
+            background: var(--card-bg);
             border-radius: 24px;
             padding: 48px;
-            border: 1px solid rgba(188, 201, 200, 0.5);
-            box-shadow: 0 10px 30px rgba(11, 28, 48, 0.03);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
         }
 
         .policy-section {
@@ -206,15 +253,16 @@
         .policy-section h2 {
             font-size: 22px;
             font-weight: 800;
-            color: var(--brand-navy);
+            color: var(--text-white);
             margin: 0 0 16px;
             display: flex;
             align-items: center;
             gap: 12px;
         }
         .policy-section h2 i {
-            color: var(--brand-primary);
-            background: var(--brand-primary-light);
+            color: var(--primary-light-gold);
+            background: var(--inner-bg);
+            border: 1px solid var(--card-border);
             width: 38px;
             height: 38px;
             border-radius: 10px;
@@ -224,8 +272,9 @@
             font-size: 18px;
         }
         .policy-section p {
-            color: var(--text-main);
+            color: var(--text-body);
             font-size: 15.5px;
+            line-height: 1.7;
             margin-bottom: 14px;
         }
         .policy-section ul {
@@ -235,12 +284,17 @@
         .policy-section li {
             margin-bottom: 8px;
             font-size: 15px;
-            color: var(--text-main);
+            color: var(--text-body);
+            line-height: 1.6;
+        }
+        .policy-section strong {
+            color: var(--text-white);
         }
 
         .highlight-box {
-            background: var(--brand-primary-light);
-            border-left: 4px solid var(--brand-primary);
+            background: var(--inner-bg);
+            border: 1px solid var(--card-border);
+            border-left: 4px solid var(--primary-gold);
             padding: 18px 22px;
             border-radius: 0 14px 14px 0;
             margin: 20px 0;
@@ -248,22 +302,26 @@
         .highlight-box p {
             margin: 0;
             font-weight: 600;
-            color: var(--brand-navy);
+            color: var(--text-white);
             font-size: 14.5px;
         }
 
         .policy-footer {
-            background: var(--brand-navy);
-            color: #94a3b8;
+            background: var(--app-bg);
+            color: var(--text-muted);
             padding: 45px 24px;
             text-align: center;
             font-size: 14px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid var(--card-border);
         }
         .policy-footer a {
-            color: #6CD7D3;
+            color: var(--primary-light-gold);
             text-decoration: none;
             font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        .policy-footer a:hover {
+            color: #FFE596;
         }
 
         @media (max-width: 991px) {
@@ -292,11 +350,10 @@
                 <li><a href="{{ route('home') }}">{{ __('Home') }}</a></li>
                 <li><a href="{{ route('about.us') }}">{{ __('About Us') }}</a></li>
                 <li><a href="{{ route('privacy.policy') }}">{{ __('Privacy Policy') }}</a></li>
-                <li><a href="{{ route('terms.conditions') }}" style="color: var(--brand-primary); font-weight: 700;">{{ __('Terms & Services') }}</a></li>
-                <li><a href="{{ route('login') }}">{{ __('Login') }}</a></li>
+                <li><a href="{{ route('terms.conditions') }}" style="color: var(--primary-light-gold); font-weight: 700;">{{ __('Terms & Services') }}</a></li>
+                <li><a class="btn-login-outline" href="{{ route('login') }}">{{ __('Partner Login') }}</a></li>
                 <li><a class="btn-cta" href="{{ route('register') }}">{{ __('Get Started') }}</a></li>
             </ul>
-
         </div>
     </nav>
 
@@ -316,20 +373,20 @@
         <aside class="toc-sidebar">
             <h4>{{ __('Sections') }}</h4>
             <ul>
-                <li><a href="#term-1"><i class="ti ti-checkup-list me-1"></i> {{ __('1. Agreement Acceptance') }}</a></li>
+                <li><a href="#term-1"><i class="ti ti-file-text me-1"></i> {{ __('1. Agreement Acceptance') }}</a></li>
                 <li><a href="#term-2"><i class="ti ti-apps me-1"></i> {{ __('2. Platform Services') }}</a></li>
                 <li><a href="#term-3"><i class="ti ti-user-check me-1"></i> {{ __('3. Account Responsibilities') }}</a></li>
                 <li><a href="#term-4"><i class="ti ti-credit-card me-1"></i> {{ __('4. Subscriptions & Billing') }}</a></li>
                 <li><a href="#term-5"><i class="ti ti-shield-check me-1"></i> {{ __('5. IP & Data Rights') }}</a></li>
                 <li><a href="#term-6"><i class="ti ti-activity me-1"></i> {{ __('6. Service Availability') }}</a></li>
-                <li><a href="#term-7"><i class="ti ti-gavel me-1"></i> {{ __('7. Liability & Governing Law') }}</a></li>
+                <li><a href="#term-7"><i class="ti ti-scale me-1"></i> {{ __('7. Liability & Governing Law') }}</a></li>
             </ul>
         </aside>
 
         <!-- Main Document Body -->
         <main class="policy-content-card">
             <div class="policy-section" id="term-1">
-                <h2><i class="ti ti-checkup-list"></i> {{ __('1. Agreement to Terms') }}</h2>
+                <h2><i class="ti ti-file-text"></i> {{ __('1. Agreement to Terms') }}</h2>
                 <p>{{ __('By creating an account, accessing, or utilizing the DarziDesk platform (web software, customer tracking portal, or mobile app), you agree to be bound by these Terms & Services and our Privacy Policy. If you do not agree, you must cease using our services immediately.') }}</p>
             </div>
 
@@ -348,7 +405,7 @@
                 <h2><i class="ti ti-user-check"></i> {{ __('3. User Accounts & Security') }}</h2>
                 <p>{{ __('Account creation requires accurate business and contact details. Account credentials must remain confidential. You are responsible for all activities occurring under your account or staff logins.') }}</p>
                 <div class="highlight-box">
-                    <p><i class="ti ti-shield-alert me-2"></i> {{ __('Un-authorized access or sharing of account credentials outside your registered boutique staff is strictly prohibited.') }}</p>
+                    <p><i class="ti ti-shield-alert me-2" style="color: var(--primary-light-gold);"></i> {{ __('Un-authorized access or sharing of account credentials outside your registered boutique staff is strictly prohibited.') }}</p>
                 </div>
             </div>
 
@@ -356,9 +413,9 @@
                 <h2><i class="ti ti-credit-card"></i> {{ __('4. Subscriptions, Payments & Billing') }}</h2>
                 <p>{{ __('Subscription plans (Monthly, Quarterly, Annual) are billed in advance according to selected packages. All fees are in Indian Rupees (INR) or localized currency.') }}</p>
                 <ul>
-                    <li><strong>{{ __('Auto-Renewal') }}</strong>: Subscriptions renew automatically unless cancelled prior to the renewal date.</li>
-                    <li><strong>{{ __('Refund Policy') }}</strong>: Payments are non-refundable except where mandated by applicable consumer protection laws.</li>
-                    <li><strong>{{ __('Plan Upgrades') }}</strong>: Upgrades take effect immediately with pro-rated billing calculation.</li>
+                    <li><strong>{{ __('Auto-Renewal') }}</strong>: {{ __('Subscriptions renew automatically unless cancelled prior to the renewal date.') }}</li>
+                    <li><strong>{{ __('Refund Policy') }}</strong>: {{ __('Payments are non-refundable except where mandated by applicable consumer protection laws.') }}</li>
+                    <li><strong>{{ __('Plan Upgrades') }}</strong>: {{ __('Upgrades take effect immediately with pro-rated billing calculation.') }}</li>
                 </ul>
             </div>
 
@@ -373,7 +430,7 @@
             </div>
 
             <div class="policy-section" id="term-7">
-                <h2><i class="ti ti-gavel"></i> {{ __('7. Limitation of Liability & Governing Law') }}</h2>
+                <h2><i class="ti ti-scale"></i> {{ __('7. Limitation of Liability & Governing Law') }}</h2>
                 <p>{{ __('DarziDesk shall not be liable for indirect, incidental, or consequential damages resulting from business interruptions or lost profits. These terms are governed by the laws of India, with exclusive jurisdiction in the courts of New Delhi, India.') }}</p>
             </div>
         </main>

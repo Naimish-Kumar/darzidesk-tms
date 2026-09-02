@@ -354,10 +354,16 @@ Route::get('/orders/track/{token}', function ($token) {
     ]);
 });
 
-// Public Tailor Marketplace Discovery Routes
+// Public Tailor Marketplace & Catalog Discovery Routes (No Auth Required)
 Route::get('/marketplace/shops', [\App\Http\Controllers\Api\TailorMarketplaceController::class, 'index']);
 Route::get('/marketplace/categories', [\App\Http\Controllers\Api\TailorMarketplaceController::class, 'categories']);
 Route::get('/marketplace/shops/{id}', [\App\Http\Controllers\Api\TailorMarketplaceController::class, 'show']);
+
+// Public Read-Only Catalog & Settings Endpoints
+Route::get('/tailor-services', [\App\Http\Controllers\Api\TailorServiceController::class, 'index']);
+Route::get('/cloth-types', [\App\Http\Controllers\Api\ClothTypeController::class, 'index']);
+Route::get('/measurement-units', [\App\Http\Controllers\Api\MeasurementUnitController::class, 'index']);
+Route::get('/settings', [\App\Http\Controllers\Api\SettingController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);

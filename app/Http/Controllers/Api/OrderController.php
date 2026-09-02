@@ -115,6 +115,25 @@ class OrderController extends Controller
             \Log::error('WhatsApp notification dispatch failed: ' . $e->getMessage());
         }
 
+        // Dispatch FCM Push Notification
+        if ($order->customers && !empty($order->customers->fcm_token)) {
+            try {
+                \App\Services\FcmService::sendNotification(
+                    $order->customers->fcm_token,
+                    "✂️ DarziDesk Order Update: #{$order->order_id}",
+                    "Good news! Your order status has been updated to {$statusLabel}.",
+                    [
+                        'order_id' => (string)$order->id,
+                        'status' => $statusLabel,
+                        'type' => 'order_status_update',
+                        'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                    ]
+                );
+            } catch (\Throwable $e) {
+                \Log::error('FCM push notification dispatch failed: ' . $e->getMessage());
+            }
+        }
+
         // Real-time WebSocket Event Dispatch (Pusher / Echo)
         try {
             event(new \App\Events\OrderStatusUpdatedEvent($order, $statusLabel));

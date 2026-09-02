@@ -157,6 +157,23 @@
                                         </a>
                                     </li>
                                 @endif
+                                @if (\Auth::user()->type == 'super admin')
+                                    <li class="nav-item">
+                                        <a class="nav-link {{ !empty($activeTab) && $activeTab == 'google_oauth_settings' ? ' active ' : '' }}"
+                                            id="profile-tab-google-oauth" data-bs-toggle="tab" href="#google_oauth_settings"
+                                            role="tab" aria-selected="true">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <i class="ti ti-brand-google me-2 f-20"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2">
+                                                    <h5 class="mb-0">{{ __('Google Sign-In (OAuth)') }}</h5>
+                                                    <small class="text-muted">{{ __('Client ID & Secret') }}</small>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                @endif
                                 @if (Gate::check('manage 2FA settings'))
                                     <li class="nav-item">
                                         <a class="nav-link {{ !empty($activeTab) && ($activeTab == '2FA' || $activeTab == 'two_factor_authentication') ? ' active ' : '' }}"
@@ -884,6 +901,69 @@
                                             <div class="col-6"></div>
                                             <div class="col-6 text-end">
                                                 {{ Form::submit(__('Save'), ['class' => 'btn btn-secondary btn-rounded']) }}
+                                            </div>
+                                        </div>
+                                        {{ Form::close() }}
+
+                                    </div>
+                                @endif
+                                @if (\Auth::user()->type == 'super admin')
+                                    <div class="tab-pane {{ !empty($activeTab) && $activeTab == 'google_oauth_settings' ? ' active show ' : '' }}"
+                                        id="google_oauth_settings" role="tabpanel"
+                                        aria-labelledby="profile-tab-google-oauth">
+
+                                        {{ Form::model($settings, ['route' => ['setting.google.oauth'], 'method' => 'post']) }}
+                                        <div class="card-header border-0 pb-0">
+                                            <h5>{{ __('Google OAuth 2.0 Sign-In Credentials') }}</h5>
+                                            <small class="text-muted">{{ __('Configure Google OAuth 2.0 Client ID and Secret to enable one-tap Google Sign-In across login and register screens.') }}</small>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row mt-2">
+                                                <div class="col-auto">
+                                                    {{ Form::label('google_oauth', __('Enable Google Sign-In'), ['class' => 'form-label']) }}
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <div class="form-check custom-chek">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                name="google_oauth" id="google_oauth"
+                                                                {{ ($settings['google_oauth'] ?? 'off') == 'on' ? 'checked' : '' }}>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    {{ Form::label('google_client_id', __('Google Client ID'), ['class' => 'form-label']) }}
+                                                    {{ Form::text('google_client_id', $settings['google_client_id'] ?? '', ['class' => 'form-control', 'placeholder' => __('Enter Google Client ID (e.g. xxxxx.apps.googleusercontent.com)')]) }}
+                                                    <small class="text-muted">{{ __('From Google Cloud Console > APIs & Services > Credentials > OAuth 2.0 Client IDs') }}</small>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    {{ Form::label('google_client_secret', __('Google Client Secret'), ['class' => 'form-label']) }}
+                                                    {{ Form::text('google_client_secret', $settings['google_client_secret'] ?? '', ['class' => 'form-control', 'placeholder' => __('Enter Google Client Secret')]) }}
+                                                    <small class="text-muted">{{ __('Client Secret provided by Google Cloud Console') }}</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-2">
+                                                <div class="form-group col-md-12">
+                                                    {{ Form::label('google_redirect_uri', __('Authorized Redirect URI (Callback URL)'), ['class' => 'form-label']) }}
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="google_redirect_uri" id="google_redirect_uri" value="{{ !empty($settings['google_redirect_uri']) ? $settings['google_redirect_uri'] : url('/auth/google/callback') }}">
+                                                        <button class="btn btn-outline-secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('google_redirect_uri').value); alert('{{ __('Callback URL copied to clipboard!') }}');">
+                                                            <i class="ti ti-copy me-1"></i> {{ __('Copy') }}
+                                                        </button>
+                                                    </div>
+                                                    <small class="text-muted">{{ __('Paste this exact URL in your Google Cloud Console under "Authorized redirect URIs".') }}</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-3">
+                                                <div class="col-6"></div>
+                                                <div class="col-6 text-end">
+                                                    {{ Form::submit(__('Save Credentials'), ['class' => 'btn btn-secondary btn-rounded']) }}
+                                                </div>
                                             </div>
                                         </div>
                                         {{ Form::close() }}

@@ -63,16 +63,16 @@
                     <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown"
                         href="#" role="button" aria-haspopup="false" aria-expanded="false">
                         <img src="{{ $profilePic }}" alt="user-image" class="user-avtar" onerror="this.onerror=null;this.src='{{ asset('storage/upload/profile/avatar.png') }}';" />
-                        <span class="user-name fw-semibold text-dark me-1 d-none d-sm-inline-block">{{ $users->name ?? __('User') }}</span>
+                        <span class="user-name fw-semibold text-white me-1 d-none d-sm-inline-block">{{ $users->name ?? __('User') }}</span>
                         <i class="ti ti-chevron-down text-muted" style="font-size: 13px;"></i>
                     </a>
                     <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                         <div class="dropdown-header">
-                            <h4>
+                            <h4 class="text-white mb-1">
                                 {{ __('Hello') }},
-                                <span class="small text-muted">{{\Auth::user()->name}}</span>
+                                <span class="small text-gold fw-bold">{{\Auth::user()->name}}</span>
                             </h4>
-                            <p class="text-muted text-capitalize mb-2">{{\Auth::user()->type}}</p>
+                            <p class="text-gold text-capitalize mb-2 fw-bold" style="font-size: 12px; letter-spacing: 0.5px;">👑 {{\Auth::user()->type}}</p>
 
                             <div class="profile-notification-scroll position-relative"
                                 style="max-height: calc(100vh - 280px)">

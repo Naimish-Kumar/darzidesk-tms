@@ -9,29 +9,46 @@
 
 @push('css-page')
     <style>
+        :root {
+            --ord-header-bg: #FFFFFF;
+            --ord-header-border: #E2E8F0;
+            --ord-text-title: #0F172A;
+            --ord-text-sub: #64748B;
+            --dd-gold: #D9A441;
+        }
+
+        [data-pc-theme="dark"] {
+            --ord-header-bg: #0B2239;
+            --ord-header-border: #29435D;
+            --ord-text-title: #FFFFFF;
+            --ord-text-sub: #8FA1B5;
+        }
+
         .order-header-bar {
-            background: #ffffff;
-            border-radius: 12px;
+            background: var(--ord-header-bg);
+            border-radius: 14px;
             padding: 18px 24px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--ord-header-border);
             margin-bottom: 20px;
+            color: var(--ord-text-title);
         }
 
         .order-id-badge {
-            font-family: monospace;
+            font-family: 'JetBrains Mono', monospace;
             font-weight: 700;
-            color: #006A67;
-            background: #e6f4f3;
+            color: var(--dd-gold);
+            background: rgba(217, 164, 65, 0.15);
             padding: 4px 10px;
             border-radius: 6px;
+            border: 1px solid rgba(217, 164, 65, 0.3);
             text-decoration: none;
             transition: all 0.2s;
         }
 
         .order-id-badge:hover {
-            background: #006A67;
-            color: #ffffff;
+            background: var(--dd-gold);
+            color: #03111F;
         }
 
         .status-badge-custom {
@@ -42,12 +59,12 @@
             text-transform: capitalize;
         }
 
-        .status-pending { background: #fef3c7; color: #d97706; }
-        .status-in_progress { background: #e6f4f3; color: #006A67; }
-        .status-completed { background: #d1fae5; color: #059669; }
-        .status-ready_for_delivery { background: #e0e7ff; color: #4338ca; }
-        .status-delivered { background: #f3e8ff; color: #7e22ce; }
-        .status-on_hold { background: #fee2e2; color: #dc2626; }
+        .status-pending { background: rgba(217, 164, 65, 0.15); color: #F4C861; border: 1px solid rgba(217, 164, 65, 0.3); }
+        .status-in_progress { background: rgba(59, 130, 246, 0.15); color: #60A5FA; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .status-completed { background: rgba(34, 197, 94, 0.15); color: #4ADE80; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .status-ready_for_delivery { background: rgba(168, 85, 247, 0.15); color: #C084FC; border: 1px solid rgba(168, 85, 247, 0.3); }
+        .status-delivered { background: rgba(99, 102, 241, 0.15); color: #818CF8; border: 1px solid rgba(99, 102, 241, 0.3); }
+        .status-on_hold { background: rgba(239, 68, 68, 0.15); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.3); }
     </style>
 @endpush
 
@@ -61,7 +78,7 @@
                         <i class="ti ti-list f-22"></i>
                     </div>
                     <div>
-                        <h4 class="mb-0 font-weight-bold" style="color: #0f172a;">{{ __('Order Directory') }}</h4>
+                        <h4 class="mb-0 font-weight-bold" style="color: var(--ord-text-title);">{{ __('Order Directory') }}</h4>
                         <small class="text-muted">{{ __('Manage all customer orders, status tracking, and job cards') }}</small>
                     </div>
                 </div>

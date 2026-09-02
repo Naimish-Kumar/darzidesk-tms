@@ -172,15 +172,31 @@ class ReportController extends Controller
         if (Auth::user()->can('manage profit loss report')) {
             $year = $request->input('year', now()->year);
 
-            $expenses = Expense::select(
-                DB::raw('MONTH(date) as month'),
-                DB::raw('SUM(amount) as total_expense')
-            )
-                ->whereYear('date', $year)
-                ->groupBy(DB::raw('MONTH(date)'))
-                ->orderBy('month')
-                ->get()
-                ->keyBy('month');
+            $driver = DB::connection()->getDriverName();
+            if ($driver === 'sqlite') {
+                $expenses = Expense::select(
+                    DB::raw("strftime('%m', date) as month"),
+                    DB::raw('SUM(amount) as total_expense')
+                )
+                    ->whereYear('date', $year)
+                    ->groupBy(DB::raw("strftime('%m', date)"))
+                    ->orderBy('month')
+                    ->get();
+                $expenses = $expenses->map(function($item) {
+                    $item->month = (int)$item->month;
+                    return $item;
+                })->keyBy('month');
+            } else {
+                $expenses = Expense::select(
+                    DB::raw('MONTH(date) as month'),
+                    DB::raw('SUM(amount) as total_expense')
+                )
+                    ->whereYear('date', $year)
+                    ->groupBy(DB::raw('MONTH(date)'))
+                    ->orderBy('month')
+                    ->get()
+                    ->keyBy('month');
+            }
 
             $invoiceGroups = Invoice::whereYear('invoice_date', $year)
                 ->whereIn('status', ['paid', 'partial_paid'])

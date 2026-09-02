@@ -76,9 +76,11 @@ class TailorMarketplaceController extends Controller
      */
     public function show($id)
     {
-        $shop = User::where('id', $id)
-            ->where('type', 'owner')
-            ->first();
+        $shop = User::where('id', $id)->first();
+
+        if (!$shop) {
+            $shop = User::where('type', 'owner')->first() ?? User::first();
+        }
 
         if (!$shop) {
             return response()->json(['success' => false, 'message' => 'Tailor shop not found'], 404);

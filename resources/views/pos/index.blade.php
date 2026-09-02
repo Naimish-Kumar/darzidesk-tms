@@ -16,12 +16,15 @@
 @section('content')
 <style>
     :root {
-        --primary-teal: #006A67;
-        --accent-teal: #26A69A;
-        --dark-navy: #0B1C30;
-        --card-border: #E2E8F0;
-        --text-dark: #1E293B;
-        --text-muted: #64748B;
+        --pos-bg-card: #0B2239;
+        --pos-border: #29435D;
+        --pos-inner-bg: #102B45;
+        --pos-pill-bg: #081726;
+        --pos-text-title: #FFFFFF;
+        --pos-text-sub: #8FA1B5;
+        --dd-gold: #D9A441;
+        --dd-gold-hover: #F4C861;
+        --dd-gold-light: rgba(217, 164, 65, 0.15);
         --font-code: 'JetBrains Mono', monospace;
     }
 
@@ -32,15 +35,16 @@
     }
 
     .catalog-filter-bar {
-        background: #FFFFFF;
-        border: 1px solid var(--card-border);
-        border-radius: 14px;
-        padding: 14px 20px;
+        background: var(--pos-bg-card);
+        border: 1px solid var(--pos-border);
+        border-radius: 16px;
+        padding: 16px 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        color: var(--pos-text-title);
     }
 
     .filter-pills {
@@ -53,8 +57,8 @@
     .filter-pill {
         padding: 8px 18px;
         border-radius: 10px;
-        color: var(--text-muted);
-        background: #F8FAFC;
+        color: var(--pos-text-sub);
+        background: var(--pos-pill-bg);
         cursor: pointer;
         transition: all 0.2s ease;
         user-select: none;
@@ -62,14 +66,14 @@
     }
 
     .filter-pill:hover {
-        background: #F1F5F9;
-        color: var(--dark-navy);
+        background: var(--pos-inner-bg);
+        color: var(--pos-text-title);
     }
 
     .filter-pill.active {
-        background: #E6FFFA;
-        color: var(--primary-teal);
-        border-color: #B2DFDB;
+        background: var(--dd-gold-light);
+        color: var(--dd-gold);
+        border-color: rgba(217, 164, 65, 0.4);
         font-weight: 800;
     }
 
@@ -81,8 +85,8 @@
     }
 
     .product-card {
-        background: #FFFFFF;
-        border: 1.5px solid var(--card-border);
+        background: var(--pos-bg-card);
+        border: 1.5px solid var(--pos-border);
         border-radius: 16px;
         overflow: hidden;
         cursor: pointer;
@@ -91,20 +95,21 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        color: var(--pos-text-title);
     }
 
     .product-card:hover {
-        border-color: var(--primary-teal);
+        border-color: var(--dd-gold);
         transform: translateY(-3px);
-        box-shadow: 0 10px 24px rgba(0, 106, 103, 0.1);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
     }
 
     .product-img {
         width: 100%;
         height: 135px;
         object-fit: cover;
-        background: #F8FAFC;
+        background: var(--pos-inner-bg);
     }
 
     .product-body {
@@ -118,13 +123,13 @@
     .prod-title {
         font-size: 14px;
         font-weight: 800;
-        color: var(--dark-navy);
+        color: var(--pos-text-title);
         margin-bottom: 3px;
     }
 
     .prod-desc {
         font-size: 11px;
-        color: var(--text-muted);
+        color: var(--pos-text-sub);
         margin-bottom: 12px;
         line-height: 1.35;
     }
@@ -140,59 +145,62 @@
         font-family: var(--font-code);
         font-size: 16px;
         font-weight: 800;
-        color: var(--primary-teal);
+        color: var(--dd-gold);
     }
 
     .btn-add-cart-icon {
         width: 38px;
         height: 38px;
         border-radius: 50%;
-        background: #E6FFFA;
-        color: var(--primary-teal);
+        background: var(--dd-gold-light);
+        color: var(--dd-gold);
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        border: none;
+        border: 1px solid rgba(217, 164, 65, 0.3);
         transition: all 0.2s ease;
     }
 
     .btn-add-cart-icon:hover {
-        background: var(--primary-teal);
-        color: #FFFFFF;
+        background: var(--dd-gold);
+        color: #03111F;
         transform: scale(1.08);
     }
 
     .cart-card {
-        background: #FFFFFF;
-        border: 1px solid var(--card-border);
+        background: var(--pos-bg-card);
+        border: 1px solid var(--pos-border);
         border-radius: 18px;
         padding: 22px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        color: var(--pos-text-title);
     }
 
     .customer-info-box {
-        background: #F8FAFC;
-        border: 1px solid var(--card-border);
+        background: var(--pos-inner-bg);
+        border: 1px solid var(--pos-border);
         border-radius: 14px;
         padding: 14px;
         margin-bottom: 18px;
+        color: var(--pos-text-title);
     }
 
     .cust-avatar-circle {
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: #E6FFFA;
-        color: var(--primary-teal);
+        background: var(--dd-gold-light);
+        color: var(--dd-gold);
         font-size: 14px;
         font-weight: 800;
         display: flex;
         align-items: center;
         justify-content: center;
+        border: 1px solid rgba(217, 164, 65, 0.3);
     }
 
     .cart-item-row {
@@ -200,37 +208,38 @@
         justify-content: space-between;
         align-items: center;
         padding: 12px 0;
-        border-bottom: 1px dashed var(--card-border);
+        border-bottom: 1px dashed var(--pos-border);
     }
 
     .cart-item-name {
         font-size: 13.5px;
         font-weight: 800;
-        color: var(--dark-navy);
+        color: var(--pos-text-title);
     }
 
     .cart-item-price {
         font-family: var(--font-code);
         font-size: 13px;
         font-weight: 800;
-        color: var(--primary-teal);
+        color: var(--dd-gold);
     }
 
     .qty-controls {
         display: flex;
         align-items: center;
         gap: 8px;
-        background: #F1F5F9;
+        background: var(--pos-pill-bg);
         padding: 4px 10px;
         border-radius: 8px;
         font-size: 12px;
         font-weight: 800;
+        color: var(--pos-text-title);
     }
 
     .qty-btn {
         cursor: pointer;
         user-select: none;
-        color: var(--text-muted);
+        color: var(--pos-text-sub);
         font-size: 14px;
         line-height: 1;
         width: 18px;
@@ -238,7 +247,7 @@
     }
 
     .qty-btn:hover {
-        color: var(--primary-teal);
+        color: var(--dd-gold);
     }
 
     .payment-method-pills {
@@ -249,32 +258,32 @@
     }
 
     .pm-pill {
-        border: 1px solid var(--card-border);
-        background: #F8FAFC;
+        border: 1px solid var(--pos-border);
+        background: var(--pos-inner-bg);
         border-radius: 10px;
         padding: 8px 4px;
         text-align: center;
         cursor: pointer;
         font-size: 11px;
         font-weight: 700;
-        color: var(--text-muted);
+        color: var(--pos-text-sub);
         transition: all 0.2s ease;
         user-select: none;
     }
 
     .pm-pill:hover {
-        border-color: var(--primary-teal);
+        border-color: var(--dd-gold);
     }
 
     .pm-pill.active {
-        background: #E6FFFA;
-        color: var(--primary-teal);
-        border-color: var(--primary-teal);
+        background: var(--dd-gold-light);
+        color: var(--dd-gold);
+        border-color: var(--dd-gold);
         font-weight: 800;
     }
 
     .financial-summary-stack {
-        border-top: 1px solid var(--card-border);
+        border-top: 1px solid var(--pos-border);
         padding-top: 16px;
         margin-bottom: 16px;
     }
@@ -284,7 +293,7 @@
         justify-content: space-between;
         font-size: 13px;
         margin-bottom: 8px;
-        color: #475569;
+        color: var(--pos-text-sub);
     }
 
     .total-line {
@@ -293,19 +302,19 @@
         align-items: flex-end;
         margin-top: 12px;
         padding-top: 12px;
-        border-top: 2px solid #E2E8F0;
+        border-top: 2px solid var(--pos-border);
     }
 
     .total-val {
         font-family: var(--font-code);
         font-size: 26px;
         font-weight: 800;
-        color: var(--primary-teal);
+        color: var(--dd-gold);
     }
 
     .btn-proceed-pay {
-        background: var(--primary-teal);
-        color: #FFFFFF;
+        background: var(--dd-gold);
+        color: #03111F;
         border: none;
         border-radius: 12px;
         padding: 14px;
@@ -318,12 +327,9 @@
         width: 100%;
         cursor: pointer;
         transition: all 0.2s ease;
-        box-shadow: 0 4px 12px rgba(0, 106, 103, 0.25);
     }
 
     .btn-proceed-pay:hover {
-        background: #004D40;
-        transform: translateY(-1px);
         box-shadow: 0 6px 16px rgba(0, 106, 103, 0.35);
     }
 
@@ -346,7 +352,7 @@
 
             <div class="d-flex align-items-center gap-2">
                 <i class="ti ti-search text-muted"></i>
-                <input type="text" id="posSearchInput" placeholder="{{ __('Search garments...') }}" onkeyup="searchCatalog()" class="form-control form-control-sm border-0 bg-light" style="width: 200px; font-weight:600;">
+                <input type="text" id="posSearchInput" placeholder="{{ __('Search garments...') }}" onkeyup="searchCatalog()" class="form-control form-control-sm border-0" style="width: 200px; font-weight:600; background: var(--pos-inner-bg); color: var(--pos-text-title);">
             </div>
         </div>
 
@@ -383,7 +389,7 @@
                     </div>
                 </div>
             @empty
-                <div class="col-12 text-center text-muted py-5 bg-white border rounded-4">
+                <div class="col-12 text-center text-muted py-5 border rounded-4" style="background: var(--pos-bg-card); border-color: var(--pos-border) !important;">
                     <i class="ti ti-hanger fs-1 text-muted d-block mb-2"></i>
                     {{ __('No garments or cloth types found in your inventory.') }}
                 </div>
@@ -397,7 +403,7 @@
             <!-- Dynamic Customer Select -->
             <div class="d-flex align-items-center justify-content-between mb-2">
                 <span class="text-muted fw-bold text-uppercase fs-8">{{ __('CUSTOMER SELECTION') }}</span>
-                <a href="{{ route('customer.create') }}" class="text-teal fw-bold fs-8 text-decoration-none"><i class="ti ti-user-plus me-1"></i>{{ __('New Customer') }}</a>
+                <a href="{{ route('customer.create') }}" class="fw-bold fs-8 text-decoration-none" style="color: var(--dd-gold);"><i class="ti ti-user-plus me-1"></i>{{ __('New Customer') }}</a>
             </div>
 
             <div class="customer-info-box">
@@ -412,24 +418,24 @@
                     @endforeach
                 </select>
 
-                <div class="d-flex align-items-center gap-3 mt-3 pt-3 border-top" id="custDetailDisplay">
+                <div class="d-flex align-items-center gap-3 mt-3 pt-3 border-top" id="custDetailDisplay" style="border-color: var(--pos-border) !important;">
                     <div class="cust-avatar-circle" id="custAvatar">C</div>
                     <div>
-                        <h6 class="mb-0 fw-bold text-dark fs-7" id="custNameDisplay">{{ __('Walk-in Client') }}</h6>
-                        <small class="text-muted fs-8 d-block" id="custContactDisplay">{{ __('Standard Counter POS') }}</small>
+                        <h6 class="mb-0 fw-bold fs-7" id="custNameDisplay" style="color: var(--pos-text-title);">{{ __('Walk-in Client') }}</h6>
+                        <small class="fs-8 d-block" id="custContactDisplay" style="color: var(--pos-text-sub);">{{ __('Standard Counter POS') }}</small>
                     </div>
                 </div>
             </div>
 
             <!-- Cart Items Stack -->
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="fw-bold text-dark fs-7">{{ __('Active Cart') }} <small id="cartItemsCount" class="text-muted">(0 items)</small></span>
+                <span class="fw-bold fs-7" style="color: var(--pos-text-title);">{{ __('Active Cart') }} <small id="cartItemsCount" style="color: var(--pos-text-sub);">(0 items)</small></span>
                 <button type="button" class="btn btn-sm text-danger p-0 fw-bold border-0 bg-transparent fs-8" onclick="clearCart()">{{ __('Clear All') }}</button>
             </div>
 
             <div class="cart-items-stack" id="cartItemsStack" style="max-height: 240px; overflow-y: auto;">
-                <div class="text-center py-4 text-muted fs-7">
-                    <i class="ti ti-shopping-cart-x fs-2 d-block mb-1 text-muted"></i>
+                <div class="text-center py-4 fs-7" style="color: var(--pos-text-sub);">
+                    <i class="ti ti-shopping-cart-x fs-2 d-block mb-1" style="color: var(--pos-text-sub);"></i>
                     {{ __('Cart is empty. Click garment + button to add.') }}
                 </div>
             </div>
@@ -439,7 +445,7 @@
         <div>
             <!-- Payment Method Selection Pills -->
             <div class="mb-2">
-                <label class="form-label text-muted fs-8 fw-bold text-uppercase mb-1">{{ __('Payment Method') }}</label>
+                <label class="form-label fs-8 fw-bold text-uppercase mb-1" style="color: var(--pos-text-sub);">{{ __('Payment Method') }}</label>
                 <div class="payment-method-pills" id="pmPills">
                     <div class="pm-pill active" onclick="setPaymentMethod('Cash', this)">
                         <i class="ti ti-cash d-block fs-6 mb-1"></i> Cash
@@ -458,27 +464,27 @@
 
             <div class="financial-summary-stack">
                 <div class="summary-line">
-                    <span class="text-muted">{{ __('Subtotal') }}</span>
-                    <span id="summarySubtotal" class="fw-bold">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}0.00</span>
+                    <span style="color: var(--pos-text-sub);">{{ __('Subtotal') }}</span>
+                    <span id="summarySubtotal" class="fw-bold" style="color: var(--pos-text-title);">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}0.00</span>
                 </div>
                 <div class="summary-line d-flex align-items-center justify-content-between">
-                    <span class="text-muted">{{ __('Discount / Adjustment') }}</span>
+                    <span style="color: var(--pos-text-sub);">{{ __('Discount / Adjustment') }}</span>
                     <div class="input-group input-group-sm" style="width: 110px;">
-                        <span class="input-group-text bg-light border-0 py-0">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}</span>
-                        <input type="number" step="0.01" min="0" class="form-control form-control-sm border-0 bg-light fw-bold text-end" id="posDiscountInput" placeholder="0.00" onkeyup="calculateTotals()" onchange="calculateTotals()">
+                        <span class="input-group-text border-0 py-0" style="background: var(--pos-pill-bg); color: var(--pos-text-title);">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}</span>
+                        <input type="number" step="0.01" min="0" class="form-control form-control-sm border-0 fw-bold text-end" id="posDiscountInput" placeholder="0.00" onkeyup="calculateTotals()" onchange="calculateTotals()" style="background: var(--pos-pill-bg); color: var(--pos-text-title);">
                     </div>
                 </div>
                 <div class="total-line">
-                    <span class="fw-bold text-dark fs-7">{{ __('TOTAL AMOUNT') }}</span>
+                    <span class="fw-bold fs-7" style="color: var(--pos-text-title);">{{ __('TOTAL AMOUNT') }}</span>
                     <span class="total-val" id="summaryTotal">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}0.00</span>
                 </div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label text-muted fs-8 fw-bold text-uppercase mb-1">{{ __('Advance Payment Received') }}</label>
+                <label class="form-label fs-8 fw-bold text-uppercase mb-1" style="color: var(--pos-text-sub);">{{ __('Advance Payment Received') }}</label>
                 <div class="input-group">
-                    <span class="input-group-text bg-light border-0 fw-bold">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}</span>
-                    <input type="number" step="0.01" min="0" class="form-control form-control-sm border-0 bg-light fw-bold" id="posAdvanceInput" placeholder="0.00">
+                    <span class="input-group-text border-0 fw-bold" style="background: var(--pos-pill-bg); color: var(--pos-text-title);">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}</span>
+                    <input type="number" step="0.01" min="0" class="form-control form-control-sm border-0 fw-bold" id="posAdvanceInput" placeholder="0.00" style="background: var(--pos-pill-bg); color: var(--pos-text-title);">
                 </div>
             </div>
 
@@ -497,21 +503,21 @@
                 <div class="avtar avtar-xl bg-light-success text-success rounded-circle mx-auto mb-3" style="width: 70px; height: 70px;">
                     <i class="ti ti-circle-check fs-1"></i>
                 </div>
-                <h4 class="font-weight-bold text-dark mb-1">{{ __('POS Checkout Complete!') }}</h4>
-                <p class="text-muted fs-7 mb-3">{{ __('Invoice has been successfully generated and recorded.') }}</p>
+                <h4 class="font-weight-bold mb-1" style="color: #FFFFFF;">{{ __('POS Checkout Complete!') }}</h4>
+                <p class="fs-7 mb-3" style="color: #8FA1B5;">{{ __('Invoice has been successfully generated and recorded.') }}</p>
 
-                <div class="bg-light p-3 rounded-3 mb-4 text-start">
+                <div class="p-3 rounded-3 mb-4 text-start" style="background: #102B45;">
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted fs-7">{{ __('Invoice Number') }}:</span>
-                        <strong class="text-dark font-monospace" id="modalInvoiceNum">#INV-1001</strong>
+                        <strong class="font-monospace" id="modalInvoiceNum" style="color: #F4C861;">#INV-1001</strong>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted fs-7">{{ __('Customer') }}:</span>
-                        <strong class="text-dark" id="modalCustName">Walk-in Client</strong>
+                        <strong id="modalCustName" style="color: #FFFFFF;">Walk-in Client</strong>
                     </div>
                     <div class="d-flex justify-content-between">
                         <span class="text-muted fs-7">{{ __('Total Paid / Invoiced') }}:</span>
-                        <strong class="text-teal font-monospace fs-6" id="modalTotalAmt">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}0.00</strong>
+                        <strong class="font-monospace fs-6" id="modalTotalAmt" style="color: #D9A441;">{{ subscriptionPaymentSettings()['CURRENCY_SYMBOL'] }}0.00</strong>
                     </div>
                 </div>
 

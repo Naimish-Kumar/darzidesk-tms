@@ -11,12 +11,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
     <style>
         :root {
-            --primary-teal: #006A67;
-            --primary-dark: #004D4B;
-            --primary-light: #E6F4F3;
-            --text-dark: #0B1C30;
-            --text-muted: #6D7978;
-            --card-border: #E2E8F0;
+            --primary-teal: #D9A441;
+            --primary-dark: #F4C861;
+            --primary-light: rgba(217, 164, 65, 0.15);
+            --text-dark: #FFFFFF;
+            --text-muted: #D8E0E8;
+            --card-border: #29435D;
             --font-main: 'Hanken Grotesk', sans-serif;
         }
 
@@ -28,8 +28,8 @@
 
         body {
             font-family: var(--font-main);
-            color: var(--text-dark);
-            background: #FFFFFF;
+            color: #FFFFFF;
+            background: #03111F;
             min-height: 100vh;
             display: flex;
         }
@@ -44,7 +44,7 @@
         .visual-side {
             flex: 1;
             position: relative;
-            background: #0B1C30;
+            background: #03111F;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -66,7 +66,7 @@
         .visual-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(11,28,48,0.3) 0%, rgba(11,28,48,0.85) 100%);
+            background: linear-gradient(180deg, rgba(3,17,31,0.4) 0%, rgba(3,17,31,0.9) 100%);
         }
 
         .logo-box {
@@ -74,11 +74,11 @@
             z-index: 10;
             display: inline-flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(11, 34, 57, 0.65);
             backdrop-filter: blur(12px);
             padding: 8px 16px;
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(41, 67, 93, 0.6);
             width: fit-content;
         }
 
@@ -87,9 +87,9 @@
             z-index: 10;
             max-width: 540px;
             margin-bottom: 30px;
-            background: rgba(11, 28, 48, 0.45);
+            background: rgba(11, 34, 57, 0.75);
             backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(41, 67, 93, 0.8);
             padding: 28px 32px;
             border-radius: 20px;
         }
@@ -101,13 +101,14 @@
             margin-bottom: 16px;
             font-style: italic;
             letter-spacing: -0.3px;
+            color: #FFFFFF;
         }
 
         .quote-author {
             font-size: 11px;
             letter-spacing: 1.5px;
             font-weight: 800;
-            color: #26A69A;
+            color: #D9A441;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -117,7 +118,7 @@
             content: '';
             width: 24px;
             height: 2px;
-            background: #26A69A;
+            background: #D9A441;
             border-radius: 2px;
         }
 
@@ -138,7 +139,9 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            background: #FFFFFF;
+            background: #07192A;
+            border-left: 1px solid #29435D;
+            color: #FFFFFF;
         }
 
         .form-container {
@@ -150,43 +153,43 @@
         .form-header h2 {
             font-size: 32px;
             font-weight: 800;
-            color: var(--text-dark);
+            color: #F4C861;
             margin-bottom: 8px;
             letter-spacing: -0.5px;
         }
 
         .form-header p {
             font-size: 14.5px;
-            color: var(--text-muted);
+            color: #D8E0E8;
             margin-bottom: 32px;
         }
 
         /* Full Width Google Button */
         .btn-social-google {
             width: 100%;
-            padding: 13px 20px;
-            border: 1.5px solid var(--card-border);
-            border-radius: 12px;
-            background: #FFFFFF;
+            padding: 14px 20px;
+            border: 1.5px solid #29435D;
+            border-radius: 9999px;
+            background: #0B2239;
             font-family: var(--font-main);
             font-size: 14.5px;
             font-weight: 700;
-            color: var(--text-dark);
+            color: #FFFFFF;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             margin-bottom: 28px;
             text-decoration: none;
         }
 
         .btn-social-google:hover {
-            background: #F8FAFC;
-            border-color: #CBD5E1;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            background: #102B45;
+            border-color: #D9A441;
+            color: #F4C861;
             transform: translateY(-1px);
         }
 
@@ -199,7 +202,7 @@
             align-items: center;
             text-align: center;
             margin-bottom: 28px;
-            color: var(--text-muted);
+            color: #D8E0E8;
             font-size: 10.5px;
             font-weight: 800;
             letter-spacing: 1.2px;
@@ -208,7 +211,7 @@
         .divider::before, .divider::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid var(--card-border);
+            border-bottom: 1px solid #29435D;
         }
 
         .divider::before { margin-right: 14px; }
@@ -223,7 +226,7 @@
             font-size: 13px;
             font-weight: 700;
             margin-bottom: 8px;
-            color: var(--text-dark);
+            color: #FFFFFF;
         }
 
         .input-group {
@@ -235,7 +238,7 @@
         .input-group .material-symbols-outlined {
             position: absolute;
             left: 14px;
-            color: var(--text-muted);
+            color: #D8E0E8;
             font-size: 20px;
         }
 
@@ -248,38 +251,39 @@
         }
 
         .input-group .password-toggle:hover {
-            color: var(--primary-teal);
+            color: #D9A441;
         }
 
         .input-group input {
             width: 100%;
             padding: 13px 42px;
-            border: 1.5px solid var(--card-border);
+            border: 1.5px solid #29435D;
             border-radius: 12px;
             font-family: var(--font-main);
             font-size: 14px;
             outline: none;
             transition: all 0.2s ease;
-            background: #F8FAFC;
+            background: #0B2239;
+            color: #FFFFFF;
         }
 
         .input-group input:focus {
-            background: #FFFFFF;
-            border-color: var(--primary-teal);
-            box-shadow: 0 0 0 3.5px rgba(0, 106, 103, 0.12);
+            background: #03111F;
+            border-color: #D9A441;
+            box-shadow: 0 0 0 3.5px rgba(217, 164, 65, 0.2);
         }
 
         .forgot-link {
             float: right;
             font-size: 12.5px;
             font-weight: 700;
-            color: var(--primary-teal);
+            color: #F4C861;
             text-decoration: none;
             transition: color 0.2s;
         }
 
         .forgot-link:hover {
-            color: var(--primary-dark);
+            color: #D9A441;
             text-decoration: underline;
         }
 
@@ -289,14 +293,14 @@
             gap: 10px;
             margin-bottom: 28px;
             font-size: 13.5px;
-            color: var(--text-muted);
+            color: #D8E0E8;
             cursor: pointer;
         }
 
         .checkbox-row input {
             width: 18px;
             height: 18px;
-            accent-color: var(--primary-teal);
+            accent-color: #D9A441;
             cursor: pointer;
             border-radius: 4px;
         }
@@ -304,25 +308,25 @@
         .btn-submit {
             width: 100%;
             padding: 15px;
-            background: var(--primary-teal);
-            color: #FFFFFF;
+            background: linear-gradient(135deg, #D9A441 0%, #F4C861 100%);
+            color: #03111F;
             border: none;
-            border-radius: 12px;
+            border-radius: 9999px;
             font-family: var(--font-main);
             font-size: 15px;
-            font-weight: 700;
+            font-weight: 800;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(0, 106, 103, 0.25);
+            box-shadow: 0 6px 20px rgba(217, 164, 65, 0.3);
         }
 
         .btn-submit:hover {
-            background: var(--primary-dark);
-            box-shadow: 0 6px 16px rgba(0, 106, 103, 0.35);
+            background: linear-gradient(135deg, #F4C861 0%, #FFE596 100%);
+            box-shadow: 0 10px 28px rgba(217, 164, 65, 0.45);
             transform: translateY(-1px);
         }
 
@@ -333,17 +337,18 @@
         .register-text {
             text-align: center;
             font-size: 13.5px;
-            color: var(--text-muted);
+            color: #D8E0E8;
             margin-top: 28px;
         }
 
         .register-text a {
-            color: var(--primary-teal);
+            color: #F4C861;
             font-weight: 800;
             text-decoration: none;
         }
 
         .register-text a:hover {
+            color: #D9A441;
             text-decoration: underline;
         }
 
@@ -353,19 +358,19 @@
             gap: 20px;
             font-size: 11px;
             font-weight: 800;
-            color: var(--text-muted);
+            color: #D8E0E8;
             letter-spacing: 0.8px;
             margin-top: 48px;
         }
 
         .footer-links a {
-            color: inherit;
+            color: #D8E0E8;
             text-decoration: none;
             transition: color 0.2s;
         }
 
         .footer-links a:hover {
-            color: var(--primary-teal);
+            color: #F4C861;
         }
 
         @media (max-width: 900px) {
@@ -403,17 +408,17 @@
                 </div>
 
                 @if (session('error'))
-                    <div style="background: #FEE2E2; color: #991B1B; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; margin-bottom: 20px; border: 1px solid #FCA5A5;">
+                    <div style="background: rgba(239, 68, 68, 0.18); color: #F87171; padding: 12px 16px; border-radius: 12px; font-size: 13px; font-weight: 600; margin-bottom: 20px; border: 1px solid rgba(239, 68, 68, 0.4);">
                         {{ session('error') }}
                     </div>
                 @endif
                 @if (session('status'))
-                    <div style="background: #D1FAE5; color: #065F46; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; margin-bottom: 20px; border: 1px solid #6EE7B7;">
+                    <div style="background: rgba(16, 185, 129, 0.18); color: #34D399; padding: 12px 16px; border-radius: 12px; font-size: 13px; font-weight: 600; margin-bottom: 20px; border: 1px solid rgba(16, 185, 129, 0.4);">
                         {{ session('status') }}
                     </div>
                 @endif
                 @if ($errors->any())
-                    <div style="background: #FEE2E2; color: #991B1B; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; margin-bottom: 20px; border: 1px solid #FCA5A5;">
+                    <div style="background: rgba(239, 68, 68, 0.18); color: #F87171; padding: 12px 16px; border-radius: 12px; font-size: 13px; font-weight: 600; margin-bottom: 20px; border: 1px solid rgba(239, 68, 68, 0.4);">
                         <ul style="margin: 0; padding-left: 18px;">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -423,7 +428,7 @@
                 @endif
 
                 <!-- Single Continue with Google Button -->
-                <a href="#" class="btn-social-google">
+                <a href="{{ route('auth.google') }}" class="btn-social-google" id="btn-google-login">
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                         <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>

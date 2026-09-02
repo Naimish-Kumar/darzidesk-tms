@@ -72,17 +72,18 @@
                             <span class="pc-micon"><i class="ti ti-user"></i></span>
                             <span class="pc-mtext">{{ __('My Profile') }}</span>
                         </a>
-                    </li>
                 @endif
-                @if (\Auth::user()->type == 'super admin')
-                    @if (Gate::check('manage user'))
-                        <li class="pc-item {{ in_array($routeName, ['users.index', 'users.show']) ? 'active' : '' }}">
-                            <a href="{{ route('users.index') }}" class="pc-link">
-                                <span class="pc-micon"><i class="ti ti-user-plus"></i></span>
-                                <span class="pc-mtext">{{ __('Customers') }}</span>
-                            </a>
-                        </li>
-                    @endif
+
+                @if (\Auth::user()->type != 'customer')
+                    @if (\Auth::user()->type == 'super admin')
+                        @if (Gate::check('manage user'))
+                            <li class="pc-item {{ in_array($routeName, ['users.index', 'users.show']) ? 'active' : '' }}">
+                                <a href="{{ route('users.index') }}" class="pc-link">
+                                    <span class="pc-micon"><i class="ti ti-building-store"></i></span>
+                                    <span class="pc-mtext">{{ __('Shop Owners') }}</span>
+                                </a>
+                            </li>
+                        @endif
                 @else
                     @if (Gate::check('manage user') || Gate::check('manage role') || Gate::check('manage logged history'))
                         <li
@@ -138,10 +139,10 @@
                     </li>
 
                     @if (Gate::check('manage customer'))
-                        <li class="pc-item {{ in_array($routeName, ['customer.index']) ? 'active' : '' }}">
+                        <li class="pc-item {{ in_array($routeName, ['customer.index', 'customer.create', 'customer.edit', 'customer.show']) ? 'active' : '' }}">
                             <a class="pc-link" href="{{ route('customer.index') }}">
-                                <span class="pc-micon"><i data-feather="user-check"></i></span>
-                                <span class="pc-mtext">{{ __('Customer') }}</span>
+                                <span class="pc-micon"><i data-feather="users"></i></span>
+                                <span class="pc-mtext">{{ __('Customers') }}</span>
                             </a>
                         </li>
                     @endif
@@ -500,6 +501,7 @@
                             </a>
                         </li>
                     @endif
+                @endif
                 @endif
 
             </ul>

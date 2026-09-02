@@ -735,6 +735,40 @@ class SettingController extends Controller
         return redirect()->back()->with('success', __('Google Recaptcha settings save successfully.'))->with('tab', 'google_recaptcha_settings');
     }
 
+    // ---------------------- Google OAuth Setting ---------------------------------------
+    public function googleOAuthData(Request $request)
+    {
+        if (Auth::user()->type != 'super admin') {
+            return redirect()->back()->with('error', __('Permission Denied.'));
+        }
+
+        $googleOAuthArray = [
+            'google_oauth' => $request->has('google_oauth') ? 'on' : 'off',
+            'google_client_id' => $request->google_client_id ?? '',
+            'google_client_secret' => $request->google_client_secret ?? '',
+            'google_redirect_uri' => $request->google_redirect_uri ?? '',
+        ];
+
+        foreach ($googleOAuthArray as $key => $val) {
+            \DB::table('settings')->updateOrInsert(
+                [
+                    'name' => $key,
+                    'parent_id' => parentId(),
+                ],
+                [
+                    'value' => $val,
+                    'type' => 'google_oauth',
+                    'updated_at' => now(),
+                    'created_at' => now(),
+                ]
+            );
+        }
+
+        clearSettingsCache();
+
+        return redirect()->back()->with('success', __('Google OAuth 2.0 credentials updated successfully.'))->with('tab', 'google_oauth_settings');
+    }
+
     // ---------------------- Footer Setting ---------------------------------------------
     public function footerSetting(Request $request)
     {

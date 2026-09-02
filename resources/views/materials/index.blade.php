@@ -10,84 +10,108 @@
 
 @push('css-page')
     <style>
+        :root {
+            --mat-banner-bg: #FFFFFF;
+            --mat-banner-border: #E2E8F0;
+            --mat-card-bg: #FFFFFF;
+            --mat-card-border: #E2E8F0;
+            --mat-inner-bg: #F8FAFC;
+            --mat-text-title: #0F172A;
+            --mat-text-sub: #64748B;
+            --dd-gold: #D9A441;
+        }
+
+        [data-pc-theme="dark"] {
+            --mat-banner-bg: #0B2239;
+            --mat-banner-border: #29435D;
+            --mat-card-bg: #0B2239;
+            --mat-card-border: #29435D;
+            --mat-inner-bg: #102B45;
+            --mat-text-title: #FFFFFF;
+            --mat-text-sub: #8FA1B5;
+        }
+
         .dd-mat-banner {
-            background: #FFFFFF;
-            border: 1px solid #E2E8F0;
+            background: var(--mat-banner-bg) !important;
+            border: 1px solid var(--mat-banner-border) !important;
             border-radius: 16px;
             padding: 24px 28px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
             margin-bottom: 24px;
         }
         .dd-mat-icon {
             width: 48px;
             height: 48px;
             border-radius: 12px;
-            background: #E6F4F1;
+            background: rgba(217, 164, 65, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            border: 1px solid rgba(217, 164, 65, 0.3);
         }
         .dd-mat-icon i {
             font-size: 24px;
-            color: #00796B;
+            color: var(--dd-gold);
         }
         .dd-mat-title {
             font-size: 22px;
             font-weight: 800;
-            color: #0F172A;
+            color: var(--mat-text-title);
             margin-bottom: 2px;
         }
         .dd-mat-subtitle {
             font-size: 13.5px;
-            color: #64748B;
+            color: var(--mat-text-sub);
             margin-bottom: 0;
         }
 
         .dd-stat-card {
-            background: #FFFFFF;
-            border: 1px solid #E2E8F0;
+            background: var(--mat-card-bg) !important;
+            border: 1px solid var(--mat-card-border) !important;
             border-radius: 14px;
             padding: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
 
         .dd-card {
-            background: #FFFFFF;
-            border: 1px solid #E2E8F0;
+            background: var(--mat-card-bg) !important;
+            border: 1px solid var(--mat-card-border) !important;
             border-radius: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
             overflow: hidden;
         }
         .dd-table th {
             font-family: 'JetBrains Mono', monospace;
             font-size: 11.5px;
             font-weight: 700;
-            color: #64748B;
+            color: var(--dd-gold) !important;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            background: #F8FAFC;
+            background: var(--mat-inner-bg) !important;
             padding: 14px 20px;
-            border-bottom: 1px solid #E2E8F0;
+            border-bottom: 1px solid var(--mat-card-border);
         }
         .dd-table td {
             font-size: 14px;
             padding: 14px 20px;
             vertical-align: middle;
-            border-bottom: 1px solid #E2E8F0;
+            border-bottom: 1px solid var(--mat-card-border);
+            color: var(--mat-text-title);
         }
         .dd-table tr:hover td {
-            background: #E6F4F1;
+            background: rgba(217, 164, 65, 0.06);
         }
 
         .dd-code-badge {
             font-family: 'JetBrains Mono', monospace;
             font-size: 11.5px;
             font-weight: 700;
-            color: #00796B;
-            background: #E6F4F1;
+            color: var(--dd-gold);
+            background: rgba(217, 164, 65, 0.15);
             padding: 3px 8px;
             border-radius: 6px;
+            border: 1px solid rgba(217, 164, 65, 0.3);
         }
     </style>
 @endpush
@@ -107,7 +131,7 @@
                     </div>
                 </div>
                 <div>
-                    <button class="btn text-white fw-bold px-4" data-bs-toggle="modal" data-bs-target="#addMaterialModal" style="background:#00796B; border-radius:10px;">
+                    <button class="btn text-dark fw-bold px-4" data-bs-toggle="modal" data-bs-target="#addMaterialModal" style="background: var(--dd-gold); border-radius:10px;">
                         <i class="ti ti-plus me-1"></i> {{ __('Add Fabric Roll') }}
                     </button>
                 </div>
@@ -120,10 +144,10 @@
                 <div class="dd-stat-card">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <span class="text-muted text-uppercase fw-semibold" style="font-size: 11.5px; letter-spacing: 0.5px;">{{ __('Total Fabric Items') }}</span>
-                            <h3 class="fw-bold text-dark mb-0 mt-1">{{ $materials->count() }}</h3>
+                            <span class="text-uppercase fw-semibold" style="font-size: 11.5px; letter-spacing: 0.5px; color: var(--mat-text-sub);">{{ __('Total Fabric Items') }}</span>
+                            <h3 class="fw-bold mb-0 mt-1" style="color: var(--mat-text-title);">{{ $materials->count() }}</h3>
                         </div>
-                        <div class="rounded-3 p-3" style="background:#E6F4F1; color:#00796B;">
+                        <div class="rounded-3 p-3" style="background: rgba(217, 164, 65, 0.15); color: var(--dd-gold); border: 1px solid rgba(217, 164, 65, 0.3);">
                             <i class="ti ti-box fs-3"></i>
                         </div>
                     </div>
@@ -134,12 +158,12 @@
                 <div class="dd-stat-card">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <span class="text-muted text-uppercase fw-semibold" style="font-size: 11.5px; letter-spacing: 0.5px;">{{ __('Low Stock Alerts') }}</span>
-                            <h3 class="fw-bold {{ $lowStockMaterials->count() > 0 ? 'text-danger' : 'text-dark' }} mb-0 mt-1">
+                            <span class="text-uppercase fw-semibold" style="font-size: 11.5px; letter-spacing: 0.5px; color: var(--mat-text-sub);">{{ __('Low Stock Alerts') }}</span>
+                            <h3 class="fw-bold {{ $lowStockMaterials->count() > 0 ? 'text-danger' : '' }} mb-0 mt-1" style="{{ $lowStockMaterials->count() == 0 ? 'color: var(--mat-text-title);' : '' }}">
                                 {{ $lowStockMaterials->count() }}
                             </h3>
                         </div>
-                        <div class="rounded-3 p-3" style="background:#FEE2E2; color:#DC2626;">
+                        <div class="rounded-3 p-3" style="background: rgba(239, 68, 68, 0.15); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3);">
                             <i class="ti ti-alert-triangle fs-3"></i>
                         </div>
                     </div>
@@ -150,12 +174,12 @@
                 <div class="dd-stat-card">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <span class="text-muted text-uppercase fw-semibold" style="font-size: 11.5px; letter-spacing: 0.5px;">{{ __('Total Inventory Value') }}</span>
-                            <h3 class="fw-bold text-dark mb-0 mt-1">
+                            <span class="text-uppercase fw-semibold" style="font-size: 11.5px; letter-spacing: 0.5px; color: var(--mat-text-sub);">{{ __('Total Inventory Value') }}</span>
+                            <h3 class="fw-bold mb-0 mt-1" style="color: var(--mat-text-title);">
                                 {{ priceFormat($materials->sum(fn($m) => $m->quantity * $m->unit_cost)) }}
                             </h3>
                         </div>
-                        <div class="rounded-3 p-3" style="background:#DCFCE7; color:#16A34A;">
+                        <div class="rounded-3 p-3" style="background: rgba(34, 197, 94, 0.15); color: #22C55E; border: 1px solid rgba(34, 197, 94, 0.3);">
                             <i class="ti ti-coin fs-3"></i>
                         </div>
                     </div>

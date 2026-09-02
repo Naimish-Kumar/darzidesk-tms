@@ -50,14 +50,22 @@
 
     <style>
         :root {
-            --page-primary: var(--bs-primary);
-            --page-primary-light: var(--bs-primary-light);
-            --page-primary-dark: var(--bs-secondary);
-            --page-text: var(--pc-heading-color, #343a40);
-            --page-text-muted: #64748b;
-            --page-bg: #f8fafc;
-            --page-card-bg: #ffffff;
-            --page-border: #e2e8f0;
+            --app-bg: #03111F;
+            --card-bg: #0B2239;
+            --card-border: #29435D;
+            --inner-bg: #102B45;
+            --primary-gold: #D9A441;
+            --primary-light-gold: #F4C861;
+            --gold-light-bg: rgba(217, 164, 65, 0.15);
+            --gold-border: rgba(217, 164, 65, 0.35);
+            --page-primary: #D9A441;
+            --page-primary-light: rgba(217, 164, 65, 0.15);
+            --page-primary-dark: #F4C861;
+            --page-text: #FFFFFF;
+            --page-text-muted: #8FA1B5;
+            --page-bg: #03111F;
+            --page-card-bg: #0B2239;
+            --page-border: #29435D;
         }
 
         * { box-sizing: border-box; }
@@ -65,7 +73,7 @@
         body.policy-page {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--page-bg);
-            color: var(--page-text);
+            color: #D8E0E8;
             -webkit-font-smoothing: antialiased;
         }
 
@@ -76,10 +84,11 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(255,255,255,0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0,0,0,0.06);
+            background: rgba(3, 17, 31, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--card-border);
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
             padding: 0 0;
             transition: all 0.3s ease;
         }
@@ -92,8 +101,10 @@
             justify-content: space-between;
         }
         .policy-navbar .brand-logo img {
-            height: 36px;
+            height: 40px;
             width: auto;
+            max-width: 220px;
+            object-fit: contain;
         }
         .policy-navbar .nav-links {
             display: flex;
@@ -104,7 +115,7 @@
             padding: 0;
         }
         .policy-navbar .nav-links a {
-            color: var(--page-text);
+            color: #D8E0E8;
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
@@ -114,18 +125,49 @@
         }
         .policy-navbar .nav-links a:hover {
             background: var(--page-primary-light);
-            color: var(--page-primary);
+            color: var(--primary-light-gold);
+        }
+        .policy-navbar .nav-links .btn-login-outline {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            padding: 0 20px;
+            background: rgba(11, 34, 57, 0.6);
+            color: var(--primary-light-gold) !important;
+            font-weight: 700;
+            font-size: 13.5px;
+            border-radius: 9999px;
+            border: 1.5px solid var(--primary-gold);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .policy-navbar .nav-links .btn-login-outline:hover {
+            background: var(--gold-light-bg);
+            color: #FFFFFF !important;
+            border-color: var(--primary-light-gold);
+            box-shadow: 0 4px 14px rgba(217, 164, 65, 0.25);
+            transform: translateY(-1px);
         }
         .policy-navbar .nav-links .btn-cta {
-            background: var(--bs-secondary);
-            color: #fff !important;
-            padding: 9px 22px;
-            border-radius: 10px;
-            font-weight: 600;
-            box-shadow: 0 2px 12px rgba(var(--bs-secondary-rgb), 0.25);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            padding: 0 22px;
+            background: linear-gradient(135deg, #D9A441 0%, #F4C861 100%);
+            color: #03111F !important;
+            font-weight: 700;
+            font-size: 13.5px;
+            border-radius: 9999px;
+            border: none;
+            box-shadow: 0 4px 14px rgba(217, 164, 65, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
         }
         .policy-navbar .nav-links .btn-cta:hover {
-            box-shadow: 0 4px 20px rgba(var(--bs-secondary-rgb), 0.4);
+            background: linear-gradient(135deg, #F4C861 0%, #FFE596 100%);
+            box-shadow: 0 6px 20px rgba(217, 164, 65, 0.45);
             transform: translateY(-1px);
         }
         .policy-navbar .nav-toggle {
@@ -148,10 +190,11 @@
         /* ── Hero Section ── */
         .policy-hero {
             position: relative;
-            padding: 160px 24px 80px;
+            padding: 145px 24px 85px;
             text-align: center;
             overflow: hidden;
-            background: linear-gradient(160deg, rgba(var(--bs-primary-rgb), 0.95) 0%, rgba(var(--bs-secondary-rgb), 0.9) 100%);
+            background: linear-gradient(180deg, rgba(3, 17, 31, 0.95) 0%, rgba(11, 34, 57, 0.98) 100%);
+            border-bottom: 1px solid var(--card-border);
         }
         .policy-hero::before {
             content: '';
@@ -160,33 +203,24 @@
             left: -20%;
             width: 140%;
             height: 200%;
-            background: radial-gradient(ellipse at 30% 50%, rgba(var(--bs-primary-rgb), 0.2) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 30%, rgba(var(--bs-secondary-rgb), 0.15) 0%, transparent 50%);
-            pointer-events: none;
-        }
-        .policy-hero::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 120px;
-            background: linear-gradient(to top, var(--page-bg), transparent);
+            background: radial-gradient(ellipse at 30% 50%, rgba(217, 164, 65, 0.12) 0%, transparent 60%);
             pointer-events: none;
         }
         .policy-hero .hero-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.15);
+            background: var(--gold-light-bg);
+            border: 1px solid var(--gold-border);
             backdrop-filter: blur(10px);
-            padding: 8px 20px;
+            padding: 6px 18px;
             border-radius: 50px;
-            font-size: 13px;
-            font-weight: 500;
-            color: rgba(255,255,255,0.85);
-            margin-bottom: 28px;
+            font-size: 12.5px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--primary-light-gold);
+            margin-bottom: 16px;
             animation: fadeInDown 0.6s ease;
         }
         .policy-hero .hero-badge i {

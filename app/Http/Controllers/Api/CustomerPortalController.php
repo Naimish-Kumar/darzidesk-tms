@@ -130,8 +130,23 @@ class CustomerPortalController extends Controller
         $user = $request->user();
 
         $measurements = Measurement::where('customer', $user->id)
-            ->with('clothType')
-            ->get();
+            ->with(['clothTypes', 'users'])
+            ->orderBy('id', 'desc')
+            ->get()
+            ->map(function ($m) {
+                return [
+                    'id' => $m->id,
+                    'measurement_id' => $m->measurement_id,
+                    'cloth_type' => $m->clothTypes->title ?? 'Bespoke Garment',
+                    'cloth_type_id' => $m->cloth_type,
+                    'responsible_name' => $m->users->name ?? 'Master Tailor',
+                    'date' => $m->date ?? ($m->created_at ? $m->created_at->format('Y-m-d') : date('Y-m-d')),
+                    'measurement_detail' => $m->measurement_detail,
+                    'details' => $m->measurement_detail,
+                    'posture_adjustments' => $m->posture_adjustments,
+                    'created_at' => $m->created_at ? $m->created_at->format('Y-m-d H:i') : null,
+                ];
+            });
 
         $history = MeasurementHistory::where('customer_id', $user->id)
             ->orderBy('created_at', 'desc')
@@ -142,7 +157,7 @@ class CustomerPortalController extends Controller
                     'field_name' => $h->field_name,
                     'old_value' => $h->old_value,
                     'new_value' => $h->new_value,
-                    'changed_at' => $h->created_at ? $h->created_at->format('Y-m-d H:i') : null,
+                    'changed_at' => $h->created_at ? $h->created_at->format('d M Y • H:i') : null,
                 ];
             });
 

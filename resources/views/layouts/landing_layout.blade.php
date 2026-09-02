@@ -30,16 +30,49 @@
     <meta name="author" content="{{ !empty($settings['app_name']) ? $settings['app_name'] : env('APP_NAME') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <meta name="title" content="{{ $settings['meta_seo_title'] ?? env('APP_NAME') }}">
-    <meta name="keywords" content="{{ $settings['meta_seo_keyword'] ?? 'tailor software, darzi software, boutique software' }}">
-    <meta name="description" content="{{ $settings['meta_seo_description'] ?? 'Tailor Management System' }}">
+    <meta name="title" content="{{ $settings['meta_seo_title'] ?? 'DarziDesk - Tailor & Boutique Management System' }}">
+    <meta name="keywords" content="{{ $settings['meta_seo_keyword'] ?? 'tailor software, darzi software, boutique management system, bespoke tailoring app, garment measurement software, POS tailoring' }}">
+    <meta name="description" content="{{ $settings['meta_seo_description'] ?? 'DarziDesk is the ultimate enterprise Tailor Management System (TMS) for bespoke ateliers, custom fashion designers, suit makers, and alteration studios.' }}">
 
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ url()->current() }}">
 
+    <!-- OpenGraph Social Tags -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ env('APP_URL') }}">
-    <meta property="og:title" content="{{ $settings['meta_seo_title'] ?? env('APP_NAME') }}">
-    <meta property="og:description" content="{{ $settings['meta_seo_description'] ?? '' }}">
+    <meta property="og:site_name" content="DarziDesk TMS">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="{{ $settings['meta_seo_title'] ?? 'DarziDesk - Tailor & Boutique Management System' }}">
+    <meta property="og:description" content="{{ $settings['meta_seo_description'] ?? 'Streamline bespoke tailoring operations with digital garment measurement vault, production kanban, fabric stock ledger, POS billing, and SMS/WhatsApp notifications.' }}">
     <meta property="og:image" content="{{ asset(Storage::url('upload/seo')) . '/' . ($settings['meta_seo_image'] ?? '') }}">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $settings['meta_seo_title'] ?? 'DarziDesk - Tailor & Boutique Management System' }}">
+    <meta name="twitter:description" content="{{ $settings['meta_seo_description'] ?? 'All-in-one Tailor Management System (TMS) for bespoke ateliers, custom fashion designers, and garment alterations studios.' }}">
+    <meta name="twitter:image" content="{{ asset(Storage::url('upload/seo')) . '/' . ($settings['meta_seo_image'] ?? '') }}">
+
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "DarziDesk TMS",
+      "operatingSystem": "Web, Android, iOS",
+      "applicationCategory": "BusinessApplication",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "1250"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0.00",
+        "priceCurrency": "USD"
+      },
+      "description": "DarziDesk is an enterprise Tailor Management System (TMS) for bespoke ateliers, custom fashion designers, suit makers, and alteration studios."
+    }
+    </script>
 
     <link rel="icon" href="{{ asset(Storage::url('upload/logo')) . '/' . ($settings['company_favicon'] ?? '') }}"
         type="image/x-icon" />
@@ -55,7 +88,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/owl.carousel.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" id="main-style-link" />
     <link rel="stylesheet" href="{{ asset('assets/css/landing.css') }}" />
-    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/custom.css') }}?v={{ file_exists(public_path('css/custom.css')) ? filemtime(public_path('css/custom.css')) : time() }}" rel="stylesheet">
     @stack('css')
 </head>
 

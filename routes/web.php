@@ -175,6 +175,7 @@ Route::group(
         Route::post('settings/payment', [SettingController::class, 'paymentData'])->name('setting.payment');
         Route::post('settings/site-seo', [SettingController::class, 'siteSEOData'])->name('setting.site.seo');
         Route::post('settings/google-recaptcha', [SettingController::class, 'googleRecaptchaData'])->name('setting.google.recaptcha');
+        Route::post('settings/google-oauth', [SettingController::class, 'googleOAuthData'])->name('setting.google.oauth');
         Route::post('settings/company', [SettingController::class, 'companyData'])->name('setting.company');
         Route::post('settings/2fa', [SettingController::class, 'twofaEnable'])->name('setting.twofa.enable');
 

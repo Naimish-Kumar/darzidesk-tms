@@ -66,6 +66,10 @@ if (!function_exists('settingsKeys')) {
             "google_recaptcha" => "off",
             "recaptcha_key" => "",
             "recaptcha_secret" => "",
+            "google_oauth" => "off",
+            "google_client_id" => "",
+            "google_client_secret" => "",
+            "google_redirect_uri" => "",
             'SERVER_DRIVER' => "",
             'SERVER_HOST' => "",
             'SERVER_PORT' => "",
@@ -582,23 +586,25 @@ if (!function_exists('setup')) {
 if (!function_exists('userLoggedHistory')) {
     function userLoggedHistory()
     {
-        $serverip = $_SERVER['REMOTE_ADDR'];
-        $data = @unserialize(file_get_contents('http://ip-api.com/php/' . $serverip));
+        $serverip = request()->ip() ?? ($_SERVER['REMOTE_ADDR'] ?? '127.0.0.1');
+        $userAgent = request()->userAgent() ?? ($_SERVER['HTTP_USER_AGENT'] ?? 'Mozilla/5.0');
+        
+        $data = @unserialize(@file_get_contents('http://ip-api.com/php/' . $serverip));
         if (isset($data['status']) && $data['status'] == 'success') {
-            $browser = new \WhichBrowser\Parser($_SERVER['HTTP_USER_AGENT']);
-            if ($browser->device->type == 'bot') {
+            $browser = new \WhichBrowser\Parser($userAgent);
+            if (isset($browser->device->type) && $browser->device->type == 'bot') {
                 return redirect()->intended(RouteServiceProvider::HOME);
             }
             $referrerData = isset($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER']) : null;
             $data['browser'] = $browser->browser->name ?? null;
             $data['os'] = $browser->os->name ?? null;
             $data['language'] = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? mb_substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : null;
-            $data['device'] = User::getDevice($_SERVER['HTTP_USER_AGENT']);
+            $data['device'] = User::getDevice($userAgent);
             $data['referrer_host'] = !empty($referrerData['host']);
             $data['referrer_path'] = !empty($referrerData['path']);
             $result = json_encode($data);
             $details = new LoggedHistory();
-            $details->type = Auth::user()->type;
+            $details->type = Auth::user()->type ?? 'owner';
             $details->user_id = Auth::user()->id;
             $details->date = date('Y-m-d H:i:s');
             $details->Details = $result;

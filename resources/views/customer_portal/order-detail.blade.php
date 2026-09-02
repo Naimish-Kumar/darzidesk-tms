@@ -13,31 +13,63 @@
 @push('css-page')
     <style>
         :root {
-            --dd-teal: #00796B;
-            --dd-teal-light: #E6F4F1;
-            --dd-teal-dark: #004D40;
+            --dd-gold: #D9A441;
+            --dd-gold-hover: #F4C861;
+            --dd-gold-light: rgba(217, 164, 65, 0.12);
+            --dd-card-bg: #FFFFFF;
+            --dd-card-border: #E2E8F0;
+            --dd-inner-bg: #F8FAFC;
+            --dd-text-title: #0F172A;
+            --dd-text-sub: #64748B;
         }
-        .dd-card {
-            background: #FFFFFF;
-            border: 1px solid #E2E8F0;
+
+        [data-pc-theme="dark"] {
+            --dd-card-bg: #0B2239;
+            --dd-card-border: #29435D;
+            --dd-inner-bg: #102B45;
+            --dd-text-title: #FFFFFF;
+            --dd-text-sub: #8FA1B5;
+        }
+
+        .dd-portal-card {
+            background: var(--dd-card-bg);
+            border: 1px solid var(--dd-card-border);
             border-radius: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
             margin-bottom: 24px;
         }
-        .dd-badge {
-            font-size: 12px;
+
+        .dd-portal-title {
+            color: var(--dd-text-title);
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+
+        .dd-portal-sub {
+            color: var(--dd-text-sub);
+            font-size: 13px;
+        }
+
+        .dd-status-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
             font-weight: 700;
             padding: 6px 14px;
-            border-radius: 10px;
+            border-radius: 20px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
-        .dd-badge-pending { background: #FEF3C7; color: #92400E; }
-        .dd-badge-in_progress { background: #E0F2FE; color: #075985; }
-        .dd-badge-completed { background: #DCFCE7; color: #166534; }
-        .dd-badge-ready_for_delivery { background: #F3E8FF; color: #6B21A8; }
-        .dd-badge-delivered { background: #E0E7FF; color: #3730A3; }
-        .dd-badge-on_hold { background: #FFEDD5; color: #9A3412; }
-        .dd-badge-cancelled { background: #FEE2E2; color: #991B1B; }
+
+        .dd-status-pending { background: rgba(217, 164, 65, 0.15); color: #F4C861; border: 1px solid rgba(217, 164, 65, 0.4); }
+        .dd-status-in_progress { background: rgba(59, 130, 246, 0.15); color: #60A5FA; border: 1px solid rgba(59, 130, 246, 0.4); }
+        .dd-status-completed { background: rgba(34, 197, 94, 0.15); color: #4ADE80; border: 1px solid rgba(34, 197, 94, 0.4); }
+        .dd-status-ready_for_delivery { background: rgba(168, 85, 247, 0.15); color: #C084FC; border: 1px solid rgba(168, 85, 247, 0.4); }
+        .dd-status-delivered { background: rgba(99, 102, 241, 0.15); color: #818CF8; border: 1px solid rgba(99, 102, 241, 0.4); }
+        .dd-status-on_hold { background: rgba(249, 115, 22, 0.15); color: #FB923C; border: 1px solid rgba(249, 115, 22, 0.4); }
+        .dd-status-cancelled { background: rgba(239, 68, 68, 0.15); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.4); }
 
         /* Stepper progress */
         .dd-step-bar {
@@ -45,47 +77,63 @@
             align-items: center;
             justify-content: space-between;
             position: relative;
-            margin: 20px 0 30px;
+            margin: 24px 0 32px;
         }
+
         .dd-step-item {
             text-align: center;
             flex: 1;
             position: relative;
             z-index: 1;
         }
+
         .dd-step-icon {
-            width: 44px;
-            height: 44px;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
-            background: #F1F5F9;
-            color: #64748B;
+            background: var(--dd-inner-bg);
+            color: var(--dd-text-sub);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             font-size: 18px;
             margin-bottom: 8px;
-            border: 2px solid #CBD5E1;
+            border: 2px solid var(--dd-card-border);
             transition: all 0.3s ease;
         }
+
         .dd-step-item.completed .dd-step-icon {
-            background: var(--dd-teal);
+            background: #22C55E;
             color: #FFFFFF;
-            border-color: var(--dd-teal);
+            border-color: #22C55E;
         }
+
         .dd-step-item.active .dd-step-icon {
-            background: #FFFFFF;
-            color: var(--dd-teal);
-            border-color: var(--dd-teal);
-            box-shadow: 0 0 0 4px var(--dd-teal-light);
+            background: var(--dd-gold);
+            color: #03111F;
+            border-color: var(--dd-gold);
+            box-shadow: 0 0 0 4px var(--dd-gold-light);
         }
+
         .dd-step-label {
             font-size: 12px;
             font-weight: 700;
-            color: #64748B;
+            color: var(--dd-text-sub);
         }
-        .dd-step-item.completed .dd-step-label,
+
+        .dd-step-item.completed .dd-step-label {
+            color: var(--dd-text-title);
+        }
+
         .dd-step-item.active .dd-step-label {
-            color: #0F172A;
+            color: var(--dd-gold);
+        }
+
+        .dd-info-tile {
+            background: var(--dd-inner-bg);
+            border: 1px solid var(--dd-card-border);
+            border-radius: 12px;
+            padding: 14px 16px;
         }
     </style>
 @endpush
@@ -104,22 +152,25 @@
         {{-- Left Column: Summary & Progress --}}
         <div class="col-lg-8">
             {{-- Header Card --}}
-            <div class="dd-card p-4">
-                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 border-bottom pb-3 mb-4">
+            <div class="dd-portal-card p-4 p-md-5">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 border-bottom pb-4 mb-4" style="border-color: var(--dd-card-border) !important;">
                     <div>
-                        <span class="text-muted small d-block">{{ __('ORDER NUMBER') }}</span>
-                        <h3 class="mb-0 fw-bold text-dark">{{ orderPrefix() . $order->id }}</h3>
+                        <span class="dd-portal-sub text-uppercase fw-bold d-block mb-1" style="font-size: 11px; letter-spacing: 0.8px;">{{ __('ORDER NUMBER') }}</span>
+                        <h3 class="mb-0 fw-bold dd-portal-title" style="font-family: 'JetBrains Mono', monospace; color: var(--dd-gold);">{{ orderPrefix() . $order->id }}</h3>
                     </div>
                     <div>
-                        @php $badgeClass = 'dd-badge-' . ($order->status ?? 'pending'); @endphp
-                        <span class="dd-badge {{ $badgeClass }}">
+                        @php
+                            $statusKey = $order->status ?? 'pending';
+                            $badgeClass = 'dd-status-' . $statusKey;
+                        @endphp
+                        <span class="dd-status-badge {{ $badgeClass }}">
                             {{ $statuses[$order->status] ?? ucwords(str_replace('_', ' ', $order->status)) }}
                         </span>
                     </div>
                 </div>
 
                 {{-- Status Stepper Timeline --}}
-                <h6 class="fw-bold mb-3">{{ __('Order Status Progression') }}</h6>
+                <h6 class="fw-bold mb-3 dd-portal-title">{{ __('Order Status Progression') }}</h6>
                 <div class="dd-step-bar">
                     @foreach (['pending' => 'Placed', 'in_progress' => 'In Stitching', 'ready_for_delivery' => 'Ready', 'delivered' => 'Delivered'] as $stepKey => $stepTitle)
                         @php
@@ -147,104 +198,91 @@
                 </div>
 
                 {{-- Garment Details Grid --}}
-                <h6 class="fw-bold mb-3 border-top pt-4">{{ __('Garment Specifications') }}</h6>
+                <h6 class="fw-bold mb-3 border-top pt-4 dd-portal-title" style="border-color: var(--dd-card-border) !important;">{{ __('Garment Specifications') }}</h6>
                 <div class="row g-3">
                     <div class="col-sm-6 col-md-4">
-                        <div class="p-3 bg-light rounded-3">
-                            <span class="text-muted small d-block">{{ __('Cloth / Garment Type') }}</span>
-                            <strong class="text-dark">{{ $order->clothTypes->title ?? $order->clothTypes->name ?? '-' }}</strong>
+                        <div class="dd-info-tile">
+                            <span class="dd-portal-sub small d-block mb-1">{{ __('Cloth / Garment Type') }}</span>
+                            <strong class="dd-portal-title">{{ $order->clothTypes->title ?? $order->clothTypes->name ?? '-' }}</strong>
                         </div>
                     </div>
                     <div class="col-sm-6 col-md-4">
-                        <div class="p-3 bg-light rounded-3">
-                            <span class="text-muted small d-block">{{ __('Gender') }}</span>
-                            <strong class="text-dark">{{ ucfirst($order->gender ?? '-') }}</strong>
+                        <div class="dd-info-tile">
+                            <span class="dd-portal-sub small d-block mb-1">{{ __('Gender') }}</span>
+                            <strong class="dd-portal-title">{{ ucfirst($order->gender ?? '-') }}</strong>
                         </div>
                     </div>
                     <div class="col-sm-6 col-md-4">
-                        <div class="p-3 bg-light rounded-3">
-                            <span class="text-muted small d-block">{{ __('Quantity') }}</span>
-                            <strong class="text-dark">{{ $order->quantity ?? 1 }} {{ __('Pcs') }}</strong>
+                        <div class="dd-info-tile">
+                            <span class="dd-portal-sub small d-block mb-1">{{ __('Fabric') }}</span>
+                            <strong class="dd-portal-title">{{ $order->febric ?? '-' }}</strong>
                         </div>
                     </div>
                     <div class="col-sm-6 col-md-4">
-                        <div class="p-3 bg-light rounded-3">
-                            <span class="text-muted small d-block">{{ __('Fabric Type') }}</span>
-                            <strong class="text-dark">{{ $order->febric ?? '-' }}</strong>
+                        <div class="dd-info-tile">
+                            <span class="dd-portal-sub small d-block mb-1">{{ __('Fabric Color') }}</span>
+                            <strong class="dd-portal-title">{{ $order->febric_color ?? '-' }}</strong>
                         </div>
                     </div>
                     <div class="col-sm-6 col-md-4">
-                        <div class="p-3 bg-light rounded-3">
-                            <span class="text-muted small d-block">{{ __('Fabric Color') }}</span>
-                            <strong class="text-dark">{{ $order->febric_color ?? '-' }}</strong>
+                        <div class="dd-info-tile">
+                            <span class="dd-portal-sub small d-block mb-1">{{ __('Booking Date') }}</span>
+                            <strong class="dd-portal-title">{{ $order->order_date ? \Carbon\Carbon::parse($order->order_date)->format('M d, Y') : '-' }}</strong>
                         </div>
                     </div>
                     <div class="col-sm-6 col-md-4">
-                        <div class="p-3 bg-light rounded-3">
-                            <span class="text-muted small d-block">{{ __('Assigned Master Tailor') }}</span>
-                            <strong class="text-dark">{{ $order->users->name ?? 'Artisan Team' }}</strong>
+                        <div class="dd-info-tile">
+                            <span class="dd-portal-sub small d-block mb-1">{{ __('Estimated Delivery') }}</span>
+                            <strong class="dd-portal-title" style="color: var(--dd-gold);">{{ $order->deadline_date ? \Carbon\Carbon::parse($order->deadline_date)->format('M d, Y') : '-' }}</strong>
                         </div>
                     </div>
                 </div>
 
-                @if(!empty($order->notes))
-                    <div class="mt-4 p-3 border rounded-3 bg-light-warning">
-                        <h6 class="fw-bold text-warning mb-1"><i class="ti ti-note me-1"></i> {{ __('Special Instructions / Notes') }}</h6>
-                        <p class="mb-0 text-dark small">{{ $order->notes }}</p>
+                {{-- Special Instructions / Notes --}}
+                @if(!empty($order->special_instructions) || !empty($order->notes))
+                    <div class="mt-4 pt-3 border-top" style="border-color: var(--dd-card-border) !important;">
+                        <h6 class="fw-bold dd-portal-title mb-2">{{ __('Special Instructions & Styling Notes') }}</h6>
+                        <div class="dd-info-tile">
+                            <p class="mb-0 dd-portal-sub">{{ $order->special_instructions ?? $order->notes }}</p>
+                        </div>
                     </div>
                 @endif
             </div>
-
-            {{-- Measurement Section --}}
-            @if(!empty($order->measurement) && is_array($order->measurement))
-                <div class="dd-card p-4">
-                    <h6 class="fw-bold mb-3"><i class="ti ti-ruler-2 me-1" style="color: var(--dd-teal);"></i> {{ __('Applied Garment Measurements') }}</h6>
-                    <div class="row g-2">
-                        @foreach($order->measurement as $mKey => $mValue)
-                            @if(!empty($mValue))
-                                <div class="col-sm-4 col-6">
-                                    <div class="border rounded p-2 text-center bg-light">
-                                        <span class="text-muted d-block" style="font-size: 11px; text-transform: uppercase;">{{ ucwords(str_replace('_', ' ', $mKey)) }}</span>
-                                        <strong class="text-dark fs-6">{{ $mValue }}</strong>
-                                    </div>
-                                </div>
-                            @endif
-                        @endforeach
-                    </div>
-                </div>
-            @endif
         </div>
 
-        {{-- Right Column: Key Dates & Receipt Link --}}
+        {{-- Right Column: Studio Atelier & Invoice Links --}}
         <div class="col-lg-4">
-            <div class="dd-card p-4">
-                <h6 class="fw-bold mb-3">{{ __('Order Metadata') }}</h6>
-                <ul class="list-group list-group-flush mb-4">
-                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                        <span class="text-muted">{{ __('Booking Date') }}</span>
-                        <strong class="text-dark">{{ $order->order_date ? \Carbon\Carbon::parse($order->order_date)->format('M d, Y') : '-' }}</strong>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                        <span class="text-muted">{{ __('Delivery Deadline') }}</span>
-                        <strong class="text-dark">{{ $order->deadline_date ? \Carbon\Carbon::parse($order->deadline_date)->format('M d, Y') : '-' }}</strong>
-                    </li>
-                </ul>
-
-                @if($order->tracking_token)
-                    <div class="d-grid gap-2 mb-3">
-                        <a href="{{ route('track.order', $order->tracking_token) }}" target="_blank" class="btn btn-outline-primary">
-                            <i class="ti ti-external-link me-1"></i> {{ __('Public Tracking Page') }}
-                        </a>
-                        <a href="{{ route('order.public.qr-receipt', $order->tracking_token) }}" target="_blank" class="btn btn-primary" style="background: var(--dd-teal); border-color: var(--dd-teal);">
-                            <i class="ti ti-qrcode me-1"></i> {{ __('Digital QR Receipt') }}
-                        </a>
+            <div class="dd-portal-card p-4">
+                <h5 class="fw-bold mb-3 dd-portal-title">{{ __('Atelier Studio') }}</h5>
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="rounded-circle p-2 d-flex align-items-center justify-content-center" style="background: var(--dd-gold-light); width: 44px; height: 44px; border: 1px solid rgba(217, 164, 65, 0.4);">
+                        <i class="ti ti-building-store fs-4" style="color: var(--dd-gold);"></i>
                     </div>
-                @endif
-
-                <a href="{{ route('customer.orders') }}" class="btn btn-light w-100 mt-2">
-                    <i class="ti ti-arrow-left me-1"></i> {{ __('Back to My Orders') }}
-                </a>
+                    <div>
+                        <h6 class="fw-bold mb-0 dd-portal-title">{{ $order->shop->shop_name ?? __('DarziDesk Atelier') }}</h6>
+                        <small class="dd-portal-sub">{{ $order->shop->address ?? __('Bespoke Custom Fitting') }}</small>
+                    </div>
+                </div>
             </div>
+
+            @if($order->invoices)
+                <div class="dd-portal-card p-4">
+                    <h5 class="fw-bold mb-3 dd-portal-title">{{ __('Associated Invoice') }}</h5>
+                    <div class="dd-info-tile mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="dd-portal-sub small">{{ __('Invoice #') }}</span>
+                            <span class="fw-bold" style="font-family: 'JetBrains Mono', monospace; color: var(--dd-gold);">{{ invoicePrefix() . $order->invoices->invoice_id }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="dd-portal-sub small">{{ __('Total Amount') }}</span>
+                            <strong class="dd-portal-title">{{ priceFormat($order->invoices->getInvoiceTotalAmount()) }}</strong>
+                        </div>
+                    </div>
+                    <a href="{{ route('customer.invoices.show', $order->invoices->id) }}" class="btn w-100" style="background: var(--dd-gold); color: #03111F; font-weight: 700; border-radius: 10px;">
+                        <i class="ti ti-receipt me-1"></i> {{ __('View Invoice Receipt') }}
+                    </a>
+                </div>
+            @endif
         </div>
     </div>
 @endsection

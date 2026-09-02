@@ -54,7 +54,7 @@
     @else
         <link rel="stylesheet" id="Pstylesheet" href="{{ asset('assets/css/style-preset.css') }}" />
     @endif
-    <link href="{{ asset('css/custom.css') }} " rel="stylesheet">
+    <link href="{{ asset('css/custom.css') }}?v={{ filemtime(public_path('css/custom.css')) }}" rel="stylesheet">
 </head>
 
 <body

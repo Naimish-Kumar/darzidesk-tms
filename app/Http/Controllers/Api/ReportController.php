@@ -17,16 +17,33 @@ class ReportController extends Controller
     {
         $year = $request->input('year', now()->year);
 
-        $expenses = Expense::select(
-            DB::raw('MONTH(date) as month'),
-            DB::raw('SUM(amount) as total_expense')
-        )
-            ->where('parent_id', parentId())
-            ->whereYear('date', $year)
-            ->groupBy(DB::raw('MONTH(date)'))
-            ->orderBy('month')
-            ->get()
-            ->keyBy('month');
+        $driver = DB::connection()->getDriverName();
+        if ($driver === 'sqlite') {
+            $expenses = Expense::select(
+                DB::raw("strftime('%m', date) as month"),
+                DB::raw('SUM(amount) as total_expense')
+            )
+                ->where('parent_id', parentId())
+                ->whereYear('date', $year)
+                ->groupBy(DB::raw("strftime('%m', date)"))
+                ->orderBy('month')
+                ->get();
+            $expenses = $expenses->map(function($item) {
+                $item->month = (int)$item->month;
+                return $item;
+            })->keyBy('month');
+        } else {
+            $expenses = Expense::select(
+                DB::raw('MONTH(date) as month'),
+                DB::raw('SUM(amount) as total_expense')
+            )
+                ->where('parent_id', parentId())
+                ->whereYear('date', $year)
+                ->groupBy(DB::raw('MONTH(date)'))
+                ->orderBy('month')
+                ->get()
+                ->keyBy('month');
+        }
 
         $invoiceGroups = Invoice::where('parent_id', parentId())
             ->whereYear('invoice_date', $year)
