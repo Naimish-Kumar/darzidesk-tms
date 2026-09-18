@@ -70,6 +70,27 @@ Route::get('/track-order/{token?}', [\App\Http\Controllers\PublicOrderTrackingCo
 Route::post('/track-order/search', [\App\Http\Controllers\PublicOrderTrackingController::class, 'search'])->name('track.order.search');
 Route::get('/order/track/{token}', [\App\Http\Controllers\PublicOrderTrackingController::class, 'track'])->name('order.public.track');
 Route::get('/order/qr-receipt/{token}', [\App\Http\Controllers\PublicOrderTrackingController::class, 'qrReceipt'])->name('order.public.qr-receipt');
+// Public Pricing & Demo Lead Generation Routes
+Route::get('/pricing', [\App\Http\Controllers\LandingSegmentController::class, 'pricing'])->name('pricing.public');
+Route::post('/book-demo', [\App\Http\Controllers\DemoRequestController::class, 'store'])->name('demo.store');
+
+// Dedicated Segment SEO Landing Pages
+$segmentSlugs = [
+    'tailoring-shop-management-software',
+    'boutique-management-software',
+    'ladies-tailor-management-software',
+    'mens-tailor-management-software',
+    'tailor-measurement-management',
+    'tailoring-billing-software',
+    'tailoring-order-management',
+    'tailoring-software-india'
+];
+foreach ($segmentSlugs as $segSlug) {
+    Route::get('/' . $segSlug, function () use ($segSlug) {
+        return app(\App\Http\Controllers\LandingSegmentController::class)->showSegment($segSlug);
+    })->name('landing.segment.' . str_replace('-', '.', $segSlug));
+}
+
 Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index']);
 
 Route::get('home', [HomeController::class, 'index'])->name('home')->middleware(

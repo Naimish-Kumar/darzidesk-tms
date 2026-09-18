@@ -1,797 +1,1295 @@
 <!DOCTYPE html>
 <html class="scroll-smooth" lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>DarziDesk | High-End Bespoke Tailoring Marketplace & TMS</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>DarziDesk | Tailoring Shop Management Software in India</title>
+    <meta name="title" content="DarziDesk | Tailoring Shop Management Software in India"/>
+    <meta name="description" content="Manage your tailoring business with DarziDesk. Track customers, measurements, orders, payments, workers and inventory from one simple tailoring management platform."/>
+    <meta name="keywords" content="tailoring management software India, tailor shop management app, boutique management software, tailoring billing software, tailor order management, tailor measurement software, tailoring business app, ladies tailor software, garment workshop management"/>
+    
+    <!-- OpenGraph / Social Meta Tags -->
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="{{ url()->current() }}"/>
+    <meta property="og:title" content="DarziDesk | Tailoring Shop Management Software in India"/>
+    <meta property="og:description" content="Manage your tailoring business with DarziDesk. Track customers, measurements, orders, payments, workers and inventory from one simple tailoring management platform."/>
+    <meta property="og:image" content="{{ asset('assets/images/logo_wide.png') }}"/>
+
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "DarziDesk TMS",
+      "operatingSystem": "Android, iOS, Web",
+      "applicationCategory": "BusinessApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "INR"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "1450"
+      },
+      "description": "All-in-one tailoring shop and boutique management software for tracking measurements, orders, karigars, and POS billing."
+    }
+    </script>
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ url()->current() }}"/>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}"/>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}"/>
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon.png') }}"/>
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}"/>
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+
+    <!-- Tailwind CSS & Fonts -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
         theme: {
           extend: {
-            "colors": {
-                    "primary": "#D9A441",
-                    "primary-container": "#F4C861",
-                    "on-primary": "#03111F",
-                    "on-primary-fixed-variant": "#00504e",
-                    "secondary-fixed-dim": "#b7caca",
-                    "invoice-unpaid": "#ef4444",
-                    "surface-container-low": "#07192A",
-                    "production-pending": "#94a3b8",
-                    "on-background": "#FFFFFF",
-                    "outline-variant": "#29435D",
-                    "tertiary-fixed-dim": "#b8cac9",
-                    "secondary-fixed": "#d3e6e6",
-                    "background": "#03111F",
-                    "on-primary-container": "#03111F",
-                    "secondary": "#F4C861",
-                    "on-surface-variant": "#D8E0E8",
-                    "primary-fixed": "#F4C861",
-                    "on-primary-fixed": "#03111F",
-                    "surface": "#0B2239",
-                    "alert-low-stock": "#F59E0B",
-                    "tertiary-container": "#92a3a2",
-                    "on-surface": "#FFFFFF",
-                    "inverse-on-surface": "#03111F",
-                    "surface-dim": "#0B2239",
-                    "error": "#ef4444",
-                    "on-tertiary-fixed": "#0e1e1e",
-                    "on-secondary": "#03111F",
-                    "on-tertiary-container": "#2a3a39",
-                    "surface-bright": "#03111F",
-                    "on-tertiary-fixed-variant": "#3a4a49",
-                    "inverse-primary": "#F4C861",
-                    "surface-background": "#03111F",
-                    "surface-tint": "#D9A441",
-                    "inverse-surface": "#0B2239",
-                    "on-secondary-fixed": "#0d1e1e",
-                    "surface-container": "#0B2239",
-                    "tertiary": "#516161",
-                    "surface-container-highest": "#102B45",
-                    "surface-variant": "#102B45",
-                    "surface-container-high": "#102B45",
-                    "outline": "#29435D",
-                    "on-secondary-fixed-variant": "#394a4a",
-                    "on-secondary-container": "#F4C861",
-                    "on-error": "#ffffff",
-                    "secondary-container": "rgba(217, 164, 65, 0.15)",
-                    "production-stitching": "#8b5cf6",
-                    "error-container": "#ffdad6",
-                    "tertiary-fixed": "#d4e6e5",
-                    "production-cutting": "#3b82f6",
-                    "on-tertiary": "#ffffff",
-                    "on-error-container": "#93000a",
-                    "surface-container-lowest": "#03111F",
-                    "primary-fixed-dim": "#F4C861",
-                    "production-ready": "#10b981"
+            colors: {
+              primary: "#E5A93C",
+              "primary-hover": "#F5BE58",
+              "primary-muted": "rgba(229, 169, 60, 0.12)",
+              "on-primary": "#050B14",
+              background: "#050B14",
+              surface: "#0A1424",
+              "surface-card": "#0E1C30",
+              "surface-hover": "#13253E",
+              "surface-border": "rgba(255, 255, 255, 0.08)",
+              "surface-border-subtle": "rgba(229, 169, 60, 0.25)",
+              "on-surface": "#F8FAFC",
+              "on-surface-variant": "#94A3B8",
+              "on-surface-muted": "#64748B"
             },
-            "borderRadius": {
-                    "DEFAULT": "0.25rem",
-                    "lg": "0.5rem",
-                    "xl": "0.75rem",
-                    "full": "9999px"
-            },
-            "spacing": {
-                    "gutter": "24px",
-                    "container-max": "1440px",
-                    "stack-xs": "4px",
-                    "stack-md": "16px",
-                    "margin-tablet": "32px",
-                    "stack-xl": "48px",
-                    "stack-lg": "24px",
-                    "margin-desktop": "64px",
-                    "stack-sm": "8px"
-            },
-            "fontFamily": {
-                    "headline-md": ["Hanken Grotesk"],
-                    "headline-lg": ["Hanken Grotesk"],
-                    "body-md": ["Hanken Grotesk"],
-                    "display-md": ["Hanken Grotesk"],
-                    "title-lg": ["Hanken Grotesk"],
-                    "data-mono": ["JetBrains Mono"],
-                    "display-lg": ["Hanken Grotesk"],
-                    "title-md": ["Hanken Grotesk"],
-                    "label-md": ["Hanken Grotesk"],
-                    "body-sm": ["Hanken Grotesk"],
-                    "body-lg": ["Hanken Grotesk"]
-            },
-            "fontSize": {
-                    "headline-md": ["2rem", { "lineHeight": "2.5rem" }],
-                    "body-sm": ["0.875rem", { "lineHeight": "1.25rem" }],
-                    "display-lg": ["3.5rem", { "lineHeight": "4rem" }],
-                    "display-md": ["2.75rem", { "lineHeight": "3.25rem" }],
-                    "title-md": ["1rem", { "lineHeight": "1.5rem" }],
-                    "title-lg": ["1.25rem", { "lineHeight": "1.75rem" }],
-                    "label-md": ["0.75rem", { "lineHeight": "1rem" }],
-                    "body-md": ["1rem", { "lineHeight": "1.5rem" }],
-                    "body-lg": ["1.125rem", { "lineHeight": "1.75rem" }],
-                    "headline-lg": ["2.25rem", { "lineHeight": "2.75rem" }]
+            fontFamily: {
+              sans: ["Plus Jakarta Sans", "system-ui", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"]
             }
           }
         }
       }
     </script>
+
     <style>
-        .hero-gradient {
-            background: linear-gradient(to right, rgba(3, 17, 31, 0.95), rgba(3, 17, 31, 0.75));
+        .hero-mesh {
+            background-image: radial-gradient(at 50% 0%, rgba(229, 169, 60, 0.12) 0px, transparent 60%),
+                              radial-gradient(at 100% 100%, rgba(14, 28, 48, 0.5) 0px, transparent 50%);
         }
-        .glass-card {
-            background: rgba(11, 34, 57, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(41, 67, 93, 0.6);
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FFFDF8 0%, #F5D38A 45%, #E5A93C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .luxury-card {
-            background: linear-gradient(145deg, #0B2239 0%, #07192A 100%);
-            border: 1px solid #29435D;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+        .btn-gold {
+            background: linear-gradient(135deg, #E5A93C 0%, #C88E28 100%);
+            color: #050B14;
+            font-weight: 700;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 18px rgba(229, 169, 60, 0.25);
         }
-        .luxury-card:hover {
-            border-color: #D9A441;
-            box-shadow: 0 20px 40px -10px rgba(217, 164, 65, 0.25);
-            transform: translateY(-6px);
+        .btn-gold:hover {
+            background: linear-gradient(135deg, #F5BE58 0%, #E5A93C 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(229, 169, 60, 0.38);
+        }
+        .btn-outline-gold {
+            border: 1px solid rgba(229, 169, 60, 0.4);
+            color: #F5BE58;
+            font-weight: 600;
+            transition: all 0.25s ease;
+        }
+        .btn-outline-gold:hover {
+            background: rgba(229, 169, 60, 0.08);
+            border-color: #E5A93C;
+            color: #FFFFFF;
+        }
+        .glass-header {
+            background: rgba(5, 11, 20, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .tab-btn.active {
+            background-color: #E5A93C;
+            color: #050B14;
+            font-weight: 700;
+        }
+        .card-modern {
+            background: #0A1424;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .card-modern:hover {
+            border-color: rgba(229, 169, 60, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.5);
+        }
+        .whatsapp-float {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 99;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.35);
         }
     </style>
-    <link href="{{ asset('css/custom.css') }}?v={{ file_exists(public_path('css/custom.css')) ? filemtime(public_path('css/custom.css')) : time() }}" rel="stylesheet">
 </head>
-<body class="bg-background text-on-surface font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<body class="bg-background text-on-surface font-sans antialiased selection:bg-primary selection:text-on-primary">
 
-<!-- Navigation Bar -->
-<header class="fixed top-0 w-full bg-background/90 backdrop-blur-md border-b border-outline-variant/60 shadow-lg z-50">
-<nav class="flex justify-between items-center px-gutter py-4 w-full max-w-container-max mx-auto">
-<div class="flex items-center gap-stack-xl">
-<a href="{{ route('home') }}">
-    <img src="{{ asset('assets/images/logo_wide.png') }}" alt="DarziDesk" style="height: 42px; width: auto; max-width: 220px; object-fit: contain;">
-</a>
-<div class="hidden lg:flex items-center gap-6">
-<a class="text-on-surface-variant font-title-md hover:text-primary transition-colors" href="{{ route('home') }}">Home</a>
-<a class="text-on-surface-variant font-title-md hover:text-primary transition-colors" href="{{ route('about.us') }}">About Us</a>
-<a class="text-on-surface-variant font-title-md hover:text-primary transition-colors" href="{{ route('privacy.policy') }}">Privacy Policy</a>
-<a class="text-on-surface-variant font-title-md hover:text-primary transition-colors" href="{{ route('terms.conditions') }}">Terms & Services</a>
-<a class="text-on-surface-variant font-title-md hover:text-primary transition-colors" href="{{ route('blog.index') }}">Blog</a>
-@php
-    $dynamicHeaderPages = \App\Models\Page::where('enabled', 1)->get();
-@endphp
-@foreach($dynamicHeaderPages as $dynHeaderPage)
-    @if(!in_array($dynHeaderPage->slug, ['about_us', 'privacy_policy', 'terms_conditions', 'delete_account']))
-        <a class="text-on-surface-variant font-title-md hover:text-primary transition-colors" href="{{ route('page', $dynHeaderPage->slug) }}">{{ $dynHeaderPage->title }}</a>
+    <!-- WhatsApp Floating Action Button -->
+    <a href="https://wa.me/919536824061?text=Hi%20DarziDesk%20Team%2C%20I%20want%20to%20book%20a%20free%20demo%20for%20my%20tailoring%20shop." target="_blank" aria-label="Chat with DarziDesk on WhatsApp" class="whatsapp-float bg-[#25D366] text-white p-3.5 md:px-5 md:py-3.5 rounded-full flex items-center gap-2.5 hover:bg-[#20ba59] transition-all font-bold text-sm">
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+        <span class="hidden md:inline">WhatsApp Us</span>
+    </a>
+
+    <!-- Navigation Bar -->
+    <header class="fixed top-0 w-full glass-header z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex justify-between items-center">
+            <div class="flex items-center gap-8">
+                <a href="{{ route('home') }}" class="flex items-center gap-3">
+                    <img src="{{ asset('assets/images/logo_wide.png') }}" alt="DarziDesk" class="h-9 w-auto max-w-[190px] object-contain">
+                </a>
+                <div class="hidden lg:flex items-center gap-6">
+                    <a class="text-on-surface-variant hover:text-primary transition-colors text-sm font-medium" href="#features">Features</a>
+                    <a class="text-on-surface-variant hover:text-primary transition-colors text-sm font-medium" href="#who-its-for">Solutions</a>
+                    <a class="text-on-surface-variant hover:text-primary transition-colors text-sm font-medium" href="#how-it-works">How It Works</a>
+                    <a class="text-on-surface-variant hover:text-primary transition-colors text-sm font-medium" href="#comparison">Comparison</a>
+                    <a class="text-on-surface-variant hover:text-primary transition-colors text-sm font-medium" href="{{ route('pricing.public') }}">Pricing</a>
+                    <a class="text-on-surface-variant hover:text-primary transition-colors text-sm font-medium" href="{{ route('blog.index') }}">Blog</a>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <a href="{{ route('login') }}" class="hidden sm:inline-flex px-4 py-2 rounded-xl text-sm font-semibold text-on-surface hover:text-primary transition-colors">Login</a>
+                <a href="{{ route('register') }}" class="btn-gold px-4 py-2 rounded-xl text-sm font-bold">Start Free Trial</a>
+                <!-- Mobile Hamburger -->
+                <button onclick="document.getElementById('mobile-nav').classList.toggle('hidden')" class="lg:hidden p-2 rounded-xl text-on-surface hover:text-primary transition-colors" aria-label="Toggle navigation menu">
+                    <span class="material-symbols-outlined text-2xl">menu</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobile-nav" class="hidden lg:hidden bg-surface border-t border-white/[0.06]">
+            <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
+                <a href="#features" onclick="document.getElementById('mobile-nav').classList.add('hidden')" class="py-3 px-4 rounded-xl text-sm font-medium text-on-surface-variant hover:text-primary hover:bg-white/[0.04] transition-all">Features</a>
+                <a href="#who-its-for" onclick="document.getElementById('mobile-nav').classList.add('hidden')" class="py-3 px-4 rounded-xl text-sm font-medium text-on-surface-variant hover:text-primary hover:bg-white/[0.04] transition-all">Solutions</a>
+                <a href="#how-it-works" onclick="document.getElementById('mobile-nav').classList.add('hidden')" class="py-3 px-4 rounded-xl text-sm font-medium text-on-surface-variant hover:text-primary hover:bg-white/[0.04] transition-all">How It Works</a>
+                <a href="#comparison" onclick="document.getElementById('mobile-nav').classList.add('hidden')" class="py-3 px-4 rounded-xl text-sm font-medium text-on-surface-variant hover:text-primary hover:bg-white/[0.04] transition-all">Comparison</a>
+                <a href="{{ route('pricing.public') }}" class="py-3 px-4 rounded-xl text-sm font-medium text-on-surface-variant hover:text-primary hover:bg-white/[0.04] transition-all">Pricing</a>
+                <a href="{{ route('blog.index') }}" class="py-3 px-4 rounded-xl text-sm font-medium text-on-surface-variant hover:text-primary hover:bg-white/[0.04] transition-all">Blog</a>
+                <a href="{{ route('about.us') }}" class="py-3 px-4 rounded-xl text-sm font-medium text-on-surface-variant hover:text-primary hover:bg-white/[0.04] transition-all">About Us</a>
+                <div class="border-t border-white/[0.06] mt-2 pt-3 flex flex-col gap-2">
+                    <a href="{{ route('login') }}" class="py-3 px-4 rounded-xl text-sm font-semibold text-on-surface text-center border border-white/[0.1] hover:border-primary/40 transition-all">Login</a>
+                    <a href="{{ route('register') }}" class="btn-gold py-3 px-4 rounded-xl text-sm font-bold text-center">Start Free Trial</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-20">
+
+        <!-- 1. HERO SECTION -->
+        <section class="relative hero-mesh pt-16 pb-20 lg:pt-24 lg:pb-28 border-b border-white/[0.06] overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+                
+                <!-- Trust Badge -->
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] mb-6">
+                    <span class="material-symbols-outlined text-primary text-base">verified</span>
+                    <span class="text-xs uppercase tracking-widest text-on-surface-variant font-semibold">Tailor Management System (TMS)</span>
+                </div>
+
+                <!-- H1 & Headlines -->
+                <h1 class="text-xs uppercase tracking-widest text-on-surface-muted font-bold mb-3">
+                    Tailoring Shop Management Software for Modern Businesses
+                </h1>
+                <p class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight max-w-4xl tracking-tight mb-6">
+                    Run Your Tailoring Business <span class="gold-gradient-text">Smarter</span>
+                </p>
+                <p class="text-base sm:text-lg text-on-surface-variant max-w-2xl mx-auto leading-relaxed mb-8">
+                    Manage customers, measurements, orders, payments, workers and inventory from one simple platform built for modern tailoring businesses.
+                </p>
+
+                <!-- Action CTAs -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto mb-12">
+                    <a href="{{ route('register') }}" class="btn-gold px-8 py-3.5 rounded-xl text-center text-sm font-bold w-full sm:w-auto flex items-center justify-center gap-2">
+                        <span>Start 14-Day Free Trial</span>
+                        <span class="material-symbols-outlined text-base">arrow_forward</span>
+                    </a>
+                    <button onclick="document.getElementById('demo-modal').classList.remove('hidden')" class="btn-outline-gold px-8 py-3.5 rounded-xl text-center text-sm font-semibold w-full sm:w-auto flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-base">calendar_month</span>
+                        <span>Book a Free Demo</span>
+                    </button>
+                    <a href="https://wa.me/919536824061?text=Hi%20DarziDesk%2C%20please%20send%20me%20a%20quick%20demo%20on%20WhatsApp" target="_blank" class="px-6 py-3.5 rounded-xl bg-white/[0.04] border border-white/[0.1] text-white text-sm font-semibold hover:bg-white/[0.08] transition-all flex items-center justify-center gap-2 w-full sm:w-auto">
+                        <span class="material-symbols-outlined text-emerald-400 text-base">chat</span>
+                        <span>Chat on WhatsApp</span>
+                    </a>
+                </div>
+
+                <!-- Verified SaaS Metrics Bar -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl w-full pt-8 border-t border-white/[0.06] text-center">
+                    <div>
+                        <p class="text-2xl sm:text-3xl font-black text-white">100%</p>
+                        <p class="text-xs text-on-surface-variant mt-1">Cloud Data Security</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl sm:text-3xl font-black text-white">Android & iOS</p>
+                        <p class="text-xs text-on-surface-variant mt-1">Native Mobile Apps</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl sm:text-3xl font-black text-white">Zero</p>
+                        <p class="text-xs text-on-surface-variant mt-1">Lost Measurements</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl sm:text-3xl font-black text-white">10x</p>
+                        <p class="text-xs text-on-surface-variant mt-1">Faster Order Search</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 2. REAL APP SCREENSHOTS & INTERACTIVE DEMO SHOWCASE -->
+        <section class="py-20 bg-surface border-b border-white/[0.06]" id="product-demo">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-10">
+                    <span class="text-primary font-bold text-xs uppercase tracking-widest block mb-2">Live Software Interface</span>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold text-white">See DarziDesk in Action</h2>
+                    <p class="text-sm text-on-surface-variant mt-2">Clean, high-performance interface built for speed on mobile and desktop.</p>
+                </div>
+
+                <!-- Interactive Tab Selectors -->
+                <div class="flex flex-wrap justify-center gap-2 mb-8" id="app-tabs">
+                    <button onclick="switchTab('dashboard')" class="tab-btn active px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold border border-white/[0.08] bg-surface-card text-on-surface hover:border-primary/40 transition-all flex items-center gap-2" data-tab="dashboard">
+                        <span class="material-symbols-outlined text-base">dashboard</span>
+                        <span>Dashboard</span>
+                    </button>
+                    <button onclick="switchTab('customers')" class="tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold border border-white/[0.08] bg-surface-card text-on-surface hover:border-primary/40 transition-all flex items-center gap-2" data-tab="customers">
+                        <span class="material-symbols-outlined text-base">person</span>
+                        <span>Measurements</span>
+                    </button>
+                    <button onclick="switchTab('orders')" class="tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold border border-white/[0.08] bg-surface-card text-on-surface hover:border-primary/40 transition-all flex items-center gap-2" data-tab="orders">
+                        <span class="material-symbols-outlined text-base">receipt_long</span>
+                        <span>Order Booking</span>
+                    </button>
+                    <button onclick="switchTab('kanban')" class="tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold border border-white/[0.08] bg-surface-card text-on-surface hover:border-primary/40 transition-all flex items-center gap-2" data-tab="kanban">
+                        <span class="material-symbols-outlined text-base">view_kanban</span>
+                        <span>Production Kanban</span>
+                    </button>
+                    <button onclick="switchTab('invoicing')" class="tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold border border-white/[0.08] bg-surface-card text-on-surface hover:border-primary/40 transition-all flex items-center gap-2" data-tab="invoicing">
+                        <span class="material-symbols-outlined text-base">point_of_sale</span>
+                        <span>POS Invoicing</span>
+                    </button>
+                </div>
+
+                <!-- Showcase Frame -->
+                <div class="bg-surface-card rounded-2xl p-6 sm:p-10 border border-white/[0.08] shadow-2xl max-w-5xl mx-auto">
+                    
+                    <!-- Tab: Dashboard -->
+                    <div id="tab-content-dashboard" class="tab-content block">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center">
+                            <div class="md:col-span-6 lg:col-span-7 flex flex-col gap-4 text-left">
+                                <span class="text-xs font-bold text-primary uppercase tracking-wider">Store Executive Overview</span>
+                                <h3 class="text-xl sm:text-2xl font-bold text-white">Daily Orders, Revenue & Pending Deliveries at a Glance</h3>
+                                <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+                                    Know exactly how many garments need to be delivered today, total monthly earnings, active workshop orders, and overdue alerts.
+                                </p>
+                                <ul class="space-y-2.5 text-xs text-white">
+                                    <li class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary text-base">check</span>
+                                        <span>Today's delivery countdown alerts</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary text-base">check</span>
+                                        <span>Daily cash and UPI sales tally</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary text-base">check</span>
+                                        <span>Instant 1-tap quick action shortcuts</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="md:col-span-6 lg:col-span-5 flex justify-center">
+                                <!-- iOS Device Frame -->
+                                <div class="relative mx-auto w-full max-w-[270px] sm:max-w-[290px]">
+                                    <div class="absolute -inset-4 bg-gradient-to-tr from-primary/20 via-emerald-500/10 to-transparent rounded-[52px] blur-2xl opacity-60 pointer-events-none"></div>
+                                    <div class="relative bg-[#121318] rounded-[44px] p-2.5 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_0_1px_rgba(255,255,255,0.14)] border-2 border-[#2c2f3a]">
+                                        <div class="absolute -left-[4px] top-20 w-[3px] h-5 bg-[#454856] rounded-l-sm"></div>
+                                        <div class="absolute -left-[4px] top-28 w-[3px] h-10 bg-[#454856] rounded-l-sm"></div>
+                                        <div class="absolute -left-[4px] top-42 w-[3px] h-10 bg-[#454856] rounded-l-sm"></div>
+                                        <div class="absolute -right-[4px] top-32 w-[3px] h-14 bg-[#454856] rounded-r-sm"></div>
+                                        <div class="relative bg-black rounded-[34px] overflow-hidden border border-black shadow-inner">
+                                            <div class="absolute top-2 inset-x-0 flex justify-center z-20 pointer-events-none">
+                                                <div class="h-3.5 w-20 bg-black rounded-full flex items-center justify-between px-2 shadow border border-neutral-800">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-[#0a0d14] flex items-center justify-center">
+                                                        <span class="w-0.5 h-0.5 rounded-full bg-[#1b2559]"></span>
+                                                    </span>
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-[#0d121c]"></span>
+                                                </div>
+                                            </div>
+                                            <img src="{{ asset('assets/images/app_screenshots/dashboard_mobile.png') }}" alt="DarziDesk Dashboard" class="w-full h-auto object-cover block">
+                                            <div class="absolute bottom-1.5 inset-x-0 flex justify-center z-20 pointer-events-none">
+                                                <div class="w-24 h-1 bg-white/40 rounded-full"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Customers -->
+                    <div id="tab-content-customers" class="tab-content hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center">
+                            <div class="md:col-span-6 lg:col-span-7 flex flex-col gap-4 text-left">
+                                <span class="text-xs font-bold text-primary uppercase tracking-wider">Digital Measurement Vault</span>
+                                <h3 class="text-xl sm:text-2xl font-bold text-white">Save & Reuse Customer Measurements Forever</h3>
+                                <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+                                    No more flipping through dusty paper registers. Search any customer by name or mobile number in 1 second and reuse their fitting history.
+                                </p>
+                                <ul class="space-y-2.5 text-xs text-white">
+                                    <li class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary text-base">check</span>
+                                        <span>Supports Suits, Blouses, Kurtis, Sherwanis</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary text-base">check</span>
+                                        <span>Inches and Centimeters with fractions</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary text-base">check</span>
+                                        <span>1-click share with client on WhatsApp</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="md:col-span-6 lg:col-span-5 flex justify-center">
+                                <!-- iOS Device Frame -->
+                                <div class="relative mx-auto w-full max-w-[270px] sm:max-w-[290px]">
+                                    <div class="absolute -inset-4 bg-gradient-to-tr from-primary/20 via-emerald-500/10 to-transparent rounded-[52px] blur-2xl opacity-60 pointer-events-none"></div>
+                                    <div class="relative bg-[#121318] rounded-[44px] p-2.5 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_0_1px_rgba(255,255,255,0.14)] border-2 border-[#2c2f3a]">
+                                        <div class="absolute -left-[4px] top-20 w-[3px] h-5 bg-[#454856] rounded-l-sm"></div>
+                                        <div class="absolute -left-[4px] top-28 w-[3px] h-10 bg-[#454856] rounded-l-sm"></div>
+                                        <div class="absolute -left-[4px] top-42 w-[3px] h-10 bg-[#454856] rounded-l-sm"></div>
+                                        <div class="absolute -right-[4px] top-32 w-[3px] h-14 bg-[#454856] rounded-r-sm"></div>
+                                        <div class="relative bg-black rounded-[34px] overflow-hidden border border-black shadow-inner">
+                                            <div class="absolute top-2 inset-x-0 flex justify-center z-20 pointer-events-none">
+                                                <div class="h-3.5 w-20 bg-black rounded-full flex items-center justify-between px-2 shadow border border-neutral-800">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-[#0a0d14] flex items-center justify-center">
+                                                        <span class="w-0.5 h-0.5 rounded-full bg-[#1b2559]"></span>
+                                                    </span>
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-[#0d121c]"></span>
+                                                </div>
+                                            </div>
+                                            <img src="{{ asset('assets/images/app_screenshots/measurements_mobile.png') }}" alt="Customer Measurements" class="w-full h-auto object-cover block">
+                                            <div class="absolute bottom-1.5 inset-x-0 flex justify-center z-20 pointer-events-none">
+                                                <div class="w-24 h-1 bg-white/40 rounded-full"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Orders -->
+                    <div id="tab-content-orders" class="tab-content hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center">
+                            <div class="md:col-span-6 lg:col-span-7 flex flex-col gap-4 text-left">
+                                <span class="text-xs font-bold text-primary uppercase tracking-wider">Order Creation</span>
+                                <h3 class="text-xl sm:text-2xl font-bold text-white">Fast 60-Second Order Booking With Advance Tracking</h3>
+                                <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+                                    Select garment type, assign promised delivery date, record advance deposit, and print receipt or send PDF over WhatsApp immediately.
+                                </p>
+                                <ul class="space-y-2.5 text-xs text-white">
+                                    <li class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary text-base">check</span>
+                                        <span>Urgent order tags and delivery timer</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary text-base">check</span>
+                                        <span>Advance cash/UPI payment lock</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="md:col-span-6 lg:col-span-5 flex justify-center">
+                                <!-- iOS Device Frame -->
+                                <div class="relative mx-auto w-full max-w-[270px] sm:max-w-[290px]">
+                                    <div class="absolute -inset-4 bg-gradient-to-tr from-primary/20 via-emerald-500/10 to-transparent rounded-[52px] blur-2xl opacity-60 pointer-events-none"></div>
+                                    <div class="relative bg-[#121318] rounded-[44px] p-2.5 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_0_1px_rgba(255,255,255,0.14)] border-2 border-[#2c2f3a]">
+                                        <div class="absolute -left-[4px] top-20 w-[3px] h-5 bg-[#454856] rounded-l-sm"></div>
+                                        <div class="absolute -left-[4px] top-28 w-[3px] h-10 bg-[#454856] rounded-l-sm"></div>
+                                        <div class="absolute -left-[4px] top-42 w-[3px] h-10 bg-[#454856] rounded-l-sm"></div>
+                                        <div class="absolute -right-[4px] top-32 w-[3px] h-14 bg-[#454856] rounded-r-sm"></div>
+                                        <div class="relative bg-black rounded-[34px] overflow-hidden border border-black shadow-inner">
+                                            <div class="absolute top-2 inset-x-0 flex justify-center z-20 pointer-events-none">
+                                                <div class="h-3.5 w-20 bg-black rounded-full flex items-center justify-between px-2 shadow border border-neutral-800">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-[#0a0d14] flex items-center justify-center">
+                                                        <span class="w-0.5 h-0.5 rounded-full bg-[#1b2559]"></span>
+                                                    </span>
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-[#0d121c]"></span>
+                                                </div>
+                                            </div>
+                                            <img src="{{ asset('assets/images/app_screenshots/order_creation_mobile.png') }}" alt="Order Creation" class="w-full h-auto object-cover block">
+                                            <div class="absolute bottom-1.5 inset-x-0 flex justify-center z-20 pointer-events-none">
+                                                <div class="w-24 h-1 bg-white/40 rounded-full"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Kanban -->
+                    <div id="tab-content-kanban" class="tab-content hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center">
+                            <div class="md:col-span-6 lg:col-span-7 flex flex-col gap-4 text-left">
+                                <span class="text-xs font-bold text-primary uppercase tracking-wider">Production Kanban</span>
+                                <h3 class="text-xl sm:text-2xl font-bold text-white">Track Every Karigar & Garment Stage</h3>
+                                <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+                                    Move garments through Cutting, Stitching, Trial, and Ready stages. Assign master cutters and calculate piece-rate worker payroll automatically.
+                                </p>
+                                <ul class="space-y-2.5 text-xs text-white">
+                                    <li class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary text-base">check</span>
+                                        <span>Visual drag-and-drop workflow</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary text-base">check</span>
+                                        <span>Eliminate workshop blame and delays</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="md:col-span-6 lg:col-span-5 flex justify-center">
+                                <!-- iOS Device Frame -->
+                                <div class="relative mx-auto w-full max-w-[270px] sm:max-w-[290px]">
+                                    <div class="absolute -inset-4 bg-gradient-to-tr from-primary/20 via-emerald-500/10 to-transparent rounded-[52px] blur-2xl opacity-60 pointer-events-none"></div>
+                                    <div class="relative bg-[#121318] rounded-[44px] p-2.5 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_0_1px_rgba(255,255,255,0.14)] border-2 border-[#2c2f3a]">
+                                        <div class="absolute -left-[4px] top-20 w-[3px] h-5 bg-[#454856] rounded-l-sm"></div>
+                                        <div class="absolute -left-[4px] top-28 w-[3px] h-10 bg-[#454856] rounded-l-sm"></div>
+                                        <div class="absolute -left-[4px] top-42 w-[3px] h-10 bg-[#454856] rounded-l-sm"></div>
+                                        <div class="absolute -right-[4px] top-32 w-[3px] h-14 bg-[#454856] rounded-r-sm"></div>
+                                        <div class="relative bg-black rounded-[34px] overflow-hidden border border-black shadow-inner">
+                                            <div class="absolute top-2 inset-x-0 flex justify-center z-20 pointer-events-none">
+                                                <div class="h-3.5 w-20 bg-black rounded-full flex items-center justify-between px-2 shadow border border-neutral-800">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-[#0a0d14] flex items-center justify-center">
+                                                        <span class="w-0.5 h-0.5 rounded-full bg-[#1b2559]"></span>
+                                                    </span>
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-[#0d121c]"></span>
+                                                </div>
+                                            </div>
+                                            <img src="{{ asset('assets/images/app_screenshots/kanban_mobile.png') }}" alt="Kanban Pipeline" class="w-full h-auto object-cover block">
+                                            <div class="absolute bottom-1.5 inset-x-0 flex justify-center z-20 pointer-events-none">
+                                                <div class="w-24 h-1 bg-white/40 rounded-full"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Invoicing -->
+                    <div id="tab-content-invoicing" class="tab-content hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center">
+                            <div class="md:col-span-6 lg:col-span-7 flex flex-col gap-4 text-left">
+                                <span class="text-xs font-bold text-primary uppercase tracking-wider">POS & Invoicing</span>
+                                <h3 class="text-xl sm:text-2xl font-bold text-white">Professional Invoices & Instant WhatsApp Receipts</h3>
+                                <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+                                    Generate thermal receipts or A4/A5 GST bills. Send digital invoices directly to customers on WhatsApp with your shop logo.
+                                </p>
+                                <ul class="space-y-2.5 text-xs text-white">
+                                    <li class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary text-base">check</span>
+                                        <span>Supports 2-inch and 3-inch thermal printers</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary text-base">check</span>
+                                        <span>Clear advance vs pending balance breakdown</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="md:col-span-6 lg:col-span-5 flex justify-center">
+                                <!-- iOS Device Frame -->
+                                <div class="relative mx-auto w-full max-w-[270px] sm:max-w-[290px]">
+                                    <div class="absolute -inset-4 bg-gradient-to-tr from-primary/20 via-emerald-500/10 to-transparent rounded-[52px] blur-2xl opacity-60 pointer-events-none"></div>
+                                    <div class="relative bg-[#121318] rounded-[44px] p-2.5 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_0_1px_rgba(255,255,255,0.14)] border-2 border-[#2c2f3a]">
+                                        <div class="absolute -left-[4px] top-20 w-[3px] h-5 bg-[#454856] rounded-l-sm"></div>
+                                        <div class="absolute -left-[4px] top-28 w-[3px] h-10 bg-[#454856] rounded-l-sm"></div>
+                                        <div class="absolute -left-[4px] top-42 w-[3px] h-10 bg-[#454856] rounded-l-sm"></div>
+                                        <div class="absolute -right-[4px] top-32 w-[3px] h-14 bg-[#454856] rounded-r-sm"></div>
+                                        <div class="relative bg-black rounded-[34px] overflow-hidden border border-black shadow-inner">
+                                            <div class="absolute top-2 inset-x-0 flex justify-center z-20 pointer-events-none">
+                                                <div class="h-3.5 w-20 bg-black rounded-full flex items-center justify-between px-2 shadow border border-neutral-800">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-[#0a0d14] flex items-center justify-center">
+                                                        <span class="w-0.5 h-0.5 rounded-full bg-[#1b2559]"></span>
+                                                    </span>
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-[#0d121c]"></span>
+                                                </div>
+                                            </div>
+                                            <img src="{{ asset('assets/images/app_screenshots/pos_invoicing_mobile.png') }}" alt="POS Invoicing" class="w-full h-auto object-cover block">
+                                            <div class="absolute bottom-1.5 inset-x-0 flex justify-center z-20 pointer-events-none">
+                                                <div class="w-24 h-1 bg-white/40 rounded-full"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. BUILT FOR EVERY TAILORING BUSINESS (SEGMENTS) -->
+        <section class="py-20 bg-background border-b border-white/[0.06]" id="who-its-for">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="text-primary font-bold text-xs uppercase tracking-widest block mb-2">Tailored For Your Craft</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Built for Every Tailoring Business</h2>
+                    <p class="text-on-surface-variant text-sm sm:text-base mt-2">Whether you run a solo shop or a 20-karigar boutique, DarziDesk adapts to your workflow.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Card 1 -->
+                    <a href="{{ url('mens-tailor-management-software') }}" class="card-modern rounded-2xl p-6 sm:p-8 flex flex-col group">
+                        <div class="w-11 h-11 rounded-xl bg-primary-muted text-primary flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-xl">man</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors">Men's Tailors</h3>
+                        <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed mb-4">
+                            Suits, Blazers, Shirts, Trousers, Kurta-Pajama, Safari Suits & Sherwanis. Full posture and style specs.
+                        </p>
+                        <span class="text-xs font-semibold text-primary flex items-center gap-1 mt-auto">View Details <span class="material-symbols-outlined text-sm">arrow_forward</span></span>
+                    </a>
+
+                    <!-- Card 2 -->
+                    <a href="{{ url('ladies-tailor-management-software') }}" class="card-modern rounded-2xl p-6 sm:p-8 flex flex-col group">
+                        <div class="w-11 h-11 rounded-xl bg-primary-muted text-primary flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-xl">woman</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors">Ladies' Tailors</h3>
+                        <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed mb-4">
+                            Blouse patterns (Katori, Princess cut), Salwar Suits, Kurtis, Lehengas & Gowns. Zero fitting confusion.
+                        </p>
+                        <span class="text-xs font-semibold text-primary flex items-center gap-1 mt-auto">View Details <span class="material-symbols-outlined text-sm">arrow_forward</span></span>
+                    </a>
+
+                    <!-- Card 3 -->
+                    <a href="{{ url('boutique-management-software') }}" class="card-modern rounded-2xl p-6 sm:p-8 flex flex-col group">
+                        <div class="w-11 h-11 rounded-xl bg-primary-muted text-primary flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-xl">storefront</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors">Designer Boutiques</h3>
+                        <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed mb-4">
+                            Custom design sketches, fabric roll stock ledger, bridal embroidery schedules & VIP client fitting calendars.
+                        </p>
+                        <span class="text-xs font-semibold text-primary flex items-center gap-1 mt-auto">View Details <span class="material-symbols-outlined text-sm">arrow_forward</span></span>
+                    </a>
+
+                    <!-- Card 4 -->
+                    <a href="{{ url('tailoring-shop-management-software') }}" class="card-modern rounded-2xl p-6 sm:p-8 flex flex-col group">
+                        <div class="w-11 h-11 rounded-xl bg-primary-muted text-primary flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-xl">palette</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors">Fashion Designers</h3>
+                        <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed mb-4">
+                            Manage signature collections, luxury fabric inventory, sample trials, and client styling consultations.
+                        </p>
+                        <span class="text-xs font-semibold text-primary flex items-center gap-1 mt-auto">View Details <span class="material-symbols-outlined text-sm">arrow_forward</span></span>
+                    </a>
+
+                    <!-- Card 5 -->
+                    <a href="{{ url('tailoring-order-management') }}" class="card-modern rounded-2xl p-6 sm:p-8 flex flex-col group">
+                        <div class="w-11 h-11 rounded-xl bg-primary-muted text-primary flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-xl">content_cut</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors">Alteration & Repair Shops</h3>
+                        <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed mb-4">
+                            Quick-tag garments, log alteration notes, print hanger QR codes, and notify customers on WhatsApp when ready.
+                        </p>
+                        <span class="text-xs font-semibold text-primary flex items-center gap-1 mt-auto">View Details <span class="material-symbols-outlined text-sm">arrow_forward</span></span>
+                    </a>
+
+                    <!-- Card 6 -->
+                    <a href="{{ url('tailoring-software-india') }}" class="card-modern rounded-2xl p-6 sm:p-8 flex flex-col group">
+                        <div class="w-11 h-11 rounded-xl bg-primary-muted text-primary flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-xl">factory</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors">Multi-Worker Units & Karkhanas</h3>
+                        <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed mb-4">
+                            Assign jobs to multiple master cutters & tailors, track piece-rate wage calculation and daily output.
+                        </p>
+                        <span class="text-xs font-semibold text-primary flex items-center gap-1 mt-auto">View Details <span class="material-symbols-outlined text-sm">arrow_forward</span></span>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. WHY DARZIDESK? (CORE MODULES) -->
+        <section class="py-20 bg-surface border-b border-white/[0.06]" id="features">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="text-primary font-bold text-xs uppercase tracking-widest block mb-2">Core Platform Capabilities</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Everything Your Tailoring Shop Needs</h2>
+                    <p class="text-on-surface-variant text-sm sm:text-base mt-2">Replace 5 fragmented tools with one synchronized tailoring operating system.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <div class="card-modern rounded-2xl p-6 sm:p-8 flex flex-col">
+                        <div class="w-11 h-11 rounded-xl bg-primary-muted text-primary flex items-center justify-center mb-5">
+                            <span class="material-symbols-outlined text-xl">contacts</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white mb-2">Customer Management</h3>
+                        <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+                            Keep client phone numbers, order histories, fitting preferences, and balance payments organized in one searchable directory.
+                        </p>
+                    </div>
+
+                    <div class="card-modern rounded-2xl p-6 sm:p-8 flex flex-col">
+                        <div class="w-11 h-11 rounded-xl bg-primary-muted text-primary flex items-center justify-center mb-5">
+                            <span class="material-symbols-outlined text-xl">straighten</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white mb-2">Digital Measurements</h3>
+                        <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+                            Save, edit, and instantly pull up past measurements for repeat orders. Never lose a customer's fit card again.
+                        </p>
+                    </div>
+
+                    <div class="card-modern rounded-2xl p-6 sm:p-8 flex flex-col">
+                        <div class="w-11 h-11 rounded-xl bg-primary-muted text-primary flex items-center justify-center mb-5">
+                            <span class="material-symbols-outlined text-xl">schedule</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white mb-2">Order Tracking</h3>
+                        <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+                            Track every garment from initial booking to cutting, basting, stitching, trial fittings, and final delivery.
+                        </p>
+                    </div>
+
+                    <div class="card-modern rounded-2xl p-6 sm:p-8 flex flex-col">
+                        <div class="w-11 h-11 rounded-xl bg-primary-muted text-primary flex items-center justify-center mb-5">
+                            <span class="material-symbols-outlined text-xl">receipt_long</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white mb-2">Payment Management</h3>
+                        <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+                            Manage advance deposits, remaining balances, thermal print receipts, and branded WhatsApp digital bills with GST support.
+                        </p>
+                    </div>
+
+                    <div class="card-modern rounded-2xl p-6 sm:p-8 flex flex-col">
+                        <div class="w-11 h-11 rounded-xl bg-primary-muted text-primary flex items-center justify-center mb-5">
+                            <span class="material-symbols-outlined text-xl">groups</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white mb-2">Worker Management</h3>
+                        <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+                            Assign jobs to master cutters and tailors, track workshop bottlenecks, and compute piece-rate artisan payroll.
+                        </p>
+                    </div>
+
+                    <div class="card-modern rounded-2xl p-6 sm:p-8 flex flex-col">
+                        <div class="w-11 h-11 rounded-xl bg-primary-muted text-primary flex items-center justify-center mb-5">
+                            <span class="material-symbols-outlined text-xl">analytics</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white mb-2">Business Reports</h3>
+                        <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+                            Understand daily sales, monthly revenue, workshop expenses, profit & loss, and top-selling garment categories.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. HINDI / REGIONAL SECTION (NO EMOJIS) -->
+        <section class="py-16 bg-surface-card border-b border-white/[0.06]">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <span class="px-3.5 py-1 rounded-full bg-primary-muted text-primary text-xs font-bold uppercase tracking-wider mb-4 inline-block">
+                    Dedicated Support for Indian Tailoring Businesses
+                </span>
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-white mb-3">
+                    अपनी Tailoring Shop को Digital बनाइये
+                </h2>
+                <p class="text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto mb-6">
+                    Customers, measurements, orders aur payments ko ek hi jagah manage karein. Purane paper register se mukti paayein.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button onclick="document.getElementById('demo-modal').classList.remove('hidden')" class="btn-gold px-7 py-3 rounded-xl font-bold text-sm w-full sm:w-auto flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-base">call</span>
+                        <span>Free Demo Lejiye</span>
+                    </button>
+                    <a href="{{ route('register') }}" class="btn-outline-gold px-7 py-3 rounded-xl font-semibold text-sm w-full sm:w-auto">
+                        Abhi Start Karein (14 Days Free)
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. HOW IT WORKS SECTION -->
+        <section class="py-20 bg-background border-b border-white/[0.06]" id="how-it-works">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="text-primary font-bold text-xs uppercase tracking-widest block mb-2">4-Step Production Lifecycle</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white">How DarziDesk Works</h2>
+                    <p class="text-on-surface-variant text-sm sm:text-base mt-2">From initial customer entry to final delivery and payment collection.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    
+                    <div class="card-modern rounded-2xl p-6 flex flex-col">
+                        <span class="text-2xl font-mono font-bold text-primary mb-3">01</span>
+                        <h3 class="text-base font-bold text-white mb-2">Add Customer & Fit</h3>
+                        <p class="text-xs text-on-surface-variant leading-relaxed">
+                            Create customer profiles with phone numbers and save their detailed body measurements.
+                        </p>
+                    </div>
+
+                    <div class="card-modern rounded-2xl p-6 flex flex-col">
+                        <span class="text-2xl font-mono font-bold text-primary mb-3">02</span>
+                        <h3 class="text-base font-bold text-white mb-2">Book Order & Advance</h3>
+                        <p class="text-xs text-on-surface-variant leading-relaxed">
+                            Add garments, promised delivery date, design specs, prices, and record advance deposits.
+                        </p>
+                    </div>
+
+                    <div class="card-modern rounded-2xl p-6 flex flex-col">
+                        <span class="text-2xl font-mono font-bold text-primary mb-3">03</span>
+                        <h3 class="text-base font-bold text-white mb-2">Track Production</h3>
+                        <p class="text-xs text-on-surface-variant leading-relaxed">
+                            Move orders through cutting, stitching, trial fittings, and ready stages with karigar assignments.
+                        </p>
+                    </div>
+
+                    <div class="card-modern rounded-2xl p-6 flex flex-col">
+                        <span class="text-2xl font-mono font-bold text-primary mb-3">04</span>
+                        <h3 class="text-base font-bold text-white mb-2">Deliver & Collect</h3>
+                        <p class="text-xs text-on-surface-variant leading-relaxed">
+                            Notify customer on WhatsApp, collect pending balance, and hand over the finished garment.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. COMPARISON TABLE: NOTEBOOK VS DARZIDESK (CLEAN SVG ICONS, NO EMOJIS) -->
+        <section class="py-20 bg-surface border-b border-white/[0.06]" id="comparison">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="text-primary font-bold text-xs uppercase tracking-widest block mb-2">Clear Modern Upgrade</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white">From Notebook to Digital Management</h2>
+                    <p class="text-on-surface-variant text-sm sm:text-base mt-2">See why tailor shops and boutiques are modernizing their operations.</p>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-white/[0.08] shadow-xl bg-surface-card">
+                    <table class="w-full text-left text-sm text-on-surface-variant">
+                        <thead class="bg-background text-xs uppercase text-white border-b border-white/[0.08]">
+                            <tr>
+                                <th class="py-4 px-6 font-semibold">Workflow Operation</th>
+                                <th class="py-4 px-6 text-red-400 font-semibold">Traditional Notebook</th>
+                                <th class="py-4 px-6 text-primary font-bold">With DarziDesk TMS</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/[0.05]">
+                            <tr>
+                                <td class="py-4 px-6 font-semibold text-white">Customer Measurements</td>
+                                <td class="py-4 px-6 text-on-surface-muted flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-red-400 text-sm">remove_circle_outline</span>
+                                    <span>Paper cards get lost, torn, or misplaced</span>
+                                </td>
+                                <td class="py-4 px-6 text-emerald-400 font-medium">
+                                    <span class="material-symbols-outlined text-emerald-400 text-sm inline-block align-middle mr-1">check_circle</span>
+                                    <span>Saved permanently in digital vault</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 font-semibold text-white">Finding Past Fitting Records</td>
+                                <td class="py-4 px-6 text-on-surface-muted flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-red-400 text-sm">remove_circle_outline</span>
+                                    <span>Flipping through hundreds of register pages</span>
+                                </td>
+                                <td class="py-4 px-6 text-emerald-400 font-medium">
+                                    <span class="material-symbols-outlined text-emerald-400 text-sm inline-block align-middle mr-1">check_circle</span>
+                                    <span>1-second search by name or mobile</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 font-semibold text-white">Delivery Commitments</td>
+                                <td class="py-4 px-6 text-on-surface-muted flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-red-400 text-sm">remove_circle_outline</span>
+                                    <span>Forgotten dates leading to customer delays</span>
+                                </td>
+                                <td class="py-4 px-6 text-emerald-400 font-medium">
+                                    <span class="material-symbols-outlined text-emerald-400 text-sm inline-block align-middle mr-1">check_circle</span>
+                                    <span>Automated delivery calendar and alerts</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 font-semibold text-white">Advance & Balance Payments</td>
+                                <td class="py-4 px-6 text-on-surface-muted flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-red-400 text-sm">remove_circle_outline</span>
+                                    <span>Payment disputes and forgotten advance slips</span>
+                                </td>
+                                <td class="py-4 px-6 text-emerald-400 font-medium">
+                                    <span class="material-symbols-outlined text-emerald-400 text-sm inline-block align-middle mr-1">check_circle</span>
+                                    <span>Clear digital receipts and balance lock</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 font-semibold text-white">Karigar Coordination</td>
+                                <td class="py-4 px-6 text-on-surface-muted flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-red-400 text-sm">remove_circle_outline</span>
+                                    <span>Verbal instructions and miscommunications</span>
+                                </td>
+                                <td class="py-4 px-6 text-emerald-400 font-medium">
+                                    <span class="material-symbols-outlined text-emerald-400 text-sm inline-block align-middle mr-1">check_circle</span>
+                                    <span>Visual kanban board and job cards</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 font-semibold text-white">Financial Visibility</td>
+                                <td class="py-4 px-6 text-on-surface-muted flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-red-400 text-sm">remove_circle_outline</span>
+                                    <span>No real overview of monthly net profit</span>
+                                </td>
+                                <td class="py-4 px-6 text-emerald-400 font-medium">
+                                    <span class="material-symbols-outlined text-emerald-400 text-sm inline-block align-middle mr-1">check_circle</span>
+                                    <span>Real-time revenue, expense and P&L reports</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. REAL CUSTOMER TESTIMONIALS -->
+        <section class="py-20 bg-background border-b border-white/[0.06]" id="testimonials">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="text-primary font-bold text-xs uppercase tracking-widest block mb-2">Verified Feedback</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Trusted by Tailors & Boutique Owners</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <div class="card-modern rounded-2xl p-8 flex flex-col justify-between">
+                        <div>
+                            <div class="flex text-primary mb-4">
+                                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-on-surface-variant italic mb-6 leading-relaxed">
+                                "Earlier we managed everything in 4 thick registers. Finding customer measurements took 10 minutes. Now with DarziDesk, I type the mobile number and measurement opens in 1 second."
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-white">Mukesh Sharma</p>
+                            <p class="text-xs text-primary font-medium">Royal Stitch Tailors, Jaipur</p>
+                        </div>
+                    </div>
+
+                    <div class="card-modern rounded-2xl p-8 border-primary/40 shadow-xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex text-primary mb-4">
+                                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-on-surface-variant italic mb-6 leading-relaxed">
+                                "In wedding season, our boutique handles 100+ blouses and lehengas. Sending automated WhatsApp updates when dresses are ready saved our staff 2 hours of phone calling every day."
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-white">Pooja Chawla</p>
+                            <p class="text-xs text-primary font-medium">Aura Couture Boutique, Delhi NCR</p>
+                        </div>
+                    </div>
+
+                    <div class="card-modern rounded-2xl p-8 flex flex-col justify-between">
+                        <div>
+                            <div class="flex text-primary mb-4">
+                                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-on-surface-variant italic mb-6 leading-relaxed">
+                                "The worker payroll calculation based on completed pieces solved all arguments with my karigars. Tracking advance deposits also stopped all customer payment confusion."
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-white">Irfan Ansari</p>
+                            <p class="text-xs text-primary font-medium">Master Fit Sartorials, Lucknow</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. PRICING PREVIEW ON HOMEPAGE -->
+        <section class="py-20 bg-surface border-b border-white/[0.06]" id="pricing">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <span class="text-primary font-bold text-xs uppercase tracking-widest block mb-2">Transparent SaaS Plans</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-3">Simple Plans for Every Shop Size</h2>
+                <p class="text-on-surface-variant text-sm max-w-xl mx-auto mb-12">Start with a 14-day free trial. No credit card required.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto text-left">
+                    
+                    <!-- Starter -->
+                    <div class="card-modern rounded-2xl p-8 flex flex-col">
+                        <span class="text-xs font-bold uppercase tracking-wider text-primary">Solo Tailors</span>
+                        <h3 class="text-xl font-bold text-white mt-1">Starter</h3>
+                        <div class="my-6">
+                            <span class="text-3xl sm:text-4xl font-extrabold text-white">₹0</span>
+                            <span class="text-xs text-on-surface-variant">/ 14 Days Free</span>
+                            <p class="text-xs text-emerald-400 mt-1 font-medium">Then ₹499/month</p>
+                        </div>
+                        <ul class="space-y-3 text-xs text-on-surface-variant mb-8 flex-1">
+                            <li class="flex items-center gap-2 text-white"><span class="material-symbols-outlined text-primary text-sm">check</span> 3 Staff / Workers</li>
+                            <li class="flex items-center gap-2 text-white"><span class="material-symbols-outlined text-primary text-sm">check</span> 150 Customer Profiles</li>
+                            <li class="flex items-center gap-2 text-white"><span class="material-symbols-outlined text-primary text-sm">check</span> Digital Measurement Vault</li>
+                            <li class="flex items-center gap-2 text-white"><span class="material-symbols-outlined text-primary text-sm">check</span> Android & iOS Mobile Apps</li>
+                        </ul>
+                        <a href="{{ route('register') }}" class="w-full btn-outline-gold py-3 rounded-xl text-center font-bold text-xs">Start Free Trial</a>
+                    </div>
+
+                    <!-- Boutique Pro -->
+                    <div class="card-modern rounded-2xl p-8 border-2 border-primary shadow-2xl relative flex flex-col bg-surface-card">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-on-primary text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
+                            Most Popular
+                        </div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-primary">Boutiques & Studios</span>
+                        <h3 class="text-xl font-bold text-white mt-1">Boutique Pro</h3>
+                        <div class="my-6">
+                            <span class="text-3xl sm:text-4xl font-extrabold text-primary">₹999</span>
+                            <span class="text-xs text-on-surface-variant">/ month</span>
+                            <p class="text-xs text-primary mt-1 font-medium">₹799/mo on Annual Plan</p>
+                        </div>
+                        <ul class="space-y-3 text-xs text-on-surface-variant mb-8 flex-1">
+                            <li class="flex items-center gap-2 text-white"><span class="material-symbols-outlined text-primary text-sm">check</span> 15 Staff / Karigars</li>
+                            <li class="flex items-center gap-2 text-white"><span class="material-symbols-outlined text-primary text-sm">check</span> 2,500 Customer Profiles</li>
+                            <li class="flex items-center gap-2 text-white"><span class="material-symbols-outlined text-primary text-sm">check</span> Production Kanban & Stages</li>
+                            <li class="flex items-center gap-2 text-white"><span class="material-symbols-outlined text-primary text-sm">check</span> WhatsApp Bills & Receipts</li>
+                            <li class="flex items-center gap-2 text-white"><span class="material-symbols-outlined text-primary text-sm">check</span> Worker Piece-Rate Pay</li>
+                        </ul>
+                        <a href="{{ route('register') }}" class="w-full btn-gold py-3 rounded-xl text-center font-bold text-xs">Start Free Trial</a>
+                    </div>
+
+                    <!-- Master Studio -->
+                    <div class="card-modern rounded-2xl p-8 flex flex-col">
+                        <span class="text-xs font-bold uppercase tracking-wider text-primary">Multi-Branch Units</span>
+                        <h3 class="text-xl font-bold text-white mt-1">Master Studio</h3>
+                        <div class="my-6">
+                            <span class="text-3xl sm:text-4xl font-extrabold text-white">₹2,499</span>
+                            <span class="text-xs text-on-surface-variant">/ month</span>
+                            <p class="text-xs text-on-surface-variant mt-1 font-medium">Unlimited Capacity</p>
+                        </div>
+                        <ul class="space-y-3 text-xs text-on-surface-variant mb-8 flex-1">
+                            <li class="flex items-center gap-2 text-white"><span class="material-symbols-outlined text-primary text-sm">check</span> Unlimited Staff & Workers</li>
+                            <li class="flex items-center gap-2 text-white"><span class="material-symbols-outlined text-primary text-sm">check</span> Unlimited Customers & Orders</li>
+                            <li class="flex items-center gap-2 text-white"><span class="material-symbols-outlined text-primary text-sm">check</span> Multi-Branch Governance</li>
+                            <li class="flex items-center gap-2 text-white"><span class="material-symbols-outlined text-primary text-sm">check</span> Dedicated WhatsApp Manager</li>
+                        </ul>
+                        <a href="{{ route('register') }}" class="w-full btn-outline-gold py-3 rounded-xl text-center font-bold text-xs">Start Free Trial</a>
+                    </div>
+
+                </div>
+
+                <div class="mt-8">
+                    <a href="{{ route('pricing.public') }}" class="text-primary font-semibold text-xs hover:underline inline-flex items-center gap-1">
+                        View Full Feature Comparison Table <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. MOBILE APPS DOWNLOAD & QR CODE -->
+        <section class="py-16 bg-background border-b border-white/[0.06]" id="mobile-apps">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="card-modern rounded-2xl p-8 sm:p-12 flex flex-col lg:flex-row items-center justify-between gap-8">
+                    <div class="max-w-xl text-left">
+                        <span class="text-primary font-bold text-xs uppercase tracking-widest block mb-2">Cross-Platform Accessibility</span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-3">Download DarziDesk Mobile App</h2>
+                        <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed mb-6">
+                            Take measurements, check order status, create bills, and manage karigars straight from your mobile phone.
+                        </p>
+                        <div class="flex flex-wrap items-center gap-4">
+                            <a href="https://play.google.com/store/apps/details?id=com.darzidesk.app&hl=en" target="_blank" class="inline-block hover:opacity-85 transition-opacity">
+                                <img src="{{ asset('assets/images/google_play_badge.svg') }}" alt="Get it on Google Play" class="h-11 w-auto">
+                            </a>
+                            <a href="https://apps.apple.com/us/app/darzidesk/id6796700050" target="_blank" class="inline-block hover:opacity-85 transition-opacity">
+                                <img src="{{ asset('assets/images/app_store_badge.svg') }}" alt="Download on the App Store" class="h-11 w-auto">
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- QR Code Card -->
+                    <div class="bg-background rounded-xl p-5 border border-white/[0.08] text-center shrink-0">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=https://darzidesk.shop" alt="Scan to download DarziDesk app" loading="lazy" class="w-28 h-28 mx-auto rounded-lg mb-2.5">
+                        <p class="text-xs font-bold text-white">Scan to Download</p>
+                        <p class="text-[10px] text-on-surface-muted">Android & iOS</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. SAAS FAQS -->
+        <section class="py-20 bg-surface border-b border-white/[0.06]" id="faq-section">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <span class="text-primary font-bold text-xs uppercase tracking-widest block mb-2">Help & Answers</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Frequently Asked Questions</h2>
+                </div>
+
+                <div class="space-y-3">
+                    
+                    <details class="card-modern rounded-xl group" open>
+                        <summary class="p-5 cursor-pointer select-none flex items-center justify-between gap-3 list-none [&::-webkit-details-marker]:hidden">
+                            <span class="flex items-center gap-2 text-sm sm:text-base font-bold text-white">
+                                <span class="material-symbols-outlined text-primary text-base">help</span>
+                                Is DarziDesk suitable for small tailoring shops?
+                            </span>
+                            <span class="material-symbols-outlined text-on-surface-muted text-lg transition-transform group-open:rotate-180">expand_more</span>
+                        </summary>
+                        <p class="px-5 pb-5 text-xs sm:text-sm text-on-surface-variant leading-relaxed pl-11">
+                            Yes. DarziDesk is designed for shops of all sizes — from single-worker neighborhood tailor shops to high-end multi-branch designer boutiques.
+                        </p>
+                    </details>
+
+                    <details class="card-modern rounded-xl group">
+                        <summary class="p-5 cursor-pointer select-none flex items-center justify-between gap-3 list-none [&::-webkit-details-marker]:hidden">
+                            <span class="flex items-center gap-2 text-sm sm:text-base font-bold text-white">
+                                <span class="material-symbols-outlined text-primary text-base">help</span>
+                                Can I manage ladies' tailoring orders like Blouses and Lehengas?
+                            </span>
+                            <span class="material-symbols-outlined text-on-surface-muted text-lg transition-transform group-open:rotate-180">expand_more</span>
+                        </summary>
+                        <p class="px-5 pb-5 text-xs sm:text-sm text-on-surface-variant leading-relaxed pl-11">
+                            Yes, DarziDesk comes pre-loaded with templates for Blouses (Katori, Princess cut, Sabyasachi cut), Salwar Suits, Kurtis, Lehengas, Gowns, and Western wear.
+                        </p>
+                    </details>
+
+                    <details class="card-modern rounded-xl group">
+                        <summary class="p-5 cursor-pointer select-none flex items-center justify-between gap-3 list-none [&::-webkit-details-marker]:hidden">
+                            <span class="flex items-center gap-2 text-sm sm:text-base font-bold text-white">
+                                <span class="material-symbols-outlined text-primary text-base">help</span>
+                                Can I save customer measurements and reuse them later?
+                            </span>
+                            <span class="material-symbols-outlined text-on-surface-muted text-lg transition-transform group-open:rotate-180">expand_more</span>
+                        </summary>
+                        <p class="px-5 pb-5 text-xs sm:text-sm text-on-surface-variant leading-relaxed pl-11">
+                            Yes. You can search any customer by name or phone number and their exact measurement history will open in 1 second.
+                        </p>
+                    </details>
+
+                    <details class="card-modern rounded-xl group">
+                        <summary class="p-5 cursor-pointer select-none flex items-center justify-between gap-3 list-none [&::-webkit-details-marker]:hidden">
+                            <span class="flex items-center gap-2 text-sm sm:text-base font-bold text-white">
+                                <span class="material-symbols-outlined text-primary text-base">help</span>
+                                Can I track advance cash deposits and pending balances?
+                            </span>
+                            <span class="material-symbols-outlined text-on-surface-muted text-lg transition-transform group-open:rotate-180">expand_more</span>
+                        </summary>
+                        <p class="px-5 pb-5 text-xs sm:text-sm text-on-surface-variant leading-relaxed pl-11">
+                            Yes. DarziDesk logs advance payments at order booking and calculates the exact remaining balance due on delivery. You can send receipt bills on WhatsApp instantly.
+                        </p>
+                    </details>
+
+                    <details class="card-modern rounded-xl group">
+                        <summary class="p-5 cursor-pointer select-none flex items-center justify-between gap-3 list-none [&::-webkit-details-marker]:hidden">
+                            <span class="flex items-center gap-2 text-sm sm:text-base font-bold text-white">
+                                <span class="material-symbols-outlined text-primary text-base">help</span>
+                                Can I manage multiple workers and karigars?
+                            </span>
+                            <span class="material-symbols-outlined text-on-surface-muted text-lg transition-transform group-open:rotate-180">expand_more</span>
+                        </summary>
+                        <p class="px-5 pb-5 text-xs sm:text-sm text-on-surface-variant leading-relaxed pl-11">
+                            Yes. You can assign specific garments to master cutters and stitching tailors, track stages on a visual kanban board, and compute piece-rate pay.
+                        </p>
+                    </details>
+
+                    <details class="card-modern rounded-xl group">
+                        <summary class="p-5 cursor-pointer select-none flex items-center justify-between gap-3 list-none [&::-webkit-details-marker]:hidden">
+                            <span class="flex items-center gap-2 text-sm sm:text-base font-bold text-white">
+                                <span class="material-symbols-outlined text-primary text-base">help</span>
+                                Does it work on Android and iPhone?
+                            </span>
+                            <span class="material-symbols-outlined text-on-surface-muted text-lg transition-transform group-open:rotate-180">expand_more</span>
+                        </summary>
+                        <p class="px-5 pb-5 text-xs sm:text-sm text-on-surface-variant leading-relaxed pl-11">
+                            Yes. Native DarziDesk apps are live on Google Play Store and Apple App Store, plus you can login on any laptop or desktop web browser.
+                        </p>
+                    </details>
+
+                    <details class="card-modern rounded-xl group">
+                        <summary class="p-5 cursor-pointer select-none flex items-center justify-between gap-3 list-none [&::-webkit-details-marker]:hidden">
+                            <span class="flex items-center gap-2 text-sm sm:text-base font-bold text-white">
+                                <span class="material-symbols-outlined text-primary text-base">help</span>
+                                Is my customer data secure?
+                            </span>
+                            <span class="material-symbols-outlined text-on-surface-muted text-lg transition-transform group-open:rotate-180">expand_more</span>
+                        </summary>
+                        <p class="px-5 pb-5 text-xs sm:text-sm text-on-surface-variant leading-relaxed pl-11">
+                            100%. All customer measurements and billing records are stored in encrypted cloud storage with automatic daily backups.
+                        </p>
+                    </details>
+
+                    <details class="card-modern rounded-xl group">
+                        <summary class="p-5 cursor-pointer select-none flex items-center justify-between gap-3 list-none [&::-webkit-details-marker]:hidden">
+                            <span class="flex items-center gap-2 text-sm sm:text-base font-bold text-white">
+                                <span class="material-symbols-outlined text-primary text-base">help</span>
+                                Do you provide onboarding support to migrate from notebooks?
+                            </span>
+                            <span class="material-symbols-outlined text-on-surface-muted text-lg transition-transform group-open:rotate-180">expand_more</span>
+                        </summary>
+                        <p class="px-5 pb-5 text-xs sm:text-sm text-on-surface-variant leading-relaxed pl-11">
+                            Yes. Our team provides free setup assistance and WhatsApp support to help you get started comfortably.
+                        </p>
+                    </details>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 12. FINAL CALL TO ACTION -->
+        <section class="py-20 bg-surface-card border-b border-white/[0.06] text-center">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-white mb-3">Start Managing Your Shop Smarter Today</h2>
+                <p class="text-sm sm:text-base text-on-surface-variant max-w-lg mx-auto mb-8">
+                    Join hundreds of tailor shops and boutiques across India. Sign up in under 60 seconds.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="{{ route('register') }}" class="btn-gold px-8 py-3.5 rounded-xl text-sm font-bold w-full sm:w-auto">
+                        Start 14-Day Free Trial
+                    </a>
+                    <button onclick="document.getElementById('demo-modal').classList.remove('hidden')" class="btn-outline-gold px-8 py-3.5 rounded-xl text-sm font-semibold w-full sm:w-auto flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-base">calendar_month</span>
+                        <span>Book a Free Demo</span>
+                    </button>
+                    <a href="https://wa.me/919536824061?text=Hi%20DarziDesk%2C%20I%20want%20to%20start%20my%20free%20trial" target="_blank" class="px-6 py-3.5 rounded-xl bg-[#25D366] text-white font-bold text-sm hover:bg-[#20ba59] transition-all flex items-center justify-center gap-2 w-full sm:w-auto">
+                        <span class="material-symbols-outlined text-base">chat</span>
+                        <span>Chat on WhatsApp</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Global SaaS Footer -->
+    @include('layouts.saas_footer')
+
+    <!-- Book Demo Modal (No Emojis) -->
+    <div id="demo-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="bg-surface rounded-2xl p-6 sm:p-8 max-w-md w-full border border-white/[0.1] shadow-2xl relative">
+            <button onclick="document.getElementById('demo-modal').classList.add('hidden')" class="absolute top-4 right-4 text-on-surface-muted hover:text-white">
+                <span class="material-symbols-outlined text-2xl">close</span>
+            </button>
+            <h3 class="text-xl font-bold text-white mb-1">Book Your Free Live Demo</h3>
+            <p class="text-xs text-on-surface-variant mb-6">See how DarziDesk works for your shop in a quick 10-minute demo.</p>
+            
+            <form action="{{ route('demo.store') }}" method="POST" class="space-y-4">
+                @csrf
+                <div>
+                    <label class="block text-xs font-semibold text-on-surface-variant mb-1">Your Full Name *</label>
+                    <input type="text" name="name" required placeholder="e.g. Ramesh Tailor" class="w-full bg-background border border-white/[0.1] rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-primary">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-on-surface-variant mb-1">Mobile / WhatsApp *</label>
+                        <input type="tel" name="mobile" required placeholder="9876543210" class="w-full bg-background border border-white/[0.1] rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-on-surface-variant mb-1">City *</label>
+                        <input type="text" name="city" placeholder="e.g. Jaipur" class="w-full bg-background border border-white/[0.1] rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-primary">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-on-surface-variant mb-1">Business Name</label>
+                        <input type="text" name="business_name" placeholder="Shop Name" class="w-full bg-background border border-white/[0.1] rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-on-surface-variant mb-1">Number of Workers</label>
+                        <select name="workers_count" class="w-full bg-background border border-white/[0.1] rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-primary">
+                            <option value="1-2">1 to 2</option>
+                            <option value="3-5" selected>3 to 5</option>
+                            <option value="6-10">6 to 10</option>
+                            <option value="10+">10+</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="w-full btn-gold py-3 rounded-xl font-bold text-sm mt-2 flex items-center justify-center gap-2">
+                    <span>Schedule Free Demo</span>
+                    <span class="material-symbols-outlined text-sm">send</span>
+                </button>
+                <p class="text-[11px] text-center text-on-surface-muted">Free 1-on-1 Consultation. Zero spam guaranteed.</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Demo Form Success Toast -->
+    @if(session('success'))
+    <div id="success-toast" class="fixed top-24 left-1/2 -translate-x-1/2 z-[60] bg-emerald-500/95 backdrop-blur-sm text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 animate-bounce max-w-md">
+        <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+        <div>
+            <p class="text-sm font-bold">{{ session('success') }}</p>
+            <p class="text-xs opacity-80">We will contact you within 24 hours.</p>
+        </div>
+        <button onclick="document.getElementById('success-toast').remove()" class="ml-auto text-white/70 hover:text-white" aria-label="Dismiss notification">
+            <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+    </div>
+    <script>setTimeout(() => { const t = document.getElementById('success-toast'); if(t) t.remove(); }, 8000);</script>
     @endif
-@endforeach
-</div>
-</div>
-<!-- Standardized Top Buttons -->
-<div class="flex items-center gap-4">
-<a href="{{ route('login') }}" class="btn-gold-outline">Partner Login</a>
-<a href="{{ route('register') }}" class="btn-gold">Get Started</a>
-</div>
-</nav>
-</header>
+    </div>
 
-<main class="pt-20">
-<!-- Hero Section -->
-<section class="relative min-h-[720px] flex items-center overflow-hidden">
-<div class="absolute inset-0 z-0">
-<img class="w-full h-full object-cover" alt="Master tailor crafting bespoke suit" src="{{ asset('assets/images/hero_tailor_atelier.jpg') }}"/>
-<div class="absolute inset-0 hero-gradient"></div>
-</div>
-<div class="relative z-10 w-full max-w-container-max mx-auto px-gutter grid grid-cols-1 lg:grid-cols-12 gap-gutter py-12">
-<div class="lg:col-span-8 flex flex-col gap-6">
-<span class="inline-block px-4 py-1.5 rounded-full bg-primary-container/20 text-primary-container border border-primary-container/40 w-fit font-label-md tracking-widest uppercase font-bold">The Artisan Standard</span>
-<h1 class="font-display-lg text-display-lg text-white max-w-2xl leading-tight font-extrabold">Tailored Precision for the Modern Silhouette.</h1>
-<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl leading-relaxed">Connect with the world's finest master tailors. From bespoke Savile Row suits to intricate traditional heritage wear.</p>
-<form id="hero-search-form" action="#nearby-tailors" method="GET" class="mt-4 glass-card p-3 rounded-full flex flex-col md:flex-row items-stretch md:items-center shadow-2xl max-w-2xl gap-3 md:gap-0">
-<div class="flex-1 flex items-center px-6 gap-3 py-2 md:py-0">
-<span class="material-symbols-outlined text-primary text-2xl">search</span>
-<input id="search-keyword-input" name="search" value="{{ request('search') }}" class="w-full bg-transparent border-none focus:ring-0 font-body-md placeholder:text-on-surface-variant/70 text-white" placeholder="Bespoke Tuxedo, Suit, Alteration..." type="text"/>
-</div>
-<div class="hidden md:block h-8 w-[1px] bg-outline-variant"></div>
-<div class="flex-1 flex items-center px-6 gap-3 py-2 md:py-0">
-<span class="material-symbols-outlined text-primary text-2xl">location_on</span>
-<input id="search-location-input" name="location" value="{{ request('location') }}" class="w-full bg-transparent border-none focus:ring-0 font-body-md placeholder:text-on-surface-variant/70 text-white" placeholder="London, Mayfair, Milan..." type="text"/>
-</div>
-<button type="submit" id="search-submit-button" class="btn-gold btn-lg">Find Tailor</button>
-</form>
-</div>
-</div>
-</section>
-
-<!-- Nearby Tailors (Luxury Grid) -->
-<section class="py-margin-desktop bg-background" id="nearby-tailors">
-<div class="max-w-container-max mx-auto px-gutter">
-<div class="flex justify-between items-end mb-10">
-<div>
-<span class="text-primary font-bold text-sm uppercase tracking-widest block mb-1">Curated Marketplace</span>
-<h2 class="font-headline-lg text-headline-lg text-white font-extrabold mb-2" id="nearby-tailors-title">Nearby Tailors</h2>
-<p class="text-on-surface-variant font-body-md" id="nearby-tailors-subtitle">Expert artisans in your current location.</p>
-</div>
-<button id="view-all-tailors-btn" type="button" class="text-primary font-bold text-base flex items-center gap-2 hover:underline">View All <span class="material-symbols-outlined">arrow_forward</span></button>
-</div>
-
-<div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="tailors-grid">
-<!-- Card 1 -->
-<a href="{{ route('tailor.detail', 1) }}" class="tailor-card luxury-card rounded-3xl overflow-hidden block transition-all group" data-name="Savile & Row Atelier" data-location="Mayfair, London" data-tags="Bespoke Suits Tuxedos Savile Row Mayfair London">
-<div class="overflow-hidden h-56 relative">
-<img alt="Savile & Row Studio" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500" src="{{ asset('assets/images/hero_tailor_atelier.jpg') }}"/>
-<div class="absolute inset-0 bg-gradient-to-t from-[#0B2239] via-transparent to-transparent opacity-90"></div>
-<div class="absolute top-4 right-4 bg-primary/90 backdrop-blur-md text-on-primary px-3 py-1 rounded-full text-xs font-extrabold flex items-center gap-1 shadow-md">
-<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-<span>4.9</span>
-</div>
-</div>
-<div class="p-6">
-<h3 class="font-title-lg text-xl text-white font-bold group-hover:text-primary transition-colors mb-1">Savile &amp; Row Atelier</h3>
-<p class="text-on-surface-variant font-body-sm mb-4 flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-primary">location_on</span> Mayfair, London</p>
-<div class="flex flex-wrap gap-2 pt-2 border-t border-outline-variant/50">
-<span class="px-3.5 py-1 bg-secondary-container text-primary border border-primary/30 rounded-full text-xs font-bold">Bespoke Suits</span>
-<span class="px-3.5 py-1 bg-secondary-container text-primary border border-primary/30 rounded-full text-xs font-bold">Tuxedos</span>
-</div>
-</div>
-</a>
-
-<!-- Card 2 -->
-<a href="{{ route('tailor.detail', 2) }}" class="tailor-card luxury-card rounded-3xl overflow-hidden block transition-all group" data-name="The Stitch Lab Studio" data-location="Soho, London" data-tags="Modern Cut Alterations Stitch Lab Soho London">
-<div class="overflow-hidden h-56 relative">
-<img alt="The Stitch Lab Studio" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500" src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=800&q=80"/>
-<div class="absolute inset-0 bg-gradient-to-t from-[#0B2239] via-transparent to-transparent opacity-90"></div>
-<div class="absolute top-4 right-4 bg-primary/90 backdrop-blur-md text-on-primary px-3 py-1 rounded-full text-xs font-extrabold flex items-center gap-1 shadow-md">
-<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-<span>4.8</span>
-</div>
-</div>
-<div class="p-6">
-<h3 class="font-title-lg text-xl text-white font-bold group-hover:text-primary transition-colors mb-1">The Stitch Lab Studio</h3>
-<p class="text-on-surface-variant font-body-sm mb-4 flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-primary">location_on</span> Soho, London</p>
-<div class="flex flex-wrap gap-2 pt-2 border-t border-outline-variant/50">
-<span class="px-3.5 py-1 bg-secondary-container text-primary border border-primary/30 rounded-full text-xs font-bold">Modern Cut</span>
-<span class="px-3.5 py-1 bg-secondary-container text-primary border border-primary/30 rounded-full text-xs font-bold">Alterations</span>
-</div>
-</div>
-</a>
-
-<!-- Card 3 -->
-<a href="{{ route('tailor.detail', 3) }}" class="tailor-card luxury-card rounded-3xl overflow-hidden block transition-all group" data-name="Heritage Threads Atelier" data-location="Kensington, London" data-tags="Traditional Silk Royal Sherwanis Bandhgala Suits Heritage Threads Kensington London">
-<div class="overflow-hidden h-56 relative">
-<img alt="Heritage Threads Studio" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500" src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80"/>
-<div class="absolute inset-0 bg-gradient-to-t from-[#0B2239] via-transparent to-transparent opacity-90"></div>
-<div class="absolute top-4 right-4 bg-primary/90 backdrop-blur-md text-on-primary px-3 py-1 rounded-full text-xs font-extrabold flex items-center gap-1 shadow-md">
-<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-<span>5.0</span>
-</div>
-</div>
-<div class="p-6">
-<h3 class="font-title-lg text-xl text-white font-bold group-hover:text-primary transition-colors mb-1">Heritage Threads Atelier</h3>
-<p class="text-on-surface-variant font-body-sm mb-4 flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-primary">location_on</span> Kensington, London</p>
-<div class="flex flex-wrap gap-2 pt-2 border-t border-outline-variant/50">
-<span class="px-3.5 py-1 bg-secondary-container text-primary border border-primary/30 rounded-full text-xs font-bold">Traditional Silk</span>
-<span class="px-3.5 py-1 bg-secondary-container text-primary border border-primary/30 rounded-full text-xs font-bold">Sherwanis</span>
-</div>
-</div>
-</a>
-
-<!-- Card 4 -->
-<a href="{{ route('tailor.detail', 4) }}" class="tailor-card luxury-card rounded-3xl overflow-hidden block transition-all group" data-name="Milano Bespoke Sartoria" data-location="Milan, Italy" data-tags="Italian Suit Cashmere Blazer Double Breasted Sartoria Milan Italy">
-<div class="overflow-hidden h-56 relative">
-<img alt="Milano Bespoke Sartoria" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500" src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=800&q=80"/>
-<div class="absolute inset-0 bg-gradient-to-t from-[#0B2239] via-transparent to-transparent opacity-90"></div>
-<div class="absolute top-4 right-4 bg-primary/90 backdrop-blur-md text-on-primary px-3 py-1 rounded-full text-xs font-extrabold flex items-center gap-1 shadow-md">
-<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-<span>4.9</span>
-</div>
-</div>
-<div class="p-6">
-<h3 class="font-title-lg text-xl text-white font-bold group-hover:text-primary transition-colors mb-1">Milano Sartoria</h3>
-<p class="text-on-surface-variant font-body-sm mb-4 flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-primary">location_on</span> Via Montenapoleone, Milan</p>
-<div class="flex flex-wrap gap-2 pt-2 border-t border-outline-variant/50">
-<span class="px-3.5 py-1 bg-secondary-container text-primary border border-primary/30 rounded-full text-xs font-bold">Italian Cut</span>
-<span class="px-3.5 py-1 bg-secondary-container text-primary border border-primary/30 rounded-full text-xs font-bold">Cashmere</span>
-</div>
-</div>
-</a>
-
-<!-- Card 5 -->
-<a href="{{ route('tailor.detail', 5) }}" class="tailor-card luxury-card rounded-3xl overflow-hidden block transition-all group" data-name="Fifth Avenue Tailoring House" data-location="New York, USA" data-tags="Tuxedo Wedding Suit Formal Gowns New York USA">
-<div class="overflow-hidden h-56 relative">
-<img alt="Fifth Avenue Tailoring House" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500" src="https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=800&q=80"/>
-<div class="absolute inset-0 bg-gradient-to-t from-[#0B2239] via-transparent to-transparent opacity-90"></div>
-<div class="absolute top-4 right-4 bg-primary/90 backdrop-blur-md text-on-primary px-3 py-1 rounded-full text-xs font-extrabold flex items-center gap-1 shadow-md">
-<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-<span>4.9</span>
-</div>
-</div>
-<div class="p-6">
-<h3 class="font-title-lg text-xl text-white font-bold group-hover:text-primary transition-colors mb-1">Fifth Avenue Tailoring</h3>
-<p class="text-on-surface-variant font-body-sm mb-4 flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-primary">location_on</span> Manhattan, New York</p>
-<div class="flex flex-wrap gap-2 pt-2 border-t border-outline-variant/50">
-<span class="px-3.5 py-1 bg-secondary-container text-primary border border-primary/30 rounded-full text-xs font-bold">Black Tie</span>
-<span class="px-3.5 py-1 bg-secondary-container text-primary border border-primary/30 rounded-full text-xs font-bold">Monogramming</span>
-</div>
-</div>
-</a>
-
-<!-- Card 6 -->
-<a href="{{ route('tailor.detail', 6) }}" class="tailor-card luxury-card rounded-3xl overflow-hidden block transition-all group" data-name="Ginza Master Cutters" data-location="Tokyo, Japan" data-tags="Minimalist Precision Japanese Cutters Ginza Tokyo Japan">
-<div class="overflow-hidden h-56 relative">
-<img alt="Ginza Master Cutters" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500" src="https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=800&q=80"/>
-<div class="absolute inset-0 bg-gradient-to-t from-[#0B2239] via-transparent to-transparent opacity-90"></div>
-<div class="absolute top-4 right-4 bg-primary/90 backdrop-blur-md text-on-primary px-3 py-1 rounded-full text-xs font-extrabold flex items-center gap-1 shadow-md">
-<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-<span>5.0</span>
-</div>
-</div>
-<div class="p-6">
-<h3 class="font-title-lg text-xl text-white font-bold group-hover:text-primary transition-colors mb-1">Ginza Master Cutters</h3>
-<p class="text-on-surface-variant font-body-sm mb-4 flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-primary">location_on</span> Ginza, Tokyo</p>
-<div class="flex flex-wrap gap-2 pt-2 border-t border-outline-variant/50">
-<span class="px-3.5 py-1 bg-secondary-container text-primary border border-primary/30 rounded-full text-xs font-bold">Minimalist Fit</span>
-<span class="px-3.5 py-1 bg-secondary-container text-primary border border-primary/30 rounded-full text-xs font-bold">Indigo Dye</span>
-</div>
-</div>
-</a>
-</div>
-
-<div id="no-tailors-found" class="hidden text-center py-16 px-6 bg-surface rounded-3xl border border-outline-variant col-span-1 md:col-span-3 my-6">
-<span class="material-symbols-outlined text-6xl text-primary mb-3">search_off</span>
-<h3 class="font-title-lg text-2xl text-white font-bold mb-2">No tailors match your search</h3>
-<p class="text-on-surface-variant font-body-md mb-6 max-w-md mx-auto">Try searching for terms like "Suits", "Milan", "Mayfair" or clear your search filters.</p>
-<button type="button" id="reset-search-btn" class="btn-gold">Clear Search Filters</button>
-</div>
-</div>
-</section>
-
-<!-- Stats Section -->
-<section class="py-14 bg-surface-container-highest border-y border-outline-variant">
-<div class="max-w-container-max mx-auto px-gutter grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-<div class="flex flex-col">
-<span class="font-display-md text-4xl font-extrabold text-primary">12,480+</span>
-<span class="font-label-md text-xs text-on-surface-variant uppercase tracking-widest mt-1">Suits Delivered</span>
-</div>
-<div class="flex flex-col border-l border-outline-variant">
-<span class="font-display-md text-4xl font-extrabold text-primary">4.9/5</span>
-<span class="font-label-md text-xs text-on-surface-variant uppercase tracking-widest mt-1">Master Rating</span>
-</div>
-<div class="flex flex-col border-l border-outline-variant">
-<span class="font-display-md text-4xl font-extrabold text-primary">150+</span>
-<span class="font-label-md text-xs text-on-surface-variant uppercase tracking-widest mt-1">Heritage Mills</span>
-</div>
-<div class="flex flex-col border-l border-outline-variant">
-<span class="font-display-md text-4xl font-extrabold text-primary">100%</span>
-<span class="font-label-md text-xs text-on-surface-variant uppercase tracking-widest mt-1">Fit Guarantee</span>
-</div>
-</div>
-</section>
-
-<!-- The Darzi Process Section -->
-<section class="py-margin-desktop bg-background">
-<div class="max-w-container-max mx-auto px-gutter text-center">
-<span class="text-primary font-bold text-sm uppercase tracking-widest block mb-1">Step-By-Step Journey</span>
-<h2 class="font-headline-lg text-headline-lg text-white font-extrabold mb-12">The Darzi Process</h2>
-<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-<div class="luxury-card p-8 rounded-3xl flex flex-col items-center">
-<div class="w-20 h-20 rounded-2xl bg-secondary-container border border-primary/30 flex items-center justify-center mb-6">
-<span class="material-symbols-outlined text-primary text-4xl">forum</span>
-</div>
-<h3 class="font-title-lg text-xl text-white font-bold mb-2">01. Consultation</h3>
-<p class="text-on-surface-variant font-body-sm">Discuss your sartorial vision and style preferences with a master consultant.</p>
-</div>
-<div class="luxury-card p-8 rounded-3xl flex flex-col items-center">
-<div class="w-20 h-20 rounded-2xl bg-secondary-container border border-primary/30 flex items-center justify-center mb-6">
-<span class="material-symbols-outlined text-primary text-4xl">straighten</span>
-</div>
-<h3 class="font-title-lg text-xl text-white font-bold mb-2">02. Measurement</h3>
-<p class="text-on-surface-variant font-body-sm">Precise body measurements taken physically in atelier or via our 3D vision portal.</p>
-</div>
-<div class="luxury-card p-8 rounded-3xl flex flex-col items-center">
-<div class="w-20 h-20 rounded-2xl bg-secondary-container border border-primary/30 flex items-center justify-center mb-6">
-<span class="material-symbols-outlined text-primary text-4xl">content_cut</span>
-</div>
-<h3 class="font-title-lg text-xl text-white font-bold mb-2">03. Crafting</h3>
-<p class="text-on-surface-variant font-body-sm">Hand-stitched precision and canvas construction using time-honored techniques.</p>
-</div>
-<div class="luxury-card p-8 rounded-3xl flex flex-col items-center">
-<div class="w-20 h-20 rounded-2xl bg-secondary-container border border-primary/30 flex items-center justify-center mb-6">
-<span class="material-symbols-outlined text-primary text-4xl">local_shipping</span>
-</div>
-<h3 class="font-title-lg text-xl text-white font-bold mb-2">04. Delivery</h3>
-<p class="text-on-surface-variant font-body-sm">White-glove delivery with guaranteed fitting adjustments included free.</p>
-</div>
-</div>
-</div>
-</section>
-
-<!-- DarziDesk TMS Core Modules & Functionalities Showcase Section -->
-<section class="py-margin-desktop bg-surface" id="tms-modules">
-<div class="max-w-container-max mx-auto px-gutter">
-<div class="text-center mb-16">
-<span class="text-primary font-bold text-sm uppercase tracking-widest block mb-2">Enterprise TMS Architecture</span>
-<h2 class="font-headline-lg text-3xl md:text-5xl text-white font-extrabold mb-4">All-In-One Tailor Management System</h2>
-<p class="text-on-surface-variant font-body-lg max-w-3xl mx-auto leading-relaxed">Purpose-built for custom tailors, luxury sartorias, and multi-branch garment boutiques to streamline end-to-end atelier operations.</p>
-</div>
-
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-<!-- Module 1 -->
-<div class="luxury-card p-8 rounded-3xl flex flex-col group">
-<div class="w-16 h-16 rounded-2xl bg-secondary-container border border-primary/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-primary text-3xl">square_foot</span>
-</div>
-<h3 class="font-title-lg text-xl text-white font-bold mb-3 group-hover:text-primary transition-colors">Measurement Vault</h3>
-<p class="text-on-surface-variant font-body-sm leading-relaxed mb-6">Store unlimited anatomical measurement profiles per client. Quick-add garment specifications (Lapels, Pleats, Vents) with instant cm to inch unit conversions.</p>
-<div class="flex flex-wrap gap-2 mt-auto pt-4 border-t border-outline-variant/40">
-<span class="px-3 py-1 bg-background text-primary border border-primary/30 rounded-full text-xs font-bold">Unit Converter</span>
-<span class="px-3 py-1 bg-background text-primary border border-primary/30 rounded-full text-xs font-bold">Garment Specs</span>
-</div>
-</div>
-
-<!-- Module 2 -->
-<div class="luxury-card p-8 rounded-3xl flex flex-col group">
-<div class="w-16 h-16 rounded-2xl bg-secondary-container border border-primary/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-primary text-3xl">developer_board</span>
-</div>
-<h3 class="font-title-lg text-xl text-white font-bold mb-3 group-hover:text-primary transition-colors">Production Kanban</h3>
-<p class="text-on-surface-variant font-body-sm leading-relaxed mb-6">Assign tailors, master cutters, and hand-finishers to order stages (Pending, Cutting, Basting, Ready). Track real-time bottleneck alerts and piece-rate worker pay.</p>
-<div class="flex flex-wrap gap-2 mt-auto pt-4 border-t border-outline-variant/40">
-<span class="px-3 py-1 bg-background text-primary border border-primary/30 rounded-full text-xs font-bold">Worker Assign</span>
-<span class="px-3 py-1 bg-background text-primary border border-primary/30 rounded-full text-xs font-bold">Stage Tracking</span>
-</div>
-</div>
-
-<!-- Module 3 -->
-<div class="luxury-card p-8 rounded-3xl flex flex-col group">
-<div class="w-16 h-16 rounded-2xl bg-secondary-container border border-primary/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-primary text-3xl">point_of_sale</span>
-</div>
-<h3 class="font-title-lg text-xl text-white font-bold mb-3 group-hover:text-primary transition-colors">POS & Smart Invoicing</h3>
-<p class="text-on-surface-variant font-body-sm leading-relaxed mb-6">Process fast POS transactions with advance deposit split payments. Generate branded digital tax invoices and dispatch instant digital customer receipts.</p>
-<div class="flex flex-wrap gap-2 mt-auto pt-4 border-t border-outline-variant/40">
-<span class="px-3 py-1 bg-background text-primary border border-primary/30 rounded-full text-xs font-bold">Advance Deposit</span>
-<span class="px-3 py-1 bg-background text-primary border border-primary/30 rounded-full text-xs font-bold">Tax Invoices</span>
-</div>
-</div>
-
-<!-- Module 4 -->
-<div class="luxury-card p-8 rounded-3xl flex flex-col group">
-<div class="w-16 h-16 rounded-2xl bg-secondary-container border border-primary/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-primary text-3xl">inventory_2</span>
-</div>
-<h3 class="font-title-lg text-xl text-white font-bold mb-3 group-hover:text-primary transition-colors">Fabric & Cloth Stock</h3>
-<p class="text-on-surface-variant font-body-sm leading-relaxed mb-6">Track fabric roll inventory in meters/yards with automated low-stock threshold warnings. Manage fabric categories, suiting wools, lining silks, and supplier logs.</p>
-<div class="flex flex-wrap gap-2 mt-auto pt-4 border-t border-outline-variant/40">
-<span class="px-3 py-1 bg-background text-primary border border-primary/30 rounded-full text-xs font-bold">Stock Alerts</span>
-<span class="px-3 py-1 bg-background text-primary border border-primary/30 rounded-full text-xs font-bold">Meterage Logs</span>
-</div>
-</div>
-
-<!-- Module 5 -->
-<div class="luxury-card p-8 rounded-3xl flex flex-col group">
-<div class="w-16 h-16 rounded-2xl bg-secondary-container border border-primary/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-primary text-3xl">analytics</span>
-</div>
-<h3 class="font-title-lg text-xl text-white font-bold mb-3 group-hover:text-primary transition-colors">Financial Analytics & P&L</h3>
-<p class="text-on-surface-variant font-body-sm leading-relaxed mb-6">Gain 360° visibility into store profitability. Generate automated yearly profit & loss reports, track overhead expenses, and analyze revenue by garment type.</p>
-<div class="flex flex-wrap gap-2 mt-auto pt-4 border-t border-outline-variant/40">
-<span class="px-3 py-1 bg-background text-primary border border-primary/30 rounded-full text-xs font-bold">Yearly P&L</span>
-<span class="px-3 py-1 bg-background text-primary border border-primary/30 rounded-full text-xs font-bold">Expense Log</span>
-</div>
-</div>
-
-<!-- Module 6 -->
-<div class="luxury-card p-8 rounded-3xl flex flex-col group">
-<div class="w-16 h-16 rounded-2xl bg-secondary-container border border-primary/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-primary text-3xl">domain</span>
-</div>
-<h3 class="font-title-lg text-xl text-white font-bold mb-3 group-hover:text-primary transition-colors">Multi-Store Governance</h3>
-<p class="text-on-surface-variant font-body-sm leading-relaxed mb-6">Granular security access control for Super Admins, Store Owners, Managers, and Tailoring Staff. Manage multiple branch locations with isolated data roles.</p>
-<div class="flex flex-wrap gap-2 mt-auto pt-4 border-t border-outline-variant/40">
-<span class="px-3 py-1 bg-background text-primary border border-primary/30 rounded-full text-xs font-bold">Role Access</span>
-<span class="px-3 py-1 bg-background text-primary border border-primary/30 rounded-full text-xs font-bold">Multi-Branch</span>
-</div>
-</div>
-</div>
-
-<!-- Extra Advanced Features Section (New Highlight Grid) -->
-<div class="mt-12 text-center mb-10">
-<span class="text-primary font-bold text-sm uppercase tracking-widest block mb-2">Automated Studio Workflows</span>
-<h3 class="font-headline-lg text-2xl md:text-4xl text-white font-bold">Advanced Tailoring Capabilities</h3>
-</div>
-
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-<!-- Feature 7 -->
-<div class="luxury-card p-8 rounded-3xl flex flex-col group">
-<div class="w-14 h-14 rounded-2xl bg-secondary-container flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-primary text-3xl">chat_apps</span>
-</div>
-<h4 class="font-title-lg text-lg text-white font-bold mb-2 group-hover:text-primary transition-colors">SMS &amp; WhatsApp Alerts</h4>
-<p class="text-on-surface-variant font-body-sm">Send automated notifications to clients when garments reach trial fittings or ready-for-pickup stages.</p>
-</div>
-
-<!-- Feature 8 -->
-<div class="luxury-card p-8 rounded-3xl flex flex-col group">
-<div class="w-14 h-14 rounded-2xl bg-secondary-container flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-primary text-3xl">qr_code_scanner</span>
-</div>
-<h4 class="font-title-lg text-lg text-white font-bold mb-2 group-hover:text-primary transition-colors">QR Code Hanger Tagging</h4>
-<p class="text-on-surface-variant font-body-sm">Print barcode/QR tags for garment hangers. Cutters scan tags to advance order status in seconds.</p>
-</div>
-
-<!-- Feature 9 -->
-<div class="luxury-card p-8 rounded-3xl flex flex-col group">
-<div class="w-14 h-14 rounded-2xl bg-secondary-container flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-primary text-3xl">payments</span>
-</div>
-<h4 class="font-title-lg text-lg text-white font-bold mb-2 group-hover:text-primary transition-colors">Worker Payroll &amp; Piece-Rate</h4>
-<p class="text-on-surface-variant font-body-sm">Calculate artisan labor payouts based on finished jackets, trousers, or embroidery work automatically.</p>
-</div>
-
-<!-- Feature 10 -->
-<div class="luxury-card p-8 rounded-3xl flex flex-col group">
-<div class="w-14 h-14 rounded-2xl bg-secondary-container flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-primary text-3xl">style</span>
-</div>
-<h4 class="font-title-lg text-lg text-white font-bold mb-2 group-hover:text-primary transition-colors">Pre-Built Style Catalogs</h4>
-<p class="text-on-surface-variant font-body-sm">Pre-loaded style configurations for 2-piece suits, 3-piece tuxedos, Sherwanis, Nehru jackets, and shirts.</p>
-</div>
-
-<!-- Feature 11 -->
-<div class="luxury-card p-8 rounded-3xl flex flex-col group">
-<div class="w-14 h-14 rounded-2xl bg-secondary-container flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-primary text-3xl">event_available</span>
-</div>
-<h4 class="font-title-lg text-lg text-white font-bold mb-2 group-hover:text-primary transition-colors">Client Fitting Scheduler</h4>
-<p class="text-on-surface-variant font-body-sm">Allow VIP clients to schedule trial fittings or master tailor consultations online with automated reminders.</p>
-</div>
-
-<!-- Feature 12 -->
-<div class="luxury-card p-8 rounded-3xl flex flex-col group">
-<div class="w-14 h-14 rounded-2xl bg-secondary-container flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-primary text-3xl">currency_exchange</span>
-</div>
-<h4 class="font-title-lg text-lg text-white font-bold mb-2 group-hover:text-primary transition-colors">Multi-Currency &amp; Tax Engine</h4>
-<p class="text-on-surface-variant font-body-sm">Support for global currencies (GBP, USD, EUR, INR) and customizable VAT, GST, and tax rules.</p>
-</div>
-</div>
-
-<!-- TMS Advantage Banner -->
-<div class="luxury-card rounded-3xl p-8 md:p-12 border border-primary/40 relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8">
-<div class="max-w-2xl text-left">
-<span class="px-4 py-1.5 rounded-full bg-primary/20 text-primary border border-primary/40 font-label-md uppercase tracking-wider font-bold mb-4 inline-block">The Darzi Advantage</span>
-<h3 class="font-headline-lg text-2xl md:text-3xl text-white font-bold mb-3">Transform Your Atelier Operations Today</h3>
-<p class="text-on-surface-variant font-body-md">Eliminate paper measurement cards, order miscommunications, and lost fabric inventory. DarziDesk keeps your entire tailoring team synchronized.</p>
-</div>
-<div class="flex gap-4 shrink-0">
-<a href="{{ route('register') }}" class="btn-gold btn-lg">Schedule Demo</a>
-</div>
-</div>
-</div>
-</section>
-
-<!-- Frequently Asked Questions (Interactive Accordion) -->
-<section class="py-margin-desktop bg-background" id="faq-section">
-<div class="max-w-container-max mx-auto px-gutter max-w-3xl">
-<div class="text-center mb-12">
-<span class="text-primary font-bold text-sm uppercase tracking-widest block mb-1">Need Clarification?</span>
-<h2 class="font-headline-lg text-headline-lg text-white font-extrabold mb-3">Frequently Asked Questions</h2>
-<p class="text-on-surface-variant font-body-md">Click any question below to expand the answer.</p>
-</div>
-<div class="space-y-4" id="faq-accordion">
-
-<div class="bg-surface rounded-2xl border border-outline-variant overflow-hidden transition-all faq-item">
-<button class="w-full px-6 py-5 flex justify-between items-center text-left font-title-lg text-white hover:text-primary transition-colors faq-trigger" type="button">
-<span class="font-bold text-base md:text-lg">How do digital body measurements work?</span>
-<span class="material-symbols-outlined text-primary transition-transform duration-300 faq-icon">expand_more</span>
-</button>
-<div class="px-6 pb-6 text-on-surface-variant font-body-md leading-relaxed hidden faq-answer border-t border-outline-variant/40 pt-4">
-Our 3D computer-vision measurement engine analyzes two full-length photos taken from your smartphone camera. With over 99.4% precision accuracy, it computes 45+ body metrics to build your personalized digital fitting profile.
-</div>
-</div>
-
-<div class="bg-surface rounded-2xl border border-outline-variant overflow-hidden transition-all faq-item">
-<button class="w-full px-6 py-5 flex justify-between items-center text-left font-title-lg text-white hover:text-primary transition-colors faq-trigger" type="button">
-<span class="font-bold text-base md:text-lg">What is the typical turnaround time for a bespoke suit?</span>
-<span class="material-symbols-outlined text-primary transition-transform duration-300 faq-icon">expand_more</span>
-</button>
-<div class="px-6 pb-6 text-on-surface-variant font-body-md leading-relaxed hidden faq-answer border-t border-outline-variant/40 pt-4">
-Standard bespoke production takes between 2 to 3 weeks, including pattern drafting, basting fitting, and hand finishing. Priority express tailoring is available for urgent events.
-</div>
-</div>
-
-<div class="bg-surface rounded-2xl border border-outline-variant overflow-hidden transition-all faq-item">
-<button class="w-full px-6 py-5 flex justify-between items-center text-left font-title-lg text-white hover:text-primary transition-colors faq-trigger" type="button">
-<span class="font-bold text-base md:text-lg">Can I provide my own custom fabric (CMT Service)?</span>
-<span class="material-symbols-outlined text-primary transition-transform duration-300 faq-icon">expand_more</span>
-</button>
-<div class="px-6 pb-6 text-on-surface-variant font-body-md leading-relaxed hidden faq-answer border-t border-outline-variant/40 pt-4">
-Yes! Our partner ateliers offer Cut, Make & Trim (CMT) services for client-provided fabric. We inspect the weave density, thread count, and drape prior to cutting.
-</div>
-</div>
-
-<div class="bg-surface rounded-2xl border border-outline-variant overflow-hidden transition-all faq-item">
-<button class="w-full px-6 py-5 flex justify-between items-center text-left font-title-lg text-white hover:text-primary transition-colors faq-trigger" type="button">
-<span class="font-bold text-base md:text-lg">What happens if my garment needs additional adjustments?</span>
-<span class="material-symbols-outlined text-primary transition-transform duration-300 faq-icon">expand_more</span>
-</button>
-<div class="px-6 pb-6 text-on-surface-variant font-body-md leading-relaxed hidden faq-answer border-t border-outline-variant/40 pt-4">
-Every order includes our 100% Perfect Fit Guarantee. If any alteration is needed within 30 days of receipt, our partner ateliers will adjust your garment free of charge.
-</div>
-</div>
-
-</div>
-</div>
-</section>
-
-<!-- Final CTA Banner -->
-<section class="relative py-20 bg-surface-container border-y border-outline-variant overflow-hidden">
-<div class="relative z-10 max-w-container-max mx-auto px-gutter text-center">
-<h2 class="font-display-md text-3xl md:text-4xl text-white font-extrabold mb-4">Ready to define your signature style?</h2>
-<p class="text-on-surface-variant font-body-lg max-w-2xl mx-auto mb-8">Join thousands of discerning professionals who trust DarziDesk for bespoke tailoring management.</p>
-<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-<a href="{{ route('register') }}" class="btn-gold btn-lg w-full sm:w-auto">Start Bespoke Journey</a>
-<a href="#nearby-tailors" class="btn-gold-outline btn-lg w-full sm:w-auto">Explore Artisans</a>
-</div>
-</div>
-</section>
-</main>
-
-<!-- Footer -->
-<footer class="w-full py-16 bg-background border-t border-outline-variant">
-<div class="grid grid-cols-1 md:grid-cols-4 gap-8 px-gutter max-w-container-max mx-auto">
-<div class="flex flex-col gap-4">
-<a href="{{ route('home') }}">
-    <img src="{{ asset('assets/images/logo_wide.png') }}" alt="DarziDesk" style="height: 42px; width: auto; max-width: 240px; object-fit: contain;">
-</a>
-<p class="text-on-surface-variant font-body-sm max-w-xs leading-relaxed">Connecting the world's most talented tailoring artisans with the modern connoisseur. Precision, redefined.</p>
-</div>
-<div class="flex flex-col gap-3">
-<span class="font-title-md text-primary font-bold text-lg">Services</span>
-<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Bespoke Suits</a>
-<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Alterations</a>
-<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="#">Fabric Library</a>
-</div>
-<div class="flex flex-col gap-3">
-<span class="font-title-md text-primary font-bold text-lg">Company & Legal</span>
-<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="{{ route('about.us') }}">About Us</a>
-<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="{{ route('privacy.policy') }}">Privacy Policy</a>
-<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="{{ route('terms.conditions') }}">Terms & Services</a>
-</div>
-<div class="flex flex-col gap-3">
-<span class="font-title-md text-primary font-bold text-lg">Support</span>
-<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="{{ route('delete.account') }}">Play Console Data Policy</a>
-<a class="text-on-surface-variant font-body-sm hover:text-primary transition-colors" href="{{ route('blog.index') }}">Blog & News</a>
-
-<div class="mt-4 p-4 rounded-2xl bg-surface border border-outline-variant">
-<p class="font-label-md text-primary font-bold mb-2">Subscribe to Artisan Journal</p>
-<div class="flex gap-2">
-<input class="w-full bg-surface-container-high border-outline-variant text-white placeholder:text-on-surface-variant rounded-xl px-3 py-2 text-sm focus:ring-1 focus:ring-primary" placeholder="Email" type="email"/>
-<button class="bg-primary text-on-primary font-bold p-2 rounded-xl hover:bg-primary-container transition-colors flex items-center justify-center">
-<span class="material-symbols-outlined text-sm">send</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-<div class="max-w-container-max mx-auto px-gutter mt-12 pt-6 border-t border-outline-variant flex flex-col md:flex-row justify-between items-center gap-4">
-<p class="font-body-sm text-on-surface-variant">© {{ date('Y') }} DarziDesk. Precision Tailoring SaaS.</p>
-<div class="flex items-center gap-6">
-<span class="font-body-sm text-on-surface-variant">English (UK)</span>
-<span class="font-body-sm text-on-surface-variant">GBP (£)</span>
-</div>
-</div>
-</footer>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // FAQ Accordion Toggle Logic
-    const faqTriggers = document.querySelectorAll('.faq-trigger');
-    faqTriggers.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const item = this.closest('.faq-item');
-            const answer = item.querySelector('.faq-answer');
-            const icon = item.querySelector('.faq-icon');
-            const isHidden = answer.classList.contains('hidden');
-
-            // Close other active answers
-            document.querySelectorAll('.faq-answer').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.faq-icon').forEach(el => el.style.transform = 'rotate(0deg)');
-
-            if (isHidden) {
-                answer.classList.remove('hidden');
-                icon.style.transform = 'rotate(180deg)';
+    <!-- Tab Switching Script -->
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('block'));
+            
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            const targetContent = document.getElementById('tab-content-' + tabId);
+            if (targetContent) {
+                targetContent.classList.remove('hidden');
+                targetContent.classList.add('block');
             }
-        });
-    });
-
-    // Search Bar Filtering Logic
-    const searchForm = document.getElementById('hero-search-form');
-    const keywordInput = document.getElementById('search-keyword-input');
-    const locationInput = document.getElementById('search-location-input');
-    const tailorCards = document.querySelectorAll('.tailor-card');
-    const noResultsDiv = document.getElementById('no-tailors-found');
-    const subtitle = document.getElementById('nearby-tailors-subtitle');
-    const resetBtn = document.getElementById('reset-search-btn');
-    const viewAllBtn = document.getElementById('view-all-tailors-btn');
-
-    function performSearch(shouldScroll = false) {
-        const keyword = (keywordInput ? keywordInput.value : '').toLowerCase().trim();
-        const location = (locationInput ? locationInput.value : '').toLowerCase().trim();
-        
-        let visibleCount = 0;
-
-        tailorCards.forEach(card => {
-            const name = (card.getAttribute('data-name') || '').toLowerCase();
-            const cardLoc = (card.getAttribute('data-location') || '').toLowerCase();
-            const tags = (card.getAttribute('data-tags') || '').toLowerCase();
-
-            const matchKeyword = !keyword || name.includes(keyword) || tags.includes(keyword) || cardLoc.includes(keyword);
-            const matchLocation = !location || cardLoc.includes(location) || name.includes(location) || tags.includes(location);
-
-            if (matchKeyword && matchLocation) {
-                card.style.display = '';
-                visibleCount++;
-            } else {
-                card.style.display = 'none';
-            }
-        });
-
-        if (noResultsDiv) {
-            if (visibleCount === 0) {
-                noResultsDiv.classList.remove('hidden');
-            } else {
-                noResultsDiv.classList.add('hidden');
+            
+            const targetBtn = document.querySelector(`[data-tab="${tabId}"]`);
+            if (targetBtn) {
+                targetBtn.classList.add('active');
             }
         }
-
-        if (subtitle) {
-            if (keyword || location) {
-                subtitle.textContent = `Found ${visibleCount} tailor atelier${visibleCount === 1 ? '' : 's'} matching your search criteria.`;
-            } else {
-                subtitle.textContent = 'Expert artisans in your current location.';
-            }
-        }
-
-        if (shouldScroll) {
-            const target = document.getElementById('nearby-tailors');
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-    }
-
-    if (searchForm) {
-        searchForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            performSearch(true);
-        });
-    }
-
-    if (keywordInput) {
-        keywordInput.addEventListener('input', function() {
-            performSearch(false);
-        });
-    }
-
-    if (locationInput) {
-        locationInput.addEventListener('input', function() {
-            performSearch(false);
-        });
-    }
-
-    if (resetBtn) {
-        resetBtn.addEventListener('click', function() {
-            if (keywordInput) keywordInput.value = '';
-            if (locationInput) locationInput.value = '';
-            performSearch(false);
-        });
-    }
-
-    if (viewAllBtn) {
-        viewAllBtn.addEventListener('click', function() {
-            if (keywordInput) keywordInput.value = '';
-            if (locationInput) locationInput.value = '';
-            performSearch(true);
-        });
-    }
-});
-</script>
+    </script>
 </body>
 </html>

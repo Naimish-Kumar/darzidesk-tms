@@ -33,6 +33,7 @@ storage/framework/views/*
 storage/logs/*
 !storage/logs/.gitignore
 mobile_app/
+darzidesk_app/
 
 # Playwright
 node_modules/

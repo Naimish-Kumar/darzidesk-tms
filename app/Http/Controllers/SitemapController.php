@@ -20,10 +20,70 @@ class SitemapController extends Controller
                 'priority' => '1.0',
             ],
             [
+                'loc' => route('pricing.public'),
+                'lastmod' => date('Y-m-d'),
+                'changefreq' => 'weekly',
+                'priority' => '0.9',
+            ],
+            [
+                'loc' => route('about.us'),
+                'lastmod' => date('Y-m-d'),
+                'changefreq' => 'monthly',
+                'priority' => '0.7',
+            ],
+            [
+                'loc' => url('/tailoring-shop-management-software'),
+                'lastmod' => date('Y-m-d'),
+                'changefreq' => 'weekly',
+                'priority' => '0.9',
+            ],
+            [
+                'loc' => url('/boutique-management-software'),
+                'lastmod' => date('Y-m-d'),
+                'changefreq' => 'weekly',
+                'priority' => '0.9',
+            ],
+            [
+                'loc' => url('/ladies-tailor-management-software'),
+                'lastmod' => date('Y-m-d'),
+                'changefreq' => 'weekly',
+                'priority' => '0.9',
+            ],
+            [
+                'loc' => url('/mens-tailor-management-software'),
+                'lastmod' => date('Y-m-d'),
+                'changefreq' => 'weekly',
+                'priority' => '0.9',
+            ],
+            [
+                'loc' => url('/tailor-measurement-management'),
+                'lastmod' => date('Y-m-d'),
+                'changefreq' => 'weekly',
+                'priority' => '0.9',
+            ],
+            [
+                'loc' => url('/tailoring-billing-software'),
+                'lastmod' => date('Y-m-d'),
+                'changefreq' => 'weekly',
+                'priority' => '0.9',
+            ],
+            [
+                'loc' => url('/tailoring-order-management'),
+                'lastmod' => date('Y-m-d'),
+                'changefreq' => 'weekly',
+                'priority' => '0.9',
+            ],
+            [
+                'loc' => url('/tailoring-software-india'),
+                'lastmod' => date('Y-m-d'),
+                'changefreq' => 'weekly',
+                'priority' => '0.9',
+            ],
+            [
                 'loc' => route('login'),
                 'lastmod' => date('Y-m-d'),
                 'changefreq' => 'monthly',
-                'priority' => '0.8',
+                'priority' => '0.7',
             ],
             [
                 'loc' => route('register'),
@@ -35,7 +95,7 @@ class SitemapController extends Controller
                 'loc' => route('blog.index'),
                 'lastmod' => date('Y-m-d'),
                 'changefreq' => 'weekly',
-                'priority' => '0.9',
+                'priority' => '0.8',
             ],
         ];
 
