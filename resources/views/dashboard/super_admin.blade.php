@@ -225,6 +225,86 @@
             animation: dd-pulse 2s ease-in-out infinite;
         }
 
+        /* Dashboard Tables */
+        .dd-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .dd-table thead th {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            color: #F4C861 !important;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border-bottom: 1px solid var(--dd-border) !important;
+            padding: 12px 16px;
+            background: #102B45 !important;
+        }
+        .dd-table tbody td {
+            font-size: 13px;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--dd-border) !important;
+            vertical-align: middle;
+            color: #E2E8F0 !important;
+            background: transparent;
+        }
+        .dd-table tbody tr:hover td {
+            background-color: rgba(16, 43, 69, 0.7) !important;
+            color: #FFFFFF !important;
+        }
+        .dd-table tbody tr:last-child td {
+            border-bottom: none !important;
+        }
+        .dd-owner-name {
+            color: #FFFFFF !important;
+            font-weight: 700;
+            font-size: 13.5px;
+        }
+        .dd-email-text {
+            color: #94A3B8 !important;
+            font-size: 13px;
+        }
+        .dd-date-text {
+            color: #CBD5E1 !important;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11.5px;
+        }
+        .dd-avatar-badge {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(217, 164, 65, 0.15);
+            color: #F4C861;
+            border: 1px solid rgba(217, 164, 65, 0.3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        .dd-pay-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(59, 130, 246, 0.15);
+            color: #93C5FD;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .dd-amount-text {
+            color: #4ADE80 !important;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 13.5px;
+        }
+        .dd-border-muted {
+            border-color: var(--dd-border) !important;
+        }
+
         /* Dark Mode Overrides */
         [data-pc-theme="dark"] .dd-welcome-banner,
         [data-pc-theme="dark"] .dd-stat-card,
@@ -476,14 +556,14 @@
             <div class="col-xl-2 col-lg-4 col-sm-6 col-12">
                 <div class="dd-stat-card">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div class="dd-stat-icon" style="background: #F3E5F5;">
-                            <i class="ti ti-user-check" style="color: #8E24AA;"></i>
+                        <div class="dd-stat-icon" style="background: rgba(168, 85, 247, 0.15); border-color: rgba(168, 85, 247, 0.3);">
+                            <i class="ti ti-user-check" style="color: #C084FC;"></i>
                         </div>
                     </div>
                     <div>
                         <div class="dd-stat-value">{{ $result['totalPlatformCustomers'] }}</div>
                         <div class="dd-stat-label">{{ __('Total Clients') }}</div>
-                        <div class="dd-stat-subtext" style="color: #8E24AA;">
+                        <div class="dd-stat-subtext" style="color: #C084FC;">
                             <i class="ti ti-users" style="font-size: 11px;"></i> {{ __('Across all boutiques') }}
                         </div>
                     </div>
@@ -494,14 +574,14 @@
             <div class="col-xl-2 col-lg-4 col-sm-6 col-12">
                 <div class="dd-stat-card">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div class="dd-stat-icon" style="background: #E0F7FA;">
-                            <i class="ti ti-needle" style="color: #00838F;"></i>
+                        <div class="dd-stat-icon" style="background: rgba(6, 182, 212, 0.15); border-color: rgba(6, 182, 212, 0.3);">
+                            <i class="ti ti-needle" style="color: #22D3EE;"></i>
                         </div>
                     </div>
                     <div>
                         <div class="dd-stat-value">{{ $result['totalPlatformOrders'] }}</div>
                         <div class="dd-stat-label">{{ __('Total Orders') }}</div>
-                        <div class="dd-stat-subtext" style="color: #00838F;">
+                        <div class="dd-stat-subtext" style="color: #22D3EE;">
                             <i class="ti ti-cut" style="font-size: 11px;"></i> {{ __('System order volume') }}
                         </div>
                     </div>
@@ -528,7 +608,7 @@
             {{-- Recent Owners --}}
             <div class="col-lg-6 col-12">
                 <div class="dd-chart-card h-100 mb-0">
-                    <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                    <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom dd-border-muted">
                         <div>
                             <h5 class="dd-chart-title"><i class="ti ti-building-store me-2" style="color: var(--dd-teal);"></i>{{ __('Recent Boutique Registrations') }}</h5>
                             <p class="dd-stat-label mb-0 mt-1">{{ __('Latest shop owners onboarded to DarziDesk') }}</p>
@@ -536,9 +616,9 @@
                         <a href="{{ route('users.index') }}" class="dd-btn-outline" style="padding: 4px 12px; font-size: 11px;">{{ __('View All') }}</a>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0" style="font-size: 13px;">
+                        <table class="dd-table align-middle mb-0">
                             <thead>
-                                <tr class="text-muted text-uppercase" style="font-size: 10px; font-family: 'JetBrains Mono', monospace;">
+                                <tr>
                                     <th>{{ __('Owner') }}</th>
                                     <th>{{ __('Email') }}</th>
                                     <th>{{ __('Joined') }}</th>
@@ -549,19 +629,17 @@
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center gap-2">
-                                                <div class="avatar rounded-circle bg-light-teal text-teal fw-bold p-2 text-center" style="width:32px; height:32px; font-size:12px;">
+                                                <div class="dd-avatar-badge">
                                                     {{ strtoupper(substr($owner->name, 0, 2)) }}
                                                 </div>
-                                                <div>
-                                                    <div class="fw-bold text-dark">{{ $owner->name }}</div>
-                                                </div>
+                                                <div class="dd-owner-name">{{ $owner->name }}</div>
                                             </div>
                                         </td>
-                                        <td class="text-muted">{{ $owner->email }}</td>
-                                        <td class="font-monospace text-muted" style="font-size: 11px;">{{ $owner->created_at->format('M d, Y') }}</td>
+                                        <td class="dd-email-text">{{ $owner->email }}</td>
+                                        <td class="dd-date-text">{{ $owner->created_at->format('M d, Y') }}</td>
                                     </tr>
                                 @empty
-                                    <tr><td colspan="3" class="text-center text-muted py-4">{{ __('No recent owners registered.') }}</td></tr>
+                                    <tr><td colspan="3" class="text-center py-4" style="color: #94A3B8;">{{ __('No recent owners registered.') }}</td></tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -572,7 +650,7 @@
             {{-- Recent Transactions --}}
             <div class="col-lg-6 col-12">
                 <div class="dd-chart-card h-100 mb-0">
-                    <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                    <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom dd-border-muted">
                         <div>
                             <h5 class="dd-chart-title"><i class="ti ti-receipt me-2" style="color: var(--dd-green);"></i>{{ __('Recent Subscription Billing') }}</h5>
                             <p class="dd-stat-label mb-0 mt-1">{{ __('Latest transactions processed on platform') }}</p>
@@ -580,9 +658,9 @@
                         <a href="{{ route('subscription.transaction') }}" class="dd-btn-outline" style="padding: 4px 12px; font-size: 11px;">{{ __('View All') }}</a>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0" style="font-size: 13px;">
+                        <table class="dd-table align-middle mb-0">
                             <thead>
-                                <tr class="text-muted text-uppercase" style="font-size: 10px; font-family: 'JetBrains Mono', monospace;">
+                                <tr>
                                     <th>{{ __('Boutique Owner') }}</th>
                                     <th>{{ __('Amount') }}</th>
                                     <th>{{ __('Payment Method') }}</th>
@@ -592,13 +670,13 @@
                             <tbody>
                                 @forelse($result['recentTransactions'] as $txn)
                                     <tr>
-                                        <td class="fw-bold text-dark">{{ $txn->user ? $txn->user->name : 'N/A' }}</td>
-                                        <td class="fw-bold text-success font-monospace">{{ getSettingsValByName('CURRENCY_SYMBOL') . number_format($txn->amount, 2) }}</td>
-                                        <td><span class="badge bg-light-primary text-primary" style="font-size: 10px;">{{ $txn->payment_type ?? 'Stripe' }}</span></td>
-                                        <td class="font-monospace text-muted" style="font-size: 11px;">{{ $txn->created_at->format('M d, Y') }}</td>
+                                        <td class="dd-owner-name">{{ $txn->user ? $txn->user->name : 'N/A' }}</td>
+                                        <td class="dd-amount-text">{{ getSettingsValByName('CURRENCY_SYMBOL') . number_format($txn->amount, 2) }}</td>
+                                        <td><span class="dd-pay-badge">{{ $txn->payment_type ?? 'Stripe' }}</span></td>
+                                        <td class="dd-date-text">{{ $txn->created_at->format('M d, Y') }}</td>
                                     </tr>
                                 @empty
-                                    <tr><td colspan="4" class="text-center text-muted py-4">{{ __('No recent transactions recorded.') }}</td></tr>
+                                    <tr><td colspan="4" class="text-center py-4" style="color: #94A3B8;">{{ __('No recent transactions recorded.') }}</td></tr>
                                 @endforelse
                             </tbody>
                         </table>
