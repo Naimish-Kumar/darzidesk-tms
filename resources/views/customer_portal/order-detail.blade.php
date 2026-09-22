@@ -15,15 +15,7 @@
         :root {
             --dd-gold: #D9A441;
             --dd-gold-hover: #F4C861;
-            --dd-gold-light: rgba(217, 164, 65, 0.12);
-            --dd-card-bg: #FFFFFF;
-            --dd-card-border: #E2E8F0;
-            --dd-inner-bg: #F8FAFC;
-            --dd-text-title: #0F172A;
-            --dd-text-sub: #64748B;
-        }
-
-        [data-pc-theme="dark"] {
+            --dd-gold-light: rgba(217, 164, 65, 0.15);
             --dd-card-bg: #0B2239;
             --dd-card-border: #29435D;
             --dd-inner-bg: #102B45;
@@ -35,7 +27,7 @@
             background: var(--dd-card-bg);
             border: 1px solid var(--dd-card-border);
             border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
             margin-bottom: 24px;
         }
 

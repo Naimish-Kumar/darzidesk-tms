@@ -210,7 +210,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('orders.index') }}" class="nav-link">
+                    <a href="{{ route('order.index') }}" class="nav-link">
                         <span class="material-symbols-outlined">shopping_bag</span>
                         Orders
                     </a>

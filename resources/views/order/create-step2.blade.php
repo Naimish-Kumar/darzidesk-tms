@@ -187,7 +187,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('orders.index') }}" class="nav-link active">
+                    <a href="{{ route('order.index') }}" class="nav-link active">
                         <span class="material-symbols-outlined">shopping_bag</span>
                         Orders
                     </a>
@@ -425,7 +425,7 @@
 
                 <div class="action-right-btns">
                     <button class="btn-draft">Save as Draft</button>
-                    <a href="{{ route('orders.index') }}" class="btn-next-measurements">
+                    <a href="{{ route('orders.create.step3') }}" class="btn-next-measurements">
                         Next: Measurements
                         <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
                     </a>

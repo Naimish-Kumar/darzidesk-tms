@@ -14,18 +14,7 @@
         :root {
             --dd-gold: #D9A441;
             --dd-gold-hover: #F4C861;
-            --dd-gold-light: rgba(217, 164, 65, 0.12);
-            --dd-card-bg: #FFFFFF;
-            --dd-card-border: #E2E8F0;
-            --dd-text-title: #0F172A;
-            --dd-text-sub: #64748B;
-            --dd-table-header-bg: #F8FAFC;
-            --dd-table-row-hover: #F8FAFC;
-            --dd-input-bg: #FFFFFF;
-            --dd-input-border: #CBD5E1;
-        }
-
-        [data-pc-theme="dark"] {
+            --dd-gold-light: rgba(217, 164, 65, 0.15);
             --dd-card-bg: #0B2239;
             --dd-card-border: #29435D;
             --dd-text-title: #FFFFFF;
@@ -40,7 +29,7 @@
             background: var(--dd-card-bg);
             border: 1px solid var(--dd-card-border);
             border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
             transition: all 0.2s ease;
         }
 
@@ -63,13 +52,18 @@
             font-size: 13px;
         }
 
+        .dd-filter-input::placeholder {
+            color: #8FA1B5 !important;
+        }
+
         .dd-filter-input:focus, .dd-filter-select:focus {
             border-color: var(--dd-gold) !important;
             box-shadow: 0 0 0 3px var(--dd-gold-light) !important;
         }
 
         .dd-portal-table {
-            color: var(--dd-text-title);
+            color: var(--dd-text-title) !important;
+            border-color: var(--dd-card-border) !important;
         }
 
         .dd-portal-table thead th {
@@ -80,19 +74,20 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            border-bottom: 1px solid var(--dd-card-border);
+            border-bottom: 1px solid var(--dd-card-border) !important;
             padding: 14px 16px;
         }
 
         .dd-portal-table tbody td {
             padding: 14px 16px;
-            border-bottom: 1px solid var(--dd-card-border);
+            border-bottom: 1px solid var(--dd-card-border) !important;
             vertical-align: middle;
-            color: var(--dd-text-title);
+            color: var(--dd-text-title) !important;
+            background: transparent !important;
         }
 
         .dd-portal-table tbody tr:hover td {
-            background: var(--dd-table-row-hover);
+            background: var(--dd-table-row-hover) !important;
         }
 
         .dd-order-id-badge {
@@ -183,7 +178,7 @@
                     <form method="GET" action="{{ route('customer.orders') }}" class="d-flex align-items-center gap-2 flex-wrap">
                         <div class="input-group input-group-sm" style="width: 220px;">
                             <input type="text" name="search" class="form-control dd-filter-input" placeholder="{{ __('Search Order # / Fabric...') }}" value="{{ request('search') }}">
-                            <button class="btn btn-outline-secondary" type="submit"><i class="ti ti-search"></i></button>
+                            <button class="btn btn-outline-secondary" type="submit" style="border-color: var(--dd-card-border); color: var(--dd-gold); background: var(--dd-input-bg);"><i class="ti ti-search"></i></button>
                         </div>
 
                         <select name="status" class="form-select form-select-sm dd-filter-select" style="width: 160px;" onchange="this.form.submit()">

@@ -180,7 +180,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('orders.index') }}" class="nav-link active">
+                    <a href="{{ route('order.index') }}" class="nav-link active">
                         <span class="material-symbols-outlined">shopping_bag</span>
                         Orders
                     </a>
@@ -273,7 +273,7 @@
 
                 <div class="section-header-row">
                     <div class="section-title">Recent Selections</div>
-                    <a href="{{ route('customers.index') }}" class="link-view-all">View All Clients</a>
+                    <a href="{{ route('customer.index') }}" class="link-view-all">View All Clients</a>
                 </div>
 
                 <!-- Recent Customers 4 Grid -->
@@ -341,7 +341,7 @@
                 </div>
 
                 <div class="card-actions-bar">
-                    <a href="{{ route('orders.index') }}" class="btn-cancel">
+                    <a href="{{ route('order.index') }}" class="btn-cancel">
                         <span class="material-symbols-outlined" style="font-size:18px;">close</span>
                         Cancel Order
                     </a>

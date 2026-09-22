@@ -190,7 +190,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('orders.index') }}" class="nav-link active">
+                    <a href="{{ route('order.index') }}" class="nav-link active">
                         <span class="material-symbols-outlined">shopping_bag</span>
                         Orders
                     </a>
@@ -340,7 +340,7 @@
                                 <span class="material-symbols-outlined" style="font-size:18px;">arrow_back</span>
                                 Back to Fabric Selection
                             </a>
-                            <a href="{{ route('orders.index') }}" class="btn-finalize-order">
+                            <a href="{{ route('order.index') }}" class="btn-finalize-order">
                                 Finalize & Create Order
                             </a>
                         </div>

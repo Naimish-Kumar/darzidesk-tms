@@ -1311,7 +1311,7 @@
                             <tbody>
                                 @foreach($result['recentOrders'] as $rOrder)
                                     <tr>
-                                        <td class="fw-bold text-dark">{{ orderPrefix() . $rOrder->id }}</td>
+                                        <td class="fw-bold" style="color: var(--dd-teal); font-family: 'JetBrains Mono', monospace;">{{ orderPrefix() . $rOrder->id }}</td>
                                         <td>{{ $rOrder->clothTypes->title ?? $rOrder->clothTypes->name ?? '-' }}</td>
                                         <td>{{ $rOrder->order_date ? \Carbon\Carbon::parse($rOrder->order_date)->format('d M Y') : '-' }}</td>
                                         <td>{{ $rOrder->deadline_date ? \Carbon\Carbon::parse($rOrder->deadline_date)->format('d M Y') : '-' }}</td>
@@ -1330,7 +1330,7 @@
                                             </span>
                                         </td>
                                         <td class="text-end">
-                                            <a href="{{ route('customer.orders.show', $rOrder->id) }}" class="btn btn-sm btn-light-primary">
+                                            <a href="{{ route('customer.orders.show', $rOrder->id) }}" class="dd-btn-outline py-1 px-2" style="font-size: 12px;">
                                                 <i class="ti ti-eye"></i>
                                             </a>
                                         </td>

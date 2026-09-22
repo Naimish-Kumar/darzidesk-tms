@@ -584,7 +584,7 @@ class OrderController extends Controller
 
         session()->forget(['order_step1', 'order_step2']);
 
-        return redirect()->route('orders.index')->with('success', 'Bespoke Order #' . $orderNumber . ' created successfully!');
+        return redirect()->route('order.index')->with('success', 'Bespoke Order #' . $orderNumber . ' created successfully!');
     }
 
     public function jobCard($ids)

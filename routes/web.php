@@ -316,6 +316,8 @@ Route::group(
         Route::delete('inventory/{id}', [\App\Http\Controllers\InventoryManagementController::class, 'destroy'])->name('inventory.destroy');
 
         // New Custom Order Multi-step Wizard Routes
+        Route::get('orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
+        Route::get('customers', [\App\Http\Controllers\CustomerController::class, 'index'])->name('customers.index');
         Route::get('orders/create/step-1', [\App\Http\Controllers\OrderController::class, 'createStep1'])->name('orders.create.step1');
         Route::post('orders/create/step-1', [\App\Http\Controllers\OrderController::class, 'storeStep1'])->name('orders.store.step1');
         Route::get('orders/create/step-2', [\App\Http\Controllers\OrderController::class, 'createStep2'])->name('orders.create.step2');

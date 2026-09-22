@@ -14,17 +14,7 @@
         :root {
             --dd-gold: #D9A441;
             --dd-gold-hover: #F4C861;
-            --dd-gold-light: rgba(217, 164, 65, 0.12);
-            --dd-card-bg: #FFFFFF;
-            --dd-card-border: #E2E8F0;
-            --dd-text-title: #0F172A;
-            --dd-text-sub: #64748B;
-            --dd-input-bg: #FFFFFF;
-            --dd-input-border: #CBD5E1;
-            --dd-input-disabled: #F1F5F9;
-        }
-
-        [data-pc-theme="dark"] {
+            --dd-gold-light: rgba(217, 164, 65, 0.15);
             --dd-card-bg: #0B2239;
             --dd-card-border: #29435D;
             --dd-text-title: #FFFFFF;
@@ -38,7 +28,7 @@
             background: var(--dd-card-bg);
             border: 1px solid var(--dd-card-border);
             border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
         }
 
         .dd-portal-title {
@@ -68,6 +58,10 @@
             padding: 10px 14px;
         }
 
+        .dd-form-control::placeholder {
+            color: #8FA1B5 !important;
+        }
+
         .dd-form-control:focus {
             border-color: var(--dd-gold) !important;
             box-shadow: 0 0 0 3px var(--dd-gold-light) !important;
@@ -75,7 +69,32 @@
 
         .dd-form-control:disabled, .dd-form-control[readonly] {
             background-color: var(--dd-input-disabled) !important;
-            opacity: 0.85;
+            border-color: #1E3347 !important;
+            color: #8FA1B5 !important;
+            opacity: 0.9;
+            cursor: not-allowed;
+        }
+
+        input[type="file"].dd-form-control {
+            color: #8FA1B5 !important;
+        }
+
+        input[type="file"].dd-form-control::file-selector-button {
+            background: #102B45;
+            color: #D9A441;
+            border: 1px solid #29435D;
+            border-radius: 6px;
+            padding: 4px 10px;
+            margin-right: 10px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        input[type="file"].dd-form-control::file-selector-button:hover {
+            background: #D9A441;
+            color: #03111F;
         }
 
         .dd-save-btn {

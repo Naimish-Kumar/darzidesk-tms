@@ -14,18 +14,7 @@
         :root {
             --dd-gold: #D9A441;
             --dd-gold-hover: #F4C861;
-            --dd-gold-light: rgba(217, 164, 65, 0.12);
-            --dd-card-bg: #FFFFFF;
-            --dd-card-border: #E2E8F0;
-            --dd-text-title: #0F172A;
-            --dd-text-sub: #64748B;
-            --dd-table-header-bg: #F8FAFC;
-            --dd-table-row-hover: #F8FAFC;
-            --dd-input-bg: #FFFFFF;
-            --dd-input-border: #CBD5E1;
-        }
-
-        [data-pc-theme="dark"] {
+            --dd-gold-light: rgba(217, 164, 65, 0.15);
             --dd-card-bg: #0B2239;
             --dd-card-border: #29435D;
             --dd-text-title: #FFFFFF;
@@ -40,7 +29,7 @@
             background: var(--dd-card-bg);
             border: 1px solid var(--dd-card-border);
             border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
         }
 
         .dd-portal-title {
@@ -68,7 +57,8 @@
         }
 
         .dd-portal-table {
-            color: var(--dd-text-title);
+            color: var(--dd-text-title) !important;
+            border-color: var(--dd-card-border) !important;
         }
 
         .dd-portal-table thead th {
@@ -79,19 +69,20 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            border-bottom: 1px solid var(--dd-card-border);
+            border-bottom: 1px solid var(--dd-card-border) !important;
             padding: 14px 16px;
         }
 
         .dd-portal-table tbody td {
             padding: 14px 16px;
-            border-bottom: 1px solid var(--dd-card-border);
+            border-bottom: 1px solid var(--dd-card-border) !important;
             vertical-align: middle;
-            color: var(--dd-text-title);
+            color: var(--dd-text-title) !important;
+            background: transparent !important;
         }
 
         .dd-portal-table tbody tr:hover td {
-            background: var(--dd-table-row-hover);
+            background: var(--dd-table-row-hover) !important;
         }
 
         .dd-invoice-id-badge {
