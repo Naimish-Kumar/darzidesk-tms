@@ -17,9 +17,12 @@
                         <p>{{ __('Before proceeding, please check your email for a verification link.') }}</p>
                     </div>
                     <hr />
-                    <h5 class="d-flex justify-content-center">{{ __('If you did not receive the email') }} <a
-                            class="ms-1 text-secondary"
-                            href="{{ route('verification.resend') }}">{{ __('click here to request another') }}</a>
+                    <h5 class="d-flex justify-content-center flex-column align-items-center gap-2">
+                        <span>{{ __('If you did not receive the email') }}</span>
+                        <form method="POST" action="{{ route('verification.send') }}">
+                            @csrf
+                            <button type="submit" class="btn btn-link text-secondary p-0 m-0 align-baseline">{{ __('click here to request another') }}</button>
+                        </form>
                     </h5>
                 </div>
             </div>

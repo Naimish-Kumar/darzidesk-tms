@@ -14,15 +14,15 @@
 @section('content')
 <style>
     .kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
-    .kpi-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
-    .kpi-lbl { font-size: 10px; font-weight: 800; letter-spacing: 0.8px; color: #64748B; margin-bottom: 4px; text-transform: uppercase; }
-    .kpi-val { font-size: 24px; font-weight: 800; color: #0F172A; }
+    .kpi-card { background: #0B2239; border: 1px solid #29435D; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    .kpi-lbl { font-size: 10px; font-weight: 800; letter-spacing: 0.8px; color: #8FA1B5; margin-bottom: 4px; text-transform: uppercase; }
+    .kpi-val { font-size: 24px; font-weight: 800; color: #FFFFFF; }
 
-    .inv-table-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 16px; overflow: hidden; }
-    .inv-table-header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; border-bottom: 1px solid #E2E8F0; }
+    .inv-table-card { background: #0B2239; border: 1px solid #29435D; border-radius: 16px; overflow: hidden; }
+    .inv-table-header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; background: #102B45; border-bottom: 1px solid #29435D; color: #FFFFFF; }
     .inv-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-    .inv-table th { text-align: left; padding: 12px 20px; font-size: 10px; font-weight: 800; letter-spacing: 0.8px; color: #64748B; background: #F8FAFC; border-bottom: 1px solid #E2E8F0; }
-    .inv-table td { padding: 14px 20px; border-bottom: 1px solid #E2E8F0; vertical-align: middle; }
+    .inv-table th { text-align: left; padding: 12px 20px; font-size: 10px; font-weight: 800; letter-spacing: 0.8px; color: #F4C861; background: #102B45; border-bottom: 1px solid #29435D; }
+    .inv-table td { padding: 14px 20px; border-bottom: 1px solid #29435D; vertical-align: middle; color: #D8E0E8; }
 </style>
 
 <div class="row mb-4 align-items-center">

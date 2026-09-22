@@ -25,9 +25,9 @@
         min-width: 280px;
         display: flex;
         flex-direction: column;
-        background: #F8FAFC;
+        background: #07192A;
         border-radius: 16px;
-        border: 1px solid #E2E8F0;
+        border: 1px solid #29435D;
         padding: 14px;
         max-height: calc(100vh - 210px);
     }
@@ -36,21 +36,21 @@
         align-items: center;
         justify-content: space-between;
         padding: 10px 14px;
-        background: #FFFFFF;
+        background: #0B2239;
         border-radius: 12px;
         margin-bottom: 12px;
-        border-left: 4px solid #00796B;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        border-left: 4px solid #D9A441;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
     .col-title {
         font-weight: 700;
         font-size: 14px;
-        color: #1E293B;
+        color: #FFFFFF;
         margin: 0;
     }
     .col-badge-count {
-        background: #E0F2F1;
-        color: #00796B;
+        background: rgba(217, 164, 65, 0.2);
+        color: #F4C861;
         font-size: 11px;
         font-weight: 800;
         padding: 3px 9px;
@@ -65,23 +65,24 @@
         transition: background 0.2s ease, border-color 0.2s ease;
     }
     .kanban-drop-zone.drag-over {
-        background: #E0F2F1;
-        border: 2px dashed #00796B;
+        background: rgba(217, 164, 65, 0.15);
+        border: 2px dashed #D9A441;
     }
     .order-card {
-        background: #FFFFFF;
-        border: 1px solid #E2E8F0;
+        background: #0B2239;
+        border: 1px solid #29435D;
         border-radius: 14px;
         padding: 16px;
         margin-bottom: 12px;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.03);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.2);
         cursor: grab;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
+        color: #FFFFFF;
     }
     .order-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0,121,107,0.1);
-        border-color: #00796B;
+        box-shadow: 0 8px 20px rgba(217,164,65,0.2);
+        border-color: #D9A441;
     }
     .order-card:active {
         cursor: grabbing;
@@ -90,20 +91,21 @@
     .empty-stage-box {
         text-align: center;
         padding: 30px 15px;
-        color: #94A3B8;
+        color: #8FA1B5;
         font-size: 12px;
-        background: #FFFFFF;
-        border: 1px dashed #CBD5E1;
+        background: #0B2239;
+        border: 1px dashed #29435D;
         border-radius: 12px;
     }
     .metric-pill {
-        background: #FFFFFF;
-        border: 1px solid #E2E8F0;
+        background: #0B2239;
+        border: 1px solid #29435D;
         border-radius: 12px;
         padding: 12px 18px;
         display: flex;
         align-items: center;
         gap: 12px;
+        color: #FFFFFF;
     }
 </style>
 

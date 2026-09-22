@@ -11,13 +11,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
     <style>
         :root {
-            --primary-teal: #006A67;
-            --accent-teal: #26A69A;
-            --dark-navy: #0B1C30;
-            --bg-light: #F4F7F9;
-            --card-border: #E2E8F0;
-            --text-dark: #1E293B;
-            --text-muted: #64748B;
+            --primary-teal: #D9A441;
+            --accent-teal: #F4C861;
+            --dark-navy: #0B2239;
+            --bg-light: #03111F;
+            --card-border: #29435D;
+            --text-dark: #FFFFFF;
+            --text-muted: #8FA1B5;
             --font-main: 'Hanken Grotesk', sans-serif;
             --font-code: 'JetBrains Mono', monospace;
         }
@@ -33,7 +33,7 @@
         }
 
         .sidebar {
-            width: 240px; background: #FFFFFF; border-right: 1px solid var(--card-border);
+            width: 240px; background: #0B2239; border-right: 1px solid var(--card-border);
             display: flex; flex-direction: column; justify-content: space-between;
             padding: 24px 16px; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
         }
@@ -55,9 +55,9 @@
         .main-wrapper { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
 
         .top-header {
-            height: 64px; background: #FFFFFF; border-bottom: 1px solid var(--card-border);
-            display: flex; align-items: center; justify-content: space-between; padding: 0 28px;
-            position: sticky; top: 0; z-index: 90;
+            height: 64px; background: #0B2239; border-bottom: 1px solid var(--card-border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 32px; position: sticky; top: 0; z-index: 90;
         }
 
         .search-bar {
@@ -251,8 +251,8 @@
                 <span class="material-symbols-outlined" style="font-size: 20px; color: var(--text-muted); cursor: pointer;">notifications</span>
                 <span class="material-symbols-outlined" style="font-size: 20px; color: var(--text-muted); cursor: pointer;">settings</span>
                 <div class="user-profile-widget">
-                    <span>Marco Santini<br><small style="color:var(--text-muted);">Master Tailor</small></span>
-                    <img src="{{ asset('assets/images/onboarding_tailor.jpg') }}" class="user-avatar" alt="Marco Santini">
+                    <span>{{ auth()->user()->name }}<br><small style="color:var(--text-muted);">{{ ucfirst(auth()->user()->type ?? 'Owner') }}</small></span>
+                    <div class="user-avatar" style="background:#D9A441; color:#03111F; font-weight:800; display:flex; align-items:center; justify-content:center; border-radius:50%; width:36px; height:36px;">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
                 </div>
             </div>
         </header>

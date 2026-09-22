@@ -333,7 +333,11 @@
         .policy-content .content-body {
             font-size: 15.5px;
             line-height: 1.85;
-            color: #334155;
+            color: #D8E0E8 !important;
+        }
+        .policy-content .content-body *,
+        .policy-content .ck-content * {
+            color: #D8E0E8;
         }
         .policy-content h1, .policy-content h2, .policy-content h3,
         .policy-content h4, .policy-content h5, .policy-content h6 {

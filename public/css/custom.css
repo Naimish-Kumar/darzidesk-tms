@@ -3183,3 +3183,129 @@ textarea::-moz-placeholder {
     font-weight: 700 !important;
     border-color: #D9A441 !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   20. Complete Dashboard Global High-Contrast & Text Visibility Fixes
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Universal Root Variable Overrides for Dark Theme Default */
+:root {
+    --ord-header-bg: #0B2239 !important;
+    --ord-header-border: #29435D !important;
+    --ord-text-title: #FFFFFF !important;
+    --ord-text-sub: #8FA1B5 !important;
+
+    --dd-card-bg: #0B2239 !important;
+    --dd-card-border: #29435D !important;
+    --dd-text-title: #FFFFFF !important;
+    --dd-text-sub: #8FA1B5 !important;
+    --dd-text-muted: #8FA1B5 !important;
+
+    --pos-bg: #03111F !important;
+    --pos-card-bg: #0B2239 !important;
+    --pos-border: #29435D !important;
+    --pos-text-title: #FFFFFF !important;
+    --pos-text-sub: #8FA1B5 !important;
+
+    --comm-card-bg: #0B2239 !important;
+    --comm-border: #29435D !important;
+    --comm-text-title: #FFFFFF !important;
+    --comm-text-sub: #8FA1B5 !important;
+}
+
+/* Page Header Subtitles across all pages */
+.pc-content .text-muted,
+.pc-content p.text-muted,
+.pc-container .text-muted,
+.pc-container p.text-muted,
+.page-header p,
+.page-header-title + p,
+.sub-title,
+.header-subtitle,
+p.text-muted {
+    color: #94A3B8 !important;
+    opacity: 1 !important;
+}
+
+/* Page Titles and H1-H6 Headers */
+.pc-content h1, .pc-content h2, .pc-content h3,
+.pc-content h4, .pc-content h5, .pc-content h6,
+.pc-container h1, .pc-container h2, .pc-container h3,
+.pc-container h4, .pc-container h5, .pc-container h6 {
+    color: #FFFFFF !important;
+}
+
+/* Table Card Headers (e.g., Staff Management, Inventory, Roles, etc.) */
+.staff-table-header,
+.inv-table-header,
+.card-header,
+.card-header-bg {
+    background: #102B45 !important;
+    border-bottom: 1px solid #29435D !important;
+    color: #FFFFFF !important;
+}
+
+.staff-table-header h5,
+.staff-table-header h6,
+.inv-table-header h5,
+.inv-table-header h6,
+.card-header h5,
+.card-header h6,
+.card-header span,
+.card-header label {
+    color: #FFFFFF !important;
+}
+
+/* Empty State Boxes & Messages */
+.empty-stage-box,
+.no-data-found,
+.empty-catalog,
+.empty-state {
+    background: #0B2239 !important;
+    border: 1px dashed #29435D !important;
+    color: #CBD5E1 !important;
+}
+
+/* Table Headers and Cells Visibility */
+.table th,
+.table td,
+.staff-table th,
+.staff-table td,
+.inv-table th,
+.inv-table td {
+    border-color: #29435D !important;
+    color: #D8E0E8 !important;
+}
+
+.table th,
+.staff-table th,
+.inv-table th {
+    background-color: #102B45 !important;
+    color: #F4C861 !important;
+}
+
+/* Form Checkbox and Radio Labels */
+.form-check-label,
+.form-label,
+label {
+    color: #D8E0E8 !important;
+}
+
+/* DataTables Layout Collision Fix */
+.dt-buttons {
+    margin-bottom: 12px !important;
+}
+.dataTables_wrapper .dataTables_filter {
+    float: right !important;
+    margin-bottom: 12px !important;
+}
+
+/* High Contrast CMS Content */
+.policy-content .content-body,
+.policy-content .ck-content,
+.content-body p,
+.content-body span,
+.content-body li,
+.content-body div {
+    color: #D8E0E8 !important;
+}
