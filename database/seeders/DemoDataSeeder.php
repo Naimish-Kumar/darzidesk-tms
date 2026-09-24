@@ -4,19 +4,27 @@ namespace Database\Seeders;
 
 use App\Models\Appointment;
 use App\Models\Branch;
+use App\Models\ClothMeasureType;
 use App\Models\ClothType;
 use App\Models\Customer;
+use App\Models\Expense;
+use App\Models\ExpenseCategory;
+use App\Models\ExpenseSubCategory;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\InvoicePayment;
 use App\Models\Material;
 use App\Models\Measurement;
 use App\Models\MeasurementHistory;
+use App\Models\MeasurementUnit;
+use App\Models\NoticeBoard;
 use App\Models\Notification;
 use App\Models\Order;
+use App\Models\OrderMaterialUsage;
 use App\Models\ProductionAssignment;
 use App\Models\ProductionStage;
 use App\Models\RegisterReconciliation;
+use App\Models\Supplier;
 use App\Models\TailorLedger;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -27,11 +35,20 @@ class DemoDataSeeder extends Seeder
 {
     public function run()
     {
-        $owner = User::where('type', 'owner')->first() ?? User::first();
-        $parentIds = [1, $owner->id];
+        $allOwners = User::whereIn('type', ['owner', 'admin', 'super admin'])->pluck('id')->toArray();
+        $parentIds = array_unique(array_merge([1], $allOwners));
 
         foreach ($parentIds as $parentId) {
-            // 1. Create Staff Members (Cutters, Master Tailors, Stitchers)
+
+            // 1. Measurement Units
+            $unitInches = MeasurementUnit::firstOrCreate(
+                ['unit' => 'Inches', 'parent_id' => $parentId]
+            );
+            $unitCm = MeasurementUnit::firstOrCreate(
+                ['unit' => 'Centimeters', 'parent_id' => $parentId]
+            );
+
+            // 2. Staff Members (Master Tailors, Cutters, Stitchers)
             $staffMembers = [
                 [
                     'name' => 'Master Vikram Singhania',
@@ -43,7 +60,7 @@ class DemoDataSeeder extends Seeder
                     'lang' => 'en',
                 ],
                 [
-                    'name' => 'Rajesh Cutter',
+                    'name' => 'Rajesh Master Cutter',
                     'email' => "rajesh.cutter.p{$parentId}@darzidesk.test",
                     'password' => Hash::make('123456'),
                     'type' => 'employee',
@@ -52,7 +69,7 @@ class DemoDataSeeder extends Seeder
                     'lang' => 'en',
                 ],
                 [
-                    'name' => 'Sunil Stitcher',
+                    'name' => 'Sunil Senior Stitcher',
                     'email' => "sunil.stitcher.p{$parentId}@darzidesk.test",
                     'password' => Hash::make('123456'),
                     'type' => 'employee',
@@ -67,7 +84,7 @@ class DemoDataSeeder extends Seeder
                 $createdStaff[] = User::firstOrCreate(['email' => $s['email']], $s);
             }
 
-            // 2. Create Realistic Customers
+            // 3. Realistic Clients
             $customers = [
                 [
                     'name' => 'Alexander Hamilton',
@@ -151,28 +168,45 @@ class DemoDataSeeder extends Seeder
                 $createdCustomers[] = $user;
             }
 
-            // 3. Create Cloth Types
-            $clothTypes = [
+            // 4. Cloth Types & Garment Attributes
+            $clothTypesData = [
                 ['title' => 'Bespoke 2-Piece Suit', 'gender' => 'Male', 'amount' => 45000.00],
-                ['title' => 'Executive Shirt', 'gender' => 'Male', 'amount' => 4500.00],
+                ['title' => 'Executive French Cuff Shirt', 'gender' => 'Male', 'amount' => 4500.00],
                 ['title' => 'Royal Wedding Sherwani', 'gender' => 'Male', 'amount' => 65000.00],
                 ['title' => 'Designer Anarkali Suit', 'gender' => 'Female', 'amount' => 38000.00],
                 ['title' => 'Classic Bandhgala Jacket', 'gender' => 'Male', 'amount' => 28000.00],
-                ['title' => 'Tailored Chinos', 'gender' => 'Male', 'amount' => 6500.00],
+                ['title' => 'Custom Tailored Chinos', 'gender' => 'Male', 'amount' => 6500.00],
+                ['title' => 'Silk Bridal Lehenga Choli', 'gender' => 'Female', 'amount' => 75000.00],
             ];
 
             $createdClothTypes = [];
-            foreach ($clothTypes as $ct) {
-                $createdClothTypes[] = ClothType::firstOrCreate(
+            foreach ($clothTypesData as $ct) {
+                $cTypeModel = ClothType::firstOrCreate(
                     ['title' => $ct['title'], 'parent_id' => $parentId],
                     [
                         'gender' => $ct['gender'],
                         'amount' => $ct['amount'],
                     ]
                 );
+                $createdClothTypes[] = $cTypeModel;
+
+                // Seed Cloth Measure Types for each garment category
+                $measureLabels = [
+                    'Chest', 'Waist', 'Hip', 'Shoulder', 'Sleeve Length', 'Jacket Length', 'Cross Back', 'Neck', 'Trouser Length', 'Inseam'
+                ];
+
+                foreach ($measureLabels as $ord => $mLabel) {
+                    ClothMeasureType::firstOrCreate(
+                        ['cloth_type_id' => $cTypeModel->id, 'title' => $mLabel],
+                        [
+                            'unit' => $unitInches->id,
+                            'order' => $ord + 1,
+                        ]
+                    );
+                }
             }
 
-            // 4. Create Anatomical Measurements
+            // 5. Anatomical Measurements & History
             foreach ($createdCustomers as $index => $cUser) {
                 $cType = $createdClothTypes[$index % count($createdClothTypes)];
                 $m = Measurement::firstOrCreate(
@@ -201,7 +235,7 @@ class DemoDataSeeder extends Seeder
                     ]
                 );
 
-                // Measurement Audit History
+                // Audit History
                 MeasurementHistory::firstOrCreate(
                     ['measurement_id' => $m->id, 'customer_id' => $cUser->id],
                     [
@@ -214,13 +248,13 @@ class DemoDataSeeder extends Seeder
                 );
             }
 
-            // 5. Create Fabric & Material Inventory
+            // 6. Fabric & Materials Inventory
             $materials = [
-                ['name' => "Loro Piana Super 130s Merino Wool (P{$parentId})", 'code' => "MAT-WOOL-P{$parentId}", 'category' => 'Fabric', 'quantity' => 125.5, 'unit' => 'Meters', 'reorder_level' => 20.0, 'unit_cost' => 1800.00],
-                ['name' => "Sea Island 120s Two-Ply Cotton (P{$parentId})", 'code' => "MAT-COT-P{$parentId}", 'category' => 'Fabric', 'quantity' => 84.0, 'unit' => 'Meters', 'reorder_level' => 15.0, 'unit_cost' => 650.00],
-                ['name' => "Banarasi Silk Velvet (P{$parentId})", 'code' => "MAT-SILK-P{$parentId}", 'category' => 'Fabric', 'quantity' => 45.0, 'unit' => 'Meters', 'reorder_level' => 10.0, 'unit_cost' => 2400.00],
-                ['name' => "Natural Horn Jacket Buttons (P{$parentId})", 'code' => "MAT-BTN-P{$parentId}", 'category' => 'Trimmings', 'quantity' => 450.0, 'unit' => 'Pieces', 'reorder_level' => 50.0, 'unit_cost' => 35.00],
-                ['name' => "Bemberg Cupro Jacket Lining (P{$parentId})", 'code' => "MAT-LIN-P{$parentId}", 'category' => 'Lining', 'quantity' => 95.0, 'unit' => 'Meters', 'reorder_level' => 15.0, 'unit_cost' => 220.00],
+                ['name' => "Loro Piana Super 150s Merino Wool (P{$parentId})", 'code' => "MAT-WOOL-P{$parentId}", 'category' => 'Fabric', 'quantity' => 125.5, 'unit' => 'Meters', 'reorder_level' => 20.0, 'unit_cost' => 1800.00],
+                ['name' => "Thomas Mason 140s Giza Cotton (P{$parentId})", 'code' => "MAT-COT-P{$parentId}", 'category' => 'Fabric', 'quantity' => 84.0, 'unit' => 'Meters', 'reorder_level' => 15.0, 'unit_cost' => 650.00],
+                ['name' => "Banarasi Raw Silk Velvet (P{$parentId})", 'code' => "MAT-SILK-P{$parentId}", 'category' => 'Fabric', 'quantity' => 45.0, 'unit' => 'Meters', 'reorder_level' => 10.0, 'unit_cost' => 2400.00],
+                ['name' => "Genuine Horn Jacket Buttons (P{$parentId})", 'code' => "MAT-BTN-P{$parentId}", 'category' => 'Trimmings', 'quantity' => 450.0, 'unit' => 'Pieces', 'reorder_level' => 50.0, 'unit_cost' => 35.00],
+                ['name' => "Bemberg Cupro Breathable Lining (P{$parentId})", 'code' => "MAT-LIN-P{$parentId}", 'category' => 'Lining', 'quantity' => 95.0, 'unit' => 'Meters', 'reorder_level' => 15.0, 'unit_cost' => 220.00],
                 ['name' => "YKK Antique Brass Zippers (P{$parentId})", 'code' => "MAT-ZIP-P{$parentId}", 'category' => 'Notions', 'quantity' => 180.0, 'unit' => 'Pieces', 'reorder_level' => 30.0, 'unit_cost' => 45.00],
             ];
 
@@ -238,7 +272,59 @@ class DemoDataSeeder extends Seeder
                 );
             }
 
-            // 6. Fetch Production Stages
+            // 7. Suppliers
+            $suppliersData = [
+                ['name' => 'Loro Piana India Fine Textiles', 'category' => 'Wool & Cashmere', 'specialization' => 'Super 150s Suiting Fabrics', 'contact_person' => 'Marco Rossi', 'phone' => '+91 22 6600 1122', 'email' => 'orders@loropiana.in', 'location' => 'Mumbai'],
+                ['name' => 'Thomas Mason Shirting Mills', 'category' => 'Cotton Fabrics', 'specialization' => 'Luxury 140s Giza Shirting', 'contact_person' => 'Anil Mehta', 'phone' => '+91 11 4455 6677', 'email' => 'sales@thomasmason.in', 'location' => 'New Delhi'],
+                ['name' => 'Silk City Varanasi Heritage', 'category' => 'Silk & Velvet', 'specialization' => 'Zardozi Embroidery & Brocades', 'contact_person' => 'Rameshwar Silk', 'phone' => '+91 542 2200 9988', 'email' => 'varanasi.silk@atelier.in', 'location' => 'Varanasi'],
+            ];
+
+            foreach ($suppliersData as $sup) {
+                Supplier::firstOrCreate(
+                    ['name' => $sup['name'], 'parent_id' => $parentId],
+                    [
+                        'category' => $sup['category'],
+                        'specialization' => $sup['specialization'],
+                        'contact_person' => $sup['contact_person'],
+                        'phone' => $sup['phone'],
+                        'email' => $sup['email'],
+                        'location' => $sup['location'],
+                        'status' => 'active',
+                        'parent_id' => $parentId,
+                    ]
+                );
+            }
+
+            // 8. Expense Categories & Atelier Workshop Expenses
+            $expCat = ExpenseCategory::firstOrCreate(
+                ['name' => 'Atelier Materials & Supplies', 'parent_id' => $parentId]
+            );
+            $expSubCat = ExpenseSubCategory::firstOrCreate(
+                ['category_id' => $expCat->id, 'name' => 'Threads & Interlinings'],
+                ['parent_id' => $parentId]
+            );
+
+            Expense::firstOrCreate(
+                ['title' => 'German Gutermann Thread & Horsehair Canvas Supply', 'parent_id' => $parentId],
+                [
+                    'amount' => 12500.00,
+                    'notes' => 'Bulk purchase of high-tensile stitching threads and chest canvas.',
+                    'category_id' => $expCat->id,
+                    'sub_category_id' => $expSubCat->id,
+                    'parent_id' => $parentId,
+                ]
+            );
+
+            // 9. Notice Board Announcements
+            NoticeBoard::firstOrCreate(
+                ['title' => "Diwali & Wedding Rush Order Deadline (P{$parentId})", 'parent_id' => $parentId],
+                [
+                    'description' => 'All bridal sherwanis and bespoke tuxedo orders booked for Diwali week must complete final trial fittings by October 15th.',
+                    'parent_id' => $parentId,
+                ]
+            );
+
+            // 10. Production Stages
             $stages = ProductionStage::where('parent_id', $parentId)->orderBy('order_index')->get();
             if ($stages->isEmpty()) {
                 $stageNames = [
@@ -261,13 +347,13 @@ class DemoDataSeeder extends Seeder
                 }
             }
 
-            // 7. Create Custom Orders with Assignments, Invoices & Payments
+            // 11. Custom Orders with Assignments, Invoices & Payments
             $sampleOrdersData = [
                 [
                     'order_id' => 88294,
                     'customer_index' => 0,
                     'cloth_type_index' => 0,
-                    'fabric' => 'Loro Piana Super 130s Merino Wool (Navy)',
+                    'fabric' => 'Loro Piana Super 150s Merino Wool (Navy)',
                     'febric_color' => 'Navy Blue',
                     'gender' => 'Male',
                     'status' => 'in_progress',
@@ -309,7 +395,7 @@ class DemoDataSeeder extends Seeder
                     'order_id' => 88320,
                     'customer_index' => 3,
                     'cloth_type_index' => 1,
-                    'fabric' => 'Sea Island 120s Cotton (White)',
+                    'fabric' => 'Thomas Mason 140s Cotton (White)',
                     'febric_color' => 'Crisp White',
                     'gender' => 'Male',
                     'status' => 'completed',
@@ -420,7 +506,7 @@ class DemoDataSeeder extends Seeder
                 );
             }
 
-            // 8. Create Fitting Appointments
+            // 12. Fitting Appointments
             foreach ($createdCustomers as $index => $cUser) {
                 $custModel = Customer::where('user_id', $cUser->id)->first();
                 Appointment::firstOrCreate(
@@ -435,7 +521,7 @@ class DemoDataSeeder extends Seeder
                 );
             }
 
-            // 9. Multi-Branch Store Locations
+            // 13. Store Branches
             $branches = [
                 ['name' => "Savile Row Atelier (P{$parentId})", 'code' => "MUM-01-P{$parentId}", 'address' => '42 Altamount Road, Mumbai', 'phone' => '+91 22 2355 9900'],
                 ['name' => "Royal Heritage (P{$parentId})", 'code' => "DEL-01-P{$parentId}", 'address' => '45 Connaught Place, New Delhi', 'phone' => '+91 11 4155 8811'],
@@ -449,15 +535,16 @@ class DemoDataSeeder extends Seeder
                         'name' => $b['name'],
                         'address' => $b['address'],
                         'phone' => $b['phone'],
-                        'manager_id' => $owner->id,
+                        'manager_id' => 1,
                         'parent_id' => $parentId,
                     ]
                 );
             }
 
-            // 10. Register Cash Reconciliations
+            // 14. Cash Reconciliations
+            $firstBranch = Branch::where('parent_id', $parentId)->first();
             RegisterReconciliation::firstOrCreate(
-                ['reconciliation_date' => now()->format('Y-m-d'), 'finalized_by' => $owner->id],
+                ['reconciliation_date' => now()->format('Y-m-d'), 'branch_id' => $firstBranch ? $firstBranch->id : null],
                 [
                     'expected_cash' => 42850.00,
                     'actual_cash' => 42850.00,
@@ -465,11 +552,11 @@ class DemoDataSeeder extends Seeder
                     'discrepancy' => 0.00,
                     'closing_notes' => 'Daily till count matched perfectly. Cash deposited to main vault.',
                     'status' => 'balanced',
-                    'finalized_by' => $owner->id,
+                    'finalized_by' => $parentId,
                 ]
             );
 
-            // 11. Tailor Ledger Payout Entries
+            // 15. Tailor Ledger Entries
             foreach ($createdStaff as $staff) {
                 TailorLedger::firstOrCreate(
                     ['tailor_id' => $staff->id, 'parent_id' => $parentId],
@@ -482,20 +569,21 @@ class DemoDataSeeder extends Seeder
                 );
             }
 
-            // 12. System Notifications
+            // 16. System Notifications
             $notificationsList = [
-                ['subject' => "Trial Fitting Tomorrow (P{$parentId})", 'message' => 'Trial fitting scheduled for Alexander Hamilton at 02:30 PM.', 'type' => 'appointment'],
-                ['subject' => "Stock Low Warning (P{$parentId})", 'message' => 'Sea Island Cotton (White) is running low (14m remaining).', 'type' => 'general'],
-                ['subject' => "New Customer Order (P{$parentId})", 'message' => 'Order created for Rohan Malhotra.', 'type' => 'order'],
+                ['module' => 'order_trial', 'name' => "Trial Fitting Tomorrow (P{$parentId})", 'subject' => "Trial Fitting Tomorrow (P{$parentId})", 'message' => 'Trial fitting scheduled for Alexander Hamilton at 02:30 PM.'],
+                ['module' => 'stock_alert', 'name' => "Stock Low Warning (P{$parentId})", 'subject' => "Stock Low Warning (P{$parentId})", 'message' => 'Thomas Mason Cotton (White) is running low (14m remaining).'],
+                ['module' => 'new_order', 'name' => "New Custom Order (P{$parentId})", 'subject' => "New Custom Order (P{$parentId})", 'message' => 'Order created for Rohan Malhotra.'],
             ];
 
             foreach ($notificationsList as $notif) {
                 Notification::firstOrCreate(
-                    ['subject' => $notif['subject'], 'user_id' => $owner->id],
+                    ['subject' => $notif['subject'], 'parent_id' => $parentId],
                     [
-                        'type' => $notif['type'],
+                        'module' => $notif['module'],
+                        'name' => $notif['name'],
                         'message' => $notif['message'],
-                        'is_read' => 0,
+                        'enabled_email' => 1,
                         'parent_id' => $parentId,
                     ]
                 );
