@@ -97,10 +97,9 @@
                         </div>
                     </div>
                     <div class="row">
-                        <h5 class="mb-20 mt-10">
-                            {{ __('Measurement Detail') }}
-                            <a href="#" class="btn btn-secondary btn-xs measure_type_clone float-end d-none"><i
-                                    class="ti ti-plus"></i></a>
+                        <h5 class="mb-20 mt-10 d-flex justify-content-between align-items-center">
+                            <span>{{ __('Measurement Detail') }}</span>
+                            <a href="#" class="btn btn-secondary btn-sm measure_type_clone"><i class="ti ti-plus me-1"></i> {{ __('Add Measurement') }}</a>
                         </h5>
 
                         <div class="table-responsive">
@@ -110,7 +109,7 @@
                                         <th>{{ __('Type') }}</th>
                                         <th>{{ __('Measurement') }}</th>
                                         <th>{{ __('Unit') }}</th>
-                                        <th>{{ __('Action') }}</th>
+                                        <th style="width: 80px;">{{ __('Action') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -121,7 +120,7 @@
                     </div>
                     <div class="row mt-20">
                         <div class="form-group text-end">
-                            {{ Form::submit(__('Create'), ['class' => 'btn btn-secondary ml-10']) }}
+                            {{ Form::submit(__('Create'), ['class' => 'btn btn-secondary ml-10', 'id' => 'create-order-btn']) }}
                         </div>
                     </div>
                     {{ Form::close() }}
@@ -133,12 +132,24 @@
 @push('script-page')
     <script>
         $(document).ready(function() {
+            function appendRow(type, measurement, unit) {
+                type = type || '';
+                measurement = measurement || '';
+                unit = unit || 'Inches';
+                var row = '<tr class="measure_type">' +
+                    '<td><input type="text" class="form-control" name="type[]" value="' + type + '" placeholder="e.g. Chest"></td>' +
+                    '<td><input type="number" class="form-control" name="measurement[]" step="0.1" value="' + measurement + '" placeholder="0.0"></td>' +
+                    '<td><input type="text" class="form-control" name="unit[]" value="' + unit + '" placeholder="Inches"></td>' +
+                    '<td><a href="javascript:void(0)" class="f-20 text-danger cloth_type_remove btn-sm"><i class="ti ti-trash"></i></a></td>' +
+                    '</tr>';
+                $('table tbody').append(row);
+            }
 
-            $('#customer_id, #cloth_type').on('change', function() {
+            function loadMeasurements() {
                 var customer_id = $('#customer_id').val();
                 var cloth_type_id = $('#cloth_type').val();
 
-                if (customer_id && cloth_type_id) {
+                if (cloth_type_id) {
                     $.ajax({
                         url: '{{ route('customer.measurement') }}',
                         type: 'GET',
@@ -153,43 +164,43 @@
                             var tbody = $('table tbody');
                             tbody.empty();
 
-                            if (!data || data.length === 0) {
-                                $('.measure_type_clone').removeClass('d-none');
-                                return;
+                            if (data && data.length > 0) {
+                                data.forEach(function(item) {
+                                    appendRow(item.type, item.measurement, item.unit);
+                                });
+                            } else {
+                                appendRow('Chest', '', 'Inches');
+                                appendRow('Waist', '', 'Inches');
+                                appendRow('Length', '', 'Inches');
                             }
-
-                            data.forEach(function(item) {
-                                var row = '<tr class="measure_type">' +
-                                    '<td><input type="text" class="form-control" name="type[]" value="' +
-                                    item.type + '"></td>' +
-                                    '<td><input type="number" class="form-control" name="measurement[]" step="0.1" value="' +
-                                    item.measurement + '"></td>' +
-                                    '<td><input type="text" class="form-control" name="unit[]" value="' +
-                                    item.unit + '"></td>' +
-                                    '<td><a href="#" class="f-20 text-danger cloth_type_remove btn-sm"><i class="ti ti-trash"></i></a></td>' +
-                                    '</tr>';
-                                tbody.append(row);
-                            });
-
-                            $('.measure_type_clone').removeClass('d-none');
                         },
-                        error: function(xhr, status, error) {
-                            console.error("Error:", error);
+                        error: function() {
+                            if ($('table tbody tr').length === 0) {
+                                appendRow('Chest', '', 'Inches');
+                                appendRow('Waist', '', 'Inches');
+                            }
                         }
                     });
                 }
+            }
+
+            $('#customer_id, #cloth_type').on('change', function() {
+                loadMeasurements();
             });
 
-            $('.wrapper').on('click', '.cloth_type_remove', function() {
+            if ($('#cloth_type').val()) {
+                loadMeasurements();
+            }
+
+            $('.wrapper').on('click', '.cloth_type_remove', function(e) {
+                e.preventDefault();
                 $(this).closest('tr').remove();
             });
 
-            $('.wrapper').on('click', '.measure_type_clone', function() {
-                let $clone = $('.measure_type').first().clone();
-                $clone.find('input').val('');
-                $('table tbody').append($clone);
+            $('.wrapper').on('click', '.measure_type_clone', function(e) {
+                e.preventDefault();
+                appendRow();
             });
-
         });
     </script>
 @endpush

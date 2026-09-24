@@ -1577,17 +1577,42 @@ a.btn-primary:hover {
 input[type="text"],
 input[type="email"],
 input[type="password"],
+input[type="text"],
 input[type="number"],
 input[type="search"],
 input[type="date"],
+input[type="email"],
+input[type="password"],
 textarea,
 select,
+.form-control,
+.form-select,
 .select2-container--default .select2-selection--single,
 .select2-container--default .select2-selection--multiple {
     background-color: #102B45 !important;
     border: 1px solid #29435D !important;
     color: #FFFFFF !important;
     border-radius: 10px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #FFFFFF !important;
+    line-height: 40px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: #8FA1B5 !important;
+}
+
+.form-control:disabled,
+.form-control[readonly],
+input:disabled,
+select:disabled,
+.select2-container--default.select2-container--disabled .select2-selection--single {
+    background-color: #081B2E !important;
+    color: #CBD5E1 !important;
+    border-color: #1E3A5F !important;
+    opacity: 0.95 !important;
 }
 
 .form-control::placeholder,
@@ -1608,15 +1633,44 @@ select:focus {
     color: #FFFFFF !important;
 }
 
+/* ─── Select2 Dropdown & Hover Styles ─── */
 .select2-dropdown {
     background-color: #0B2239 !important;
-    border: 1px solid #29435D !important;
-    color: #D8E0E8 !important;
+    border: 1px solid #D9A441 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
 }
 
-.select2-container--default .select2-results__option--highlighted[aria-selected] {
+.select2-search--dropdown {
+    background-color: #0B2239 !important;
+    padding: 8px !important;
+}
+
+.select2-search--dropdown .select2-search__field {
     background-color: #102B45 !important;
-    color: #D9A441 !important;
+    border: 1px solid #29435D !important;
+    color: #FFFFFF !important;
+    border-radius: 6px !important;
+    padding: 6px 10px !important;
+}
+
+.select2-container--default .select2-results__option--selectable,
+.select2-results__option {
+    background-color: #0B2239 !important;
+    color: #F1F5F9 !important;
+    padding: 8px 12px !important;
+    transition: all 0.15s ease !important;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected],
+.select2-container--default .select2-results__option--selectable:hover,
+.select2-results__option:hover,
+.select2-results__option[aria-selected="true"] {
+    background-color: #D9A441 !important;
+    color: #03111F !important;
+    font-weight: 600 !important;
 }
 
 /* ─── 7. Tables & DataTables Styling ─── */

@@ -90,9 +90,6 @@ class OrderController extends Controller
                     'febric_color' => 'required',
                     'responsible' => 'required',
                     'cloth_type' => 'required',
-                    'type.*' => 'required',
-                    'measurement.*' => 'required',
-                    'unit.*' => 'required',
                 ]
             );
             if ($validator->fails()) {
@@ -100,18 +97,25 @@ class OrderController extends Controller
                 return redirect()->back()->with('error', $messages->first())->withInput();
             }
 
-            $types = $request->input('type');
-            $measurements = $request->input('measurement');
-            $units = $request->input('unit');
+            $types = $request->input('type', []);
+            $measurements = $request->input('measurement', []);
+            $units = $request->input('unit', []);
             $measurementDetail = [];
-            foreach ($types as $index => $type) {
-                $measurementDetail[] = [
-                    'type' => $type,
-                    'measurement' => $measurements[$index],
-                    'unit' => $units[$index],
-                ];
+
+            if (is_array($types)) {
+                foreach ($types as $index => $type) {
+                    if (!empty($type)) {
+                        $measurementDetail[] = [
+                            'type' => $type,
+                            'measurement' => $measurements[$index] ?? '',
+                            'unit' => $units[$index] ?? '',
+                        ];
+                    }
+                }
             }
+
             $order = new Order();
+            $order->parent_id = parentId();
             $order->order_id = $request->order_id;
             $order->tracking_token = \Illuminate\Support\Str::random(16);
             $order->customer_id = $request->customer_id;
@@ -122,10 +126,10 @@ class OrderController extends Controller
             $order->febric_color = $request->febric_color;
             $order->gender = $request->gender;
             $order->cloth_type = $request->cloth_type;
-            $order->status = $request->status;
+            $order->status = $request->status ?? 'pending';
             $order->notes = $request->notes;
             $order->responsible = !empty($request->responsible) ? $request->responsible : 0;
-            $firstStage = \App\Models\ProductionStage::orderBy('order_index', 'asc')->first();
+            $firstStage = \App\Models\ProductionStage::where('parent_id', parentId())->orderBy('order_index', 'asc')->first();
             if ($firstStage) {
                 $order->production_stage_id = $firstStage->id;
             }
@@ -134,7 +138,7 @@ class OrderController extends Controller
 
             // Automatic Fabric Inventory Deduction on Order Creation
             if (!empty($request->febric)) {
-                $material = \App\Models\Material::where(function($q) use ($request) {
+                $material = \App\Models\Material::where('parent_id', parentId())->where(function($q) use ($request) {
                     $q->where('name', 'LIKE', '%' . $request->febric . '%')
                       ->orWhere('code', 'LIKE', '%' . $request->febric . '%');
                 })->first();
@@ -153,13 +157,10 @@ class OrderController extends Controller
                 }
             }
 
-
-            // Initialize the measurement details string
+            // Format measurement details string for notifications
             $measurementDetails = "";
-
-            // Loop through the measurement details and create the string
             foreach ($measurementDetail as $service) {
-                $measurementDetails .= $service['type'] . ':' . ' ' . $service['measurement'] . ", Unit: " . $service['unit'] . "<br>";
+                $measurementDetails .= $service['type'] . ': ' . $service['measurement'] . " (" . $service['unit'] . ")<br>";
             }
 
             if ($request->hasFile('fabric_attachment')) {
@@ -177,11 +178,11 @@ class OrderController extends Controller
 
             $module = 'order_create';
             $notification = Notification::where('parent_id', parentId())->where('module', $module)->first();
-            $notification->measurement = $measurementDetails;
             $setting = settings();
             $errorMessage = '';
 
             if (!empty($notification)) {
+                $notification->measurement = $measurementDetails;
                 $notificationResponse = MessageReplace($notification, $order->id);
 
                 if ($notification->enabled_email == 1 && !empty($order->customers->email)) {
@@ -207,10 +208,9 @@ class OrderController extends Controller
 
             $module = 'order_assign';
             $notification = Notification::where('parent_id', parentId())->where('module', $module)->first();
-            $notification->measurement = $measurementDetails;
-            $setting = settings();
 
             if (!empty($notification)) {
+                $notification->measurement = $measurementDetails;
                 $notificationResponse = MessageReplace($notification, $order->id);
 
                 if ($notification->enabled_email == 1 && !empty($order->users->email)) {
@@ -234,7 +234,7 @@ class OrderController extends Controller
                 }
             }
 
-            return redirect()->route('order.index')->with('success', __('Order successfully created.') . '</br>' . $errorMessage);
+            return redirect()->route('order.index')->with('success', __('Order successfully created.') . ($errorMessage ? '</br>' . $errorMessage : ''));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
@@ -403,13 +403,61 @@ class OrderController extends Controller
 
     public function customerMeasurement(Request $request)
     {
-        $measurement = Measurement::where('cloth_type', $request->cloth_type_id)->where('customer', $request->customer_id)->first();
+        $measurement = null;
+        if (!empty($request->customer_id) && !empty($request->cloth_type_id)) {
+            $measurement = Measurement::where('cloth_type', $request->cloth_type_id)
+                ->where('customer', $request->customer_id)
+                ->first();
+        }
 
         if ($measurement && !empty($measurement->measurement_detail)) {
-            return response()->json(json_decode($measurement->measurement_detail, true));
-        } else {
-            return response()->json([]);
+            $details = is_array($measurement->measurement_detail)
+                ? $measurement->measurement_detail
+                : json_decode($measurement->measurement_detail, true);
+
+            $formatted = [];
+            if (is_array($details)) {
+                foreach ($details as $k => $v) {
+                    if (is_array($v)) {
+                        $formatted[] = $v;
+                    } else {
+                        $formatted[] = [
+                            'type' => $k,
+                            'measurement' => $v,
+                            'unit' => 'Inches'
+                        ];
+                    }
+                }
+            }
+            if (!empty($formatted)) {
+                return response()->json($formatted);
+            }
         }
+
+        // Fallback: Default cloth measure types for this cloth_type_id
+        $formatted = [];
+        if (!empty($request->cloth_type_id)) {
+            $measureTypes = \App\Models\ClothMeasureType::where('cloth_type_id', $request->cloth_type_id)->get();
+            foreach ($measureTypes as $mt) {
+                $unitName = $mt->unitModel ? $mt->unitModel->unit : 'Inches';
+                $formatted[] = [
+                    'type' => $mt->title,
+                    'measurement' => '',
+                    'unit' => $unitName
+                ];
+            }
+        }
+
+        if (empty($formatted)) {
+            $formatted = [
+                ['type' => 'Chest', 'measurement' => '', 'unit' => 'Inches'],
+                ['type' => 'Waist', 'measurement' => '', 'unit' => 'Inches'],
+                ['type' => 'Length', 'measurement' => '', 'unit' => 'Inches'],
+                ['type' => 'Shoulder', 'measurement' => '', 'unit' => 'Inches'],
+            ];
+        }
+
+        return response()->json($formatted);
     }
 
     public function todayOrder()
