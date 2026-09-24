@@ -355,6 +355,8 @@ Route::group(
             Route::get('measurements', [CustomerDashboardController::class, 'measurements'])->name('customer.measurements');
             Route::get('invoices', [CustomerDashboardController::class, 'invoices'])->name('customer.invoices');
             Route::get('invoices/{id}', [CustomerDashboardController::class, 'invoiceDetail'])->name('customer.invoices.show');
+            Route::get('track/{token?}', [CustomerDashboardController::class, 'trackOrder'])->name('customer.track');
+            Route::post('track/search', [CustomerDashboardController::class, 'searchTrackOrder'])->name('customer.track.search');
             Route::get('profile', [CustomerDashboardController::class, 'profile'])->name('customer.profile');
             Route::post('profile', [CustomerDashboardController::class, 'updateProfile'])->name('customer.profile.update');
         });

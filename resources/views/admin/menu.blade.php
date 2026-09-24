@@ -61,8 +61,8 @@
                             <span class="pc-mtext">{{ __('My Invoices') }}</span>
                         </a>
                     </li>
-                    <li class="pc-item {{ in_array($routeName, ['track.order']) ? 'active' : '' }}">
-                        <a href="{{ route('track.order') }}" class="pc-link" target="_blank">
+                    <li class="pc-item {{ in_array($routeName, ['customer.track', 'track.order']) ? 'active' : '' }}">
+                        <a href="{{ route('customer.track') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-search"></i></span>
                             <span class="pc-mtext">{{ __('Track Order') }}</span>
                         </a>

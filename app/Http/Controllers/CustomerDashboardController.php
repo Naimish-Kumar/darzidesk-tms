@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invoice;
 use App\Models\Measurement;
 use App\Models\Order;
+use App\Models\ProductionStage;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
@@ -101,6 +102,60 @@ class CustomerDashboardController extends Controller
             ->findOrFail($id);
 
         return view('customer_portal.invoice-detail', compact('invoice'));
+    }
+
+    /**
+     * Display order tracking view inside customer portal.
+     */
+    public function trackOrder(Request $request, $token = null)
+    {
+        $order = null;
+        $searchError = null;
+        $searchQuery = $token ?? $request->query('query');
+        $userId = Auth::user()->id;
+
+        if (!empty($searchQuery)) {
+            $cleanQuery = trim(str_ireplace(['#', 'ORD-', 'ord-'], '', $searchQuery));
+
+            $order = Order::where(function ($q) use ($searchQuery, $cleanQuery) {
+                $q->where('tracking_token', $searchQuery)
+                  ->orWhere('order_id', $searchQuery)
+                  ->orWhere('order_id', $cleanQuery)
+                  ->orWhere('id', $cleanQuery);
+            })
+            ->with(['customers', 'clothTypes', 'productionStage', 'invoices'])
+            ->first();
+
+            if (!$order) {
+                $searchError = __('No tailoring order found matching code: ') . $searchQuery;
+            }
+        } else {
+            // Default to the customer's most recent active order if available
+            $order = Order::where('customer_id', $userId)
+                ->with(['customers', 'clothTypes', 'productionStage', 'invoices'])
+                ->orderBy('id', 'desc')
+                ->first();
+            
+            if ($order) {
+                $searchQuery = orderPrefix() . $order->order_id;
+            }
+        }
+
+        $allStages = ProductionStage::orderBy('order_index', 'asc')->get();
+
+        return view('customer_portal.track-order', compact('order', 'allStages', 'searchQuery', 'searchError'));
+    }
+
+    /**
+     * Handle search form submit in customer portal tracking.
+     */
+    public function searchTrackOrder(Request $request)
+    {
+        $request->validate([
+            'order_query' => 'required|string|max:100',
+        ]);
+
+        return redirect()->route('customer.track', ['token' => trim($request->order_query)]);
     }
 
     /**

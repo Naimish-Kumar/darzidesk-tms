@@ -258,7 +258,7 @@
                                             </div>
                                             <h5 class="fw-bold dd-portal-title mb-1">{{ __('No Tailoring Orders Found') }}</h5>
                                             <p class="dd-portal-sub mb-3">{{ __('You currently have no active or completed orders with our atelier.') }}</p>
-                                            <a href="{{ route('track.order') }}" class="dd-action-btn py-2 px-3" target="_blank">
+                                            <a href="{{ route('customer.track') }}" class="dd-action-btn py-2 px-3">
                                                 <i class="ti ti-search me-1"></i> {{ __('Track an Order Code') }}
                                             </a>
                                         </div>

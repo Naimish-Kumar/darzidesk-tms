@@ -5,11 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\ProductionStage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PublicOrderTrackingController extends Controller
 {
     public function track($token = null)
     {
+        if (Auth::check() && Auth::user()->type == 'customer') {
+            return redirect()->route('customer.track', ['token' => $token]);
+        }
+
         $order = null;
         $searchError = null;
 
