@@ -691,7 +691,7 @@
                     </div>
                 </div>
                 <div class="dd-quick-actions">
-                    <a href="{{ route('orders.create.step1') }}" class="dd-btn-primary">
+                    <a href="{{ route('order.create') }}" class="dd-btn-primary">
                         <i class="ti ti-plus"></i> {{ __('New Custom Order') }}
                     </a>
                     <a href="{{ route('pos.index') }}" class="dd-btn-outline">

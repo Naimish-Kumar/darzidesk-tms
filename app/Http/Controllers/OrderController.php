@@ -515,7 +515,7 @@ class OrderController extends Controller
     // Step 1: Customer & Basic Details
     public function createStep1()
     {
-        return view('order.create-step1');
+        return redirect()->route('order.create');
     }
 
     public function storeStep1(Request $request)
@@ -534,7 +534,7 @@ class OrderController extends Controller
     // Step 2: Fabric & Customizations
     public function createStep2()
     {
-        return view('order.create-step2');
+        return redirect()->route('order.create');
     }
 
     public function storeStep2(Request $request)
@@ -553,7 +553,7 @@ class OrderController extends Controller
     // Step 3: Detailed Measurements & Order Finalization
     public function createStep3()
     {
-        return view('order.create-step3');
+        return redirect()->route('order.create');
     }
 
     public function storeStep3(Request $request)

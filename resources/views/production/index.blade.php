@@ -143,7 +143,7 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('orders.create.step1') }}" class="btn btn-primary rounded-3 px-3 py-2 fw-bold" style="background:#00796B; border-color:#00796B;">
+                    <a href="{{ route('order.create') }}" class="btn btn-primary rounded-3 px-3 py-2 fw-bold" style="background: var(--dd-gold, #D9A441); border-color: var(--dd-gold, #D9A441); color: #03111F;">
                         <i class="ti ti-plus me-1"></i> {{ __('New Order') }}
                     </a>
                 </div>
