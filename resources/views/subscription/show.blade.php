@@ -312,10 +312,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
     :root {
-        --dd-brand-teal: #00796B;
-        --dd-brand-teal-hover: #005A50;
-        --dd-brand-teal-light: #E6F4F1;
-        --dd-brand-teal-border: #B2E0D8;
+        --dd-gold: #D9A441;
+        --dd-gold-hover: #F4C861;
+        --dd-gold-light: rgba(217, 164, 65, 0.15);
+        --dd-bg: #03111F;
+        --dd-card-bg: #0B2239;
+        --dd-card-subtle: #07192A;
+        --dd-border: #29435D;
+        --dd-text-title: #FFFFFF;
+        --dd-text-muted: #8FA1B5;
+        --dd-input-bg: #102B45;
     }
 
     body {
@@ -323,12 +329,13 @@
     }
 
     .package-summary-card {
-        background: linear-gradient(135deg, #00796B 0%, #004D40 100%);
+        background: linear-gradient(135deg, #0B2239 0%, #07192A 100%);
         color: #ffffff;
+        border: 1px solid var(--dd-border);
         border-radius: 16px;
         padding: 1.75rem 2rem;
         margin-bottom: 1.75rem;
-        box-shadow: 0 8px 24px rgba(0, 121, 107, 0.18);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
     }
 
     .package-info-grid {
@@ -339,15 +346,15 @@
     }
 
     .info-item {
-        background: rgba(255, 255, 255, 0.12);
+        background: rgba(217, 164, 65, 0.08);
         backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(217, 164, 65, 0.2);
         border-radius: 12px;
         padding: 12px 14px;
     }
 
     .info-item h6 {
-        color: rgba(255, 255, 255, 0.85);
+        color: #8FA1B5;
         font-size: 0.72rem;
         font-weight: 700;
         letter-spacing: 0.8px;
@@ -359,7 +366,15 @@
         font-size: 1.15rem;
         font-weight: 800;
         margin-bottom: 0;
-        color: #ffffff;
+        color: #F4C861;
+    }
+
+    .subscription-main-card {
+        background: var(--dd-card-bg);
+        border: 1px solid var(--dd-border);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+        color: #FFFFFF;
     }
 
     .payment-tile-container {
@@ -373,8 +388,8 @@
         flex: 1;
         min-width: 140px;
         max-width: 180px;
-        background: #ffffff;
-        border: 1.5px solid #E2E8F0;
+        background: #102B45;
+        border: 1.5px solid var(--dd-border);
         border-radius: 12px;
         padding: 1.25rem 1rem;
         text-align: center;
@@ -388,15 +403,15 @@
     }
 
     .payment-tile:hover {
-        border-color: var(--dd-brand-teal);
+        border-color: var(--dd-gold);
         transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(0, 121, 107, 0.08);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
     }
 
     .payment-tile.active {
-        border-color: var(--dd-brand-teal);
-        background: var(--dd-brand-teal-light);
-        box-shadow: 0 6px 16px rgba(0, 121, 107, 0.12);
+        border-color: var(--dd-gold);
+        background: var(--dd-gold-light);
+        box-shadow: 0 6px 16px rgba(217, 164, 65, 0.25);
     }
 
     .payment-tile.active::after {
@@ -406,8 +421,8 @@
         position: absolute;
         top: 8px;
         right: 8px;
-        background: var(--dd-brand-teal);
-        color: white;
+        background: var(--dd-gold);
+        color: #03111F;
         width: 20px;
         height: 20px;
         border-radius: 50%;
@@ -421,50 +436,52 @@
     .payment-tile i {
         font-size: 1.8rem;
         margin-bottom: 0.5rem;
-        color: var(--dd-brand-teal) !important;
+        color: var(--dd-gold) !important;
     }
 
     .payment-tile span {
         font-weight: 600;
         font-size: 0.88rem;
-        color: #0F172A;
+        color: #FFFFFF;
     }
 
     .payment-form-container {
-        background: #ffffff;
+        background: #07192A;
         border-radius: 14px;
         padding: 1.75rem;
-        border: 1px solid #E2E8F0;
+        border: 1px solid var(--dd-border);
+        color: #FFFFFF;
     }
 
     .coupon-box {
-        background: #F8FAFC;
+        background: #102B45;
         border-radius: 12px;
         padding: 1.25rem;
         margin-bottom: 1.5rem;
-        border: 1px dashed #CBD5E1;
+        border: 1px dashed var(--dd-border);
     }
 
     .btn-pay-now, .btn-primary {
-        background-color: var(--dd-brand-teal) !important;
-        border-color: var(--dd-brand-teal) !important;
-        color: #ffffff !important;
-        padding: 11px 24px;
-        font-weight: 700;
-        font-size: 0.9rem;
+        background-color: var(--dd-gold) !important;
+        border-color: var(--dd-gold) !important;
+        color: #03111F !important;
+        padding: 12px 24px;
+        font-weight: 800;
+        font-size: 0.95rem;
         border-radius: 8px;
         transition: all 0.2s ease;
     }
 
     .btn-pay-now:hover, .btn-primary:hover {
-        background-color: var(--dd-brand-teal-hover) !important;
-        border-color: var(--dd-brand-teal-hover) !important;
-        box-shadow: 0 4px 14px rgba(0, 121, 107, 0.25) !important;
+        background-color: var(--dd-gold-hover) !important;
+        border-color: var(--dd-gold-hover) !important;
+        box-shadow: 0 4px 14px rgba(217, 164, 65, 0.35) !important;
+        color: #03111F !important;
     }
 
     .info-box-item {
-        background: #F8FAFC;
-        border: 1px solid #E2E8F0;
+        background: #102B45;
+        border: 1px solid var(--dd-border);
         border-radius: 10px;
         padding: 14px 16px;
     }
@@ -474,7 +491,7 @@
         font-weight: 700;
         letter-spacing: 0.6px;
         text-transform: uppercase;
-        color: #64748B;
+        color: #8FA1B5;
         margin-bottom: 4px;
         display: block;
     }
@@ -482,8 +499,26 @@
     .info-box-value {
         font-size: 15px;
         font-weight: 700;
-        color: #0F172A;
+        color: #FFFFFF;
         margin-bottom: 0;
+    }
+
+    .dd-dark-input {
+        background-color: #102B45 !important;
+        border-color: #29435D !important;
+        color: #FFFFFF !important;
+        border-radius: 8px;
+    }
+
+    .dd-dark-input::placeholder {
+        color: #8FA1B5 !important;
+    }
+
+    .dd-dark-input:focus {
+        background-color: #102B45 !important;
+        border-color: var(--dd-gold) !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 0 0 3px var(--dd-gold-light) !important;
     }
 </style>
 @endpush
@@ -491,7 +526,7 @@
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
     <li class="breadcrumb-item"><a href="{{ route('subscriptions.index') }}">{{ __('Subscription') }}</a></li>
-    <li class="breadcrumb-item" aria-current="page">{{ __('Details') }}</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ __('Details') }}</li>
 @endsection
 
 @section('content')
@@ -502,7 +537,7 @@
                 <div class="row align-items-center">
                     <div class="col-md-4">
                         <h3 class="text-white mb-2 fw-bold">{{ $subscription->title }}</h3>
-                        <span class="badge bg-white text-dark px-3 py-2 rounded-pill fw-semibold" style="font-size: 0.78rem;">{{ __('Active Subscription Selection') }}</span>
+                        <span class="badge px-3 py-2 rounded-pill fw-semibold" style="background: var(--dd-gold-light); color: var(--dd-gold); border: 1px solid rgba(217, 164, 65, 0.3); font-size: 0.78rem;">{{ __('Active Subscription Selection') }}</span>
                     </div>
                     <div class="col-md-8 mt-3 mt-md-0">
                         <div class="package-info-grid">
@@ -510,7 +545,7 @@
                                 <h6>{{ __('Amount') }}</h6>
                                 <p class="discoutedPrice mb-0">{{ dynamicPrice($subscription->package_amount) }}</p>
                                 @if(session('geo_location') && session('geo_location')['currency'] != (subscriptionPaymentSettings()['CURRENCY'] ?? 'INR'))
-                                    <small class="opacity-75 d-block mt-1" style="font-size: 0.7rem;">(≈ {{ priceFormat($subscription->package_amount) }})</small>
+                                    <small class="opacity-75 d-block mt-1" style="font-size: 0.7rem; color: #8FA1B5;">(≈ {{ priceFormat($subscription->package_amount) }})</small>
                                 @endif
                             </div>
                             <div class="info-item">
@@ -535,12 +570,12 @@
     <!-- Main Payment Selection Card -->
     <div class="row">
         <div class="col-12">
-            <div class="card border-0 shadow-sm" style="border-radius: 16px;">
-                <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0">
-                    <h5 class="fw-bold mb-1" style="color: #0F172A;"><i class="ti ti-wallet me-2" style="color: var(--dd-brand-teal);"></i>{{ __('Choose Payment Method') }}</h5>
-                    <p class="text-muted small mb-0">{{ __('Select your preferred gateway to complete the transaction.') }}</p>
+            <div class="subscription-main-card p-4">
+                <div class="pb-3 mb-4 border-bottom" style="border-color: var(--dd-border) !important;">
+                    <h5 class="fw-bold mb-1 text-white"><i class="ti ti-wallet me-2" style="color: var(--dd-gold);"></i>{{ __('Choose Payment Method') }}</h5>
+                    <p class="small mb-0" style="color: #8FA1B5;">{{ __('Select your preferred gateway to complete the transaction.') }}</p>
                 </div>
-                <div class="card-body p-4">
+                <div>
                     <!-- Method Selector -->
                     <div class="payment-tile-container">
                         @if ($settings['bank_transfer_payment'] == 'on')
@@ -594,14 +629,14 @@
                                     <div class="col-md-5">
                                         <div class="form-check custom-option mb-0">
                                             <input class="form-check-input have_coupon" type="checkbox" value="" id="global_have_coupon">
-                                            <label class="form-check-label fw-bold" for="global_have_coupon" style="color: #0F172A;">
+                                            <label class="form-check-label fw-bold text-white" for="global_have_coupon">
                                                 {{ __('Have a Discount Coupon?') }}
                                             </label>
                                         </div>
                                     </div>
                                     <div class="col-md-7 d-none coupon_div mt-2 mt-md-0">
                                         <div class="input-group">
-                                            <input type="text" class="form-control packageCouponCodeInput" placeholder="{{ __('Enter Code') }}">
+                                            <input type="text" class="form-control packageCouponCodeInput dd-dark-input" placeholder="{{ __('Enter Code') }}">
                                             <button class="btn btn-primary packageCouponApplyBtn" type="button">{{ __('Apply') }}</button>
                                         </div>
                                     </div>
@@ -646,13 +681,13 @@
                                             <div class="col-12">
                                                 <div class="info-box-item">
                                                     <span class="info-box-label">{{ __('Instructions') }}</span>
-                                                    <p class="mb-0 small" style="color: #334155;">{{ $settings['bank_other_details'] }}</p>
+                                                    <p class="mb-0 small" style="color: #8FA1B5;">{{ $settings['bank_other_details'] }}</p>
                                                 </div>
                                             </div>
                                         @endif
                                         <div class="col-12 mt-3">
-                                            <label class="form-label fw-bold" style="color: #0F172A;">{{ __('Payment Receipt (Image/PDF)') }}</label>
-                                            <input type="file" name="payment_receipt" class="form-control" required style="border-radius: 8px;">
+                                            <label class="form-label fw-bold text-white">{{ __('Payment Receipt (Image/PDF)') }}</label>
+                                            <input type="file" name="payment_receipt" class="form-control dd-dark-input" required>
                                         </div>
                                         <div class="col-12">
                                             <button type="submit" class="btn btn-primary btn-pay-now w-100 mt-2">{{ __('Submit Bank Transfer') }}</button>
@@ -670,12 +705,12 @@
                                     <input type="hidden" name="coupon" class="packageCouponCodeHidden">
                                     <div class="row g-3">
                                         <div class="col-md-12">
-                                            <label class="form-label fw-bold" style="color: #0F172A;">{{ __('Card Holder Name') }}</label>
-                                            <input type="text" name="name" class="form-control" placeholder="Full Name" required style="border-radius: 8px;">
+                                            <label class="form-label fw-bold text-white">{{ __('Card Holder Name') }}</label>
+                                            <input type="text" name="name" class="form-control dd-dark-input" placeholder="Full Name" required>
                                         </div>
                                         <div class="col-md-12">
-                                            <label class="form-label fw-bold" style="color: #0F172A;">{{ __('Card Details') }}</label>
-                                            <div id="card-element" class="form-control" style="padding: 12px; border-radius: 8px;"></div>
+                                            <label class="form-label fw-bold text-white">{{ __('Card Details') }}</label>
+                                            <div id="card-element" class="form-control dd-dark-input" style="padding: 12px;"></div>
                                             <div id="stripe_card_errors" class="text-danger mt-2 small" role="alert"></div>
                                         </div>
                                         <div class="col-12 mt-4">
@@ -693,9 +728,9 @@
                                     @csrf
                                     <input type="hidden" name="coupon" class="packageCouponCodeHidden">
                                     <div class="text-center py-3">
-                                        <i class="ti ti-brand-paypal display-4 mb-3" style="color: var(--dd-brand-teal);"></i>
-                                        <h5 class="mb-2 fw-bold" style="color: #0F172A;">{{ __('PayPal Checkout') }}</h5>
-                                        <p class="text-muted small px-md-5">{{ __('You will be redirected to PayPal\'s secure portal to complete your payment.') }}</p>
+                                        <i class="ti ti-brand-paypal display-4 mb-3" style="color: var(--dd-gold);"></i>
+                                        <h5 class="mb-2 fw-bold text-white">{{ __('PayPal Checkout') }}</h5>
+                                        <p class="small px-md-5" style="color: #8FA1B5;">{{ __('You will be redirected to PayPal\'s secure portal to complete your payment.') }}</p>
                                         <button type="submit" class="btn btn-primary btn-pay-now w-100 mt-3">{{ __('Proceed to PayPal') }}</button>
                                     </div>
                                 </form>
@@ -706,9 +741,9 @@
                         @if (!empty($settings['flutterwave_payment']) && $settings['flutterwave_payment'] == 'on')
                             <div id="flutterwave-form" class="payment-form-section d-none">
                                 <div class="text-center py-3">
-                                    <i class="ti ti-wave-sine display-4 mb-3" style="color: var(--dd-brand-teal);"></i>
-                                    <h5 class="mb-2 fw-bold" style="color: #0F172A;">{{ __('Flutterwave Payment') }}</h5>
-                                    <p class="text-muted small">{{ __('Safe and fast payment via Flutterwave gateway.') }}</p>
+                                    <i class="ti ti-wave-sine display-4 mb-3" style="color: var(--dd-gold);"></i>
+                                    <h5 class="mb-2 fw-bold text-white">{{ __('Flutterwave Payment') }}</h5>
+                                    <p class="small" style="color: #8FA1B5;">{{ __('Safe and fast payment via Flutterwave gateway.') }}</p>
                                     <button type="button" id="flutterwavePaymentBtn" class="btn btn-primary btn-pay-now w-100 mt-3">{{ __('Pay with Flutterwave') }}</button>
                                 </div>
                             </div>
@@ -722,9 +757,9 @@
                                     <input type="hidden" name="plan_id" value="{{ Crypt::encrypt($subscription->id) }}">
                                     <input type="hidden" name="coupon" class="packageCouponCodeHidden">
                                     <div class="text-center py-3">
-                                        <i class="ti ti-stack display-4 mb-3" style="color: var(--dd-brand-teal);"></i>
-                                        <h5 class="mb-2 fw-bold" style="color: #0F172A;">{{ __('Paystack Checkout') }}</h5>
-                                        <p class="text-muted small">{{ __('Fast and secure payment processing via Paystack.') }}</p>
+                                        <i class="ti ti-stack display-4 mb-3" style="color: var(--dd-gold);"></i>
+                                        <h5 class="mb-2 fw-bold text-white">{{ __('Paystack Checkout') }}</h5>
+                                        <p class="small" style="color: #8FA1B5;">{{ __('Fast and secure payment processing via Paystack.') }}</p>
                                         <button type="button" class="btn btn-primary btn-pay-now w-100 mt-3" id="subscription_pay_with_paystack">{{ __('Pay with Paystack') }}</button>
                                     </div>
                                 </form>
@@ -739,9 +774,9 @@
                                     <input type="hidden" name="plan_id" value="{{ Crypt::encrypt($subscription->id) }}">
                                     <input type="hidden" name="coupon" class="packageCouponCodeHidden">
                                     <div class="text-center py-3">
-                                        <i class="ti ti-rocket display-4 mb-3" style="color: var(--dd-brand-teal);"></i>
-                                        <h5 class="mb-2 fw-bold" style="color: #0F172A;">{{ __('Razorpay Secure') }}</h5>
-                                        <p class="text-muted small">{{ __('India\'s most popular and secure payment gateway.') }}</p>
+                                        <i class="ti ti-rocket display-4 mb-3" style="color: var(--dd-gold);"></i>
+                                        <h5 class="mb-2 fw-bold text-white">{{ __('Razorpay Secure') }}</h5>
+                                        <p class="small" style="color: #8FA1B5;">{{ __('India\'s most popular and secure payment gateway.') }}</p>
                                         <button type="button" class="btn btn-primary btn-pay-now w-100 mt-3" id="subscription_pay_with_razorpay">{{ __('Pay with Razorpay') }}</button>
                                     </div>
                                 </form>
