@@ -19,6 +19,9 @@ class SettingController extends Controller
     public function index()
     {
         $loginUser = \Auth::user();
+        if ($loginUser && $loginUser->type == 'customer') {
+            return redirect()->route('customer.profile');
+        }
         $settings = settings();
         $timezones = config('timezones');
         return view('settings.index', compact('loginUser', 'settings', 'timezones'));

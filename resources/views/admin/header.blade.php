@@ -78,7 +78,7 @@
                                 style="max-height: calc(100vh - 280px)">
                                 <hr class="my-2" />
 
-                                <a href="{{ route('setting.index') }}" class="dropdown-item">
+                                <a href="{{ \Auth::user()->type == 'customer' ? route('customer.profile') : route('setting.index') }}" class="dropdown-item">
                                     <i class="ti ti-settings"></i>
                                     <span>{{ __('Account Settings') }}</span>
                                 </a>
