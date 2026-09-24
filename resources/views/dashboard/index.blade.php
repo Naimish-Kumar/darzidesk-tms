@@ -1185,7 +1185,7 @@
                             <a href="{{ route('customer.invoices') }}" class="dd-btn-outline">
                                 <i class="ti ti-receipt"></i> {{ __('My Invoices') }}
                             </a>
-                            <a href="{{ route('track.order') }}" class="dd-btn-outline">
+                            <a href="{{ route('track.order') }}" class="dd-btn-outline" target="_blank">
                                 <i class="ti ti-search"></i> {{ __('Track Order') }}
                             </a>
                         </div>

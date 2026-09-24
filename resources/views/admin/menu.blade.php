@@ -62,7 +62,7 @@
                         </a>
                     </li>
                     <li class="pc-item {{ in_array($routeName, ['track.order']) ? 'active' : '' }}">
-                        <a href="{{ route('track.order') }}" class="pc-link">
+                        <a href="{{ route('track.order') }}" class="pc-link" target="_blank">
                             <span class="pc-micon"><i class="ti ti-search"></i></span>
                             <span class="pc-mtext">{{ __('Track Order') }}</span>
                         </a>
